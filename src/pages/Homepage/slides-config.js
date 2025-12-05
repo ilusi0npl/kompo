@@ -44,7 +44,7 @@ export const desktopSlides = [
     taglineX: 741,
     image: '/assets/slides/hero-3.jpg',
     textColor: '#131313',
-    lineColor: '#A0E38A',
+    lineColor: '#01936F',
     logoSrc: '/assets/logo.svg'
   },
   {
@@ -92,7 +92,7 @@ export const mobileSlides = [
     tagline: 'jesteśmy z Polski',
     image: '/assets/slides/hero-3.jpg',
     textColor: '#131313',
-    lineColor: '#A0E38A',
+    lineColor: '#01936F',
     logoSrc: '/assets/logo.svg'
   },
   {

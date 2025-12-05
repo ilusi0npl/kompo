@@ -448,6 +448,142 @@ make verify-section SECTION=hero SECTIONS_CONFIG=scripts_project/sections-config
 
 ---
 
+## Kompopolex - Implementacja Bio
+
+### Figma Design
+
+| Wersja | Link | Wymiary |
+|--------|------|---------|
+| Desktop Bio1 (Ensemble) | [node 9-449](https://www.figma.com/design/16wGmQvLEJ5vSIrSzL8muo/Kompopolex-www-MATYLDA?node-id=9-449) | 1440 x 700 px |
+| Desktop Bio2 (Aleksandra) | [node 10-903](https://www.figma.com/design/16wGmQvLEJ5vSIrSzL8muo/Kompopolex-www-MATYLDA?node-id=10-903) | 1440 x 700 px |
+| Desktop Bio3 (Rafał) | [node 10-611](https://www.figma.com/design/16wGmQvLEJ5vSIrSzL8muo/Kompopolex-www-MATYLDA?node-id=10-611) | 1440 x 700 px |
+| Desktop Bio4 (Jacek) | [node 10-642](https://www.figma.com/design/16wGmQvLEJ5vSIrSzL8muo/Kompopolex-www-MATYLDA?node-id=10-642) | 1440 x 700 px |
+
+### Struktura plików
+
+```
+src/pages/Bio/
+├── index.jsx           # Główny - używa ResponsiveWrapper
+├── DesktopBio.jsx      # Layout desktop (1440px)
+├── MobileBio.jsx       # Layout mobile (390px)
+├── bio-config.js       # Konfiguracja slajdów Bio
+
+public/assets/bio/
+├── bio1-ensemble.jpg   # Zdjęcie Ensemble
+├── bio2-aleksandra.jpg # Zdjęcie Aleksandra
+├── bio3-rafal.jpg      # Zdjęcie Rafał
+├── bio4-jacek.jpg      # Zdjęcie Jacek
+└── bio-text.svg        # SVG "Bio." (49x107px)
+```
+
+### Kolory slajdów Bio
+
+| Slajd | Background | Line Color | Text |
+|-------|-----------|------------|------|
+| Bio1 (Ensemble) | #FDFDFD | #A0E38A | #131313 |
+| Bio2 (Aleksandra) | #FF734C | #FFBD19 | #131313 |
+| Bio3 (Rafał) | #34B898 | #01936F | #131313 |
+| Bio4 (Jacek) | #73A1FE | #3478FF | #131313 |
+
+### Pozycjonowanie obrazów (z Figma CSS)
+
+Każdy slajd Bio ma inne pozycjonowanie obrazu w kontenerze 300x460px:
+
+```javascript
+// Bio1 - object-cover centered
+imageStyle: { width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 50%' }
+
+// Bio2 - Aleksandra
+imageStyle: { width: '342.5%', height: '159.57%', left: '0.75%', top: '-28.91%' }
+
+// Bio3 - Rafał
+imageStyle: { width: '330.37%', height: '153.91%', left: '-101.18%', top: '-13.7%' }
+
+// Bio4 - Jacek
+imageStyle: { width: '301.44%', height: '140.43%', left: '-198.05%', top: '-0.22%' }
+```
+
+### Weryfikacja sekcji
+
+```bash
+make verify-section SECTION=bio1-ensemble SECTIONS_CONFIG=scripts_project/sections-config.json
+make verify-section SECTION=bio2-aleksandra SECTIONS_CONFIG=scripts_project/sections-config.json
+make verify-section SECTION=bio3-rafal SECTIONS_CONFIG=scripts_project/sections-config.json
+make verify-section SECTION=bio4-jacek SECTIONS_CONFIG=scripts_project/sections-config.json
+```
+
+### Ostatnie wyniki weryfikacji
+
+| Sekcja | Diff | Status |
+|--------|------|--------|
+| bio1-ensemble | 3.77% | ✅ PASSED |
+| bio2-aleksandra | 2.86% | ✅ PASSED |
+| bio3-rafal | 3.55% | ✅ PASSED |
+| bio4-jacek | 5.76% | ✅ PASSED |
+
+### Kluczowe elementy
+
+- **Bio text SVG**: 49x107px, używa `fill={currentData.textColor}` dla dynamicznego koloru
+- **Stopka**: tylko na Bio4 (Jacek), pozycja `left: 185px, top: 652px`
+- **Nawigacja**: Bio w menu Homepage linkuje do `/bio` przez React Router
+
+---
+
+## Kompopolex - Implementacja Kalendarz
+
+### Figma Design
+
+| Wersja | Link | Wymiary |
+|--------|------|---------|
+| Desktop | [node 19-49](https://www.figma.com/design/16wGmQvLEJ5vSIrSzL8muo/Kompopolex-www-MATYLDA?node-id=19-49) | 1440 x 2047 px |
+
+### Struktura plików
+
+```
+src/pages/Kalendarz/
+├── index.jsx              # Główny - używa ResponsiveWrapper
+├── DesktopKalendarz.jsx   # Layout desktop (1440px)
+├── kalendarz-config.js    # Konfiguracja wydarzeń
+
+public/assets/kalendarz/
+├── event1.jpg             # Zdjęcie Ensemble Kompopolex
+├── event2.jpg             # Zdjęcie Społeczne Komponowanie
+├── event3.jpg             # Zdjęcie Mixtur Festival
+└── place-icon.svg         # Ikona lokalizacji
+```
+
+### Elementy strony
+
+1. **Pionowe linie dekoracyjne** - x = 155, 375, 595, 815, 1035, 1255 (te same co Homepage)
+2. **Logo** - `/assets/logo.svg`, pozycja: left: 185px, top: 60px
+3. **"Kalendarz" tekst** - rotacja -90°, pozycja: left: 94px, top: 275px
+4. **Nawigacja** - "Nadchodzące" / "Archiwalne" - left: 185px, top: 190px
+5. **3 eventy** - każdy z obrazem (330x462px), datą, tytułem, wykonawcami/programem, opisem, lokalizacją
+6. **Stopka** - email + social links, wycentrowana na dole
+7. **Menu nawigacyjne** - prawa strona, pozycja: left: 1265px, top: 60px
+
+### Wydarzenia
+
+| Event | Tytuł | Data | Lokalizacja |
+|-------|-------|------|-------------|
+| 1 | ENSEMBLE KOMPOPOLEX | 13.12.25 18:00 | ASP WROCŁAW |
+| 2 | SPOŁECZNE KOMPONOWANIE 2025 | 20.12.25 18:00 | Akademia Muzyczna |
+| 3 | MIXTUR FESTIVAL | 16.01.26 20:00 | NAU BOSTIK, BARCELONA |
+
+### Weryfikacja sekcji
+
+```bash
+make verify-section SECTION=kalendarz SECTIONS_CONFIG=scripts_project/sections-config.json
+```
+
+### Ostatnie wyniki weryfikacji
+
+| Sekcja | Diff | Status |
+|--------|------|--------|
+| kalendarz | 2.82% | ✅ PASSED |
+
+---
+
 ## Quick Start for New Project
 
 1. **Create project config folder:**

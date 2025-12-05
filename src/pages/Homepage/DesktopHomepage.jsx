@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import { useScrollSlides } from './useScrollSlides';
 import {
   desktopSlides,
@@ -156,11 +157,18 @@ export default function DesktopHomepage() {
             gap: '22px',
           }}
         >
-          {['Bio', 'Media', 'Kalendarz', 'Repertuar', 'Fundacja', 'Kontakt'].map(
-            (item) => (
-              <a
-                key={item}
-                href={`#${item.toLowerCase()}`}
+          {[
+            { name: 'Bio', href: '/bio', isRoute: true },
+            { name: 'Media', href: '#media', isRoute: false },
+            { name: 'Kalendarz', href: '/kalendarz', isRoute: true },
+            { name: 'Repertuar', href: '#repertuar', isRoute: false },
+            { name: 'Fundacja', href: '#fundacja', isRoute: false },
+            { name: 'Kontakt', href: '#kontakt', isRoute: false },
+          ].map((item) =>
+            item.isRoute ? (
+              <Link
+                key={item.name}
+                to={item.href}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 700,
@@ -171,7 +179,23 @@ export default function DesktopHomepage() {
                   transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
                 }}
               >
-                {item}
+                {item.name}
+              </Link>
+            ) : (
+              <a
+                key={item.name}
+                href={item.href}
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontWeight: 700,
+                  fontSize: '18px',
+                  lineHeight: 1.48,
+                  color: currentData.textColor,
+                  textDecoration: 'none',
+                  transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+                }}
+              >
+                {item.name}
               </a>
             )
           )}

@@ -29,6 +29,48 @@
       "height": 700,
       "selector": "[data-section='hero']",
       "pageUrl": "http://localhost:5173/?slide=3"
+    },
+    "bio1-ensemble": {
+      "figmaNodeId": "9-449",
+      "y": 0,
+      "height": 700,
+      "selector": "[data-section='bio']",
+      "pageUrl": "http://localhost:5173/bio?slide=0"
+    },
+    "bio2-aleksandra": {
+      "figmaNodeId": "10-903",
+      "y": 0,
+      "height": 700,
+      "selector": "[data-section='bio']",
+      "pageUrl": "http://localhost:5173/bio?slide=1"
+    },
+    "bio3-rafal": {
+      "figmaNodeId": "10-611",
+      "y": 0,
+      "height": 700,
+      "selector": "[data-section='bio']",
+      "pageUrl": "http://localhost:5173/bio?slide=2"
+    },
+    "bio4-jacek": {
+      "figmaNodeId": "10-642",
+      "y": 0,
+      "height": 700,
+      "selector": "[data-section='bio']",
+      "pageUrl": "http://localhost:5173/bio?slide=3"
+    },
+    "kalendarz": {
+      "figmaNodeId": "19-49",
+      "y": 0,
+      "height": 2008,
+      "selector": "[data-section='kalendarz']",
+      "pageUrl": "http://localhost:5173/kalendarz"
+    },
+    "archiwalne": {
+      "figmaNodeId": "19-127",
+      "y": 0,
+      "height": 1792,
+      "selector": "[data-section='archiwalne']",
+      "pageUrl": "http://localhost:5173/archiwalne"
     }
   }
 }
