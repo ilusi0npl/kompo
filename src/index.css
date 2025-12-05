@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@theme {
+  /* Define your project colors here */
+  --color-primary: #3B82F6;
+  --color-secondary: #10B981;
+  --color-background: #FFFFFF;
+  --font-family-display: sans-serif;
+  --font-family-body: sans-serif;
+}
+
+/* Add your @font-face declarations here */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: var(--color-background);
+}
+
+body {
+  font-family: var(--font-family-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
