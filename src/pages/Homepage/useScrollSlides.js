@@ -1,8 +1,25 @@
 // Hook do obsługi wheel-based slide transitions
 import { useState, useEffect, useCallback, useRef } from 'react';
 
+// Read slide from URL query param (?slide=0, ?slide=1, etc.)
+function getInitialSlide() {
+  if (typeof window === 'undefined') return 0;
+  const params = new URLSearchParams(window.location.search);
+  const slideParam = params.get('slide');
+  if (slideParam !== null) {
+    const parsed = parseInt(slideParam, 10);
+    if (!isNaN(parsed) && parsed >= 0) {
+      return parsed;
+    }
+  }
+  return 0;
+}
+
 export function useScrollSlides(totalSlides = 4) {
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(() => {
+    const initial = getInitialSlide();
+    return Math.min(initial, totalSlides - 1);
+  });
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   const isAnimating = useRef(false);

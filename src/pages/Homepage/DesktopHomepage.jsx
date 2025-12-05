@@ -104,42 +104,23 @@ export default function DesktopHomepage() {
         </p>
       ))}
 
-      {/* Tekst słowa (Trio/Kompo/Polex/Ensemble) - obrócony */}
+      {/* Tekst słowa (Trio/Kompo/Polex/Ensemble) - SVG z Figma */}
       {desktopSlides.map((slide, index) => (
-        <div
+        <img
           key={slide.id}
+          src={slide.wordSvg}
+          alt={slide.word}
           className="absolute"
           style={{
-            left: '84px',
-            top: `${slide.wordY + 77}px`,
-            width: '154px',
-            height: '45px',
-            transform: 'rotate(-90deg)',
-            transformOrigin: 'center center',
-            overflow: 'visible',
+            left: '94px',
+            top: `${slide.wordY}px`,
+            width: `${slide.wordWidth}px`,
+            height: `${slide.wordHeight}px`,
             opacity: index === currentSlide ? 1 : 0,
             transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
             pointerEvents: index === currentSlide ? 'auto' : 'none',
           }}
-        >
-          <p
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 600,
-              fontSize: '64px',
-              lineHeight: '45px',
-              color: slide.textColor,
-              whiteSpace: 'nowrap',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '100%',
-              height: '100%',
-            }}
-          >
-            {slide.word}
-          </p>
-        </div>
+        />
       ))}
 
       {/* Prawa nawigacja */}

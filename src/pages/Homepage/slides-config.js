@@ -6,7 +6,10 @@ export const desktopSlides = [
     id: 1,
     backgroundColor: '#FDFDFD',
     word: 'Trio',
-    wordY: 446,  // pozycja Y słowa (przed obrotem)
+    wordSvg: '/assets/slides/word-trio.svg',
+    wordY: 446,
+    wordHeight: 149,  // SVG height from Figma
+    wordWidth: 49,    // SVG width from Figma
     tagline: 'specjalizujemy się w muzyce najnowszej',
     taglineX: 514,
     image: '/assets/slides/hero-1.jpg',
@@ -18,7 +21,10 @@ export const desktopSlides = [
     id: 2,
     backgroundColor: '#761FE0',
     word: 'Kompo',
+    wordSvg: '/assets/slides/word-kompo.svg',
     wordY: 408,
+    wordHeight: 185,  // SVG height from Figma
+    wordWidth: 58,    // SVG width from Figma
     tagline: 'gramy wszystko i na wszystkim',
     taglineX: 612,
     image: '/assets/slides/hero-2.jpg',
@@ -30,7 +36,10 @@ export const desktopSlides = [
     id: 3,
     backgroundColor: '#34B898',
     word: 'Polex',
+    wordSvg: '/assets/slides/word-polex.svg',
     wordY: 408,
+    wordHeight: 185,  // SVG height from Figma
+    wordWidth: 49,    // SVG width from Figma
     tagline: 'jesteśmy z Polski',
     taglineX: 741,
     image: '/assets/slides/hero-3.jpg',
@@ -42,7 +51,10 @@ export const desktopSlides = [
     id: 4,
     backgroundColor: '#FFBD19',
     word: 'Ensemble',
+    wordSvg: '/assets/slides/word-ensemble.svg',
     wordY: 293,
+    wordHeight: 299,  // SVG height from Figma
+    wordWidth: 49,    // SVG width from Figma
     tagline: 'komponuje dla nas cały świat',
     taglineX: 622,
     image: '/assets/slides/hero-4.jpg',

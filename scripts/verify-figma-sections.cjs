@@ -458,10 +458,19 @@ async function main() {
   console.log('╚══════════════════════════════════════════════════════════════╝');
   console.log('');
 
-  const { figmaFileKey, figmaNodeId, pageWidth, sections } = config;
+  const { figmaFileKey, figmaNodeId, pageWidth, pageUrl, sections } = config;
 
-  if (!figmaFileKey || !figmaNodeId || !sections) {
-    console.error('❌ Config missing required fields: figmaFileKey, figmaNodeId, sections');
+  // Support both old format (global figmaNodeId) and new format (per-section figmaNodeId)
+  const hasGlobalNodeId = !!figmaNodeId;
+  const hasPerSectionNodeIds = Object.values(sections).some(s => s.figmaNodeId);
+
+  if (!figmaFileKey || !sections) {
+    console.error('❌ Config missing required fields: figmaFileKey, sections');
+    process.exit(1);
+  }
+
+  if (!hasGlobalNodeId && !hasPerSectionNodeIds) {
+    console.error('❌ Config missing figmaNodeId (either global or per-section)');
     process.exit(1);
   }
 
@@ -471,52 +480,45 @@ async function main() {
     : Object.keys(sections);
 
   console.log(`📋 Sections to verify: ${sectionNames.join(', ')}`);
-  console.log(`🔗 URL: ${options.url}`);
+  console.log(`🔗 Base URL: ${options.url}`);
   console.log(`📁 Output: ${outputDir}`);
   console.log('');
 
-  // Step 1: Fetch full page screenshot from Figma
-  console.log('📥 Fetching Figma screenshot...');
-  let figmaImageUrl;
-  try {
-    figmaImageUrl = await fetchFigmaScreenshot(figmaFileKey, figmaNodeId);
-    console.log('   ✅ Got image URL from Figma API');
-  } catch (e) {
-    console.error(`   ❌ Failed to fetch from Figma: ${e.message}`);
-    process.exit(1);
+  // Cache for downloaded Figma screenshots (to avoid re-downloading same nodeId)
+  const figmaCache = {};
+
+  async function getFigmaScreenshot(nodeId) {
+    if (figmaCache[nodeId]) {
+      return figmaCache[nodeId];
+    }
+
+    console.log(`   📥 Fetching Figma screenshot for node ${nodeId}...`);
+    const imageUrl = await fetchFigmaScreenshot(figmaFileKey, nodeId);
+    const figmaPath = path.join(outputDir, `figma-${nodeId.replace(':', '-')}.png`);
+    await downloadImage(imageUrl, figmaPath);
+    const metadata = await sharp(figmaPath).metadata();
+    console.log(`   ✅ Downloaded: ${metadata.width}x${metadata.height}`);
+
+    figmaCache[nodeId] = { path: figmaPath, metadata };
+    return figmaCache[nodeId];
   }
 
-  const figmaFullPath = path.join(outputDir, 'figma-full.png');
-  try {
-    await downloadImage(figmaImageUrl, figmaFullPath);
-    console.log(`   ✅ Downloaded: ${figmaFullPath}`);
-  } catch (e) {
-    console.error(`   ❌ Failed to download: ${e.message}`);
-    process.exit(1);
+  // If global nodeId, download it upfront
+  let globalFigmaData = null;
+  if (hasGlobalNodeId && !hasPerSectionNodeIds) {
+    console.log('📥 Fetching global Figma screenshot...');
+    try {
+      globalFigmaData = await getFigmaScreenshot(figmaNodeId);
+    } catch (e) {
+      console.error(`   ❌ Failed to fetch from Figma: ${e.message}`);
+      process.exit(1);
+    }
+    console.log('');
   }
-
-  // Get Figma image dimensions
-  const figmaMetadata = await sharp(figmaFullPath).metadata();
-  console.log(`   📐 Figma size: ${figmaMetadata.width}x${figmaMetadata.height}`);
-  console.log('');
 
   // Step 2: Launch browser for implementation screenshots
   console.log('🌐 Launching browser...');
   const browser = await playwright.chromium.launch();
-  const context = await browser.newContext({
-    viewport: { width: pageWidth || 1728, height: 1080 }
-  });
-  const page = await context.newPage();
-
-  try {
-    await page.goto(options.url, { waitUntil: 'networkidle', timeout: 30000 });
-    console.log('   ✅ Page loaded');
-  } catch (e) {
-    console.error(`   ❌ Failed to load page: ${e.message}`);
-    await browser.close();
-    process.exit(1);
-  }
-  console.log('');
 
   // Step 3: Process each section
   const results = [];
@@ -533,21 +535,62 @@ async function main() {
     const sectionDir = path.join(outputDir, sectionName);
     fs.mkdirSync(sectionDir, { recursive: true });
 
+    // Determine which Figma node to use
+    const sectionNodeId = sectionConfig.figmaNodeId || figmaNodeId;
+
+    // Get Figma screenshot for this section
+    let figmaData;
+    try {
+      figmaData = await getFigmaScreenshot(sectionNodeId);
+    } catch (e) {
+      console.error(`   ❌ Failed to fetch Figma for ${sectionName}: ${e.message}`);
+      continue;
+    }
+
+    const figmaMetadata = figmaData.metadata;
+
     const bounds = {
       x: sectionConfig.x || 0,
-      y: sectionConfig.y,
+      y: sectionConfig.y || 0,
       width: sectionConfig.width || pageWidth || figmaMetadata.width,
-      height: sectionConfig.height
+      height: sectionConfig.height || figmaMetadata.height
     };
 
-    // Crop Figma screenshot to section bounds
+    // Crop or copy Figma screenshot
     const figmaSectionPath = path.join(sectionDir, 'figma.png');
     let figmaSize;
     try {
-      figmaSize = await cropImage(figmaFullPath, figmaSectionPath, bounds);
-      console.log(`   ✅ Figma cropped: ${figmaSize.width}x${figmaSize.height}`);
+      // If bounds cover full image, just copy; otherwise crop
+      if (bounds.y === 0 && bounds.height === figmaMetadata.height &&
+          bounds.x === 0 && bounds.width === figmaMetadata.width) {
+        fs.copyFileSync(figmaData.path, figmaSectionPath);
+        figmaSize = { width: figmaMetadata.width, height: figmaMetadata.height };
+      } else {
+        figmaSize = await cropImage(figmaData.path, figmaSectionPath, bounds);
+      }
+      console.log(`   ✅ Figma: ${figmaSize.width}x${figmaSize.height}`);
     } catch (e) {
-      console.error(`   ❌ Failed to crop Figma: ${e.message}`);
+      console.error(`   ❌ Failed to process Figma: ${e.message}`);
+      continue;
+    }
+
+    // Determine URL for this section
+    const sectionUrl = sectionConfig.pageUrl || pageUrl || options.url;
+
+    // Create new context with correct viewport
+    const context = await browser.newContext({
+      viewport: { width: pageWidth || figmaSize.width, height: figmaSize.height + 100 }
+    });
+    const page = await context.newPage();
+
+    try {
+      console.log(`   🌐 Loading: ${sectionUrl}`);
+      await page.goto(sectionUrl, { waitUntil: 'networkidle', timeout: 30000 });
+      // Wait a bit for any CSS transitions to settle
+      await page.waitForTimeout(500);
+    } catch (e) {
+      console.error(`   ❌ Failed to load page: ${e.message}`);
+      await context.close();
       continue;
     }
 
@@ -564,9 +607,7 @@ async function main() {
         console.log(`   ✅ Impl captured: ${implSize.width}x${implSize.height}`);
       } else {
         console.log(`   ⚠️  Selector not found: ${selector}`);
-        // Fallback: capture by scrolling to Y position and taking viewport screenshot
-        await page.evaluate((y) => window.scrollTo(0, y), bounds.y);
-        await page.waitForTimeout(100);
+        // Fallback: capture viewport
         await page.screenshot({
           path: implSectionPath,
           clip: { x: 0, y: 0, width: bounds.width, height: bounds.height }
@@ -577,8 +618,11 @@ async function main() {
       }
     } catch (e) {
       console.error(`   ❌ Failed to capture impl: ${e.message}`);
+      await context.close();
       continue;
     }
+
+    await context.close();
 
     // Compare images
     const diffPath = path.join(sectionDir, 'diff.png');
@@ -599,6 +643,7 @@ async function main() {
       diffPath: diffPath,
       figmaSize,
       implSize,
+      url: sectionUrl,
       ...comparison
     });
 
