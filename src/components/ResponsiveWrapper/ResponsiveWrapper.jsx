@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
 
-const DESKTOP_WIDTH = 1728;
+// Wymiary z Figma
+const DESKTOP_WIDTH = 1440;
 const MOBILE_WIDTH = 390;
 const BREAKPOINT = 768;
 
 export default function ResponsiveWrapper({
   desktopContent,
   mobileContent,
-  desktopHeight = 5000,  // Adjust per project
-  mobileHeight = 8000,   // Adjust per project
+  desktopHeight = 700,   // Z Figma desktop
+  mobileHeight = 683,    // Z Figma mobile
 }) {
   const [viewportWidth, setViewportWidth] = useState(
     typeof window !== 'undefined' ? window.innerWidth : DESKTOP_WIDTH

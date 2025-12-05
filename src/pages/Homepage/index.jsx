@@ -1,22 +1,14 @@
-import BackgroundLines from '../../components/BackgroundLines/BackgroundLines';
-import HeroSection from './HeroSection';
+import ResponsiveWrapper from '../../components/ResponsiveWrapper/ResponsiveWrapper';
+import DesktopHomepage from './DesktopHomepage';
+import MobileHomepage from './MobileHomepage';
 
 export default function Homepage() {
   return (
-    <div
-      className="relative"
-      style={{
-        width: '1440px',
-        backgroundColor: '#FDFDFD'
-      }}
-    >
-      {/* Wspólne tło z liniami dla całej strony */}
-      <BackgroundLines />
-
-      {/* Sekcje strony */}
-      <div className="relative" style={{ zIndex: 1 }}>
-        <HeroSection />
-      </div>
-    </div>
+    <ResponsiveWrapper
+      desktopContent={<DesktopHomepage />}
+      mobileContent={<MobileHomepage />}
+      desktopHeight={700}
+      mobileHeight={683}
+    />
   );
 }

@@ -1,4 +1,4 @@
-export default function HeroSection() {
+export default function DesktopHomepage() {
   // Pozycje pionowych linii z Figma (dla 1440px szerokości)
   const linePositions = [155, 375, 595, 815, 1035, 1255];
 

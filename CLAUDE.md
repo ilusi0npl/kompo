@@ -376,6 +376,78 @@ Mobile design: https://www.figma.com/design/[fileKey]/[fileName]?node-id=[nodeId
 
 ---
 
+## Kompopolex - Implementacja Homepage
+
+### Figma Design
+
+| Wersja | Link | Wymiary |
+|--------|------|---------|
+| Desktop | [node 9-301](https://www.figma.com/design/16wGmQvLEJ5vSIrSzL8muo/Kompopolex-www-MATYLDA?node-id=9-301) | 1440 x 700 px |
+| Mobile | [node 71-470](https://www.figma.com/design/16wGmQvLEJ5vSIrSzL8muo/Kompopolex-www-MATYLDA?node-id=71-470) | 390 x 683 px |
+
+### Struktura plików
+
+```
+src/
+├── components/
+│   └── ResponsiveWrapper/
+│       └── ResponsiveWrapper.jsx    # Skaluje layout do viewportu
+├── pages/
+│   └── Homepage/
+│       ├── index.jsx                # Główny - używa ResponsiveWrapper
+│       ├── DesktopHomepage.jsx      # Layout desktop (1440px)
+│       └── MobileHomepage.jsx       # Layout mobile (390px)
+
+public/
+├── favicon.svg                      # Favicon (logo Kompopolex)
+└── assets/
+    ├── logo.svg                     # Logo desktop
+    ├── hero-photo.jpg               # Zdjęcie hero desktop (295KB)
+    └── mobile/
+        ├── logo.svg                 # Logo mobile
+        ├── hero-photo.jpg           # Zdjęcie hero mobile (90KB)
+        └── trio.svg                 # SVG "Trio" mobile
+```
+
+### Konfiguracja responsywności
+
+```jsx
+// src/components/ResponsiveWrapper/ResponsiveWrapper.jsx
+const DESKTOP_WIDTH = 1440;  // Z Figma desktop
+const MOBILE_WIDTH = 390;    // Z Figma mobile
+const BREAKPOINT = 768;      // Przełączenie desktop/mobile
+```
+
+### Kolory z designu
+
+| Nazwa | Hex | Użycie |
+|-------|-----|--------|
+| Background | #FDFDFD | Tło strony |
+| Text | #131313 | Tekst |
+| Lines | #A0E38A | Pionowe linie dekoracyjne |
+
+### Pionowe linie dekoracyjne
+
+**Desktop (1440px):** x = 155, 375, 595, 815, 1035, 1255
+**Mobile (390px):** x = 97, 195, 292
+
+### Weryfikacja sekcji
+
+```bash
+# Weryfikuj hero desktop
+make verify-section SECTION=hero SECTIONS_CONFIG=scripts_project/sections-config.json
+```
+
+**Ostatni wynik:** 1.59% diff (PASSED, próg ≤8%)
+
+### Fonty
+
+- **IBM Plex Mono** - wszystkie teksty
+- Pliki: `public/fonts/ibm-plex-mono/*.woff2`
+- Definicje: `src/index.css` (@font-face)
+
+---
+
 ## Quick Start for New Project
 
 1. **Create project config folder:**
