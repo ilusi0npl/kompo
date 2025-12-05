@@ -65,30 +65,18 @@ export default function DesktopKalendarz() {
         />
       </Link>
 
-      {/* Kalendarz - pionowy tekst po lewej (rotacja 90 stopni) */}
-      <div
-        className="absolute flex items-center justify-center"
+      {/* Kalendarz - pionowy tekst po lewej */}
+      <img
+        src="/assets/kalendarz/kalendarz-text.svg"
+        alt="Kalendarz"
+        className="absolute"
         style={{
           left: '94px',
           top: '275px',
-          width: '45px',
-          height: '346px',
+          width: '49px',
+          height: '337px',
         }}
-      >
-        <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '64px',
-            lineHeight: 1.1,
-            color: '#131313',
-            transform: 'rotate(-90deg)',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          Kalendarz
-        </p>
-      </div>
+      />
 
       {/* Nawigacja Nadchodzące / Archiwalne */}
       <span
@@ -272,11 +260,11 @@ export default function DesktopKalendarz() {
         >
           {[
             { name: 'Bio', href: '/bio', active: false },
-            { name: 'Media', href: '#media', active: false },
+            { name: 'Media', href: '/media', active: false },
             { name: 'Kalendarz', href: '/kalendarz', active: true },
             { name: 'Repertuar', href: '#repertuar', active: false },
             { name: 'Fundacja', href: '#fundacja', active: false },
-            { name: 'Kontakt', href: '#kontakt', active: false },
+            { name: 'Kontakt', href: '/kontakt', active: false },
           ].map((item) => (
             item.href.startsWith('/') ? (
               <Link

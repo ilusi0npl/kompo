@@ -391,11 +391,11 @@ export default function DesktopWydarzenie() {
         >
           {[
             { name: 'Bio', href: '/bio', active: false, top: 0 },
-            { name: 'Media', href: '#media', active: false, top: 49 },
+            { name: 'Media', href: '/media', active: false, top: 49 },
             { name: 'Kalendarz', href: '/kalendarz', active: true, top: 98 },
             { name: 'Repertuar', href: '#repertuar', active: false, top: 147 },
             { name: 'Fundacja', href: '#fundacja', active: false, top: 196 },
-            { name: 'Kontakt', href: '#kontakt', active: false, top: 245 },
+            { name: 'Kontakt', href: '/kontakt', active: false, top: 245 },
           ].map((item) =>
             item.href.startsWith('/') ? (
               <Link

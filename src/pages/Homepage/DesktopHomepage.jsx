@@ -159,11 +159,11 @@ export default function DesktopHomepage() {
         >
           {[
             { name: 'Bio', href: '/bio', isRoute: true },
-            { name: 'Media', href: '#media', isRoute: false },
+            { name: 'Media', href: '/media', isRoute: true },
             { name: 'Kalendarz', href: '/kalendarz', isRoute: true },
             { name: 'Repertuar', href: '#repertuar', isRoute: false },
             { name: 'Fundacja', href: '#fundacja', isRoute: false },
-            { name: 'Kontakt', href: '#kontakt', isRoute: false },
+            { name: 'Kontakt', href: '/kontakt', isRoute: false },
           ].map((item) =>
             item.isRoute ? (
               <Link

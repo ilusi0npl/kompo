@@ -1,21 +1,32 @@
 import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
 import {
-  archivedEvents,
+  videos,
   desktopLinePositions,
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
-} from './archiwalne-config';
+  LINE_COLOR,
+  BACKGROUND_COLOR,
+  ACTIVE_TAB_COLOR,
+} from './media-wideo-config';
 
-export default function DesktopArchiwalne() {
+export default function DesktopMediaWideo() {
+  // Grid positions for 2 columns x 2 rows
+  const gridPositions = [
+    { left: 185, top: 275 },  // Row 1, Col 1
+    { left: 690, top: 275 },  // Row 1, Col 2
+    { left: 185, top: 655 },  // Row 2, Col 1
+    { left: 690, top: 655 },  // Row 2, Col 2
+  ];
+
   return (
     <section
-      data-section="archiwalne"
+      data-section="media-wideo"
       className="relative overflow-hidden"
       style={{
         width: `${DESKTOP_WIDTH}px`,
         height: `${DESKTOP_HEIGHT}px`,
-        backgroundColor: '#FDFDFD',
+        backgroundColor: BACKGROUND_COLOR,
       }}
     >
       {/* Pionowe linie w tle */}
@@ -27,7 +38,7 @@ export default function DesktopArchiwalne() {
             left: `${left}px`,
             width: '1px',
             height: '100%',
-            backgroundColor: '#A0E38A',
+            backgroundColor: LINE_COLOR,
           }}
         />
       ))}
@@ -47,22 +58,22 @@ export default function DesktopArchiwalne() {
         />
       </Link>
 
-      {/* Kalendarz - pionowy tekst po lewej */}
+      {/* Media - pionowy tekst po lewej */}
       <img
-        src="/assets/kalendarz/kalendarz-text.svg"
-        alt="Kalendarz"
+        src="/assets/media/media-text.svg"
+        alt="Media"
         className="absolute"
         style={{
           left: '94px',
           top: '275px',
           width: '49px',
-          height: '337px',
+          height: '187px',
         }}
       />
 
-      {/* Nawigacja Nadchodzące / Archiwalne */}
+      {/* Nawigacja Zdjęcia / Wideo */}
       <Link
-        to="/kalendarz"
+        to="/media"
         className="absolute"
         style={{
           left: '185px',
@@ -76,7 +87,7 @@ export default function DesktopArchiwalne() {
           cursor: 'pointer',
         }}
       >
-        Nadchodzące
+        Zdjęcia
       </Link>
       <span
         className="absolute"
@@ -87,91 +98,74 @@ export default function DesktopArchiwalne() {
           fontWeight: 600,
           fontSize: '24px',
           lineHeight: 1.44,
-          color: '#761FE0',
+          color: ACTIVE_TAB_COLOR,
           textDecoration: 'underline',
           cursor: 'pointer',
         }}
       >
-        Archiwalne
+        Wideo
       </span>
 
-      {/* Event cards - 3x2 grid */}
-      {archivedEvents.map((event) => (
+      {/* Video Grid */}
+      {videos.map((video, index) => (
         <div
-          key={event.id}
+          key={video.id}
           className="absolute flex flex-col"
           style={{
-            left: `${event.position.left}px`,
-            top: `${event.position.top}px`,
-            width: '300px',
+            left: `${gridPositions[index].left}px`,
+            top: `${gridPositions[index].top}px`,
+            width: '455px',
             gap: '16px',
           }}
         >
-          {/* Image */}
-          <div
-            className="relative"
+          {/* Video Thumbnail with Play Button */}
+          <a
+            href={video.youtubeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="relative block overflow-hidden"
             style={{
-              width: '300px',
-              height: '420px',
-              border: event.hasBorder ? '1px solid #131313' : 'none',
-              overflow: 'hidden',
+              width: '455px',
+              height: '256px',
             }}
           >
             <img
-              src={event.image}
-              alt={event.title}
-              className="absolute inset-0 w-full h-full"
-              style={{
-                objectFit: 'cover',
-                objectPosition: '50% 50%',
-              }}
+              src={video.thumbnail}
+              alt={video.title}
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ objectPosition: '50% 50%' }}
             />
-          </div>
-
-          {/* Text content */}
-          <div className="flex flex-col" style={{ gap: '6px' }}>
-            {/* Date */}
-            <p
+            {/* Play Icon */}
+            <div
+              className="absolute"
               style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontWeight: 700,
-                fontSize: '16px',
-                lineHeight: 1.48,
-                color: '#131313',
+                left: '198px',
+                top: '98px',
+                width: '60px',
+                height: '60px',
               }}
             >
-              {event.date}
-            </p>
-
-            {/* Title and performers */}
-            <div className="flex flex-col" style={{ gap: '16px' }}>
-              <Link
-                to={`/wydarzenie/${event.id}`}
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontWeight: 600,
-                  fontSize: '24px',
-                  lineHeight: 1.45,
-                  color: '#131313',
-                  textDecoration: 'underline',
-                  textTransform: 'uppercase',
-                }}
-              >
-                {event.title}
-              </Link>
-              <p
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontWeight: 500,
-                  fontSize: '16px',
-                  lineHeight: 1.48,
-                  color: '#131313',
-                }}
-              >
-                {event.performers}
-              </p>
+              <img
+                src="/assets/media-wideo/play-icon.svg"
+                alt="Play"
+                className="w-full h-full"
+              />
             </div>
-          </div>
+          </a>
+
+          {/* Video Title */}
+          <p
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 700,
+              fontSize: '20px',
+              lineHeight: 1.44,
+              color: '#131313',
+              textTransform: 'uppercase',
+            }}
+          >
+            {video.title}
+          </p>
         </div>
       ))}
 
@@ -180,7 +174,7 @@ export default function DesktopArchiwalne() {
         className="absolute"
         style={{
           left: '185px',
-          top: '1728px',
+          top: '1111px',
           width: '520px',
         }}
       />
@@ -219,12 +213,12 @@ export default function DesktopArchiwalne() {
         >
           {[
             { name: 'Bio', href: '/bio', active: false },
-            { name: 'Media', href: '/media', active: false },
-            { name: 'Kalendarz', href: '/kalendarz', active: true },
+            { name: 'Media', href: '/media', active: true },
+            { name: 'Kalendarz', href: '/kalendarz', active: false },
             { name: 'Repertuar', href: '#repertuar', active: false },
             { name: 'Fundacja', href: '#fundacja', active: false },
             { name: 'Kontakt', href: '/kontakt', active: false },
-          ].map((item) =>
+          ].map((item) => (
             item.href.startsWith('/') ? (
               <Link
                 key={item.name}
@@ -256,7 +250,7 @@ export default function DesktopArchiwalne() {
                 {item.name}
               </a>
             )
-          )}
+          ))}
         </nav>
       </div>
     </section>

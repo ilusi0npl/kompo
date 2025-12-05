@@ -199,11 +199,11 @@ export default function DesktopBio() {
         >
           {[
             { name: 'Bio', href: '/bio', active: true, isRoute: true },
-            { name: 'Media', href: '#media', active: false, isRoute: false },
+            { name: 'Media', href: '/media', active: false, isRoute: true },
             { name: 'Kalendarz', href: '/kalendarz', active: false, isRoute: true },
             { name: 'Repertuar', href: '#repertuar', active: false, isRoute: false },
             { name: 'Fundacja', href: '#fundacja', active: false, isRoute: false },
-            { name: 'Kontakt', href: '#kontakt', active: false, isRoute: false },
+            { name: 'Kontakt', href: '/kontakt', active: false, isRoute: false },
           ].map((item) =>
             item.isRoute ? (
               <Link

@@ -60,6 +60,11 @@ make verify-section SECTION=hero SECTIONS_CONFIG=scripts_project/sections-config
 
 **Output:** `tmp/figma-sections/[timestamp]/report.html`
 
+**WAŻNE:** Po każdym uruchomieniu `make verify-section` ZAWSZE podawaj użytkownikowi link do raportu HTML, np.:
+```
+file:///home/ilusi0n/repo/kompo/tmp/figma-sections/2025-12-05T18-59-06/report.html
+```
+
 **Skrypt:** `scripts/verify-figma-sections.cjs`
 
 ### 2. UIMatch (Single Node Comparison)

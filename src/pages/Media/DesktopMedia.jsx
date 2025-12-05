@@ -1,21 +1,34 @@
 import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
 import {
-  archivedEvents,
+  photos,
   desktopLinePositions,
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
-} from './archiwalne-config';
+  LINE_COLOR,
+  BACKGROUND_COLOR,
+  ACTIVE_TAB_COLOR,
+} from './media-config';
 
-export default function DesktopArchiwalne() {
+export default function DesktopMedia() {
+  // Grid positions for 3 columns x 2 rows
+  const gridPositions = [
+    { left: 185, top: 276 },  // Row 1, Col 1
+    { left: 515, top: 276 },  // Row 1, Col 2
+    { left: 845, top: 276 },  // Row 1, Col 3
+    { left: 185, top: 613 },  // Row 2, Col 1
+    { left: 515, top: 613 },  // Row 2, Col 2
+    { left: 845, top: 613 },  // Row 2, Col 3
+  ];
+
   return (
     <section
-      data-section="archiwalne"
+      data-section="media"
       className="relative overflow-hidden"
       style={{
         width: `${DESKTOP_WIDTH}px`,
         height: `${DESKTOP_HEIGHT}px`,
-        backgroundColor: '#FDFDFD',
+        backgroundColor: BACKGROUND_COLOR,
       }}
     >
       {/* Pionowe linie w tle */}
@@ -27,7 +40,7 @@ export default function DesktopArchiwalne() {
             left: `${left}px`,
             width: '1px',
             height: '100%',
-            backgroundColor: '#A0E38A',
+            backgroundColor: LINE_COLOR,
           }}
         />
       ))}
@@ -47,22 +60,21 @@ export default function DesktopArchiwalne() {
         />
       </Link>
 
-      {/* Kalendarz - pionowy tekst po lewej */}
+      {/* Media - pionowy tekst po lewej */}
       <img
-        src="/assets/kalendarz/kalendarz-text.svg"
-        alt="Kalendarz"
+        src="/assets/media/media-text.svg"
+        alt="Media"
         className="absolute"
         style={{
           left: '94px',
-          top: '275px',
+          top: '276px',
           width: '49px',
-          height: '337px',
+          height: '187px',
         }}
       />
 
-      {/* Nawigacja Nadchodzące / Archiwalne */}
-      <Link
-        to="/kalendarz"
+      {/* Nawigacja Zdjęcia / Wideo */}
+      <span
         className="absolute"
         style={{
           left: '185px',
@@ -70,15 +82,16 @@ export default function DesktopArchiwalne() {
           fontFamily: "'IBM Plex Mono', monospace",
           fontWeight: 600,
           fontSize: '24px',
-          lineHeight: 1.44,
-          color: '#131313',
-          textDecoration: 'none',
+          lineHeight: 1.48,
+          color: ACTIVE_TAB_COLOR,
+          textDecoration: 'underline',
           cursor: 'pointer',
         }}
       >
-        Nadchodzące
-      </Link>
-      <span
+        Zdjęcia
+      </span>
+      <Link
+        to="/media/wideo"
         className="absolute"
         style={{
           left: '405px',
@@ -86,91 +99,69 @@ export default function DesktopArchiwalne() {
           fontFamily: "'IBM Plex Mono', monospace",
           fontWeight: 600,
           fontSize: '24px',
-          lineHeight: 1.44,
-          color: '#761FE0',
-          textDecoration: 'underline',
+          lineHeight: 1.48,
+          color: '#131313',
+          textDecoration: 'none',
           cursor: 'pointer',
         }}
       >
-        Archiwalne
-      </span>
+        Wideo
+      </Link>
 
-      {/* Event cards - 3x2 grid */}
-      {archivedEvents.map((event) => (
+      {/* Photo Grid */}
+      {photos.map((photo, index) => (
         <div
-          key={event.id}
+          key={photo.id}
           className="absolute flex flex-col"
           style={{
-            left: `${event.position.left}px`,
-            top: `${event.position.top}px`,
+            left: `${gridPositions[index].left}px`,
+            top: `${gridPositions[index].top}px`,
             width: '300px',
             gap: '16px',
           }}
         >
-          {/* Image */}
+          {/* Photo */}
           <div
-            className="relative"
+            className="relative overflow-hidden"
             style={{
               width: '300px',
-              height: '420px',
-              border: event.hasBorder ? '1px solid #131313' : 'none',
-              overflow: 'hidden',
+              height: '214px',
             }}
           >
             <img
-              src={event.image}
-              alt={event.title}
-              className="absolute inset-0 w-full h-full"
-              style={{
-                objectFit: 'cover',
-                objectPosition: '50% 50%',
-              }}
+              src={photo.image}
+              alt={photo.title}
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ objectPosition: '50% 50%' }}
             />
           </div>
 
-          {/* Text content */}
-          <div className="flex flex-col" style={{ gap: '6px' }}>
-            {/* Date */}
+          {/* Photo info */}
+          <div className="flex flex-col" style={{ gap: '8px' }}>
             <p
               style={{
                 fontFamily: "'IBM Plex Mono', monospace",
-                fontWeight: 700,
+                fontWeight: 600,
+                fontSize: '24px',
+                lineHeight: 1.45,
+                color: '#131313',
+                textDecoration: 'underline',
+                textTransform: 'uppercase',
+              }}
+            >
+              {photo.title}
+            </p>
+            <p
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontWeight: 500,
                 fontSize: '16px',
                 lineHeight: 1.48,
                 color: '#131313',
               }}
             >
-              {event.date}
+              fot. {photo.photographer}
             </p>
-
-            {/* Title and performers */}
-            <div className="flex flex-col" style={{ gap: '16px' }}>
-              <Link
-                to={`/wydarzenie/${event.id}`}
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontWeight: 600,
-                  fontSize: '24px',
-                  lineHeight: 1.45,
-                  color: '#131313',
-                  textDecoration: 'underline',
-                  textTransform: 'uppercase',
-                }}
-              >
-                {event.title}
-              </Link>
-              <p
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontWeight: 500,
-                  fontSize: '16px',
-                  lineHeight: 1.48,
-                  color: '#131313',
-                }}
-              >
-                {event.performers}
-              </p>
-            </div>
           </div>
         </div>
       ))}
@@ -180,7 +171,7 @@ export default function DesktopArchiwalne() {
         className="absolute"
         style={{
           left: '185px',
-          top: '1728px',
+          top: '1016px',
           width: '520px',
         }}
       />
@@ -219,12 +210,12 @@ export default function DesktopArchiwalne() {
         >
           {[
             { name: 'Bio', href: '/bio', active: false },
-            { name: 'Media', href: '/media', active: false },
-            { name: 'Kalendarz', href: '/kalendarz', active: true },
+            { name: 'Media', href: '/media', active: true },
+            { name: 'Kalendarz', href: '/kalendarz', active: false },
             { name: 'Repertuar', href: '#repertuar', active: false },
             { name: 'Fundacja', href: '#fundacja', active: false },
             { name: 'Kontakt', href: '/kontakt', active: false },
-          ].map((item) =>
+          ].map((item) => (
             item.href.startsWith('/') ? (
               <Link
                 key={item.name}
@@ -256,7 +247,7 @@ export default function DesktopArchiwalne() {
                 {item.name}
               </a>
             )
-          )}
+          ))}
         </nav>
       </div>
     </section>
