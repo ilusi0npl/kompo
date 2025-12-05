@@ -8,8 +8,8 @@ const BREAKPOINT = 768;
 export default function ResponsiveWrapper({
   desktopContent,
   mobileContent,
-  desktopHeight = 700,   // Z Figma desktop
-  mobileHeight = 683,    // Z Figma mobile
+  desktopHeight = 700,
+  mobileHeight = 683,
 }) {
   const [viewportWidth, setViewportWidth] = useState(
     typeof window !== 'undefined' ? window.innerWidth : DESKTOP_WIDTH

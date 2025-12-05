@@ -1,20 +1,31 @@
+import { useScrollSlides } from './useScrollSlides';
+import {
+  mobileSlides,
+  mobileLinePositions,
+  MOBILE_WIDTH,
+  MOBILE_HEIGHT,
+} from './slides-config';
+
+const TRANSITION_DURATION = '1s';
+const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
+
 export default function MobileHomepage() {
-  // Pozycje pionowych linii z Figma mobile (dla 390px szerokości)
-  // x=97, x=195, x=292
-  const linePositions = [97, 195, 292];
+  const { currentSlide } = useScrollSlides(mobileSlides.length);
+  const currentData = mobileSlides[currentSlide];
 
   return (
     <section
       data-section="hero-mobile"
       className="relative overflow-hidden"
       style={{
-        width: '390px',
-        height: '683px',
-        backgroundColor: '#FDFDFD'
+        width: `${MOBILE_WIDTH}px`,
+        height: `${MOBILE_HEIGHT}px`,
+        backgroundColor: currentData.backgroundColor,
+        transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
       }}
     >
       {/* Zielone pionowe linie w tle */}
-      {linePositions.map((left, index) => (
+      {mobileLinePositions.map((left, index) => (
         <div
           key={index}
           className="absolute top-0"
@@ -22,25 +33,31 @@ export default function MobileHomepage() {
             left: `${left}px`,
             width: '1px',
             height: '100%',
-            backgroundColor: '#A0E38A'
+            backgroundColor: currentData.lineColor,
           }}
         />
       ))}
 
-      {/* Logo - pozycja z Figma: x=20, y=40, w=104, h=42 */}
-      <img
-        src="/assets/mobile/logo.svg"
-        alt="Kompopolex"
-        className="absolute"
-        style={{
-          left: '20px',
-          top: '40px',
-          width: '104px',
-          height: '42px'
-        }}
-      />
+      {/* Logo - wszystkie preloadowane, CSS transition na opacity */}
+      {mobileSlides.map((slide, index) => (
+        <img
+          key={slide.id}
+          src={slide.logoSrc}
+          alt="Kompopolex"
+          className="absolute"
+          style={{
+            left: '20px',
+            top: '40px',
+            width: '104px',
+            height: '42px',
+            opacity: index === currentSlide ? 1 : 0,
+            transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+            pointerEvents: index === currentSlide ? 'auto' : 'none',
+          }}
+        />
+      ))}
 
-      {/* MENU - pozycja z Figma: x=312, y=43 */}
+      {/* MENU */}
       <p
         className="absolute"
         style={{
@@ -50,54 +67,95 @@ export default function MobileHomepage() {
           fontWeight: 700,
           fontSize: '24px',
           lineHeight: 'normal',
-          color: '#131313'
+          color: currentData.textColor,
+          transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
         }}
       >
         MENU
       </p>
 
-      {/* Glowne zdjecie - pozycja z Figma: x=20, y=152, w=350, h=288 */}
-      <img
-        src="/assets/mobile/hero-photo.jpg"
-        alt="Trio Kompopolex"
-        className="absolute object-cover"
+      {/* Główne zdjęcie - crossfade */}
+      <div
+        className="absolute"
         style={{
           left: '20px',
           top: '152px',
           width: '350px',
-          height: '288px'
-        }}
-      />
-
-      {/* Trio SVG - pozycja z Figma: x=30, y=460, w=49, h=149 */}
-      <img
-        src="/assets/mobile/trio.svg"
-        alt="Trio"
-        className="absolute"
-        style={{
-          left: '30px',
-          top: '460px',
-          width: '49px',
-          height: '149px'
-        }}
-      />
-
-      {/* Tekst - x=185, y=460, w=185 */}
-      <p
-        className="absolute"
-        style={{
-          left: '185px',
-          top: '460px',
-          width: '185px',
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontWeight: 600,
-          fontSize: '16px',
-          lineHeight: 1.48,
-          color: '#131313'
+          height: '288px',
+          overflow: 'hidden',
         }}
       >
-        specjalizuj&#261;ce si&#281; w muzyce najnowszej
-      </p>
+        {mobileSlides.map((slide, index) => (
+          <img
+            key={slide.id}
+            src={slide.image}
+            alt={`Slide ${index + 1}`}
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{
+              opacity: index === currentSlide ? 1 : 0,
+              transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Słowo (Trio/Kompo/Polex/Ensemble) - obrócone */}
+      {mobileSlides.map((slide, index) => (
+        <div
+          key={slide.id}
+          className="absolute"
+          style={{
+            left: '30px',
+            top: '460px',
+            width: '49px',
+            height: '149px',
+            display: 'flex',
+            alignItems: 'flex-start',
+            justifyContent: 'center',
+            opacity: index === currentSlide ? 1 : 0,
+            transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+            pointerEvents: index === currentSlide ? 'auto' : 'none',
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 600,
+              fontSize: '44px',
+              lineHeight: 1,
+              color: slide.textColor,
+              writingMode: 'vertical-rl',
+              transform: 'rotate(180deg)',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {slide.word}
+          </p>
+        </div>
+      ))}
+
+      {/* Tekst tagline */}
+      {mobileSlides.map((slide, index) => (
+        <p
+          key={slide.id}
+          className="absolute"
+          style={{
+            left: '185px',
+            top: '460px',
+            width: '185px',
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 600,
+            fontSize: '16px',
+            lineHeight: 1.48,
+            color: slide.textColor,
+            opacity: index === currentSlide ? 1 : 0,
+            transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+            pointerEvents: index === currentSlide ? 'auto' : 'none',
+          }}
+        >
+          {slide.tagline}
+        </p>
+      ))}
     </section>
   );
 }
