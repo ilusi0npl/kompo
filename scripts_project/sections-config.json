@@ -1,0 +1,13 @@
+{
+  "figmaFileKey": "16wGmQvLEJ5vSIrSzL8muo",
+  "figmaNodeId": "9-301",
+  "pageWidth": 1440,
+  "pageUrl": "http://localhost:5173",
+  "sections": {
+    "hero": {
+      "y": 0,
+      "height": 700,
+      "selector": "[data-section='hero']"
+    }
+  }
+}
