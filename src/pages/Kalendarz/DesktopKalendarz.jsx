@@ -1,10 +1,29 @@
 import { Link } from 'react-router';
+import Footer from '../../components/Footer/Footer';
 import {
   events,
   desktopLinePositions,
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
 } from './kalendarz-config';
+
+// Helper to make title a link
+const EventTitle = ({ event, children }) => (
+  <Link
+    to={`/wydarzenie/${event.id}`}
+    style={{
+      fontFamily: "'IBM Plex Mono', monospace",
+      fontWeight: 600,
+      fontSize: '32px',
+      lineHeight: 1.4,
+      color: '#131313',
+      textDecoration: 'underline',
+      textTransform: 'uppercase',
+    }}
+  >
+    {children}
+  </Link>
+);
 
 export default function DesktopKalendarz() {
   return (
@@ -121,9 +140,9 @@ export default function DesktopKalendarz() {
         </p>
         <div className="flex flex-col" style={{ gap: '32px' }}>
           <div className="flex flex-col" style={{ gap: '16px' }}>
-            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '32px', lineHeight: 1.4, color: '#131313', textDecoration: 'underline', textTransform: 'uppercase' }}>
+            <EventTitle event={events[0]}>
               {events[0].title}
-            </p>
+            </EventTitle>
             <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
               {events[0].performers}
             </p>
@@ -154,9 +173,9 @@ export default function DesktopKalendarz() {
         </p>
         <div className="flex flex-col" style={{ gap: '32px' }}>
           <div className="flex flex-col" style={{ gap: '16px' }}>
-            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '32px', lineHeight: 1.4, color: '#131313', textDecoration: 'underline', textTransform: 'uppercase' }}>
+            <EventTitle event={events[1]}>
               {events[1].title}
-            </p>
+            </EventTitle>
             <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
               {events[1].performers}
             </p>
@@ -188,9 +207,9 @@ export default function DesktopKalendarz() {
         </p>
         <div className="flex flex-col" style={{ gap: '32px' }}>
           <div className="flex flex-col">
-            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '32px', lineHeight: 1.4, color: '#131313', textDecoration: 'underline', textTransform: 'uppercase' }}>
+            <EventTitle event={events[2]}>
               {events[2].title}
-            </p>
+            </EventTitle>
           </div>
           <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px', lineHeight: 1.48, color: '#131313', width: '519px' }}>
             {events[2].program.map((item, idx) => (
@@ -210,28 +229,14 @@ export default function DesktopKalendarz() {
       </div>
 
       {/* Stopka */}
-      <div
-        className="absolute flex items-center justify-between"
+      <Footer
+        className="absolute"
         style={{
           left: '185px',
           top: '1944px',
           width: '520px',
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontWeight: 600,
-          fontSize: '16px',
-          lineHeight: 1.48,
-          color: '#131313',
-          textTransform: 'uppercase',
         }}
-      >
-        <p>KOMPOPOLEX@GMAIL.COM</p>
-        <a href="https://facebook.com" style={{ textDecoration: 'underline' }}>
-          FACEBOOK
-        </a>
-        <a href="https://instagram.com" style={{ textDecoration: 'underline' }}>
-          INSTAGRAM
-        </a>
-      </div>
+      />
 
       {/* Prawa nawigacja */}
       <div

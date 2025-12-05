@@ -6,6 +6,7 @@ import {
   DESKTOP_HEIGHT,
 } from './bio-config';
 import { Link } from 'react-router';
+import Footer from '../../components/Footer/Footer';
 
 const TRANSITION_DURATION = '1s';
 const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
@@ -243,28 +244,15 @@ export default function DesktopBio() {
 
       {/* Stopka (tylko dla slide 4) */}
       {currentData.hasFooter && (
-        <div
-          className="absolute flex items-center justify-between"
+        <Footer
+          className="absolute"
           style={{
             left: '185px',
             top: '652px',
             width: '520px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '16px',
-            lineHeight: 1.48,
-            color: currentData.textColor,
-            textTransform: 'uppercase',
           }}
-        >
-          <p>KOMPOPOLEX@GMAIL.COM</p>
-          <a href="https://facebook.com" style={{ textDecoration: 'underline' }}>
-            FACEBOOK
-          </a>
-          <a href="https://instagram.com" style={{ textDecoration: 'underline' }}>
-            INSTAGRAM
-          </a>
-        </div>
+          textColor={currentData.textColor}
+        />
       )}
     </section>
   );

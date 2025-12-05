@@ -3,6 +3,7 @@ import Homepage from './pages/Homepage';
 import Bio from './pages/Bio';
 import Kalendarz from './pages/Kalendarz';
 import Archiwalne from './pages/Archiwalne';
+import Wydarzenie from './pages/Wydarzenie';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/bio" element={<Bio />} />
         <Route path="/kalendarz" element={<Kalendarz />} />
         <Route path="/archiwalne" element={<Archiwalne />} />
+        <Route path="/wydarzenie/:id" element={<Wydarzenie />} />
       </Routes>
     </BrowserRouter>
   );

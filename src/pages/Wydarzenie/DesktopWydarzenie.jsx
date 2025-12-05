@@ -1,0 +1,446 @@
+import { Link } from 'react-router';
+import Footer from '../../components/Footer/Footer';
+import {
+  eventData,
+  desktopLinePositions,
+  DESKTOP_WIDTH,
+  DESKTOP_HEIGHT,
+} from './wydarzenie-config';
+
+export default function DesktopWydarzenie() {
+  return (
+    <section
+      data-section="wydarzenie"
+      className="relative overflow-hidden"
+      style={{
+        width: `${DESKTOP_WIDTH}px`,
+        height: `${DESKTOP_HEIGHT}px`,
+        backgroundColor: '#FDFDFD',
+      }}
+    >
+      {/* Pionowe linie w tle */}
+      {desktopLinePositions.map((left, index) => (
+        <div
+          key={index}
+          className="absolute top-0"
+          style={{
+            left: `${left}px`,
+            width: '1px',
+            height: '100%',
+            backgroundColor: '#A0E38A',
+          }}
+        />
+      ))}
+
+      {/* Logo */}
+      <Link to="/">
+        <img
+          src="/assets/logo.svg"
+          alt="Kompopolex"
+          className="absolute"
+          style={{
+            left: '185px',
+            top: '60px',
+            width: '149px',
+            height: '60px',
+          }}
+        />
+      </Link>
+
+      {/* Wydarzenie - pionowy tekst po lewej (rotacja 90 stopni) - Figma: left=94px */}
+      <div
+        className="absolute flex items-center justify-center"
+        style={{
+          left: '94px',
+          top: '220px',
+          width: '45px',
+          height: '384px',
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 600,
+            fontSize: '64px',
+            lineHeight: 1.1,
+            color: '#131313',
+            transform: 'rotate(-90deg)',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          Wydarzenie
+        </p>
+      </div>
+
+      {/* Tytuł wydarzenia - centered in 850px frame */}
+      <div
+        className="absolute flex items-center justify-center"
+        style={{
+          left: '295px',
+          top: '220px',
+          width: '850px',
+        }}
+      >
+        <p
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 600,
+            fontSize: '40px',
+            lineHeight: 1.35,
+            color: '#761FE0',
+            textDecoration: 'underline',
+            textTransform: 'uppercase',
+          }}
+        >
+          {eventData.title}
+        </p>
+      </div>
+
+      {/* Obraz wydarzenia - centered at 555px (1440/2 - 330/2 = 555) */}
+      <div
+        className="absolute"
+        style={{
+          left: '555px',
+          top: '334px',
+          width: '330px',
+          height: '462px',
+          overflow: 'hidden',
+        }}
+      >
+        <img
+          src={eventData.image}
+          alt={eventData.title}
+          className="absolute inset-0 w-full h-full"
+          style={{
+            objectFit: 'cover',
+            objectPosition: '50% 50%',
+          }}
+        />
+      </div>
+
+      {/* Data i godzina frame - centered at 297px (1440/2 - 847/2 ≈ 297) */}
+      <div
+        className="absolute flex flex-col items-start"
+        style={{
+          left: '297px',
+          top: '846px',
+          width: '847px',
+          gap: '10px',
+        }}
+      >
+        {/* Date row */}
+        <div
+          className="flex items-center justify-center w-full"
+        >
+          <p
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 600,
+              fontSize: '32px',
+              lineHeight: 1.48,
+              color: '#131313',
+            }}
+          >
+            {eventData.date}| {eventData.time}
+          </p>
+        </div>
+
+        {/* Location row */}
+        <div
+          className="flex items-center justify-center w-full"
+          style={{
+            gap: '10px',
+          }}
+        >
+          <img
+            src="/assets/wydarzenie/place-icon.svg"
+            alt="Location"
+            style={{ width: '42px', height: '42px' }}
+          />
+          <p
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 600,
+              fontSize: '32px',
+              lineHeight: 1.48,
+              color: '#131313',
+            }}
+          >
+            {eventData.location}
+          </p>
+        </div>
+      </div>
+
+      {/* Główna treść - flex column with gap 50px */}
+      <div
+        className="absolute flex flex-col"
+        style={{
+          left: '295px',
+          top: '990px',
+          width: '850px',
+          gap: '50px',
+        }}
+      >
+        {/* Opis */}
+        <p
+          style={{
+            width: '100%',
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 500,
+            fontSize: '16px',
+            lineHeight: 1.48,
+            color: '#131313',
+            whiteSpace: 'pre-wrap',
+          }}
+        >
+          {eventData.description}
+        </p>
+
+        {/* Artyści frame */}
+        <div
+          className="flex flex-col items-center w-full"
+          style={{
+            gap: '20px',
+          }}
+        >
+          <p
+            style={{
+              width: '100%',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 600,
+              fontSize: '24px',
+              lineHeight: 1.45,
+              color: '#131313',
+              textDecoration: 'underline',
+              textTransform: 'uppercase',
+            }}
+          >
+            artyści
+          </p>
+          <p
+            style={{
+              width: '100%',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 700,
+              fontSize: '16px',
+              lineHeight: 1.48,
+              color: '#131313',
+            }}
+          >
+            {eventData.artists}
+          </p>
+        </div>
+
+        {/* Program frame */}
+        <div
+          className="flex flex-col items-start w-full"
+          style={{
+            gap: '20px',
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 600,
+              fontSize: '24px',
+              lineHeight: 1.45,
+              color: '#131313',
+              textDecoration: 'underline',
+              textTransform: 'uppercase',
+            }}
+          >
+            program
+          </p>
+          <ul
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontSize: '16px',
+              lineHeight: 1.48,
+              color: '#131313',
+              width: '519px',
+              listStyleType: 'disc',
+              paddingLeft: '24px',
+            }}
+          >
+            {eventData.program.map((item, idx) => (
+              <li key={idx} style={{ marginBottom: idx < eventData.program.length - 1 ? '8px' : '0' }}>
+                <span style={{ fontWeight: 700 }}>{item.composer}</span>
+                <span style={{ fontWeight: 500 }}>- {item.piece}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* Partnerzy frame */}
+        <div
+          className="flex flex-col items-center w-full"
+          style={{
+            gap: '32px',
+          }}
+        >
+          <p
+            style={{
+              width: '100%',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 600,
+              fontSize: '24px',
+              lineHeight: 1.45,
+              color: '#131313',
+              textDecoration: 'underline',
+              textTransform: 'uppercase',
+            }}
+          >
+            partnerzy
+          </p>
+          {/* Partner logos with justify-between */}
+          <div
+            className="flex items-center justify-between w-full"
+          >
+            <img
+              src={eventData.partners[0].logo}
+              alt={eventData.partners[0].name}
+              style={{
+                width: '323px',
+                height: '42px',
+                objectFit: 'cover',
+                objectPosition: '50% 50%',
+              }}
+            />
+            <img
+              src={eventData.partners[1].logo}
+              alt={eventData.partners[1].name}
+              style={{
+                width: '93px',
+                height: '42px',
+                objectFit: 'cover',
+                objectPosition: '50% 50%',
+              }}
+            />
+            <img
+              src={eventData.partners[2].logo}
+              alt={eventData.partners[2].name}
+              style={{
+                width: '122px',
+                height: '42px',
+                objectFit: 'cover',
+                objectPosition: '50% 50%',
+              }}
+            />
+            <img
+              src={eventData.partners[3].logo}
+              alt={eventData.partners[3].name}
+              style={{
+                width: '129px',
+                height: '42px',
+                objectFit: 'cover',
+                objectPosition: '50% 50%',
+              }}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Stopka - at y=1877 (DESKTOP_HEIGHT - 40 - 24 = 1877) */}
+      <Footer
+        className="absolute"
+        style={{
+          left: '185px',
+          top: '1877px',
+          width: '520px',
+        }}
+      />
+
+      {/* Prawa nawigacja - Frame 8 at x=1265, y=60, h=580 */}
+      <div
+        className="absolute"
+        style={{
+          left: '1265px',
+          top: '60px',
+          width: '100px',
+          height: '580px',
+        }}
+      >
+        {/* ENG - at y=0, height=29 */}
+        <p
+          className="absolute"
+          style={{
+            left: '0',
+            top: '0',
+            width: '100px',
+            height: '29px',
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 700,
+            fontSize: '20px',
+            lineHeight: 1.44,
+            color: '#131313',
+            textTransform: 'uppercase',
+          }}
+        >
+          ENG
+        </p>
+
+        {/* Frame 7 - Menu items at y=308 */}
+        <nav
+          className="absolute"
+          style={{
+            left: '0',
+            top: '308px',
+            width: '100px',
+            height: '272px',
+          }}
+        >
+          {[
+            { name: 'Bio', href: '/bio', active: false, top: 0 },
+            { name: 'Media', href: '#media', active: false, top: 49 },
+            { name: 'Kalendarz', href: '/kalendarz', active: true, top: 98 },
+            { name: 'Repertuar', href: '#repertuar', active: false, top: 147 },
+            { name: 'Fundacja', href: '#fundacja', active: false, top: 196 },
+            { name: 'Kontakt', href: '#kontakt', active: false, top: 245 },
+          ].map((item) =>
+            item.href.startsWith('/') ? (
+              <Link
+                key={item.name}
+                to={item.href}
+                className="absolute"
+                style={{
+                  left: '0',
+                  top: `${item.top}px`,
+                  width: '100px',
+                  height: '27px',
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontWeight: 700,
+                  fontSize: '18px',
+                  lineHeight: 1.48,
+                  color: '#131313',
+                  textDecoration: item.active ? 'underline' : 'none',
+                }}
+              >
+                {item.name}
+              </Link>
+            ) : (
+              <a
+                key={item.name}
+                href={item.href}
+                className="absolute"
+                style={{
+                  left: '0',
+                  top: `${item.top}px`,
+                  width: '100px',
+                  height: '27px',
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontWeight: 700,
+                  fontSize: '18px',
+                  lineHeight: 1.48,
+                  color: '#131313',
+                  textDecoration: item.active ? 'underline' : 'none',
+                }}
+              >
+                {item.name}
+              </a>
+            )
+          )}
+        </nav>
+      </div>
+    </section>
+  );
+}

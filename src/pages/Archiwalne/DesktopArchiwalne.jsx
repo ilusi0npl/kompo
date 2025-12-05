@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import Footer from '../../components/Footer/Footer';
 import {
   archivedEvents,
   desktopLinePositions,
@@ -156,7 +157,8 @@ export default function DesktopArchiwalne() {
 
             {/* Title and performers */}
             <div className="flex flex-col" style={{ gap: '16px' }}>
-              <p
+              <Link
+                to={`/wydarzenie/${event.id}`}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 600,
@@ -168,7 +170,7 @@ export default function DesktopArchiwalne() {
                 }}
               >
                 {event.title}
-              </p>
+              </Link>
               <p
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
@@ -186,28 +188,14 @@ export default function DesktopArchiwalne() {
       ))}
 
       {/* Stopka */}
-      <div
-        className="absolute flex items-center justify-between"
+      <Footer
+        className="absolute"
         style={{
           left: '185px',
           top: '1728px',
           width: '520px',
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontWeight: 600,
-          fontSize: '16px',
-          lineHeight: 1.48,
-          color: '#131313',
-          textTransform: 'uppercase',
         }}
-      >
-        <p>KOMPOPOLEX@GMAIL.COM</p>
-        <a href="https://facebook.com" style={{ textDecoration: 'underline' }}>
-          FACEBOOK
-        </a>
-        <a href="https://instagram.com" style={{ textDecoration: 'underline' }}>
-          INSTAGRAM
-        </a>
-      </div>
+      />
 
       {/* Prawa nawigacja */}
       <div

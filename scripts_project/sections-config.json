@@ -71,6 +71,13 @@
       "height": 1792,
       "selector": "[data-section='archiwalne']",
       "pageUrl": "http://localhost:5173/archiwalne"
+    },
+    "wydarzenie": {
+      "figmaNodeId": "29-1501",
+      "y": 0,
+      "height": 1941,
+      "selector": "[data-section='wydarzenie']",
+      "pageUrl": "http://localhost:5173/wydarzenie/1"
     }
   }
 }
