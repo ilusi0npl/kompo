@@ -7,6 +7,8 @@ import {
 } from './bio-config';
 import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
+import { useTranslation } from '../../hooks/useTranslation';
+import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
 
 const TRANSITION_DURATION = '1s';
 const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
@@ -14,9 +16,13 @@ const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 // Pozycje linii pionowych z Figma
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
 
+// Map slide indices to translation keys
+const slideTranslationKeys = ['ensemble', 'aleksandra', 'rafal', 'jacek'];
+
 export default function DesktopBio() {
   const { currentSlide } = useScrollSlides(desktopBioSlides.length);
   const currentData = desktopBioSlides[currentSlide];
+  const { t } = useTranslation();
 
   // Sync background and line colors with CSS variables for ResponsiveWrapper
   useEffect(() => {
@@ -113,42 +119,45 @@ export default function DesktopBio() {
             pointerEvents: index === currentSlide ? 'auto' : 'none',
           }}
         >
-          {slide.name}
+          {t(`bio.slides.${slideTranslationKeys[index]}.name`)}
         </p>
       ))}
 
       {/* Paragrafy tekstu */}
-      {desktopBioSlides.map((slide, index) => (
-        <div
-          key={slide.id}
-          className="absolute"
-          style={{
-            opacity: index === currentSlide ? 1 : 0,
-            transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-            pointerEvents: index === currentSlide ? 'auto' : 'none',
-          }}
-        >
-          {slide.paragraphs.map((text, pIndex) => (
-            <p
-              key={pIndex}
-              className="absolute"
-              style={{
-                left: '625px',
-                top: `${slide.paragraphTops[pIndex]}px`,
-                width: '520px',
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontWeight: 500,
-                fontSize: '16px',
-                lineHeight: 1.48,
-                color: slide.textColor,
-                whiteSpace: 'pre-wrap',
-              }}
-            >
-              {text}
-            </p>
-          ))}
-        </div>
-      ))}
+      {desktopBioSlides.map((slide, index) => {
+        const paragraphs = t(`bio.slides.${slideTranslationKeys[index]}.paragraphs`);
+        return (
+          <div
+            key={slide.id}
+            className="absolute"
+            style={{
+              opacity: index === currentSlide ? 1 : 0,
+              transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+              pointerEvents: index === currentSlide ? 'auto' : 'none',
+            }}
+          >
+            {Array.isArray(paragraphs) && paragraphs.map((text, pIndex) => (
+              <p
+                key={pIndex}
+                className="absolute"
+                style={{
+                  left: '625px',
+                  top: `${slide.paragraphTops[pIndex]}px`,
+                  width: '520px',
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontWeight: 500,
+                  fontSize: '16px',
+                  lineHeight: 1.48,
+                  color: slide.textColor,
+                  whiteSpace: 'pre-wrap',
+                }}
+              >
+                {text}
+              </p>
+            ))}
+          </div>
+        );
+      })}
 
       {/* Bio - SVG pionowy tekst po lewej */}
       <svg
@@ -182,20 +191,11 @@ export default function DesktopBio() {
           width: '100px',
         }}
       >
-        {/* ENG */}
-        <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 700,
-            fontSize: '20px',
-            lineHeight: 1.44,
-            color: currentData.textColor,
-            textTransform: 'uppercase',
-            transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-          }}
-        >
-          ENG
-        </p>
+        {/* Language Toggle */}
+        <LanguageToggle
+          textColor={currentData.textColor}
+          transition={`${TRANSITION_DURATION} ${TRANSITION_EASING}`}
+        />
 
         {/* Menu items */}
         <nav
@@ -207,16 +207,16 @@ export default function DesktopBio() {
           }}
         >
           {[
-            { name: 'Bio', href: '/bio', active: true, isRoute: true },
-            { name: 'Media', href: '/media', active: false, isRoute: true },
-            { name: 'Kalendarz', href: '/kalendarz', active: false, isRoute: true },
-            { name: 'Repertuar', href: '#repertuar', active: false, isRoute: false },
-            { name: 'Fundacja', href: '#fundacja', active: false, isRoute: false },
-            { name: 'Kontakt', href: '/kontakt', active: false, isRoute: false },
+            { key: 'bio', href: '/bio', active: true, isRoute: true },
+            { key: 'media', href: '/media', active: false, isRoute: true },
+            { key: 'kalendarz', href: '/kalendarz', active: false, isRoute: true },
+            { key: 'repertuar', href: '#repertuar', active: false, isRoute: false },
+            { key: 'fundacja', href: '#fundacja', active: false, isRoute: false },
+            { key: 'kontakt', href: '/kontakt', active: false, isRoute: false },
           ].map((item) =>
             item.isRoute ? (
               <Link
-                key={item.name}
+                key={item.key}
                 to={item.href}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
@@ -228,11 +228,11 @@ export default function DesktopBio() {
                   transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
                 }}
               >
-                {item.name}
+                {t(`common.nav.${item.key}`)}
               </Link>
             ) : (
               <a
-                key={item.name}
+                key={item.key}
                 href={item.href}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
@@ -244,7 +244,7 @@ export default function DesktopBio() {
                   transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
                 }}
               >
-                {item.name}
+                {t(`common.nav.${item.key}`)}
               </a>
             )
           )}

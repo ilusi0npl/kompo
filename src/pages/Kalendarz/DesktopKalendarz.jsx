@@ -1,5 +1,7 @@
 import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
+import { useTranslation } from '../../hooks/useTranslation';
+import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
 import {
   events,
   DESKTOP_WIDTH,
@@ -11,7 +13,7 @@ const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
 const LINE_COLOR = '#A0E38A';
 
 // Helper to make title a link
-const EventTitle = ({ event, children }) => (
+const EventTitle = ({ event, t }) => (
   <Link
     to={`/wydarzenie/${event.id}`}
     style={{
@@ -24,11 +26,13 @@ const EventTitle = ({ event, children }) => (
       textTransform: 'uppercase',
     }}
   >
-    {children}
+    {t(`kalendarz.events.event${event.id}.title`)}
   </Link>
 );
 
 export default function DesktopKalendarz() {
+  const { t, language } = useTranslation();
+
   return (
     <section
       data-section="kalendarz"
@@ -70,8 +74,8 @@ export default function DesktopKalendarz() {
 
       {/* Kalendarz - pionowy tekst po lewej */}
       <img
-        src="/assets/kalendarz/kalendarz-text.svg"
-        alt="Kalendarz"
+        src={language === 'pl' ? '/assets/kalendarz/kalendarz-text.svg' : '/assets/kalendarz/calendar-text.svg'}
+        alt={language === 'pl' ? 'Kalendarz' : 'Calendar'}
         className="absolute"
         style={{
           left: '94px',
@@ -96,7 +100,7 @@ export default function DesktopKalendarz() {
           cursor: 'pointer',
         }}
       >
-        Nadchodzące
+        {t('common.tabs.upcoming')}
       </span>
       <Link
         to="/archiwalne"
@@ -113,7 +117,7 @@ export default function DesktopKalendarz() {
           textDecoration: 'none',
         }}
       >
-        Archiwalne
+        {t('common.tabs.archived')}
       </Link>
 
       {/* Event 1 */}
@@ -131,9 +135,7 @@ export default function DesktopKalendarz() {
         </p>
         <div className="flex flex-col" style={{ gap: '32px' }}>
           <div className="flex flex-col" style={{ gap: '16px' }}>
-            <EventTitle event={events[0]}>
-              {events[0].title}
-            </EventTitle>
+            <EventTitle event={events[0]} t={t} />
             <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
               {events[0].performers}
             </p>
@@ -164,9 +166,7 @@ export default function DesktopKalendarz() {
         </p>
         <div className="flex flex-col" style={{ gap: '32px' }}>
           <div className="flex flex-col" style={{ gap: '16px' }}>
-            <EventTitle event={events[1]}>
-              {events[1].title}
-            </EventTitle>
+            <EventTitle event={events[1]} t={t} />
             <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
               {events[1].performers}
             </p>
@@ -198,9 +198,7 @@ export default function DesktopKalendarz() {
         </p>
         <div className="flex flex-col" style={{ gap: '32px' }}>
           <div className="flex flex-col">
-            <EventTitle event={events[2]}>
-              {events[2].title}
-            </EventTitle>
+            <EventTitle event={events[2]} t={t} />
           </div>
           <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px', lineHeight: 1.48, color: '#131313', width: '519px' }}>
             {events[2].program.map((item, idx) => (
@@ -238,19 +236,8 @@ export default function DesktopKalendarz() {
           width: '100px',
         }}
       >
-        {/* ENG */}
-        <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 700,
-            fontSize: '20px',
-            lineHeight: 1.44,
-            color: '#131313',
-            textTransform: 'uppercase',
-          }}
-        >
-          ENG
-        </p>
+        {/* Language Toggle */}
+        <LanguageToggle textColor="#131313" />
 
         {/* Menu items */}
         <nav
@@ -262,16 +249,16 @@ export default function DesktopKalendarz() {
           }}
         >
           {[
-            { name: 'Bio', href: '/bio', active: false },
-            { name: 'Media', href: '/media', active: false },
-            { name: 'Kalendarz', href: '/kalendarz', active: true },
-            { name: 'Repertuar', href: '#repertuar', active: false },
-            { name: 'Fundacja', href: '#fundacja', active: false },
-            { name: 'Kontakt', href: '/kontakt', active: false },
+            { key: 'bio', href: '/bio', active: false },
+            { key: 'media', href: '/media', active: false },
+            { key: 'kalendarz', href: '/kalendarz', active: true },
+            { key: 'repertuar', href: '#repertuar', active: false },
+            { key: 'fundacja', href: '#fundacja', active: false },
+            { key: 'kontakt', href: '/kontakt', active: false },
           ].map((item) => (
             item.href.startsWith('/') ? (
               <Link
-                key={item.name}
+                key={item.key}
                 to={item.href}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
@@ -282,11 +269,11 @@ export default function DesktopKalendarz() {
                   textDecoration: item.active ? 'underline' : 'none',
                 }}
               >
-                {item.name}
+                {t(`common.nav.${item.key}`)}
               </Link>
             ) : (
               <a
-                key={item.name}
+                key={item.key}
                 href={item.href}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
@@ -297,7 +284,7 @@ export default function DesktopKalendarz() {
                   textDecoration: item.active ? 'underline' : 'none',
                 }}
               >
-                {item.name}
+                {t(`common.nav.${item.key}`)}
               </a>
             )
           ))}

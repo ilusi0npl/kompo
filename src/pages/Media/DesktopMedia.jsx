@@ -1,5 +1,7 @@
 import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
+import { useTranslation } from '../../hooks/useTranslation';
+import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
 import {
   photos,
   DESKTOP_WIDTH,
@@ -13,6 +15,8 @@ const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
 const LINE_COLOR = '#01936F';
 
 export default function DesktopMedia() {
+  const { t } = useTranslation();
+
   // Grid positions for 3 columns x 2 rows
   const gridPositions = [
     { left: 185, top: 276 },  // Row 1, Col 1
@@ -90,7 +94,7 @@ export default function DesktopMedia() {
           cursor: 'pointer',
         }}
       >
-        Zdjęcia
+        {t('common.tabs.photos')}
       </span>
       <Link
         to="/media/wideo"
@@ -107,7 +111,7 @@ export default function DesktopMedia() {
           cursor: 'pointer',
         }}
       >
-        Wideo
+        {t('common.tabs.video')}
       </Link>
 
       {/* Photo Grid */}
@@ -187,19 +191,8 @@ export default function DesktopMedia() {
           width: '100px',
         }}
       >
-        {/* ENG */}
-        <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 700,
-            fontSize: '20px',
-            lineHeight: 1.44,
-            color: '#131313',
-            textTransform: 'uppercase',
-          }}
-        >
-          ENG
-        </p>
+        {/* Language Toggle */}
+        <LanguageToggle textColor="#131313" />
 
         {/* Menu items */}
         <nav
@@ -211,16 +204,16 @@ export default function DesktopMedia() {
           }}
         >
           {[
-            { name: 'Bio', href: '/bio', active: false },
-            { name: 'Media', href: '/media', active: true },
-            { name: 'Kalendarz', href: '/kalendarz', active: false },
-            { name: 'Repertuar', href: '#repertuar', active: false },
-            { name: 'Fundacja', href: '#fundacja', active: false },
-            { name: 'Kontakt', href: '/kontakt', active: false },
+            { key: 'bio', href: '/bio', active: false },
+            { key: 'media', href: '/media', active: true },
+            { key: 'kalendarz', href: '/kalendarz', active: false },
+            { key: 'repertuar', href: '#repertuar', active: false },
+            { key: 'fundacja', href: '#fundacja', active: false },
+            { key: 'kontakt', href: '/kontakt', active: false },
           ].map((item) => (
             item.href.startsWith('/') ? (
               <Link
-                key={item.name}
+                key={item.key}
                 to={item.href}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
@@ -231,11 +224,11 @@ export default function DesktopMedia() {
                   textDecoration: item.active ? 'underline' : 'none',
                 }}
               >
-                {item.name}
+                {t(`common.nav.${item.key}`)}
               </Link>
             ) : (
               <a
-                key={item.name}
+                key={item.key}
                 href={item.href}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
@@ -246,7 +239,7 @@ export default function DesktopMedia() {
                   textDecoration: item.active ? 'underline' : 'none',
                 }}
               >
-                {item.name}
+                {t(`common.nav.${item.key}`)}
               </a>
             )
           ))}

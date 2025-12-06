@@ -1,5 +1,7 @@
 import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
+import { useTranslation } from '../../hooks/useTranslation';
+import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
 import {
   eventData,
   DESKTOP_WIDTH,
@@ -11,6 +13,8 @@ const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
 const LINE_COLOR = '#A0E38A';
 
 export default function DesktopWydarzenie() {
+  const { t } = useTranslation();
+
   return (
     <section
       data-section="wydarzenie"
@@ -71,7 +75,7 @@ export default function DesktopWydarzenie() {
             whiteSpace: 'nowrap',
           }}
         >
-          Wydarzenie
+          {t('wydarzenie.sideTitle')}
         </p>
       </div>
 
@@ -218,7 +222,7 @@ export default function DesktopWydarzenie() {
               textTransform: 'uppercase',
             }}
           >
-            artyści
+            {t('common.labels.artists')}
           </p>
           <p
             style={{
@@ -252,7 +256,7 @@ export default function DesktopWydarzenie() {
               textTransform: 'uppercase',
             }}
           >
-            program
+            {t('common.labels.program')}
           </p>
           <ul
             style={{
@@ -293,7 +297,7 @@ export default function DesktopWydarzenie() {
               textTransform: 'uppercase',
             }}
           >
-            partnerzy
+            {t('common.labels.partners')}
           </p>
           {/* Partner logos with justify-between */}
           <div
@@ -363,24 +367,8 @@ export default function DesktopWydarzenie() {
           height: '580px',
         }}
       >
-        {/* ENG - at y=0, height=29 */}
-        <p
-          className="absolute"
-          style={{
-            left: '0',
-            top: '0',
-            width: '100px',
-            height: '29px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 700,
-            fontSize: '20px',
-            lineHeight: 1.44,
-            color: '#131313',
-            textTransform: 'uppercase',
-          }}
-        >
-          ENG
-        </p>
+        {/* Language Toggle */}
+        <LanguageToggle textColor="#131313" />
 
         {/* Frame 7 - Menu items at y=308 */}
         <nav
@@ -393,16 +381,16 @@ export default function DesktopWydarzenie() {
           }}
         >
           {[
-            { name: 'Bio', href: '/bio', active: false, top: 0 },
-            { name: 'Media', href: '/media', active: false, top: 49 },
-            { name: 'Kalendarz', href: '/kalendarz', active: true, top: 98 },
-            { name: 'Repertuar', href: '#repertuar', active: false, top: 147 },
-            { name: 'Fundacja', href: '#fundacja', active: false, top: 196 },
-            { name: 'Kontakt', href: '/kontakt', active: false, top: 245 },
+            { key: 'bio', href: '/bio', active: false, top: 0 },
+            { key: 'media', href: '/media', active: false, top: 49 },
+            { key: 'kalendarz', href: '/kalendarz', active: true, top: 98 },
+            { key: 'repertuar', href: '#repertuar', active: false, top: 147 },
+            { key: 'fundacja', href: '#fundacja', active: false, top: 196 },
+            { key: 'kontakt', href: '/kontakt', active: false, top: 245 },
           ].map((item) =>
             item.href.startsWith('/') ? (
               <Link
-                key={item.name}
+                key={item.key}
                 to={item.href}
                 className="absolute"
                 style={{
@@ -418,11 +406,11 @@ export default function DesktopWydarzenie() {
                   textDecoration: item.active ? 'underline' : 'none',
                 }}
               >
-                {item.name}
+                {t(`common.nav.${item.key}`)}
               </Link>
             ) : (
               <a
-                key={item.name}
+                key={item.key}
                 href={item.href}
                 className="absolute"
                 style={{
@@ -438,7 +426,7 @@ export default function DesktopWydarzenie() {
                   textDecoration: item.active ? 'underline' : 'none',
                 }}
               >
-                {item.name}
+                {t(`common.nav.${item.key}`)}
               </a>
             )
           )}

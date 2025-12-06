@@ -1,5 +1,7 @@
 import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
+import { useTranslation } from '../../hooks/useTranslation';
+import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
 import {
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
@@ -12,6 +14,8 @@ const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
 const LINE_COLOR = '#FFBD19';
 
 export default function DesktopKontakt() {
+  const { t, language } = useTranslation();
+
   return (
     <section
       data-section="kontakt"
@@ -53,8 +57,8 @@ export default function DesktopKontakt() {
 
       {/* Kontakt - pionowy tekst po lewej */}
       <img
-        src="/assets/kontakt/kontakt-text.svg"
-        alt="Kontakt"
+        src={language === 'pl' ? '/assets/kontakt/kontakt-text.svg' : '/assets/kontakt/contact-text.svg'}
+        alt={language === 'pl' ? 'Kontakt' : 'Contact'}
         className="absolute"
         style={{
           left: '94px',
@@ -104,7 +108,7 @@ export default function DesktopKontakt() {
             textTransform: 'uppercase',
           }}
         >
-          dane fundacji kompopolex:
+          {t('kontakt.title')}
         </p>
 
         {/* Dane */}
@@ -119,11 +123,11 @@ export default function DesktopKontakt() {
             color: '#131313',
           }}
         >
-          <p>KRS: {fundacjaData.krs}</p>
-          <p>REGON: {fundacjaData.regon}</p>
-          <p>NIP: {fundacjaData.nip}</p>
+          <p>{t('kontakt.krs')} {fundacjaData.krs}</p>
+          <p>{t('kontakt.regon')} {fundacjaData.regon}</p>
+          <p>{t('kontakt.nip')} {fundacjaData.nip}</p>
           <div>
-            <p>NR KONTA:</p>
+            <p>{t('kontakt.bankAccount')}</p>
             <p>{fundacjaData.bankAccount}</p>
           </div>
         </div>
@@ -164,19 +168,8 @@ export default function DesktopKontakt() {
           width: '100px',
         }}
       >
-        {/* ENG */}
-        <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 700,
-            fontSize: '20px',
-            lineHeight: 1.44,
-            color: '#131313',
-            textTransform: 'uppercase',
-          }}
-        >
-          ENG
-        </p>
+        {/* Language Toggle */}
+        <LanguageToggle textColor="#131313" />
 
         {/* Menu items */}
         <nav
@@ -188,16 +181,16 @@ export default function DesktopKontakt() {
           }}
         >
           {[
-            { name: 'Bio', href: '/bio', active: false },
-            { name: 'Media', href: '/media', active: false },
-            { name: 'Kalendarz', href: '/kalendarz', active: false },
-            { name: 'Repertuar', href: '#repertuar', active: false },
-            { name: 'Fundacja', href: '#fundacja', active: false },
-            { name: 'Kontakt', href: '/kontakt', active: true },
+            { key: 'bio', href: '/bio', active: false },
+            { key: 'media', href: '/media', active: false },
+            { key: 'kalendarz', href: '/kalendarz', active: false },
+            { key: 'repertuar', href: '#repertuar', active: false },
+            { key: 'fundacja', href: '#fundacja', active: false },
+            { key: 'kontakt', href: '/kontakt', active: true },
           ].map((item) => (
             item.href.startsWith('/') ? (
               <Link
-                key={item.name}
+                key={item.key}
                 to={item.href}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
@@ -208,11 +201,11 @@ export default function DesktopKontakt() {
                   textDecoration: item.active ? 'underline' : 'none',
                 }}
               >
-                {item.name}
+                {t(`common.nav.${item.key}`)}
               </Link>
             ) : (
               <a
-                key={item.name}
+                key={item.key}
                 href={item.href}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
@@ -223,7 +216,7 @@ export default function DesktopKontakt() {
                   textDecoration: item.active ? 'underline' : 'none',
                 }}
               >
-                {item.name}
+                {t(`common.nav.${item.key}`)}
               </a>
             )
           ))}

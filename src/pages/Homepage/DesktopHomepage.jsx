@@ -1,6 +1,8 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router';
 import { useScrollSlides } from './useScrollSlides';
+import { useTranslation } from '../../hooks/useTranslation';
+import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
 import {
   desktopSlides,
   DESKTOP_WIDTH,
@@ -13,9 +15,13 @@ const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 // Pozycje linii pionowych z Figma
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
 
+// Map slide words to translation keys
+const slideTranslationKeys = ['trio', 'kompo', 'polex', 'ensemble'];
+
 export default function DesktopHomepage() {
   const { currentSlide } = useScrollSlides(desktopSlides.length);
   const currentData = desktopSlides[currentSlide];
+  const { t } = useTranslation();
 
   // Sync background and line colors with CSS variables for ResponsiveWrapper
   useEffect(() => {
@@ -112,7 +118,7 @@ export default function DesktopHomepage() {
             pointerEvents: index === currentSlide ? 'auto' : 'none',
           }}
         >
-          {slide.tagline}
+          {t(`homepage.slides.${slideTranslationKeys[index]}.tagline`)}
         </p>
       ))}
 
@@ -144,20 +150,11 @@ export default function DesktopHomepage() {
           width: '100px',
         }}
       >
-        {/* ENG */}
-        <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 700,
-            fontSize: '20px',
-            lineHeight: 1.44,
-            color: currentData.textColor,
-            textTransform: 'uppercase',
-            transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-          }}
-        >
-          ENG
-        </p>
+        {/* Language Toggle */}
+        <LanguageToggle
+          textColor={currentData.textColor}
+          transition={`${TRANSITION_DURATION} ${TRANSITION_EASING}`}
+        />
 
         {/* Menu items */}
         <nav
@@ -169,16 +166,16 @@ export default function DesktopHomepage() {
           }}
         >
           {[
-            { name: 'Bio', href: '/bio', isRoute: true },
-            { name: 'Media', href: '/media', isRoute: true },
-            { name: 'Kalendarz', href: '/kalendarz', isRoute: true },
-            { name: 'Repertuar', href: '#repertuar', isRoute: false },
-            { name: 'Fundacja', href: '#fundacja', isRoute: false },
-            { name: 'Kontakt', href: '/kontakt', isRoute: false },
+            { key: 'bio', href: '/bio', isRoute: true },
+            { key: 'media', href: '/media', isRoute: true },
+            { key: 'kalendarz', href: '/kalendarz', isRoute: true },
+            { key: 'repertuar', href: '#repertuar', isRoute: false },
+            { key: 'fundacja', href: '#fundacja', isRoute: false },
+            { key: 'kontakt', href: '/kontakt', isRoute: false },
           ].map((item) =>
             item.isRoute ? (
               <Link
-                key={item.name}
+                key={item.key}
                 to={item.href}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
@@ -190,11 +187,11 @@ export default function DesktopHomepage() {
                   transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
                 }}
               >
-                {item.name}
+                {t(`common.nav.${item.key}`)}
               </Link>
             ) : (
               <a
-                key={item.name}
+                key={item.key}
                 href={item.href}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
@@ -206,7 +203,7 @@ export default function DesktopHomepage() {
                   transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
                 }}
               >
-                {item.name}
+                {t(`common.nav.${item.key}`)}
               </a>
             )
           )}

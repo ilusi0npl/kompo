@@ -1,5 +1,7 @@
 import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
+import { useTranslation } from '../../hooks/useTranslation';
+import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
 import {
   archivedEvents,
   DESKTOP_WIDTH,
@@ -11,6 +13,8 @@ const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
 const LINE_COLOR = '#A0E38A';
 
 export default function DesktopArchiwalne() {
+  const { t, language } = useTranslation();
+
   return (
     <section
       data-section="archiwalne"
@@ -52,8 +56,8 @@ export default function DesktopArchiwalne() {
 
       {/* Kalendarz - pionowy tekst po lewej */}
       <img
-        src="/assets/kalendarz/kalendarz-text.svg"
-        alt="Kalendarz"
+        src={language === 'pl' ? '/assets/kalendarz/kalendarz-text.svg' : '/assets/kalendarz/calendar-text.svg'}
+        alt={language === 'pl' ? 'Kalendarz' : 'Calendar'}
         className="absolute"
         style={{
           left: '94px',
@@ -79,7 +83,7 @@ export default function DesktopArchiwalne() {
           cursor: 'pointer',
         }}
       >
-        Nadchodzące
+        {t('common.tabs.upcoming')}
       </Link>
       <span
         className="absolute"
@@ -95,7 +99,7 @@ export default function DesktopArchiwalne() {
           cursor: 'pointer',
         }}
       >
-        Archiwalne
+        {t('common.tabs.archived')}
       </span>
 
       {/* Event cards - 3x2 grid */}
@@ -197,19 +201,8 @@ export default function DesktopArchiwalne() {
           width: '100px',
         }}
       >
-        {/* ENG */}
-        <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 700,
-            fontSize: '20px',
-            lineHeight: 1.44,
-            color: '#131313',
-            textTransform: 'uppercase',
-          }}
-        >
-          ENG
-        </p>
+        {/* Language Toggle */}
+        <LanguageToggle textColor="#131313" />
 
         {/* Menu items */}
         <nav
@@ -221,16 +214,16 @@ export default function DesktopArchiwalne() {
           }}
         >
           {[
-            { name: 'Bio', href: '/bio', active: false },
-            { name: 'Media', href: '/media', active: false },
-            { name: 'Kalendarz', href: '/kalendarz', active: true },
-            { name: 'Repertuar', href: '#repertuar', active: false },
-            { name: 'Fundacja', href: '#fundacja', active: false },
-            { name: 'Kontakt', href: '/kontakt', active: false },
+            { key: 'bio', href: '/bio', active: false },
+            { key: 'media', href: '/media', active: false },
+            { key: 'kalendarz', href: '/kalendarz', active: true },
+            { key: 'repertuar', href: '#repertuar', active: false },
+            { key: 'fundacja', href: '#fundacja', active: false },
+            { key: 'kontakt', href: '/kontakt', active: false },
           ].map((item) =>
             item.href.startsWith('/') ? (
               <Link
-                key={item.name}
+                key={item.key}
                 to={item.href}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
@@ -241,11 +234,11 @@ export default function DesktopArchiwalne() {
                   textDecoration: item.active ? 'underline' : 'none',
                 }}
               >
-                {item.name}
+                {t(`common.nav.${item.key}`)}
               </Link>
             ) : (
               <a
-                key={item.name}
+                key={item.key}
                 href={item.href}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
@@ -256,7 +249,7 @@ export default function DesktopArchiwalne() {
                   textDecoration: item.active ? 'underline' : 'none',
                 }}
               >
-                {item.name}
+                {t(`common.nav.${item.key}`)}
               </a>
             )
           )}
