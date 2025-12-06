@@ -53,15 +53,16 @@ export default function DesktopBio() {
         transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
       }}
     >
-      {/* Pionowe linie dekoracyjne */}
+      {/* Pionowe linie dekoracyjne - z Figma: height 776px, top -65px */}
       {LINE_POSITIONS.map((x) => (
         <div
           key={x}
-          className="absolute top-0"
+          className="absolute"
           style={{
             left: `${x}px`,
+            top: '-65px',
             width: '1px',
-            height: '100%',
+            height: '776px',
             backgroundColor: currentData.lineColor,
             transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
           }}

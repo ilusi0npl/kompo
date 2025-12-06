@@ -9,7 +9,7 @@ export default function Bio() {
       desktopContent={<DesktopBio />}
       mobileContent={<MobileBio />}
       desktopHeight={DESKTOP_HEIGHT}
-      mobileHeight="100vh"
+      mobileHeight="auto"
     />
   );
 }

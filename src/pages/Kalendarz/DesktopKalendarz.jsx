@@ -282,11 +282,11 @@ export default function DesktopKalendarz() {
         {/* Language Toggle */}
         <LanguageToggle textColor="#131313" />
 
-        {/* Menu items - Figma: gap-[279px] from ENG (60px) = 339px, ale ENG ma ~29px height */}
+        {/* Menu items */}
         <nav
           className="absolute flex flex-col"
           style={{
-            top: '368px',
+            top: '308px',
             left: '0',
             gap: '22px',
           }}

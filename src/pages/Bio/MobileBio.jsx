@@ -25,14 +25,40 @@ const mobileImageStyles = [
 
 export default function MobileBio() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
   const [loadedImages, setLoadedImages] = useState(new Set());
-  const containerRef = useRef(null);
-  const lastScrollTime = useRef(0);
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [linesVisible, setLinesVisible] = useState(false);
+  const isAnimating = useRef(false);
+  const touchStartY = useRef(0);
+  const lastScrollTop = useRef(0);
   const scrollAccumulator = useRef(0);
 
   const currentData = mobileBioSlides[currentSlide];
+  const totalSlides = mobileBioSlides.length;
+
+  // Animate lines on mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLinesVisible(true);
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const goToSlide = useCallback((toSlide) => {
+    if (isAnimating.current) return;
+    if (toSlide < 0 || toSlide >= totalSlides) return;
+
+    isAnimating.current = true;
+    setCurrentSlide(toSlide);
+
+    // Scroll window to top
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    scrollAccumulator.current = 0;
+
+    setTimeout(() => {
+      isAnimating.current = false;
+    }, 600);
+  }, [totalSlides]);
 
   // Preload wszystkich obrazów Bio
   useEffect(() => {
@@ -51,110 +77,78 @@ export default function MobileBio() {
     document.documentElement.style.setProperty('--line-color', currentData.lineColor);
   }, [currentData.backgroundColor, currentData.lineColor]);
 
-  const goToSlide = useCallback((newSlide) => {
-    if (newSlide < 0 || newSlide >= mobileBioSlides.length) return;
-    if (isTransitioning) return;
-
-    setIsTransitioning(true);
-    setCurrentSlide(newSlide);
-    scrollAccumulator.current = 0;
-
-    // Scroll to top of new slide
-    if (containerRef.current) {
-      containerRef.current.scrollTop = 0;
-    }
-
-    setTimeout(() => {
-      setIsTransitioning(false);
-    }, 600);
-  }, [isTransitioning]);
-
-  // Handle wheel events for slide transitions
+  // Touch handlers for slide transitions at boundaries
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
-    const handleWheel = (e) => {
-      if (isTransitioning) return;
-
-      const { scrollTop, scrollHeight, clientHeight } = container;
-      const isAtTop = scrollTop <= 0;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5;
-
-      // Reset accumulator if changing direction or after timeout
-      const now = Date.now();
-      if (now - lastScrollTime.current > 200) {
-        scrollAccumulator.current = 0;
-      }
-      lastScrollTime.current = now;
-
-      // Scrolling down at bottom - go to next slide
-      if (isAtBottom && e.deltaY > 0 && currentSlide < mobileBioSlides.length - 1) {
-        e.preventDefault();
-        scrollAccumulator.current += e.deltaY;
-        if (scrollAccumulator.current > 100) {
-          goToSlide(currentSlide + 1);
-        }
-      }
-      // Scrolling up at top - go to previous slide
-      else if (isAtTop && e.deltaY < 0 && currentSlide > 0) {
-        e.preventDefault();
-        scrollAccumulator.current += Math.abs(e.deltaY);
-        if (scrollAccumulator.current > 100) {
-          goToSlide(currentSlide - 1);
-        }
-      }
-    };
-
-    container.addEventListener('wheel', handleWheel, { passive: false });
-    return () => container.removeEventListener('wheel', handleWheel);
-  }, [currentSlide, isTransitioning, goToSlide]);
-
-  // Handle touch events for mobile swipe
-  const touchStart = useRef({ y: 0, time: 0 });
-
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
     const handleTouchStart = (e) => {
-      touchStart.current = {
-        y: e.touches[0].clientY,
-        time: Date.now()
-      };
+      if (isAnimating.current) return;
+      touchStartY.current = e.touches[0].clientY;
+      lastScrollTop.current = window.scrollY;
     };
 
-    const handleTouchEnd = (e) => {
-      if (isTransitioning) return;
+    const handleTouchMove = (e) => {
+      if (isAnimating.current) return;
 
-      const deltaY = touchStart.current.y - e.changedTouches[0].clientY;
-      const deltaTime = Date.now() - touchStart.current.time;
+      const touchY = e.touches[0].clientY;
+      const deltaY = touchStartY.current - touchY;
+      const scrollTop = window.scrollY;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = window.innerHeight;
 
-      // Must be a quick swipe (< 300ms) with enough distance (> 50px)
-      if (deltaTime > 300 || Math.abs(deltaY) < 50) return;
-
-      const { scrollTop, scrollHeight, clientHeight } = container;
       const isAtTop = scrollTop <= 5;
       const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5;
 
-      // Swipe up at bottom - go to next slide
-      if (isAtBottom && deltaY > 50 && currentSlide < mobileBioSlides.length - 1) {
+      // At bottom, swiping up → accumulate for next slide
+      if (isAtBottom && deltaY > 0 && currentSlide < totalSlides - 1) {
+        scrollAccumulator.current += Math.abs(deltaY - (lastScrollTop.current - scrollTop));
+      }
+      // At top, swiping down → accumulate for previous slide
+      else if (isAtTop && deltaY < 0 && currentSlide > 0) {
+        scrollAccumulator.current += Math.abs(deltaY);
+      }
+      else {
+        scrollAccumulator.current = 0;
+      }
+
+      lastScrollTop.current = scrollTop;
+    };
+
+    const handleTouchEnd = (e) => {
+      if (isAnimating.current) return;
+
+      const touchEndY = e.changedTouches[0].clientY;
+      const deltaY = touchStartY.current - touchEndY;
+
+      const scrollTop = window.scrollY;
+      const scrollHeight = document.documentElement.scrollHeight;
+      const clientHeight = window.innerHeight;
+
+      const isAtTop = scrollTop <= 5;
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5;
+
+      const SWIPE_THRESHOLD = 80;
+
+      // Swipe up at bottom → next slide
+      if (isAtBottom && deltaY > SWIPE_THRESHOLD && currentSlide < totalSlides - 1) {
         goToSlide(currentSlide + 1);
       }
-      // Swipe down at top - go to previous slide
-      else if (isAtTop && deltaY < -50 && currentSlide > 0) {
+      // Swipe down at top → previous slide
+      else if (isAtTop && deltaY < -SWIPE_THRESHOLD && currentSlide > 0) {
         goToSlide(currentSlide - 1);
       }
+
+      scrollAccumulator.current = 0;
     };
 
-    container.addEventListener('touchstart', handleTouchStart, { passive: true });
-    container.addEventListener('touchend', handleTouchEnd, { passive: true });
+    document.addEventListener('touchstart', handleTouchStart, { passive: true });
+    document.addEventListener('touchmove', handleTouchMove, { passive: true });
+    document.addEventListener('touchend', handleTouchEnd, { passive: true });
 
     return () => {
-      container.removeEventListener('touchstart', handleTouchStart);
-      container.removeEventListener('touchend', handleTouchEnd);
+      document.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [currentSlide, isTransitioning, goToSlide]);
+  }, [currentSlide, totalSlides, goToSlide]);
 
   return (
     <section
@@ -162,7 +156,7 @@ export default function MobileBio() {
       className="relative"
       style={{
         width: `${MOBILE_WIDTH}px`,
-        height: '100%',
+        minHeight: '100vh',
         backgroundColor: currentData.backgroundColor,
         transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
       }}
@@ -182,221 +176,212 @@ export default function MobileBio() {
         />
       ))}
 
-      {/* Scrollable content container */}
+      {/* Header z logo i menu - FIXED na górze */}
       <div
-        ref={containerRef}
-        className="absolute inset-0 overflow-y-auto overflow-x-hidden"
+        className="fixed top-0 left-0 z-20"
         style={{
-          scrollBehavior: 'smooth',
+          width: `${MOBILE_WIDTH}px`,
+          height: '281px',
+          backgroundColor: currentData.backgroundColor,
+          transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
         }}
       >
-        {/* Header z logo i menu - sticky */}
-        <div
-          className="sticky top-0 left-0 z-10"
+        {/* Pionowe linie w FIXED headerze */}
+        {mobileLinePositions.map((left, index) => (
+          <div
+            key={`header-line-${index}`}
+            className="absolute top-0"
+            style={{
+              left: `${left}px`,
+              width: '1px',
+              height: '281px',
+              backgroundColor: currentData.lineColor,
+              transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+            }}
+          />
+        ))}
+
+        {/* Logo */}
+        <Link to="/">
+          <img
+            src="/assets/logo.svg"
+            alt="Kompopolex"
+            className="absolute"
+            style={{
+              left: '20px',
+              top: '40px',
+              width: '104px',
+              height: '42px',
+            }}
+          />
+        </Link>
+
+        {/* MENU button */}
+        <button
+          onClick={() => setIsMenuOpen(true)}
+          className="absolute"
           style={{
-            width: `${MOBILE_WIDTH}px`,
-            height: '281px',
-            backgroundColor: currentData.backgroundColor,
-            transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+            left: '312px',
+            top: '43px',
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 700,
+            fontSize: '24px',
+            lineHeight: 'normal',
+            color: currentData.textColor,
+            background: 'transparent',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+            transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
           }}
         >
-          {/* Pionowe linie w headerze */}
-          {mobileLinePositions.map((left, index) => (
-            <div
-              key={`header-line-${index}`}
-              className="absolute top-0"
+          MENU
+        </button>
+
+        {/* Bio - obrócony tekst */}
+        <div
+          className="absolute flex items-center justify-center"
+          style={{
+            left: '45px',
+            top: '192px',
+            width: '107px',
+            height: '49px',
+          }}
+        >
+          <img
+            src="/assets/bio/bio-text.svg"
+            alt="Bio"
+            style={{
+              height: '107px',
+              transform: 'rotate(-90deg)',
+              transformOrigin: 'center center',
+            }}
+          />
+        </div>
+      </div>
+
+      {/* Content area - z paddingiem na fixed header */}
+      <div style={{ paddingTop: '281px', paddingBottom: '60px' }}>
+        {/* Zdjęcie - 300x460px centered z smooth loading */}
+        <div
+          className="relative mx-auto"
+          style={{
+            width: '300px',
+            height: '460px',
+            overflow: 'hidden',
+            backgroundColor: currentData.backgroundColor,
+          }}
+        >
+          {mobileBioSlides.map((slide, index) => (
+            <img
+              key={slide.id}
+              src={slide.image}
+              alt={slide.name}
+              className="absolute"
               style={{
-                left: `${left}px`,
-                width: '1px',
-                height: '100%',
-                backgroundColor: currentData.lineColor,
-                transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+                ...mobileImageStyles[index],
+                opacity: index === currentSlide && loadedImages.has(index) ? 1 : 0,
+                transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
               }}
             />
           ))}
+        </div>
 
-          {/* Logo */}
-          <Link to="/">
-            <img
-              src="/assets/logo.svg"
-              alt="Kompopolex"
+        {/* Tytuł (imię) - 40px SemiBold */}
+        <div className="relative" style={{ marginTop: '60px', minHeight: '96px' }}>
+          {mobileBioSlides.map((slide, index) => (
+            <p
+              key={slide.id}
               className="absolute"
               style={{
                 left: '20px',
-                top: '40px',
-                width: '104px',
-                height: '42px',
+                top: 0,
+                width: '350px',
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontWeight: 600,
+                fontSize: '40px',
+                lineHeight: 1.2,
+                color: slide.textColor,
+                opacity: index === currentSlide ? 1 : 0,
+                transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+                pointerEvents: index === currentSlide ? 'auto' : 'none',
               }}
-            />
-          </Link>
-
-          {/* MENU button */}
-          <button
-            onClick={() => setIsMenuOpen(true)}
-            className="absolute"
-            style={{
-              left: '312px',
-              top: '43px',
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 700,
-              fontSize: '24px',
-              lineHeight: 'normal',
-              color: currentData.textColor,
-              background: 'transparent',
-              border: 'none',
-              padding: 0,
-              cursor: 'pointer',
-              transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-            }}
-          >
-            MENU
-          </button>
-
-          {/* Bio - obrócony tekst */}
-          <div
-            className="absolute flex items-center justify-center"
-            style={{
-              left: '45px',
-              top: '192px',
-              width: '107px',
-              height: '49px',
-            }}
-          >
-            <img
-              src="/assets/bio/bio-text.svg"
-              alt="Bio"
-              style={{
-                height: '107px',
-                transform: 'rotate(-90deg)',
-                transformOrigin: 'center center',
-              }}
-            />
-          </div>
+            >
+              {slide.name}
+            </p>
+          ))}
         </div>
 
-        {/* Content area */}
-        <div style={{ paddingBottom: '60px' }}>
-          {/* Zdjęcie - 300x460px centered z smooth loading */}
-          <div
-            className="relative mx-auto"
-            style={{
-              width: '300px',
-              height: '460px',
-              overflow: 'hidden',
-              backgroundColor: currentData.backgroundColor,
-            }}
-          >
-            {mobileBioSlides.map((slide, index) => (
-              <img
-                key={slide.id}
-                src={slide.image}
-                alt={slide.name}
-                className="absolute"
-                style={{
-                  ...mobileImageStyles[index],
-                  opacity: index === currentSlide && loadedImages.has(index) ? 1 : 0,
-                  transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Tytuł (imię) - 40px SemiBold */}
-          <div className="relative" style={{ marginTop: '60px', minHeight: '96px' }}>
-            {mobileBioSlides.map((slide, index) => (
-              <p
-                key={slide.id}
-                className="absolute"
-                style={{
-                  left: '20px',
-                  top: 0,
-                  width: '350px',
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontWeight: 600,
-                  fontSize: '40px',
-                  lineHeight: 1.2,
-                  color: slide.textColor,
-                  opacity: index === currentSlide ? 1 : 0,
-                  transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-                  pointerEvents: index === currentSlide ? 'auto' : 'none',
-                }}
-              >
-                {slide.name}
-              </p>
-            ))}
-          </div>
-
-          {/* Paragrafy tekstu */}
-          <div className="relative" style={{ marginTop: '20px' }}>
-            {mobileBioSlides.map((slide, index) => (
-              <div
-                key={slide.id}
-                style={{
-                  opacity: index === currentSlide ? 1 : 0,
-                  transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-                  pointerEvents: index === currentSlide ? 'auto' : 'none',
-                  position: index === currentSlide ? 'relative' : 'absolute',
-                  top: 0,
-                  left: 0,
-                }}
-              >
-                {slide.paragraphs.map((text, pIndex) => (
-                  <p
-                    key={pIndex}
-                    style={{
-                      marginLeft: '20px',
-                      marginRight: '20px',
-                      marginBottom: '24px',
-                      width: '350px',
-                      fontFamily: "'IBM Plex Mono', monospace",
-                      fontWeight: 500,
-                      fontSize: '16px',
-                      lineHeight: 1.48,
-                      color: slide.textColor,
-                    }}
-                  >
-                    {text}
-                  </p>
-                ))}
-              </div>
-            ))}
-          </div>
-
-          {/* Stopka (tylko dla ostatniego slide) */}
-          {currentData.hasFooter && (
-            <MobileFooter
+        {/* Paragrafy tekstu */}
+        <div className="relative" style={{ marginTop: '20px' }}>
+          {mobileBioSlides.map((slide, index) => (
+            <div
+              key={slide.id}
               style={{
-                marginLeft: '20px',
-                marginTop: '40px',
-                width: '350px',
+                opacity: index === currentSlide ? 1 : 0,
+                transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+                pointerEvents: index === currentSlide ? 'auto' : 'none',
+                position: index === currentSlide ? 'relative' : 'absolute',
+                top: 0,
+                left: 0,
               }}
-              textColor={currentData.textColor}
-            />
-          )}
+            >
+              {slide.paragraphs.map((text, pIndex) => (
+                <p
+                  key={pIndex}
+                  style={{
+                    marginLeft: '20px',
+                    marginRight: '20px',
+                    marginBottom: '24px',
+                    width: '350px',
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontWeight: 500,
+                    fontSize: '16px',
+                    lineHeight: 1.48,
+                    color: slide.textColor,
+                  }}
+                >
+                  {text}
+                </p>
+              ))}
+            </div>
+          ))}
+        </div>
 
-          {/* Slide indicator */}
-          <div
-            className="flex justify-center gap-2"
-            style={{ marginTop: '40px', paddingBottom: '20px' }}
-          >
-            {mobileBioSlides.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                style={{
-                  width: '8px',
-                  height: '8px',
-                  borderRadius: '50%',
-                  backgroundColor: index === currentSlide ? currentData.textColor : 'transparent',
-                  border: `1px solid ${currentData.textColor}`,
-                  padding: 0,
-                  cursor: 'pointer',
-                  transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-                }}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
+        {/* Stopka (tylko dla ostatniego slide) */}
+        {currentData.hasFooter && (
+          <MobileFooter
+            style={{
+              marginLeft: '20px',
+              marginTop: '40px',
+              width: '350px',
+            }}
+            textColor={currentData.textColor}
+          />
+        )}
+
+        {/* Slide indicator */}
+        <div
+          className="flex justify-center gap-2"
+          style={{ marginTop: '40px', paddingBottom: '20px' }}
+        >
+          {mobileBioSlides.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              style={{
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: index === currentSlide ? currentData.textColor : 'transparent',
+                border: `1px solid ${currentData.textColor}`,
+                padding: 0,
+                cursor: 'pointer',
+                transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+              }}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
         </div>
       </div>
 

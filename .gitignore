@@ -25,3 +25,4 @@ tmp/
 
 # UIMatch reports (generated)
 tmp/uimatch-reports/
+.vercel
