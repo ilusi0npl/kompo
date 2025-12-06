@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { useScrollSlides } from './useScrollSlides';
 import MobileMenu from '../../components/MobileMenu/MobileMenu';
+import { useTranslation } from '../../hooks/useTranslation';
 import {
   mobileSlides,
   mobileLinePositions,
@@ -16,6 +17,7 @@ export default function MobileHomepage() {
   const [searchParams] = useSearchParams();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [viewportHeight, setViewportHeight] = useState(typeof window !== 'undefined' ? window.innerHeight : 800);
+  const { t } = useTranslation();
 
   useEffect(() => {
     const menuParam = searchParams.get('menu');
@@ -170,7 +172,7 @@ export default function MobileHomepage() {
             pointerEvents: index === currentSlide ? 'auto' : 'none',
           }}
         >
-          {slide.tagline}
+          {t(`homepage.slides.${slide.word.toLowerCase()}.tagline`)}
         </p>
       ))}
     </section>
