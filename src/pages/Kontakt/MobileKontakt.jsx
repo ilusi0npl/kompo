@@ -26,13 +26,15 @@ export default function MobileKontakt() {
         backgroundColor: BACKGROUND_COLOR,
       }}
     >
-      {/* Pionowe linie w tle - na całą wysokość */}
+      {/* Pionowe linie w tle */}
       {mobileLinePositions.map((left, index) => (
         <div
           key={index}
-          className="absolute top-0 bottom-0"
+          className="absolute"
           style={{
             left: `${left}px`,
+            top: 0,
+            bottom: 0,
             width: '1px',
             backgroundColor: LINE_COLOR,
           }}
@@ -44,7 +46,6 @@ export default function MobileKontakt() {
         className="relative flex-shrink-0"
         style={{
           width: `${MOBILE_WIDTH}px`,
-          backgroundColor: BACKGROUND_COLOR,
           paddingTop: '40px',
           paddingBottom: '20px',
         }}
