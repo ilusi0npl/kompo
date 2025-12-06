@@ -45,7 +45,7 @@ export const events = [
       { composer: 'Rafał Ryterski', piece: 'Breathe' },
       { composer: 'La Monte Young', piece: 'Composition #13' },
     ],
-    location: 'NAU BOSTIK, BARCELONA',
+    location: 'Nau Bostik, Barcelona',
     image: '/assets/kalendarz/event3.jpg',
     imageStyle: {
       objectFit: 'cover',

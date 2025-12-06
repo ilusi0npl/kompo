@@ -586,8 +586,8 @@ async function main() {
     try {
       console.log(`   🌐 Loading: ${sectionUrl}`);
       await page.goto(sectionUrl, { waitUntil: 'networkidle', timeout: 30000 });
-      // Wait a bit for any CSS transitions to settle
-      await page.waitForTimeout(500);
+      // Wait for images to load and CSS transitions to settle
+      await page.waitForTimeout(2000);
     } catch (e) {
       console.error(`   ❌ Failed to load page: ${e.message}`);
       await context.close();

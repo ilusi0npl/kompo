@@ -29,7 +29,7 @@ export default function SmoothImage({
         }
       },
       {
-        rootMargin: '100px', // Zacznij ładować 100px przed widokiem
+        rootMargin: '2000px', // Zacznij ładować 2000px przed widokiem (dla pełnych stron)
         threshold: 0,
       }
     );

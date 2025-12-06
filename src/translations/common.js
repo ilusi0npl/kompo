@@ -20,8 +20,8 @@ export const pl = {
   tabs: {
     upcoming: 'Nadchodzące',
     archived: 'Archiwalne',
-    photos: 'zdjęcia',
-    video: 'wideo',
+    photos: 'Zdjęcia',
+    video: 'Wideo',
   },
   labels: {
     program: 'program:',
@@ -52,8 +52,8 @@ export const en = {
   tabs: {
     upcoming: 'Upcoming',
     archived: 'Archived',
-    photos: 'photos',
-    video: 'video',
+    photos: 'Photos',
+    video: 'Video',
   },
   labels: {
     program: 'program:',

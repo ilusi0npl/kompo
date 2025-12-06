@@ -263,8 +263,9 @@ export default function DesktopKalendarz() {
       <Footer
         className="absolute"
         style={{
-          left: '185px',
-          top: '1944px',
+          left: 'calc(50% - 275px)',
+          transform: 'translateX(-50%)',
+          bottom: '40px',
           width: '520px',
         }}
       />
@@ -281,11 +282,11 @@ export default function DesktopKalendarz() {
         {/* Language Toggle */}
         <LanguageToggle textColor="#131313" />
 
-        {/* Menu items */}
+        {/* Menu items - Figma: gap-[279px] from ENG (60px) = 339px, ale ENG ma ~29px height */}
         <nav
           className="absolute flex flex-col"
           style={{
-            top: '308px',
+            top: '368px',
             left: '0',
             gap: '22px',
           }}
