@@ -13,43 +13,48 @@ const TEXT_COLOR = '#131313';
 
 export default function MobileKontakt() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <section
       data-section="kontakt-mobile"
-      className="relative overflow-hidden"
+      className="relative flex flex-col"
       style={{
         width: `${MOBILE_WIDTH}px`,
         minHeight: '100vh',
         backgroundColor: BACKGROUND_COLOR,
       }}
     >
-      {/* Pionowe linie */}
+      {/* Pionowe linie w tle - na całą wysokość */}
       {mobileLinePositions.map((left, index) => (
         <div
           key={index}
-          className="absolute top-0"
+          className="absolute top-0 bottom-0"
           style={{
             left: `${left}px`,
             width: '1px',
-            height: '100%',
             backgroundColor: LINE_COLOR,
           }}
         />
       ))}
 
-      {/* Header */}
-      <div className="relative" style={{ height: '281px' }}>
+      {/* Header z logo i menu */}
+      <div
+        className="relative flex-shrink-0"
+        style={{
+          width: `${MOBILE_WIDTH}px`,
+          backgroundColor: BACKGROUND_COLOR,
+          paddingTop: '40px',
+          paddingBottom: '20px',
+        }}
+      >
         {/* Logo */}
         <Link to="/">
           <img
             src="/assets/logo.svg"
             alt="Kompopolex"
-            className="absolute"
             style={{
-              left: '20px',
-              top: '40px',
+              marginLeft: '20px',
               width: '104px',
               height: '42px',
             }}
@@ -66,6 +71,7 @@ export default function MobileKontakt() {
             fontFamily: "'IBM Plex Mono', monospace",
             fontWeight: 700,
             fontSize: '24px',
+            lineHeight: 'normal',
             color: TEXT_COLOR,
             background: 'transparent',
             border: 'none',
@@ -76,121 +82,115 @@ export default function MobileKontakt() {
           MENU
         </button>
 
-        {/* Tytuł strony rotowany */}
-        <div
-          className="absolute"
+        {/* Tytuł strony - poziomy tekst */}
+        <p
           style={{
-            left: '45px',
-            top: '192px',
-            transform: 'rotate(-90deg)',
-            transformOrigin: 'left top',
+            marginLeft: '20px',
+            marginTop: '38px',
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 600,
+            fontSize: '40px',
+            lineHeight: 1.2,
+            color: TEXT_COLOR,
           }}
         >
-          <span
+          {t('kontakt.sideTitle')}
+        </p>
+      </div>
+
+      {/* Content area - flexbox grow */}
+      <div className="relative flex-grow flex flex-col">
+        {/* Zdjęcie zespołu - 300x460px centered */}
+        <div
+          className="relative mx-auto flex-shrink-0"
+          style={{
+            width: '300px',
+            height: '460px',
+            overflow: 'hidden',
+          }}
+        >
+          <img
+            src="/assets/kontakt/team-photo.jpg"
+            alt="Zespół Kompopolex"
+            className="w-full h-full object-cover"
+            style={{ objectPosition: '50% 50%' }}
+          />
+        </div>
+
+        {/* Dane fundacji */}
+        <div
+          className="flex flex-col flex-shrink-0"
+          style={{
+            marginTop: '40px',
+            marginLeft: '20px',
+            width: '350px',
+            gap: '16px',
+          }}
+        >
+          {/* Tytuł */}
+          <p
             style={{
               fontFamily: "'IBM Plex Mono', monospace",
               fontWeight: 600,
-              fontSize: '44px',
+              fontSize: '24px',
+              lineHeight: 1.4,
+              color: TEXT_COLOR,
+              textDecoration: 'underline',
+              textTransform: 'uppercase',
+            }}
+          >
+            {t('kontakt.title')}
+          </p>
+
+          {/* Dane */}
+          <div
+            className="flex flex-col"
+            style={{
+              gap: '16px',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 600,
+              fontSize: '16px',
+              lineHeight: 1.48,
               color: TEXT_COLOR,
             }}
           >
-            {t('kontakt.sideTitle')}
-          </span>
-        </div>
-      </div>
-
-      {/* Zdjęcie zespołu - 300x460px wycentrowane */}
-      <div
-        className="absolute overflow-hidden"
-        style={{
-          left: '50%',
-          transform: 'translateX(-50%)',
-          top: '281px',
-          width: '300px',
-          height: '460px',
-        }}
-      >
-        <img
-          src="/assets/kontakt/team-photo.jpg"
-          alt="Zespół Kompopolex"
-          className="w-full h-full object-cover"
-          style={{ objectPosition: '50% 50%' }}
-        />
-      </div>
-
-      {/* Dane fundacji */}
-      <div
-        className="absolute flex flex-col"
-        style={{
-          left: '20px',
-          top: '761px',
-          width: '350px',
-          gap: '16px',
-        }}
-      >
-        {/* Tytuł */}
-        <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '24px',
-            lineHeight: 1.4,
-            color: TEXT_COLOR,
-            textDecoration: 'underline',
-            textTransform: 'uppercase',
-          }}
-        >
-          {t('kontakt.title')}
-        </p>
-
-        {/* Dane */}
-        <div
-          className="flex flex-col"
-          style={{
-            gap: '16px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '16px',
-            lineHeight: 1.48,
-            color: TEXT_COLOR,
-          }}
-        >
-          <p>{t('kontakt.krs')} {fundacjaData.krs}</p>
-          <p>{t('kontakt.regon')} {fundacjaData.regon}</p>
-          <p>{t('kontakt.nip')} {fundacjaData.nip}</p>
-          <div>
-            <p>{t('kontakt.bankAccount')}</p>
-            <p>{fundacjaData.bankAccount}</p>
+            <p>{t('kontakt.krs')} {fundacjaData.krs}</p>
+            <p>{t('kontakt.regon')} {fundacjaData.regon}</p>
+            <p>{t('kontakt.nip')} {fundacjaData.nip}</p>
+            <div>
+              <p>{t('kontakt.bankAccount')}</p>
+              <p>{fundacjaData.bankAccount}</p>
+            </div>
           </div>
+
+          {/* Email */}
+          <a
+            href={`mailto:${fundacjaData.email}`}
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 600,
+              fontSize: '16px',
+              lineHeight: 1.48,
+              color: TEXT_COLOR,
+              textDecoration: 'underline',
+              textTransform: 'uppercase',
+            }}
+          >
+            {fundacjaData.email}
+          </a>
         </div>
 
-        {/* Email */}
-        <a
-          href={`mailto:${fundacjaData.email}`}
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '16px',
-            lineHeight: 1.48,
-            color: TEXT_COLOR,
-            textDecoration: 'underline',
-            textTransform: 'uppercase',
-          }}
-        >
-          {fundacjaData.email}
-        </a>
+        {/* Stopka - dynamiczny margines */}
+        <div className="flex-shrink-0 mt-auto" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
+          <MobileFooter
+            style={{
+              marginLeft: '20px',
+              width: '350px',
+            }}
+            textColor={TEXT_COLOR}
+          />
+        </div>
       </div>
-
-      {/* Stopka */}
-      <MobileFooter
-        className="absolute"
-        style={{
-          left: '20px',
-          top: '1100px',
-          width: '350px',
-        }}
-        textColor={TEXT_COLOR}
-      />
 
       {/* MobileMenu overlay */}
       <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
