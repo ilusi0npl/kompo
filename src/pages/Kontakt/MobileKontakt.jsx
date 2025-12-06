@@ -81,21 +81,21 @@ export default function MobileKontakt() {
           className="absolute"
           style={{
             left: '45px',
-            top: '240px',
-            width: '107px',
-            height: '49px',
+            top: '192px',
+            transform: 'rotate(-90deg)',
+            transformOrigin: 'left top',
           }}
         >
-          <img
-            src={language === 'pl' ? '/assets/kontakt/kontakt-text.svg' : '/assets/kontakt/contact-text.svg'}
-            alt={language === 'pl' ? 'Kontakt' : 'Contact'}
+          <span
             style={{
-              width: '107px',
-              height: '49px',
-              transform: 'rotate(-90deg)',
-              transformOrigin: 'center center',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 600,
+              fontSize: '44px',
+              color: TEXT_COLOR,
             }}
-          />
+          >
+            {t('kontakt.sideTitle')}
+          </span>
         </div>
       </div>
 

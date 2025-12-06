@@ -55,18 +55,30 @@ export default function DesktopKontakt() {
         />
       </Link>
 
-      {/* Kontakt - pionowy tekst po lewej */}
-      <img
-        src={language === 'pl' ? '/assets/kontakt/kontakt-text.svg' : '/assets/kontakt/contact-text.svg'}
-        alt={language === 'pl' ? 'Kontakt' : 'Contact'}
-        className="absolute"
+      {/* Kontakt - pionowy tekst po lewej (rotacja 90 stopni) */}
+      <div
+        className="absolute flex items-center justify-center"
         style={{
           left: '94px',
           top: '371px',
-          width: '49px',
-          height: '260px',
+          width: '45px',
+          height: '269px',
         }}
-      />
+      >
+        <p
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 600,
+            fontSize: '64px',
+            lineHeight: 1.4,
+            color: '#131313',
+            transform: 'rotate(90deg)',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {t('kontakt.sideTitle')}
+        </p>
+      </div>
 
       {/* Zdjęcie zespołu */}
       <div

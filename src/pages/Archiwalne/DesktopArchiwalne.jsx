@@ -54,18 +54,30 @@ export default function DesktopArchiwalne() {
         />
       </Link>
 
-      {/* Kalendarz - pionowy tekst po lewej */}
-      <img
-        src={language === 'pl' ? '/assets/kalendarz/kalendarz-text.svg' : '/assets/kalendarz/calendar-text.svg'}
-        alt={language === 'pl' ? 'Kalendarz' : 'Calendar'}
-        className="absolute"
+      {/* Kalendarz - pionowy tekst po lewej (rotacja 90 stopni) */}
+      <div
+        className="absolute flex items-center justify-center"
         style={{
           left: '94px',
           top: '275px',
-          width: '49px',
-          height: '337px',
+          width: '45px',
+          height: '346px',
         }}
-      />
+      >
+        <p
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 600,
+            fontSize: '64px',
+            lineHeight: 1.1,
+            color: '#131313',
+            transform: 'rotate(90deg)',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {t('kalendarz.sideTitle')}
+        </p>
+      </div>
 
       {/* Nawigacja Nadchodzące / Archiwalne */}
       <Link

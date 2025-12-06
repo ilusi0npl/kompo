@@ -2,6 +2,7 @@
 // Events descriptions
 
 export const pl = {
+  sideTitle: 'Kalendarz',
   events: {
     event1: {
       title: 'ENSEMBLE KOMPOPOLEX',
@@ -18,6 +19,7 @@ export const pl = {
 };
 
 export const en = {
+  sideTitle: 'Calendar',
   events: {
     event1: {
       title: 'ENSEMBLE KOMPOPOLEX',
