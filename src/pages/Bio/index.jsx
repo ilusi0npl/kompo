@@ -10,6 +10,7 @@ export default function Bio() {
       mobileContent={<MobileBio />}
       desktopHeight={DESKTOP_HEIGHT}
       mobileHeight="auto"
+      hideLines={true}
     />
   );
 }

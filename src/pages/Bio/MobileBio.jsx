@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router';
 import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import MobileFooter from '../../components/Footer/MobileFooter';
@@ -7,6 +8,8 @@ import {
   mobileLinePositions,
   MOBILE_WIDTH,
 } from './bio-config';
+
+const BREAKPOINT = 768;
 
 const TRANSITION_DURATION = '0.6s';
 const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
@@ -28,6 +31,7 @@ export default function MobileBio() {
   const [loadedImages, setLoadedImages] = useState(new Set());
   const [currentSlide, setCurrentSlide] = useState(0);
   const [linesVisible, setLinesVisible] = useState(false);
+  const [scale, setScale] = useState(1);
   const isAnimating = useRef(false);
   const touchStartY = useRef(0);
   const lastScrollTop = useRef(0);
@@ -35,6 +39,20 @@ export default function MobileBio() {
 
   const currentData = mobileBioSlides[currentSlide];
   const totalSlides = mobileBioSlides.length;
+
+  // Calculate scale factor for fixed header (must match ResponsiveWrapper)
+  useEffect(() => {
+    const updateScale = () => {
+      const viewportWidth = window.innerWidth;
+      const isMobile = viewportWidth <= BREAKPOINT;
+      if (isMobile) {
+        setScale(viewportWidth / MOBILE_WIDTH);
+      }
+    };
+    updateScale();
+    window.addEventListener('resize', updateScale);
+    return () => window.removeEventListener('resize', updateScale);
+  }, []);
 
   // Animate lines on mount
   useEffect(() => {
@@ -161,7 +179,7 @@ export default function MobileBio() {
         transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
       }}
     >
-      {/* Pionowe linie w tle */}
+      {/* Pionowe linie w tle - absolute, pełna wysokość sekcji */}
       {mobileLinePositions.map((left, index) => (
         <div
           key={index}
@@ -171,97 +189,107 @@ export default function MobileBio() {
             width: '1px',
             height: '100%',
             backgroundColor: currentData.lineColor,
-            transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+            opacity: linesVisible ? 1 : 0,
+            transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}, opacity 0.8s ${TRANSITION_EASING} ${index * 0.15}s`,
           }}
         />
       ))}
 
-      {/* Header z logo i menu - FIXED na górze */}
-      <div
-        className="fixed top-0 left-0 z-20"
-        style={{
-          width: `${MOBILE_WIDTH}px`,
-          height: '281px',
-          backgroundColor: currentData.backgroundColor,
-          transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-        }}
-      >
-        {/* Pionowe linie w FIXED headerze */}
-        {mobileLinePositions.map((left, index) => (
-          <div
-            key={`header-line-${index}`}
-            className="absolute top-0"
-            style={{
-              left: `${left}px`,
-              width: '1px',
-              height: '281px',
-              backgroundColor: currentData.lineColor,
-              transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-            }}
-          />
-        ))}
+      {/* Spacer for fixed header */}
+      <div style={{ height: '281px' }} />
 
-        {/* Logo */}
-        <Link to="/">
-          <img
-            src="/assets/logo.svg"
-            alt="Kompopolex"
+      {/* Header z logo i menu - FIXED via portal */}
+      {typeof document !== 'undefined' && createPortal(
+        <div
+          className="fixed top-0 left-0 z-50"
+          style={{
+            width: `${MOBILE_WIDTH}px`,
+            height: '281px',
+            backgroundColor: currentData.backgroundColor,
+            transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+            transform: `scale(${scale})`,
+            transformOrigin: 'top left',
+          }}
+        >
+          {/* Pionowe linie w FIXED headerze */}
+          {mobileLinePositions.map((left, index) => (
+            <div
+              key={`header-line-${index}`}
+              className="absolute top-0"
+              style={{
+                left: `${left}px`,
+                width: '1px',
+                height: '281px',
+                backgroundColor: currentData.lineColor,
+                opacity: linesVisible ? 1 : 0,
+                transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}, opacity 0.8s ${TRANSITION_EASING} ${index * 0.15}s`,
+              }}
+            />
+          ))}
+
+          {/* Logo */}
+          <Link to="/">
+            <img
+              src="/assets/logo.svg"
+              alt="Kompopolex"
+              className="absolute"
+              style={{
+                left: '20px',
+                top: '40px',
+                width: '104px',
+                height: '42px',
+              }}
+            />
+          </Link>
+
+          {/* MENU button */}
+          <button
+            onClick={() => setIsMenuOpen(true)}
             className="absolute"
             style={{
-              left: '20px',
-              top: '40px',
-              width: '104px',
-              height: '42px',
+              left: '312px',
+              top: '43px',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 700,
+              fontSize: '24px',
+              lineHeight: 'normal',
+              color: currentData.textColor,
+              background: 'transparent',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer',
+              transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
             }}
-          />
-        </Link>
+          >
+            MENU
+          </button>
 
-        {/* MENU button */}
-        <button
-          onClick={() => setIsMenuOpen(true)}
-          className="absolute"
-          style={{
-            left: '312px',
-            top: '43px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 700,
-            fontSize: '24px',
-            lineHeight: 'normal',
-            color: currentData.textColor,
-            background: 'transparent',
-            border: 'none',
-            padding: 0,
-            cursor: 'pointer',
-            transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-          }}
-        >
-          MENU
-        </button>
-
-        {/* Bio - obrócony tekst */}
-        <div
-          className="absolute flex items-center justify-center"
-          style={{
-            left: '45px',
-            top: '192px',
-            width: '107px',
-            height: '49px',
-          }}
-        >
-          <img
-            src="/assets/bio/bio-text.svg"
-            alt="Bio"
+          {/* Bio - obrócony tekst */}
+          <div
+            className="absolute flex items-center justify-center"
             style={{
-              height: '107px',
-              transform: 'rotate(-90deg)',
-              transformOrigin: 'center center',
+              left: '45px',
+              top: '192px',
+              width: '107px',
+              height: '49px',
             }}
-          />
-        </div>
-      </div>
+          >
+            <img
+              src="/assets/bio/bio-text.svg"
+              alt="Bio"
+              style={{
+                height: '107px',
+                transform: 'rotate(-90deg)',
+                transformOrigin: 'center center',
+              }}
+            />
+          </div>
+        </div>,
+        document.body
+      )}
 
-      {/* Content area - z paddingiem na fixed header */}
-      <div style={{ paddingTop: '281px', paddingBottom: '60px' }}>
+      {/* Content area */}
+      <div style={{ paddingBottom: '60px' }}>
         {/* Zdjęcie - 300x460px centered z smooth loading */}
         <div
           className="relative mx-auto"

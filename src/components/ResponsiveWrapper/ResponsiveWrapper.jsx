@@ -16,6 +16,7 @@ export default function ResponsiveWrapper({
   mobileHeight = 'auto',
   backgroundColor = null,
   lineColor = null,
+  hideLines = false,
 }) {
   const [viewport, setViewport] = useState({
     width: typeof window !== 'undefined' ? window.innerWidth : DESKTOP_WIDTH,
@@ -86,7 +87,7 @@ export default function ResponsiveWrapper({
   const linePositions = isMobile ? MOBILE_LINE_POSITIONS : DESKTOP_LINE_POSITIONS;
 
   // Generuj CSS gradient dla linii - linie są częścią tła, więc są idealnie wyrównane
-  const lineGradients = linePositions.map(pos => {
+  const lineGradients = hideLines ? '' : linePositions.map(pos => {
     const scaledPos = pos * scale;
     return `linear-gradient(to right, transparent ${scaledPos}px, ${lnColor} ${scaledPos}px, ${lnColor} ${scaledPos + 1}px, transparent ${scaledPos + 1}px)`;
   }).join(', ');
@@ -97,7 +98,7 @@ export default function ResponsiveWrapper({
         width: '100%',
         minHeight: isAuto ? `${Math.max(scaledHeight, viewportHeight)}px` : `${Math.max(scaledHeight, viewportHeight)}px`,
         height: isAuto ? 'auto' : `${Math.max(scaledHeight, viewportHeight)}px`,
-        background: `${lineGradients}, ${bgColor}`,
+        background: hideLines ? bgColor : `${lineGradients}, ${bgColor}`,
         position: 'relative',
         overflow: isAuto ? 'visible' : 'hidden',
       }}
