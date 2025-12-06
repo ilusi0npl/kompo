@@ -15,7 +15,7 @@ export default function DesktopKontakt() {
   return (
     <section
       data-section="kontakt"
-      className="relative overflow-hidden"
+      className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
         height: `${DESKTOP_HEIGHT}px`,

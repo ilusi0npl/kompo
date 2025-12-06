@@ -24,7 +24,7 @@ export default function DesktopMediaWideo() {
   return (
     <section
       data-section="media-wideo"
-      className="relative overflow-hidden"
+      className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
         height: `${DESKTOP_HEIGHT}px`,

@@ -14,7 +14,7 @@ export default function DesktopArchiwalne() {
   return (
     <section
       data-section="archiwalne"
-      className="relative overflow-hidden"
+      className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
         height: `${DESKTOP_HEIGHT}px`,

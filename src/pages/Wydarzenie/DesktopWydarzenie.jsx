@@ -14,7 +14,7 @@ export default function DesktopWydarzenie() {
   return (
     <section
       data-section="wydarzenie"
-      className="relative overflow-hidden"
+      className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
         height: `${DESKTOP_HEIGHT}px`,

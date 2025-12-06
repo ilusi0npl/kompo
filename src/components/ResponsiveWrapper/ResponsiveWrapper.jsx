@@ -17,18 +17,25 @@ export default function ResponsiveWrapper({
   backgroundColor = null,
   lineColor = null,
 }) {
-  const [viewportWidth, setViewportWidth] = useState(
-    typeof window !== 'undefined' ? window.innerWidth : DESKTOP_WIDTH
-  );
+  const [viewport, setViewport] = useState({
+    width: typeof window !== 'undefined' ? window.innerWidth : DESKTOP_WIDTH,
+    height: typeof window !== 'undefined' ? window.innerHeight : 800,
+  });
 
   useEffect(() => {
     const handleResize = () => {
-      setViewportWidth(window.innerWidth);
+      setViewport({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
     };
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const viewportWidth = viewport.width;
+  const viewportHeight = viewport.height;
 
   const isMobile = viewportWidth <= BREAKPOINT;
 
@@ -55,10 +62,10 @@ export default function ResponsiveWrapper({
     <div
       style={{
         width: '100%',
-        minHeight: '100vh',
+        height: `${Math.max(scaledHeight, viewportHeight)}px`,
         background: `${lineGradients}, ${bgColor}`,
-        overflow: 'hidden',
         position: 'relative',
+        overflow: 'hidden',
       }}
     >
       {/* Skalowana treść */}

@@ -32,7 +32,7 @@ export default function DesktopKalendarz() {
   return (
     <section
       data-section="kalendarz"
-      className="relative overflow-hidden"
+      className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
         height: `${DESKTOP_HEIGHT}px`,
