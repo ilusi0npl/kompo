@@ -8,7 +8,6 @@ import Wydarzenie from './pages/Wydarzenie';
 import Media from './pages/Media';
 import MediaWideo from './pages/MediaWideo';
 import Kontakt from './pages/Kontakt';
-import TestMobileMenu from './pages/TestMobileMenu';
 
 function App() {
   return (
@@ -23,7 +22,6 @@ function App() {
           <Route path="/archiwalne" element={<Archiwalne />} />
           <Route path="/wydarzenie/:id" element={<Wydarzenie />} />
           <Route path="/kontakt" element={<Kontakt />} />
-          <Route path="/test-mobile-menu" element={<TestMobileMenu />} />
         </Routes>
       </BrowserRouter>
     </LanguageProvider>

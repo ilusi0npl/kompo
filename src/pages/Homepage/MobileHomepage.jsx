@@ -120,39 +120,23 @@ export default function MobileHomepage() {
         ))}
       </div>
 
-      {/* Słowo (Trio/Kompo/Polex/Ensemble) - obrócone */}
+      {/* Słowo (Trio/Kompo/Polex/Ensemble) - SVG z Figma */}
       {mobileSlides.map((slide, index) => (
-        <div
+        <img
           key={slide.id}
+          src={slide.wordSvg}
+          alt={slide.word}
           className="absolute"
           style={{
             left: '30px',
             top: '460px',
-            width: '49px',
-            height: '149px',
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'center',
+            width: `${slide.wordWidth}px`,
+            height: `${slide.wordHeight}px`,
             opacity: index === currentSlide ? 1 : 0,
             transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
             pointerEvents: index === currentSlide ? 'auto' : 'none',
           }}
-        >
-          <p
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 600,
-              fontSize: '44px',
-              lineHeight: 1,
-              color: slide.textColor,
-              writingMode: 'vertical-rl',
-              transform: 'rotate(180deg)',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {slide.word}
-          </p>
-        </div>
+        />
       ))}
 
       {/* Tekst tagline */}
