@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
 import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
+import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import {
   videos,
   DESKTOP_WIDTH,
@@ -124,22 +125,33 @@ export default function DesktopMediaWideo() {
             gap: '16px',
           }}
         >
-          {/* Video Thumbnail with Play Button */}
+          {/* Video Thumbnail with Play Button - smooth loading */}
           <a
             href={video.youtubeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="relative block overflow-hidden"
+            className="relative block"
             style={{
               width: '455px',
               height: '256px',
             }}
           >
-            <img
+            <SmoothImage
               src={video.thumbnail}
               alt={video.title}
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{ objectPosition: '50% 50%' }}
+              containerStyle={{
+                width: '455px',
+                height: '256px',
+              }}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: '50% 50%',
+              }}
+              placeholderColor="#e5e5e5"
             />
             {/* Play Icon */}
             <div
@@ -149,6 +161,7 @@ export default function DesktopMediaWideo() {
                 top: '98px',
                 width: '60px',
                 height: '60px',
+                zIndex: 10,
               }}
             >
               <img

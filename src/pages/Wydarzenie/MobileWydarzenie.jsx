@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
+import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import { eventData } from './wydarzenie-config';
 
 const MOBILE_WIDTH = 390;
@@ -127,22 +128,23 @@ export default function MobileWydarzenie() {
           {eventData.title}
         </h1>
 
-        {/* Zdjęcie */}
-        <div
-          className="overflow-hidden"
-          style={{
+        {/* Zdjęcie z smooth loading */}
+        <SmoothImage
+          src={eventData.image}
+          alt={eventData.title}
+          containerStyle={{
             width: '300px',
             height: '420px',
             alignSelf: 'center',
           }}
-        >
-          <img
-            src={eventData.image}
-            alt={eventData.title}
-            className="w-full h-full object-cover"
-            style={{ objectPosition: '50% 50%' }}
-          />
-        </div>
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: '50% 50%',
+          }}
+          placeholderColor="#e5e5e5"
+        />
 
         {/* Data i godzina */}
         <p

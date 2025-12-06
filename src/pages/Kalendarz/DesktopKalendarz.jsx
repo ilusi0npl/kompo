@@ -1,7 +1,9 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
 import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
+import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import {
   events,
   DESKTOP_WIDTH,
@@ -133,14 +135,25 @@ export default function DesktopKalendarz() {
       </Link>
 
       {/* Event 1 */}
-      <div className="absolute" style={{ left: '185px', top: '275px', width: '330px', height: '462px' }}>
-        <img
-          src={events[0].image}
-          alt={events[0].title}
-          className="absolute inset-0 w-full h-full"
-          style={events[0].imageStyle}
-        />
-      </div>
+      <SmoothImage
+        src={events[0].image}
+        alt={events[0].title}
+        className="absolute"
+        containerStyle={{
+          left: '185px',
+          top: '275px',
+          width: '330px',
+          height: '462px',
+        }}
+        style={{
+          ...events[0].imageStyle,
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+        }}
+        placeholderColor="#e5e5e5"
+      />
       <div className="absolute flex flex-col" style={{ left: '625px', top: '275px', width: '519px', gap: '20px' }}>
         <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: '#131313' }}>
           {events[0].date}
@@ -165,13 +178,19 @@ export default function DesktopKalendarz() {
       </div>
 
       {/* Event 2 */}
-      <div className="absolute overflow-hidden" style={{ left: '185px', top: '807px', width: '330px', height: '462px' }}>
-        <img
-          src={events[1].image}
-          alt={events[1].title}
-          style={events[1].imageStyle}
-        />
-      </div>
+      <SmoothImage
+        src={events[1].image}
+        alt={events[1].title}
+        className="absolute"
+        containerStyle={{
+          left: '185px',
+          top: '807px',
+          width: '330px',
+          height: '462px',
+        }}
+        style={events[1].imageStyle}
+        placeholderColor="#e5e5e5"
+      />
       <div className="absolute flex flex-col" style={{ left: '625px', top: '807px', width: '519px', gap: '20px' }}>
         <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: '#131313' }}>
           {events[1].date}
@@ -196,14 +215,25 @@ export default function DesktopKalendarz() {
       </div>
 
       {/* Event 3 */}
-      <div className="absolute" style={{ left: '185px', top: '1339px', width: '330px', height: '462px' }}>
-        <img
-          src={events[2].image}
-          alt={events[2].title}
-          className="absolute inset-0 w-full h-full"
-          style={events[2].imageStyle}
-        />
-      </div>
+      <SmoothImage
+        src={events[2].image}
+        alt={events[2].title}
+        className="absolute"
+        containerStyle={{
+          left: '185px',
+          top: '1339px',
+          width: '330px',
+          height: '462px',
+        }}
+        style={{
+          ...events[2].imageStyle,
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+        }}
+        placeholderColor="#e5e5e5"
+      />
       <div className="absolute flex flex-col" style={{ left: '625px', top: '1339px', width: '519px', gap: '20px' }}>
         <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: '#131313' }}>
           {events[2].date}

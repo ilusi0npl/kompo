@@ -27,11 +27,23 @@ export default function MobileBio() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [loadedImages, setLoadedImages] = useState(new Set());
   const containerRef = useRef(null);
   const lastScrollTime = useRef(0);
   const scrollAccumulator = useRef(0);
 
   const currentData = mobileBioSlides[currentSlide];
+
+  // Preload wszystkich obrazów Bio
+  useEffect(() => {
+    mobileBioSlides.forEach((slide, index) => {
+      const img = new Image();
+      img.onload = () => {
+        setLoadedImages((prev) => new Set(prev).add(index));
+      };
+      img.src = slide.image;
+    });
+  }, []);
 
   // Sync background and line colors with CSS variables for ResponsiveWrapper
   useEffect(() => {
@@ -264,13 +276,14 @@ export default function MobileBio() {
 
         {/* Content area */}
         <div style={{ paddingBottom: '60px' }}>
-          {/* Zdjęcie - 300x460px centered */}
+          {/* Zdjęcie - 300x460px centered z smooth loading */}
           <div
             className="relative mx-auto"
             style={{
               width: '300px',
               height: '460px',
               overflow: 'hidden',
+              backgroundColor: currentData.backgroundColor,
             }}
           >
             {mobileBioSlides.map((slide, index) => (
@@ -281,7 +294,7 @@ export default function MobileBio() {
                 className="absolute"
                 style={{
                   ...mobileImageStyles[index],
-                  opacity: index === currentSlide ? 1 : 0,
+                  opacity: index === currentSlide && loadedImages.has(index) ? 1 : 0,
                   transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
                 }}
               />

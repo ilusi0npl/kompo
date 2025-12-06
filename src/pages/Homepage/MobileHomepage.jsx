@@ -3,6 +3,7 @@ import { Link, useSearchParams } from 'react-router';
 import { useScrollSlides } from './useScrollSlides';
 import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import { useTranslation } from '../../hooks/useTranslation';
+import SmoothSlideshow from '../../components/SmoothImage/SmoothSlideshow';
 import {
   mobileSlides,
   mobileLinePositions,
@@ -109,30 +110,22 @@ export default function MobileHomepage() {
       {/* Mobile Menu Overlay */}
       <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
-      {/* Główne zdjęcie - crossfade */}
-      <div
+      {/* Główne zdjęcie - crossfade z smooth loading */}
+      <SmoothSlideshow
+        slides={mobileSlides}
+        currentSlide={currentSlide}
         className="absolute"
-        style={{
+        containerStyle={{
           left: '20px',
           top: '152px',
           width: '350px',
           height: '288px',
-          overflow: 'hidden',
         }}
-      >
-        {mobileSlides.map((slide, index) => (
-          <img
-            key={slide.id}
-            src={slide.image}
-            alt={`Slide ${index + 1}`}
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{
-              opacity: index === currentSlide ? 1 : 0,
-              transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-            }}
-          />
-        ))}
-      </div>
+        placeholderColor={currentData.backgroundColor}
+        transitionDuration={TRANSITION_DURATION}
+        transitionEasing={TRANSITION_EASING}
+        getImageSrc={(slide) => slide.image}
+      />
 
       {/* Słowo (Trio/Kompo/Polex/Ensemble) - SVG z Figma */}
       {mobileSlides.map((slide, index) => (

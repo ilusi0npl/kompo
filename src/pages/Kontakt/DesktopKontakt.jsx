@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
 import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
+import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import {
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
@@ -80,23 +81,27 @@ export default function DesktopKontakt() {
         </p>
       </div>
 
-      {/* Zdjęcie zespołu */}
-      <div
-        className="absolute overflow-hidden"
-        style={{
+      {/* Zdjęcie zespołu z smooth loading */}
+      <SmoothImage
+        src="/assets/kontakt/team-photo.jpg"
+        alt="Zespół Kompopolex"
+        className="absolute"
+        containerStyle={{
           left: '185px',
           top: '180px',
           width: '300px',
           height: '460px',
         }}
-      >
-        <img
-          src="/assets/kontakt/team-photo.jpg"
-          alt="Zespół Kompopolex"
-          className="w-full h-full object-cover"
-          style={{ objectPosition: '50% 50%' }}
-        />
-      </div>
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: '50% 50%',
+        }}
+        placeholderColor="#e5e5e5"
+      />
 
       {/* Dane fundacji */}
       <div

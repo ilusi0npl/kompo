@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useScrollSlides } from '../Homepage/useScrollSlides';
 import {
   desktopBioSlides,
@@ -23,6 +23,18 @@ export default function DesktopBio() {
   const { currentSlide } = useScrollSlides(desktopBioSlides.length);
   const currentData = desktopBioSlides[currentSlide];
   const { t } = useTranslation();
+  const [loadedImages, setLoadedImages] = useState(new Set());
+
+  // Preload wszystkich obrazów Bio
+  useEffect(() => {
+    desktopBioSlides.forEach((slide, index) => {
+      const img = new Image();
+      img.onload = () => {
+        setLoadedImages((prev) => new Set(prev).add(index));
+      };
+      img.src = slide.image;
+    });
+  }, []);
 
   // Sync background and line colors with CSS variables for ResponsiveWrapper
   useEffect(() => {
@@ -88,6 +100,7 @@ export default function DesktopBio() {
             width: '300px',
             height: '460px',
             overflow: 'hidden',
+            backgroundColor: slide.backgroundColor,
             opacity: index === currentSlide ? 1 : 0,
             transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
             pointerEvents: index === currentSlide ? 'auto' : 'none',
@@ -96,7 +109,11 @@ export default function DesktopBio() {
           <img
             src={slide.image}
             alt={slide.name}
-            style={slide.imageStyle}
+            style={{
+              ...slide.imageStyle,
+              opacity: loadedImages.has(index) ? 1 : 0,
+              transition: 'opacity 0.5s ease-in-out',
+            }}
           />
         </div>
       ))}

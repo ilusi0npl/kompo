@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
 import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
+import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import {
   eventData,
   DESKTOP_WIDTH,
@@ -103,27 +104,27 @@ export default function DesktopWydarzenie() {
         </p>
       </div>
 
-      {/* Obraz wydarzenia - centered at 555px (1440/2 - 330/2 = 555) */}
-      <div
+      {/* Obraz wydarzenia - centered at 555px (1440/2 - 330/2 = 555) z smooth loading */}
+      <SmoothImage
+        src={eventData.image}
+        alt={eventData.title}
         className="absolute"
-        style={{
+        containerStyle={{
           left: '555px',
           top: '334px',
           width: '330px',
           height: '462px',
-          overflow: 'hidden',
         }}
-      >
-        <img
-          src={eventData.image}
-          alt={eventData.title}
-          className="absolute inset-0 w-full h-full"
-          style={{
-            objectFit: 'cover',
-            objectPosition: '50% 50%',
-          }}
-        />
-      </div>
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: '50% 50%',
+        }}
+        placeholderColor="#e5e5e5"
+      />
 
       {/* Data i godzina frame - centered at 297px (1440/2 - 847/2 ≈ 297) */}
       <div

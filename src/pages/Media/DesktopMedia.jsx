@@ -2,6 +2,7 @@ import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
 import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
+import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import {
   photos,
   DESKTOP_WIDTH,
@@ -126,21 +127,24 @@ export default function DesktopMedia() {
             gap: '16px',
           }}
         >
-          {/* Photo */}
-          <div
-            className="relative overflow-hidden"
-            style={{
+          {/* Photo z smooth loading */}
+          <SmoothImage
+            src={photo.image}
+            alt={photo.title}
+            containerStyle={{
               width: '300px',
               height: '214px',
             }}
-          >
-            <img
-              src={photo.image}
-              alt={photo.title}
-              className="absolute inset-0 w-full h-full object-cover"
-              style={{ objectPosition: '50% 50%' }}
-            />
-          </div>
+            style={{
+              position: 'absolute',
+              inset: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: '50% 50%',
+            }}
+            placeholderColor="#e5e5e5"
+          />
 
           {/* Photo info */}
           <div className="flex flex-col" style={{ gap: '8px' }}>

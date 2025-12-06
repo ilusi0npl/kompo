@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
+import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import { videos, ACTIVE_TAB_COLOR } from './media-wideo-config';
 
 const MOBILE_WIDTH = 390;
@@ -145,22 +146,31 @@ export default function MobileMediaWideo() {
       >
         {videos.map((video) => (
           <div key={video.id} className="flex flex-col" style={{ gap: '16px' }}>
-            {/* Miniaturka wideo z przyciskiem play */}
+            {/* Miniaturka wideo z przyciskiem play - smooth loading */}
             <a
               href={video.youtubeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="relative block overflow-hidden"
+              className="relative block"
               style={{
                 width: '350px',
                 height: '197px',
               }}
             >
-              <img
+              <SmoothImage
                 src={video.thumbnail}
                 alt={video.title}
-                className="w-full h-full object-cover"
-                style={{ objectPosition: '50% 50%' }}
+                containerStyle={{
+                  width: '350px',
+                  height: '197px',
+                }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: '50% 50%',
+                }}
+                placeholderColor="#e5e5e5"
               />
               {/* Play Icon */}
               <div
@@ -171,6 +181,7 @@ export default function MobileMediaWideo() {
                   transform: 'translate(-50%, -50%)',
                   width: '50px',
                   height: '50px',
+                  zIndex: 10,
                 }}
               >
                 <img

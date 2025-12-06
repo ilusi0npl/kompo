@@ -53,7 +53,9 @@ export default function MobileMenu({ isOpen, onClose }) {
   const scaledLangFontSize = 20 * scale;
   const scaledGap = 40 * scale;
   const scaledCloseSize = 24 * scale;
-  const scaledCloseRight = 17 * scale;
+  // Figma: left-[calc(50%+40.5px)] = 102.5 + 40.5 = 143px from left
+  // So right = 205 - 143 - 24 = 38px
+  const scaledCloseLeft = 143 * scale;
   const scaledCloseTop = 44 * scale;
   const scaledNavLeft = 39 * scale;
   const scaledNavOffset = 64 * scale;
@@ -81,12 +83,12 @@ export default function MobileMenu({ isOpen, onClose }) {
         zIndex: 9999,
       }}
     >
-      {/* Close icon - position from Figma */}
+      {/* Close icon - position from Figma: left-[calc(50%+40.5px)] top-[44px] */}
       <button
         onClick={onClose}
         className="absolute"
         style={{
-          right: `${scaledCloseRight}px`,
+          left: `${scaledCloseLeft}px`,
           top: `${scaledCloseTop}px`,
           width: `${scaledCloseSize}px`,
           height: `${scaledCloseSize}px`,

@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
+import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import { events } from './kalendarz-config';
 
 const MOBILE_WIDTH = 390;
@@ -145,22 +146,23 @@ export default function MobileKalendarz() {
       >
         {events.map((event, index) => (
           <div key={event.id} className="flex flex-col" style={{ gap: '16px' }}>
-            {/* Zdjęcie */}
-            <div
-              className="overflow-hidden"
-              style={{
+            {/* Zdjęcie z smooth loading */}
+            <SmoothImage
+              src={event.image}
+              alt={event.title}
+              containerStyle={{
                 width: '300px',
                 height: '420px',
                 alignSelf: 'center',
               }}
-            >
-              <img
-                src={event.image}
-                alt={event.title}
-                className="w-full h-full object-cover"
-                style={{ objectPosition: '50% 50%' }}
-              />
-            </div>
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: '50% 50%',
+              }}
+              placeholderColor="#e5e5e5"
+            />
 
             {/* Data */}
             <p

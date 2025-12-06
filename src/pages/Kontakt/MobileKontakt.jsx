@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
+import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import { fundacjaData } from './kontakt-config';
 
 const MOBILE_WIDTH = 390;
@@ -100,22 +101,23 @@ export default function MobileKontakt() {
 
       {/* Content area - flexbox grow */}
       <div className="relative flex-grow flex flex-col">
-        {/* Zdjęcie zespołu - 300x460px centered */}
-        <div
-          className="relative mx-auto flex-shrink-0"
-          style={{
+        {/* Zdjęcie zespołu z smooth loading - 300x460px centered */}
+        <SmoothImage
+          src="/assets/kontakt/team-photo.jpg"
+          alt="Zespół Kompopolex"
+          className="mx-auto flex-shrink-0"
+          containerStyle={{
             width: '300px',
             height: '460px',
-            overflow: 'hidden',
           }}
-        >
-          <img
-            src="/assets/kontakt/team-photo.jpg"
-            alt="Zespół Kompopolex"
-            className="w-full h-full object-cover"
-            style={{ objectPosition: '50% 50%' }}
-          />
-        </div>
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: '50% 50%',
+          }}
+          placeholderColor="#e5e5e5"
+        />
 
         {/* Dane fundacji */}
         <div

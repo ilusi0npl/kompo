@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { useScrollSlides } from './useScrollSlides';
 import { useTranslation } from '../../hooks/useTranslation';
 import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
+import SmoothSlideshow from '../../components/SmoothImage/SmoothSlideshow';
 import {
   desktopSlides,
   DESKTOP_WIDTH,
@@ -75,30 +76,22 @@ export default function DesktopHomepage() {
         </Link>
       ))}
 
-      {/* Główne zdjęcie - crossfade */}
-      <div
+      {/* Główne zdjęcie - crossfade z smooth loading */}
+      <SmoothSlideshow
+        slides={desktopSlides}
+        currentSlide={currentSlide}
         className="absolute"
-        style={{
+        containerStyle={{
           left: '185px',
           top: '180px',
           width: '740px',
           height: '420px',
-          overflow: 'hidden',
         }}
-      >
-        {desktopSlides.map((slide, index) => (
-          <img
-            key={slide.id}
-            src={slide.image}
-            alt={`Slide ${index + 1}`}
-            className="absolute inset-0 w-full h-full object-cover"
-            style={{
-              opacity: index === currentSlide ? 1 : 0,
-              transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-            }}
-          />
-        ))}
-      </div>
+        placeholderColor={currentData.backgroundColor}
+        transitionDuration={TRANSITION_DURATION}
+        transitionEasing={TRANSITION_EASING}
+        getImageSrc={(slide) => slide.image}
+      />
 
       {/* Tekst tagline */}
       {desktopSlides.map((slide, index) => (
