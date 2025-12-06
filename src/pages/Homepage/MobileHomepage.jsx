@@ -1,5 +1,7 @@
-import { Link } from 'react-router';
+import { useState, useEffect } from 'react';
+import { Link, useSearchParams } from 'react-router';
 import { useScrollSlides } from './useScrollSlides';
+import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import {
   mobileSlides,
   mobileLinePositions,
@@ -11,6 +13,15 @@ const TRANSITION_DURATION = '1s';
 const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 
 export default function MobileHomepage() {
+  const [searchParams] = useSearchParams();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const menuParam = searchParams.get('menu');
+    if (menuParam === 'open') {
+      setIsMenuOpen(true);
+    }
+  }, [searchParams]);
   const { currentSlide } = useScrollSlides(mobileSlides.length);
   const currentData = mobileSlides[currentSlide];
 
@@ -59,8 +70,9 @@ export default function MobileHomepage() {
         </Link>
       ))}
 
-      {/* MENU */}
-      <p
+      {/* MENU button */}
+      <button
+        onClick={() => setIsMenuOpen(true)}
         className="absolute"
         style={{
           left: '312px',
@@ -71,10 +83,17 @@ export default function MobileHomepage() {
           lineHeight: 'normal',
           color: currentData.textColor,
           transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+          background: 'transparent',
+          border: 'none',
+          padding: 0,
+          cursor: 'pointer',
         }}
       >
         MENU
-      </p>
+      </button>
+
+      {/* Mobile Menu Overlay */}
+      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
 
       {/* Główne zdjęcie - crossfade */}
       <div

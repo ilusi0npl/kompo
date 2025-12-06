@@ -85,6 +85,14 @@
       "height": 847,
       "selector": "[data-section='kontakt']",
       "pageUrl": "http://localhost:5173/kontakt"
+    },
+    "mobile-menu": {
+      "figmaNodeId": "71-571",
+      "y": 0,
+      "height": 683,
+      "width": 390,
+      "selector": "[data-section='hero-mobile']",
+      "pageUrl": "http://localhost:5174/test-mobile-menu?menu=open"
     }
   }
 }
