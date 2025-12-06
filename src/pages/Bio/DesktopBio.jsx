@@ -1,7 +1,7 @@
+import { useEffect } from 'react';
 import { useScrollSlides } from '../Homepage/useScrollSlides';
 import {
   desktopBioSlides,
-  desktopLinePositions,
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
 } from './bio-config';
@@ -11,9 +11,18 @@ import Footer from '../../components/Footer/Footer';
 const TRANSITION_DURATION = '1s';
 const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 
+// Pozycje linii pionowych z Figma
+const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
+
 export default function DesktopBio() {
   const { currentSlide } = useScrollSlides(desktopBioSlides.length);
   const currentData = desktopBioSlides[currentSlide];
+
+  // Sync background and line colors with CSS variables for ResponsiveWrapper
+  useEffect(() => {
+    document.documentElement.style.setProperty('--page-bg', currentData.backgroundColor);
+    document.documentElement.style.setProperty('--line-color', currentData.lineColor);
+  }, [currentData.backgroundColor, currentData.lineColor]);
 
   return (
     <section
@@ -26,13 +35,13 @@ export default function DesktopBio() {
         transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
       }}
     >
-      {/* Pionowe linie w tle */}
-      {desktopLinePositions.map((left, index) => (
+      {/* Pionowe linie dekoracyjne */}
+      {LINE_POSITIONS.map((x) => (
         <div
-          key={index}
+          key={x}
           className="absolute top-0"
           style={{
-            left: `${left}px`,
+            left: `${x}px`,
             width: '1px',
             height: '100%',
             backgroundColor: currentData.lineColor,

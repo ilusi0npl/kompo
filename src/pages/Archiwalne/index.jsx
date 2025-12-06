@@ -8,6 +8,8 @@ export default function Archiwalne() {
       mobileContent={<DesktopArchiwalne />} // TODO: Mobile version
       desktopHeight={1792}
       mobileHeight={1792}
+      backgroundColor="#FDFDFD"
+      lineColor="#A0E38A"
     />
   );
 }

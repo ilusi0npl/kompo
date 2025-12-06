@@ -8,6 +8,8 @@ export default function Kalendarz() {
       mobileContent={<DesktopKalendarz />} // TODO: Mobile version
       desktopHeight={2008}
       mobileHeight={2008}
+      backgroundColor="#FDFDFD"
+      lineColor="#A0E38A"
     />
   );
 }

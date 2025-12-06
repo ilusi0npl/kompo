@@ -1,13 +1,15 @@
 import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
 import {
-  desktopLinePositions,
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
-  LINE_COLOR,
   BACKGROUND_COLOR,
   fundacjaData,
 } from './kontakt-config';
+
+// Pozycje linii pionowych z Figma
+const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
+const LINE_COLOR = '#FFBD19';
 
 export default function DesktopKontakt() {
   return (
@@ -20,13 +22,13 @@ export default function DesktopKontakt() {
         backgroundColor: BACKGROUND_COLOR,
       }}
     >
-      {/* Pionowe linie w tle */}
-      {desktopLinePositions.map((left, index) => (
+      {/* Pionowe linie dekoracyjne */}
+      {LINE_POSITIONS.map((x) => (
         <div
-          key={index}
+          key={x}
           className="absolute top-0"
           style={{
-            left: `${left}px`,
+            left: `${x}px`,
             width: '1px',
             height: '100%',
             backgroundColor: LINE_COLOR,

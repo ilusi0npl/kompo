@@ -143,7 +143,7 @@ html, body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  background-color: #FDFDFD;
+  background-color: var(--page-bg, #FDFDFD);
 }
 
 body {

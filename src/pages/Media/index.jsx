@@ -8,6 +8,8 @@ export default function Media() {
       mobileContent={<DesktopMedia />} // TODO: Mobile version
       desktopHeight={1043}
       mobileHeight={1043}
+      backgroundColor="#34B898"
+      lineColor="#01936F"
     />
   );
 }

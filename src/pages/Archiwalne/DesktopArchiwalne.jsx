@@ -2,10 +2,13 @@ import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
 import {
   archivedEvents,
-  desktopLinePositions,
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
 } from './archiwalne-config';
+
+// Pozycje linii pionowych z Figma
+const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
+const LINE_COLOR = '#A0E38A';
 
 export default function DesktopArchiwalne() {
   return (
@@ -18,16 +21,16 @@ export default function DesktopArchiwalne() {
         backgroundColor: '#FDFDFD',
       }}
     >
-      {/* Pionowe linie w tle */}
-      {desktopLinePositions.map((left, index) => (
+      {/* Pionowe linie dekoracyjne */}
+      {LINE_POSITIONS.map((x) => (
         <div
-          key={index}
+          key={x}
           className="absolute top-0"
           style={{
-            left: `${left}px`,
+            left: `${x}px`,
             width: '1px',
             height: '100%',
-            backgroundColor: '#A0E38A',
+            backgroundColor: LINE_COLOR,
           }}
         />
       ))}

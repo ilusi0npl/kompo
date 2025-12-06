@@ -9,6 +9,8 @@ export default function Wydarzenie() {
       mobileContent={<DesktopWydarzenie />}
       desktopHeight={DESKTOP_HEIGHT}
       mobileHeight={DESKTOP_HEIGHT}
+      backgroundColor="#FDFDFD"
+      lineColor="#A0E38A"
     />
   );
 }
