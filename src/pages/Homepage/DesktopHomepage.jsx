@@ -51,21 +51,22 @@ export default function DesktopHomepage() {
 
       {/* Logo - wszystkie renderowane, CSS transition na opacity */}
       {desktopSlides.map((slide, index) => (
-        <img
-          key={slide.id}
-          src={slide.logoSrc}
-          alt="Kompopolex"
-          className="absolute"
-          style={{
-            left: '185px',
-            top: '60px',
-            width: '149px',
-            height: '60px',
-            opacity: index === currentSlide ? 1 : 0,
-            transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-            pointerEvents: index === currentSlide ? 'auto' : 'none',
-          }}
-        />
+        <Link to="/" key={slide.id}>
+          <img
+            src={slide.logoSrc}
+            alt="Kompopolex"
+            className="absolute"
+            style={{
+              left: '185px',
+              top: '60px',
+              width: '149px',
+              height: '60px',
+              opacity: index === currentSlide ? 1 : 0,
+              transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+              pointerEvents: index === currentSlide ? 'auto' : 'none',
+            }}
+          />
+        </Link>
       ))}
 
       {/* Główne zdjęcie - crossfade */}

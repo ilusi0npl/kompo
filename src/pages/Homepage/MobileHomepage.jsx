@@ -1,3 +1,4 @@
+import { Link } from 'react-router';
 import { useScrollSlides } from './useScrollSlides';
 import {
   mobileSlides,
@@ -40,21 +41,22 @@ export default function MobileHomepage() {
 
       {/* Logo - wszystkie preloadowane, CSS transition na opacity */}
       {mobileSlides.map((slide, index) => (
-        <img
-          key={slide.id}
-          src={slide.logoSrc}
-          alt="Kompopolex"
-          className="absolute"
-          style={{
-            left: '20px',
-            top: '40px',
-            width: '104px',
-            height: '42px',
-            opacity: index === currentSlide ? 1 : 0,
-            transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-            pointerEvents: index === currentSlide ? 'auto' : 'none',
-          }}
-        />
+        <Link to="/" key={slide.id}>
+          <img
+            src={slide.logoSrc}
+            alt="Kompopolex"
+            className="absolute"
+            style={{
+              left: '20px',
+              top: '40px',
+              width: '104px',
+              height: '42px',
+              opacity: index === currentSlide ? 1 : 0,
+              transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+              pointerEvents: index === currentSlide ? 'auto' : 'none',
+            }}
+          />
+        </Link>
       ))}
 
       {/* MENU */}
