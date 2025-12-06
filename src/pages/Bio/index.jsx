@@ -1,7 +1,7 @@
 import ResponsiveWrapper from '../../components/ResponsiveWrapper/ResponsiveWrapper';
 import DesktopBio from './DesktopBio';
 import MobileBio from './MobileBio';
-import { DESKTOP_HEIGHT, MOBILE_HEIGHT } from './bio-config';
+import { DESKTOP_HEIGHT } from './bio-config';
 
 export default function Bio() {
   return (
@@ -9,7 +9,7 @@ export default function Bio() {
       desktopContent={<DesktopBio />}
       mobileContent={<MobileBio />}
       desktopHeight={DESKTOP_HEIGHT}
-      mobileHeight={MOBILE_HEIGHT}
+      mobileHeight="100vh"
     />
   );
 }

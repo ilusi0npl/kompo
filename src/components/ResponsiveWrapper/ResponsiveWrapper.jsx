@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // Wymiary z Figma
 const DESKTOP_WIDTH = 1440;
@@ -13,7 +13,7 @@ export default function ResponsiveWrapper({
   desktopContent,
   mobileContent,
   desktopHeight = 700,
-  mobileHeight = 683,
+  mobileHeight = 'auto',
   backgroundColor = null,
   lineColor = null,
 }) {
@@ -21,6 +21,8 @@ export default function ResponsiveWrapper({
     width: typeof window !== 'undefined' ? window.innerWidth : DESKTOP_WIDTH,
     height: typeof window !== 'undefined' ? window.innerHeight : 800,
   });
+  const [contentHeight, setContentHeight] = useState(0);
+  const contentRef = useRef(null);
 
   useEffect(() => {
     const handleResize = () => {
@@ -34,6 +36,19 @@ export default function ResponsiveWrapper({
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Measure actual content height for auto mode
+  useEffect(() => {
+    if (contentRef.current) {
+      const observer = new ResizeObserver((entries) => {
+        for (const entry of entries) {
+          setContentHeight(entry.contentRect.height);
+        }
+      });
+      observer.observe(contentRef.current);
+      return () => observer.disconnect();
+    }
+  }, []);
+
   const viewportWidth = viewport.width;
   const viewportHeight = viewport.height;
 
@@ -41,9 +56,27 @@ export default function ResponsiveWrapper({
 
   // Calculate scale factor
   const baseWidth = isMobile ? MOBILE_WIDTH : DESKTOP_WIDTH;
-  const baseHeight = isMobile ? mobileHeight : desktopHeight;
   const scale = viewportWidth / baseWidth;
-  const scaledHeight = baseHeight * scale;
+
+  // Handle height values
+  const rawBaseHeight = isMobile ? mobileHeight : desktopHeight;
+  const isAuto = rawBaseHeight === 'auto';
+  const isFullViewport = rawBaseHeight === '100vh';
+
+  let baseHeight;
+  let scaledHeight;
+
+  if (isAuto) {
+    // Use measured content height
+    baseHeight = contentHeight || viewportHeight / scale;
+    scaledHeight = contentHeight * scale || viewportHeight;
+  } else if (isFullViewport) {
+    baseHeight = viewportHeight / scale;
+    scaledHeight = viewportHeight;
+  } else {
+    baseHeight = rawBaseHeight;
+    scaledHeight = baseHeight * scale;
+  }
 
   // Determine background and line colors
   const bgColor = backgroundColor || 'var(--page-bg, transparent)';
@@ -62,17 +95,20 @@ export default function ResponsiveWrapper({
     <div
       style={{
         width: '100%',
-        height: `${Math.max(scaledHeight, viewportHeight)}px`,
+        minHeight: isAuto ? `${Math.max(scaledHeight, viewportHeight)}px` : `${Math.max(scaledHeight, viewportHeight)}px`,
+        height: isAuto ? 'auto' : `${Math.max(scaledHeight, viewportHeight)}px`,
         background: `${lineGradients}, ${bgColor}`,
         position: 'relative',
-        overflow: 'hidden',
+        overflow: isAuto ? 'visible' : 'hidden',
       }}
     >
       {/* Skalowana treść */}
       <div
+        ref={contentRef}
         style={{
           width: `${baseWidth}px`,
-          height: `${baseHeight}px`,
+          height: isAuto ? 'auto' : (isFullViewport ? `${baseHeight}px` : 'auto'),
+          minHeight: isAuto ? undefined : (isFullViewport ? undefined : `${baseHeight}px`),
           transform: `scale(${scale})`,
           transformOrigin: 'top left',
           position: 'absolute',

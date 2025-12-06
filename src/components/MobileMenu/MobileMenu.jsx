@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { createPortal } from 'react-dom';
 
 export default function MobileMenu({ isOpen, onClose }) {
   if (!isOpen) return null;
@@ -7,34 +8,31 @@ export default function MobileMenu({ isOpen, onClose }) {
     { label: 'Bio', to: '/bio' },
     { label: 'Media', to: '/media' },
     { label: 'Kalendarz', to: '/kalendarz' },
-    { label: 'Repertuar', to: '/repertuar' },
+    { label: 'Repertuar', to: '#' },
     { label: 'Kontakt', to: '/kontakt' },
   ];
 
-  // Panel pozycjonowany absolutnie w sekcji 390x683
-  // left: 50% - 10px = 185px
-  // top: calc(50% - 67.5px) z translateY(-50%) = (341.5 - 67.5) - 274 = 0px
-  return (
+  // Use portal to render menu outside of scaled wrapper
+  // Position fixed relative to viewport
+  const menuContent = (
     <div
-      className="absolute overflow-hidden"
+      className="fixed overflow-hidden"
       style={{
-        left: '185px',
-        top: '50%',
-        transform: 'translateY(calc(-50% - 67.5px))',
-        width: '205px',
-        height: '548px',
+        right: 0,
+        top: 0,
+        width: '52.6%', // ~205px on 390px = 52.6%
+        height: '100vh',
         backgroundColor: '#FDFDFD',
         borderLeft: '1px solid #131313',
-        borderBottom: '1px solid #131313',
-        zIndex: 50,
+        zIndex: 9999,
       }}
     >
-      {/* Close icon - pozycja: left + 50% + 40.5 = 185 + 102.5 + 40.5 = w panelu: 143px from panel left */}
+      {/* Close icon - positioned relative to panel width */}
       <button
         onClick={onClose}
         className="absolute"
         style={{
-          left: '143px',
+          right: '20px',
           top: '44px',
           width: '24px',
           height: '24px',
@@ -51,15 +49,14 @@ export default function MobileMenu({ isOpen, onClose }) {
         />
       </button>
 
-      {/* Menu items - z Figma: top: calc(50% + 64px) z translateY(-50%) */}
+      {/* Menu items - centered vertically */}
       <nav
         className="absolute flex flex-col"
         style={{
-          left: '39px',
+          left: '20%',
           top: '50%',
-          transform: 'translateY(calc(-50% + 64px))',
+          transform: 'translateY(-50%)',
           gap: '40px',
-          width: '100px',
         }}
       >
         {menuItems.map((item) => (
@@ -87,7 +84,6 @@ export default function MobileMenu({ isOpen, onClose }) {
             lineHeight: 'normal',
             color: '#131313',
             cursor: 'pointer',
-            width: '100px',
           }}
         >
           ENG
@@ -95,4 +91,7 @@ export default function MobileMenu({ isOpen, onClose }) {
       </nav>
     </div>
   );
+
+  // Render using portal to escape the scaled wrapper
+  return createPortal(menuContent, document.body);
 }

@@ -1,13 +1,14 @@
 import ResponsiveWrapper from '../../components/ResponsiveWrapper/ResponsiveWrapper';
 import DesktopKontakt from './DesktopKontakt';
+import MobileKontakt from './MobileKontakt';
 
 export default function Kontakt() {
   return (
     <ResponsiveWrapper
       desktopContent={<DesktopKontakt />}
-      mobileContent={<DesktopKontakt />} // TODO: Mobile version
+      mobileContent={<MobileKontakt />}
       desktopHeight={847}
-      mobileHeight={847}
+      mobileHeight={1200}
       backgroundColor="#FF734C"
       lineColor="#FFBD19"
     />

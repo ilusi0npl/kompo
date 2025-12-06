@@ -15,6 +15,7 @@ const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 export default function MobileHomepage() {
   const [searchParams] = useSearchParams();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [viewportHeight, setViewportHeight] = useState(typeof window !== 'undefined' ? window.innerHeight : 800);
 
   useEffect(() => {
     const menuParam = searchParams.get('menu');
@@ -22,8 +23,19 @@ export default function MobileHomepage() {
       setIsMenuOpen(true);
     }
   }, [searchParams]);
+
+  useEffect(() => {
+    const handleResize = () => setViewportHeight(window.innerHeight);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   const { currentSlide } = useScrollSlides(mobileSlides.length);
   const currentData = mobileSlides[currentSlide];
+
+  // Oblicz skalę i minimalną wysokość żeby pokryć cały viewport
+  const scale = typeof window !== 'undefined' ? window.innerWidth / MOBILE_WIDTH : 1;
+  const minHeight = Math.max(MOBILE_HEIGHT, viewportHeight / scale);
 
   return (
     <section
@@ -31,7 +43,7 @@ export default function MobileHomepage() {
       className="relative overflow-hidden"
       style={{
         width: `${MOBILE_WIDTH}px`,
-        height: `${MOBILE_HEIGHT}px`,
+        minHeight: `${minHeight}px`,
         backgroundColor: currentData.backgroundColor,
         transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
       }}

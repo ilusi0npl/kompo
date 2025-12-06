@@ -1,13 +1,14 @@
 import ResponsiveWrapper from '../../components/ResponsiveWrapper/ResponsiveWrapper';
 import DesktopMediaWideo from './DesktopMediaWideo';
+import MobileMediaWideo from './MobileMediaWideo';
 
 export default function MediaWideo() {
   return (
     <ResponsiveWrapper
       desktopContent={<DesktopMediaWideo />}
-      mobileContent={<DesktopMediaWideo />} // TODO: Mobile version
+      mobileContent={<MobileMediaWideo />}
       desktopHeight={1175}
-      mobileHeight={1175}
+      mobileHeight="auto"
       backgroundColor="#73A1FE"
       lineColor="#3478FF"
     />

@@ -71,7 +71,7 @@ export default function DesktopWydarzenie() {
             fontSize: '64px',
             lineHeight: 1.1,
             color: '#131313',
-            transform: 'rotate(-90deg)',
+            transform: 'rotate(90deg)',
             whiteSpace: 'nowrap',
           }}
         >
