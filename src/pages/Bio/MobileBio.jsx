@@ -3,11 +3,15 @@ import { createPortal } from 'react-dom';
 import { Link } from 'react-router';
 import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import MobileFooter from '../../components/Footer/MobileFooter';
+import { useTranslation } from '../../hooks/useTranslation';
 import {
   mobileBioSlides,
   mobileLinePositions,
   MOBILE_WIDTH,
 } from './bio-config';
+
+// Mapowanie indeksu slajdu na klucz tłumaczenia
+const slideTranslationKeys = ['ensemble', 'aleksandra', 'rafal', 'jacek'];
 
 const BREAKPOINT = 768;
 
@@ -33,6 +37,7 @@ export default function MobileBio() {
   const [linesVisible, setLinesVisible] = useState(false);
   const [scale, setScale] = useState(1);
   const isAnimating = useRef(false);
+  const { t } = useTranslation();
   const touchStartY = useRef(0);
   const lastScrollTop = useRef(0);
   const scrollAccumulator = useRef(0);
@@ -284,6 +289,9 @@ export default function MobileBio() {
               }}
             />
           </div>
+
+          {/* MobileMenu wewnątrz portalu */}
+          <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
         </div>,
         document.body
       )}
@@ -317,63 +325,70 @@ export default function MobileBio() {
 
         {/* Tytuł (imię) - 40px SemiBold */}
         <div className="relative" style={{ marginTop: '60px', minHeight: '96px' }}>
-          {mobileBioSlides.map((slide, index) => (
-            <p
-              key={slide.id}
-              className="absolute"
-              style={{
-                left: '20px',
-                top: 0,
-                width: '350px',
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontWeight: 600,
-                fontSize: '40px',
-                lineHeight: 1.2,
-                color: slide.textColor,
-                opacity: index === currentSlide ? 1 : 0,
-                transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-                pointerEvents: index === currentSlide ? 'auto' : 'none',
-              }}
-            >
-              {slide.name}
-            </p>
-          ))}
+          {mobileBioSlides.map((slide, index) => {
+            const translationKey = slideTranslationKeys[index];
+            return (
+              <p
+                key={slide.id}
+                className="absolute"
+                style={{
+                  left: '20px',
+                  top: 0,
+                  width: '350px',
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontWeight: 600,
+                  fontSize: '40px',
+                  lineHeight: 1.2,
+                  color: slide.textColor,
+                  opacity: index === currentSlide ? 1 : 0,
+                  transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+                  pointerEvents: index === currentSlide ? 'auto' : 'none',
+                }}
+              >
+                {t(`bio.slides.${translationKey}.name`)}
+              </p>
+            );
+          })}
         </div>
 
         {/* Paragrafy tekstu */}
         <div className="relative" style={{ marginTop: '20px' }}>
-          {mobileBioSlides.map((slide, index) => (
-            <div
-              key={slide.id}
-              style={{
-                opacity: index === currentSlide ? 1 : 0,
-                transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-                pointerEvents: index === currentSlide ? 'auto' : 'none',
-                position: index === currentSlide ? 'relative' : 'absolute',
-                top: 0,
-                left: 0,
-              }}
-            >
-              {slide.paragraphs.map((text, pIndex) => (
-                <p
-                  key={pIndex}
-                  style={{
-                    marginLeft: '20px',
-                    marginRight: '20px',
-                    marginBottom: '24px',
-                    width: '350px',
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontWeight: 500,
-                    fontSize: '16px',
-                    lineHeight: 1.48,
-                    color: slide.textColor,
-                  }}
-                >
-                  {text}
-                </p>
-              ))}
-            </div>
-          ))}
+          {mobileBioSlides.map((slide, index) => {
+            const translationKey = slideTranslationKeys[index];
+            const paragraphs = t(`bio.slides.${translationKey}.paragraphs`);
+            return (
+              <div
+                key={slide.id}
+                style={{
+                  opacity: index === currentSlide ? 1 : 0,
+                  transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+                  pointerEvents: index === currentSlide ? 'auto' : 'none',
+                  position: index === currentSlide ? 'relative' : 'absolute',
+                  top: 0,
+                  left: 0,
+                }}
+              >
+                {Array.isArray(paragraphs) && paragraphs.map((text, pIndex) => (
+                  <p
+                    key={pIndex}
+                    style={{
+                      marginLeft: '20px',
+                      marginRight: '20px',
+                      marginBottom: '24px',
+                      width: '350px',
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontWeight: 500,
+                      fontSize: '16px',
+                      lineHeight: 1.48,
+                      color: slide.textColor,
+                    }}
+                  >
+                    {text}
+                  </p>
+                ))}
+              </div>
+            );
+          })}
         </div>
 
         {/* Stopka (tylko dla ostatniego slide) */}
@@ -412,9 +427,6 @@ export default function MobileBio() {
           ))}
         </div>
       </div>
-
-      {/* MobileMenu overlay */}
-      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </section>
   );
 }

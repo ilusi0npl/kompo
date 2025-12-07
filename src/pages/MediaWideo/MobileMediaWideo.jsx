@@ -1,6 +1,4 @@
-import { useState } from 'react';
-import { Link } from 'react-router';
-import MobileMenu from '../../components/MobileMenu/MobileMenu';
+import MobileHeader from '../../components/MobileHeader/MobileHeader';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
@@ -13,7 +11,6 @@ const LINE_COLOR = '#3478FF';
 const TEXT_COLOR = '#131313';
 
 export default function MobileMediaWideo() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { t } = useTranslation();
 
   return (
@@ -40,101 +37,16 @@ export default function MobileMediaWideo() {
         />
       ))}
 
-      {/* Header */}
-      <div className="relative" style={{ height: '281px' }}>
-        {/* Logo */}
-        <Link to="/">
-          <img
-            src="/assets/logo.svg"
-            alt="Kompopolex"
-            className="absolute"
-            style={{
-              left: '20px',
-              top: '40px',
-              width: '104px',
-              height: '42px',
-            }}
-          />
-        </Link>
-
-        {/* MENU button */}
-        <button
-          onClick={() => setIsMenuOpen(true)}
-          className="absolute"
-          style={{
-            left: '312px',
-            top: '43px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 700,
-            fontSize: '24px',
-            color: TEXT_COLOR,
-            background: 'transparent',
-            border: 'none',
-            padding: 0,
-            cursor: 'pointer',
-          }}
-        >
-          MENU
-        </button>
-
-        {/* Tytuł strony rotowany - Media */}
-        <div
-          className="absolute"
-          style={{
-            left: '45px',
-            top: '240px',
-            width: '107px',
-            height: '49px',
-          }}
-        >
-          <img
-            src="/assets/media/media-text.svg"
-            alt="Media"
-            style={{
-              height: '107px',
-              transform: 'rotate(-90deg)',
-              transformOrigin: 'left top',
-            }}
-          />
-        </div>
-
-        {/* Nawigacja Zdjęcia / Wideo */}
-        <div
-          className="absolute flex"
-          style={{
-            left: '20px',
-            top: '190px',
-            gap: '20px',
-          }}
-        >
-          <Link
-            to="/media"
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 600,
-              fontSize: '16px',
-              lineHeight: 1.44,
-              color: TEXT_COLOR,
-              textDecoration: 'none',
-            }}
-          >
-            {t('common.tabs.photos')}
-          </Link>
-          <span
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 600,
-              fontSize: '16px',
-              lineHeight: 1.44,
-              color: ACTIVE_TAB_COLOR,
-              textDecoration: 'underline',
-              cursor: 'pointer',
-            }}
-          >
-            {t('common.tabs.video')}
-          </span>
-        </div>
-      </div>
+      {/* Header z nawigacją */}
+      <MobileHeader
+        title={t('media.sideTitle')}
+        textColor={TEXT_COLOR}
+        activeColor={ACTIVE_TAB_COLOR}
+        navLinks={[
+          { label: t('common.tabs.photos'), to: '/media', isActive: false },
+          { label: t('common.tabs.video'), to: '/media/wideo', isActive: true },
+        ]}
+      />
 
       {/* Lista wideo */}
       <div
@@ -220,9 +132,6 @@ export default function MobileMediaWideo() {
         }}
         textColor={TEXT_COLOR}
       />
-
-      {/* MobileMenu overlay */}
-      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </section>
   );
 }

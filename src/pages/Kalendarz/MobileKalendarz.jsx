@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import { Link } from 'react-router';
-import MobileMenu from '../../components/MobileMenu/MobileMenu';
+import MobileHeader from '../../components/MobileHeader/MobileHeader';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
@@ -13,8 +12,7 @@ const LINE_COLOR = '#A0E38A';
 const TEXT_COLOR = '#131313';
 
 export default function MobileKalendarz() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { t, language } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <section
@@ -40,101 +38,15 @@ export default function MobileKalendarz() {
         />
       ))}
 
-      {/* Header */}
-      <div className="relative" style={{ height: '281px' }}>
-        {/* Logo */}
-        <Link to="/">
-          <img
-            src="/assets/logo.svg"
-            alt="Kompopolex"
-            className="absolute"
-            style={{
-              left: '20px',
-              top: '40px',
-              width: '104px',
-              height: '42px',
-            }}
-          />
-        </Link>
-
-        {/* MENU button */}
-        <button
-          onClick={() => setIsMenuOpen(true)}
-          className="absolute"
-          style={{
-            left: '312px',
-            top: '43px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 700,
-            fontSize: '24px',
-            color: TEXT_COLOR,
-            background: 'transparent',
-            border: 'none',
-            padding: 0,
-            cursor: 'pointer',
-          }}
-        >
-          MENU
-        </button>
-
-        {/* Tytuł strony rotowany */}
-        <div
-          className="absolute"
-          style={{
-            left: '45px',
-            top: '240px',
-            width: '107px',
-            height: '49px',
-          }}
-        >
-          <img
-            src={language === 'pl' ? '/assets/kalendarz/kalendarz-text.svg' : '/assets/kalendarz/calendar-text.svg'}
-            alt={language === 'pl' ? 'Kalendarz' : 'Calendar'}
-            style={{
-              height: '107px',
-              transform: 'rotate(-90deg)',
-              transformOrigin: 'left top',
-            }}
-          />
-        </div>
-
-        {/* Nawigacja Nadchodzące / Archiwalne */}
-        <div
-          className="absolute flex"
-          style={{
-            left: '20px',
-            top: '190px',
-            gap: '20px',
-          }}
-        >
-          <span
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 600,
-              fontSize: '16px',
-              lineHeight: 1.44,
-              color: '#761FE0',
-              textDecoration: 'underline',
-              cursor: 'pointer',
-            }}
-          >
-            {t('common.tabs.upcoming')}
-          </span>
-          <Link
-            to="/archiwalne"
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 600,
-              fontSize: '16px',
-              lineHeight: 1.44,
-              color: TEXT_COLOR,
-              textDecoration: 'none',
-            }}
-          >
-            {t('common.tabs.archived')}
-          </Link>
-        </div>
-      </div>
+      {/* Header z nawigacją */}
+      <MobileHeader
+        title={t('kalendarz.sideTitle')}
+        textColor={TEXT_COLOR}
+        navLinks={[
+          { label: t('common.tabs.upcoming'), to: '/kalendarz', isActive: true },
+          { label: t('common.tabs.archived'), to: '/archiwalne', isActive: false },
+        ]}
+      />
 
       {/* Lista eventów */}
       <div
@@ -277,9 +189,6 @@ export default function MobileKalendarz() {
         }}
         textColor={TEXT_COLOR}
       />
-
-      {/* MobileMenu overlay */}
-      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </section>
   );
 }

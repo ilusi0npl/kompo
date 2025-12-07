@@ -1,6 +1,4 @@
-import { useState } from 'react';
-import { Link } from 'react-router';
-import MobileMenu from '../../components/MobileMenu/MobileMenu';
+import MobileHeader from '../../components/MobileHeader/MobileHeader';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
@@ -13,7 +11,6 @@ const LINE_COLOR = '#A0E38A';
 const TEXT_COLOR = '#131313';
 
 export default function MobileWydarzenie() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { t, language } = useTranslation();
 
   return (
@@ -40,69 +37,11 @@ export default function MobileWydarzenie() {
         />
       ))}
 
-      {/* Header */}
-      <div className="relative" style={{ height: '281px' }}>
-        {/* Logo */}
-        <Link to="/">
-          <img
-            src="/assets/logo.svg"
-            alt="Kompopolex"
-            className="absolute"
-            style={{
-              left: '20px',
-              top: '40px',
-              width: '104px',
-              height: '42px',
-            }}
-          />
-        </Link>
-
-        {/* MENU button */}
-        <button
-          onClick={() => setIsMenuOpen(true)}
-          className="absolute"
-          style={{
-            left: '312px',
-            top: '43px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 700,
-            fontSize: '24px',
-            color: TEXT_COLOR,
-            background: 'transparent',
-            border: 'none',
-            padding: 0,
-            cursor: 'pointer',
-          }}
-        >
-          MENU
-        </button>
-
-        {/* Tytuł strony rotowany - Wydarzenie */}
-        <div
-          className="absolute"
-          style={{
-            left: '45px',
-            top: '240px',
-            width: '107px',
-            height: '49px',
-          }}
-        >
-          <span
-            style={{
-              display: 'block',
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 600,
-              fontSize: '36px',
-              color: TEXT_COLOR,
-              transform: 'rotate(-90deg)',
-              transformOrigin: 'left top',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            {t('wydarzenie.sideTitle')}
-          </span>
-        </div>
-      </div>
+      {/* Header z tytułem */}
+      <MobileHeader
+        title={t('wydarzenie.sideTitle')}
+        textColor={TEXT_COLOR}
+      />
 
       {/* Treść wydarzenia */}
       <div
@@ -306,9 +245,6 @@ export default function MobileWydarzenie() {
         }}
         textColor={TEXT_COLOR}
       />
-
-      {/* MobileMenu overlay */}
-      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </section>
   );
 }

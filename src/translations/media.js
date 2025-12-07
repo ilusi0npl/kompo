@@ -2,6 +2,7 @@
 // Photo titles and captions
 
 export const pl = {
+  sideTitle: 'Media',
   photos: {
     photo1: {
       title: 'Festiwal Klang',
@@ -25,6 +26,7 @@ export const pl = {
 };
 
 export const en = {
+  sideTitle: 'Media',
   photos: {
     photo1: {
       title: 'Klang Festival',

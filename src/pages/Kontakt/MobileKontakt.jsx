@@ -1,6 +1,4 @@
-import { useState } from 'react';
-import { Link } from 'react-router';
-import MobileMenu from '../../components/MobileMenu/MobileMenu';
+import MobileHeader from '../../components/MobileHeader/MobileHeader';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
@@ -13,7 +11,6 @@ const LINE_COLOR = '#FFBD19';
 const TEXT_COLOR = '#131313';
 
 export default function MobileKontakt() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { t } = useTranslation();
 
   return (
@@ -41,64 +38,11 @@ export default function MobileKontakt() {
         />
       ))}
 
-      {/* Header z logo i menu */}
-      <div
-        className="relative flex-shrink-0"
-        style={{
-          width: `${MOBILE_WIDTH}px`,
-          paddingTop: '40px',
-          paddingBottom: '20px',
-        }}
-      >
-        {/* Logo */}
-        <Link to="/">
-          <img
-            src="/assets/logo.svg"
-            alt="Kompopolex"
-            style={{
-              marginLeft: '20px',
-              width: '104px',
-              height: '42px',
-            }}
-          />
-        </Link>
-
-        {/* MENU button */}
-        <button
-          onClick={() => setIsMenuOpen(true)}
-          className="absolute"
-          style={{
-            left: '312px',
-            top: '43px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 700,
-            fontSize: '24px',
-            lineHeight: 'normal',
-            color: TEXT_COLOR,
-            background: 'transparent',
-            border: 'none',
-            padding: 0,
-            cursor: 'pointer',
-          }}
-        >
-          MENU
-        </button>
-
-        {/* Tytuł strony - poziomy tekst */}
-        <p
-          style={{
-            marginLeft: '20px',
-            marginTop: '38px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '40px',
-            lineHeight: 1.2,
-            color: TEXT_COLOR,
-          }}
-        >
-          {t('kontakt.sideTitle')}
-        </p>
-      </div>
+      {/* Header z tytułem */}
+      <MobileHeader
+        title={t('kontakt.sideTitle')}
+        textColor={TEXT_COLOR}
+      />
 
       {/* Content area - flexbox grow */}
       <div className="relative flex-grow flex flex-col">
@@ -195,8 +139,6 @@ export default function MobileKontakt() {
         </div>
       </div>
 
-      {/* MobileMenu overlay */}
-      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </section>
   );
 }

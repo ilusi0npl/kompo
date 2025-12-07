@@ -3,6 +3,7 @@
 ## Project Overview
 
 DO NOT COMMIT ANYTHING WITHOUT EXPLICIT ASKED!
+DO NOT DEPLOY TO VERCEL WITHOUT EXPLICIT ASKED!
 
 **Cel**: Pixel-perfect implementacja stron React z designów Figma.
 
