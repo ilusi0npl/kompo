@@ -394,9 +394,10 @@ export default function MobileBio() {
         {/* Stopka (tylko dla ostatniego slide) */}
         {currentData.hasFooter && (
           <MobileFooter
+            className="mt-16"
             style={{
               marginLeft: '20px',
-              marginTop: '40px',
+              marginRight: '20px',
               width: '350px',
             }}
             textColor={currentData.textColor}
@@ -406,7 +407,7 @@ export default function MobileBio() {
         {/* Slide indicator */}
         <div
           className="flex justify-center gap-2"
-          style={{ marginTop: '40px', paddingBottom: '20px' }}
+          style={{ marginTop: '40px', paddingBottom: '40px' }}
         >
           {mobileBioSlides.map((_, index) => (
             <button

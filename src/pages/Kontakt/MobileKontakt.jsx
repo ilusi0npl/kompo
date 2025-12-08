@@ -16,7 +16,7 @@ export default function MobileKontakt() {
   return (
     <section
       data-section="kontakt-mobile"
-      className="relative flex flex-col"
+      className="relative overflow-hidden"
       style={{
         width: `${MOBILE_WIDTH}px`,
         minHeight: '100vh',
@@ -27,12 +27,11 @@ export default function MobileKontakt() {
       {mobileLinePositions.map((left, index) => (
         <div
           key={index}
-          className="absolute"
+          className="absolute top-0"
           style={{
             left: `${left}px`,
-            top: 0,
-            bottom: 0,
             width: '1px',
+            height: '100%',
             backgroundColor: LINE_COLOR,
           }}
         />
@@ -44,101 +43,98 @@ export default function MobileKontakt() {
         textColor={TEXT_COLOR}
       />
 
-      {/* Content area - flexbox grow */}
-      <div className="relative flex-grow flex flex-col">
-        {/* Zdjęcie zespołu z smooth loading - 300x460px centered */}
-        <SmoothImage
-          src="/assets/kontakt/team-photo.jpg"
-          alt="Zespół Kompopolex"
-          className="mx-auto flex-shrink-0"
-          containerStyle={{
-            width: '300px',
-            height: '460px',
-          }}
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            objectPosition: '50% 50%',
-          }}
-          placeholderColor="#e5e5e5"
-        />
+      {/* Zdjęcie zespołu z smooth loading - 300x460px centered */}
+      <SmoothImage
+        src="/assets/kontakt/team-photo.jpg"
+        alt="Zespół Kompopolex"
+        className="mx-auto"
+        containerStyle={{
+          width: '300px',
+          height: '460px',
+        }}
+        style={{
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          objectPosition: '50% 50%',
+        }}
+        placeholderColor="#e5e5e5"
+      />
 
-        {/* Dane fundacji */}
-        <div
-          className="flex flex-col flex-shrink-0"
+      {/* Dane fundacji */}
+      <div
+        className="flex flex-col"
+        style={{
+          marginTop: '40px',
+          marginLeft: '20px',
+          width: '350px',
+          gap: '16px',
+        }}
+      >
+        {/* Tytuł */}
+        <p
           style={{
-            marginTop: '40px',
-            marginLeft: '20px',
-            width: '350px',
-            gap: '16px',
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 600,
+            fontSize: '24px',
+            lineHeight: 1.4,
+            color: TEXT_COLOR,
+            textDecoration: 'underline',
+            textTransform: 'uppercase',
           }}
         >
-          {/* Tytuł */}
-          <p
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 600,
-              fontSize: '24px',
-              lineHeight: 1.4,
-              color: TEXT_COLOR,
-              textDecoration: 'underline',
-              textTransform: 'uppercase',
-            }}
-          >
-            {t('kontakt.title')}
-          </p>
+          {t('kontakt.title')}
+        </p>
 
-          {/* Dane */}
-          <div
-            className="flex flex-col"
-            style={{
-              gap: '16px',
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 600,
-              fontSize: '16px',
-              lineHeight: 1.48,
-              color: TEXT_COLOR,
-            }}
-          >
-            <p>{t('kontakt.krs')} {fundacjaData.krs}</p>
-            <p>{t('kontakt.regon')} {fundacjaData.regon}</p>
-            <p>{t('kontakt.nip')} {fundacjaData.nip}</p>
-            <div>
-              <p>{t('kontakt.bankAccount')}</p>
-              <p>{fundacjaData.bankAccount}</p>
-            </div>
+        {/* Dane */}
+        <div
+          className="flex flex-col"
+          style={{
+            gap: '16px',
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 600,
+            fontSize: '16px',
+            lineHeight: 1.48,
+            color: TEXT_COLOR,
+          }}
+        >
+          <p>{t('kontakt.krs')} {fundacjaData.krs}</p>
+          <p>{t('kontakt.regon')} {fundacjaData.regon}</p>
+          <p>{t('kontakt.nip')} {fundacjaData.nip}</p>
+          <div>
+            <p>{t('kontakt.bankAccount')}</p>
+            <p>{fundacjaData.bankAccount}</p>
           </div>
-
-          {/* Email */}
-          <a
-            href={`mailto:${fundacjaData.email}`}
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 600,
-              fontSize: '16px',
-              lineHeight: 1.48,
-              color: TEXT_COLOR,
-              textDecoration: 'underline',
-              textTransform: 'uppercase',
-            }}
-          >
-            {fundacjaData.email}
-          </a>
         </div>
 
-        {/* Stopka - dynamiczny margines */}
-        <div className="flex-shrink-0 mt-auto" style={{ paddingTop: '40px', paddingBottom: '40px' }}>
-          <MobileFooter
-            style={{
-              marginLeft: '20px',
-              width: '350px',
-            }}
-            textColor={TEXT_COLOR}
-          />
-        </div>
+        {/* Email */}
+        <a
+          href={`mailto:${fundacjaData.email}`}
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 600,
+            fontSize: '16px',
+            lineHeight: 1.48,
+            color: TEXT_COLOR,
+            textDecoration: 'underline',
+            textTransform: 'uppercase',
+          }}
+        >
+          {fundacjaData.email}
+        </a>
       </div>
 
+      {/* Stopka */}
+      <MobileFooter
+        className="mt-16"
+        style={{
+          marginLeft: '20px',
+          marginRight: '20px',
+          marginBottom: '40px',
+          width: '350px',
+        }}
+        textColor={TEXT_COLOR}
+      />
     </section>
   );
 }
