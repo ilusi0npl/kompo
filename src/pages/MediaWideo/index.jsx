@@ -11,6 +11,7 @@ export default function MediaWideo() {
       mobileHeight="auto"
       backgroundColor="#73A1FE"
       lineColor="#3478FF"
+      hideLines={true}
     />
   );
 }

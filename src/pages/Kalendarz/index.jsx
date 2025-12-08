@@ -11,6 +11,7 @@ export default function Kalendarz() {
       mobileHeight="auto"
       backgroundColor="#FDFDFD"
       lineColor="#A0E38A"
+      hideLines={true}
     />
   );
 }

@@ -96,9 +96,10 @@ export default function ResponsiveWrapper({
     <div
       style={{
         width: '100%',
-        minHeight: isAuto ? `${Math.max(scaledHeight, viewportHeight)}px` : `${Math.max(scaledHeight, viewportHeight)}px`,
+        minHeight: `${Math.max(scaledHeight, viewportHeight)}px`,
         height: isAuto ? 'auto' : `${Math.max(scaledHeight, viewportHeight)}px`,
         background: hideLines ? bgColor : `${lineGradients}, ${bgColor}`,
+        transition: 'background-color 1s cubic-bezier(0.4, 0, 0.2, 1)',
         position: 'relative',
         overflow: isAuto ? 'visible' : 'hidden',
       }}

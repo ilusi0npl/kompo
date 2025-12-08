@@ -11,6 +11,7 @@ export default function Archiwalne() {
       mobileHeight={4000}
       backgroundColor="#FDFDFD"
       lineColor="#A0E38A"
+      hideLines={true}
     />
   );
 }

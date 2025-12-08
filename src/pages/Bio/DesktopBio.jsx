@@ -45,7 +45,7 @@ export default function DesktopBio() {
   return (
     <section
       data-section="bio"
-      className="relative overflow-hidden"
+      className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
         height: `${DESKTOP_HEIGHT}px`,
@@ -53,16 +53,15 @@ export default function DesktopBio() {
         transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
       }}
     >
-      {/* Pionowe linie dekoracyjne - z Figma: height 776px, top -65px */}
+      {/* Pionowe linie dekoracyjne - wysokość 200% żeby pokryć cały viewport po skalowaniu */}
       {LINE_POSITIONS.map((x) => (
         <div
           key={x}
-          className="absolute"
+          className="absolute top-0"
           style={{
             left: `${x}px`,
-            top: '-65px',
             width: '1px',
-            height: '776px',
+            height: '200%',
             backgroundColor: currentData.lineColor,
             transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
           }}

@@ -12,6 +12,7 @@ export default function Wydarzenie() {
       mobileHeight={2200}
       backgroundColor="#FDFDFD"
       lineColor="#A0E38A"
+      hideLines={true}
     />
   );
 }

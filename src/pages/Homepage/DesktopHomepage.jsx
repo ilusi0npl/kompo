@@ -13,9 +13,6 @@ import {
 const TRANSITION_DURATION = '1s';
 const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 
-// Pozycje linii pionowych z Figma
-const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
-
 // Map slide words to translation keys
 const slideTranslationKeys = ['trio', 'kompo', 'polex', 'ensemble'];
 
@@ -33,7 +30,7 @@ export default function DesktopHomepage() {
   return (
     <section
       data-section="hero"
-      className="relative overflow-hidden"
+      className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
         height: `${DESKTOP_HEIGHT}px`,
@@ -41,15 +38,15 @@ export default function DesktopHomepage() {
         transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
       }}
     >
-      {/* Pionowe linie dekoracyjne */}
-      {LINE_POSITIONS.map((x) => (
+      {/* Pionowe linie dekoracyjne - wysokość 200% żeby pokryć cały viewport po skalowaniu */}
+      {[155, 375, 595, 815, 1035, 1255].map((x) => (
         <div
           key={x}
           className="absolute top-0"
           style={{
             left: `${x}px`,
             width: '1px',
-            height: '100%',
+            height: '200%',
             backgroundColor: currentData.lineColor,
             transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
           }}

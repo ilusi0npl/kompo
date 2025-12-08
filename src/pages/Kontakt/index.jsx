@@ -11,6 +11,7 @@ export default function Kontakt() {
       mobileHeight={1250}
       backgroundColor="#FF734C"
       lineColor="#FFBD19"
+      hideLines={true}
     />
   );
 }

@@ -11,6 +11,7 @@ export default function Media() {
       mobileHeight="auto"
       backgroundColor="#34B898"
       lineColor="#01936F"
+      hideLines={true}
     />
   );
 }

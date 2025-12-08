@@ -9,6 +9,7 @@ export default function Homepage() {
       mobileContent={<MobileHomepage />}
       desktopHeight={700}
       mobileHeight={683}
+      hideLines={true}
     />
   );
 }
