@@ -8,6 +8,8 @@ import Wydarzenie from './pages/Wydarzenie';
 import Media from './pages/Media';
 import MediaWideo from './pages/MediaWideo';
 import Kontakt from './pages/Kontakt';
+import Repertuar from './pages/Repertuar';
+import RepertuarSpecjalne from './pages/Repertuar/specjalne';
 
 function App() {
   return (
@@ -21,6 +23,8 @@ function App() {
           <Route path="/kalendarz" element={<Kalendarz />} />
           <Route path="/archiwalne" element={<Archiwalne />} />
           <Route path="/wydarzenie/:id" element={<Wydarzenie />} />
+          <Route path="/repertuar" element={<Repertuar />} />
+          <Route path="/repertuar/specjalne" element={<RepertuarSpecjalne />} />
           <Route path="/kontakt" element={<Kontakt />} />
         </Routes>
       </BrowserRouter>

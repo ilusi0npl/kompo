@@ -440,11 +440,11 @@ export default function DesktopWydarzenie() {
             { key: 'bio', href: '/bio', active: false, top: 0 },
             { key: 'media', href: '/media', active: false, top: 49 },
             { key: 'kalendarz', href: '/kalendarz', active: true, top: 98 },
-            { key: 'repertuar', href: '#repertuar', active: false, top: 147 },
-            { key: 'fundacja', href: '#fundacja', active: false, top: 196 },
+            { key: 'repertuar', href: '/repertuar', active: false, top: 147 },
+            { key: 'fundacja', href: '/#fundacja', active: false, top: 196 },
             { key: 'kontakt', href: '/kontakt', active: false, top: 245 },
           ].map((item) =>
-            item.href.startsWith('/') ? (
+            item.href.startsWith('/') && !item.href.includes('#') ? (
               <Link
                 key={item.key}
                 to={item.href}

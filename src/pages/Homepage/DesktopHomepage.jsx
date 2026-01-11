@@ -159,9 +159,9 @@ export default function DesktopHomepage() {
             { key: 'bio', href: '/bio', isRoute: true },
             { key: 'media', href: '/media', isRoute: true },
             { key: 'kalendarz', href: '/kalendarz', isRoute: true },
-            { key: 'repertuar', href: '#repertuar', isRoute: false },
-            { key: 'fundacja', href: '#fundacja', isRoute: false },
-            { key: 'kontakt', href: '/kontakt', isRoute: false },
+            { key: 'repertuar', href: '/repertuar', isRoute: true },
+            { key: 'fundacja', href: '/#fundacja', isRoute: false },
+            { key: 'kontakt', href: '/kontakt', isRoute: true },
           ].map((item) =>
             item.isRoute ? (
               <Link

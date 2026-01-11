@@ -42,7 +42,8 @@ export default function MobileMenu({ isOpen, onClose }) {
     { labelKey: 'common.nav.bio', to: '/bio' },
     { labelKey: 'common.nav.media', to: '/media' },
     { labelKey: 'common.nav.kalendarz', to: '/kalendarz' },
-    { labelKey: 'common.nav.repertuar', to: '#' },
+    { labelKey: 'common.nav.repertuar', to: '/repertuar' },
+    { labelKey: 'common.nav.fundacja', to: '/#fundacja' },
     { labelKey: 'common.nav.kontakt', to: '/kontakt' },
   ];
 

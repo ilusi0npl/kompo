@@ -201,11 +201,11 @@ export default function DesktopKontakt() {
             { key: 'bio', href: '/bio', active: false },
             { key: 'media', href: '/media', active: false },
             { key: 'kalendarz', href: '/kalendarz', active: false },
-            { key: 'repertuar', href: '#repertuar', active: false },
-            { key: 'fundacja', href: '#fundacja', active: false },
+            { key: 'repertuar', href: '/repertuar', active: false },
+            { key: 'fundacja', href: '/#fundacja', active: false },
             { key: 'kontakt', href: '/kontakt', active: true },
           ].map((item) => (
-            item.href.startsWith('/') ? (
+            item.href.startsWith('/') && !item.href.includes('#') ? (
               <Link
                 key={item.key}
                 to={item.href}

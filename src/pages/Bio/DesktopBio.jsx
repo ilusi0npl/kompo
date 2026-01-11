@@ -227,8 +227,8 @@ export default function DesktopBio() {
             { key: 'bio', href: '/bio', active: true, isRoute: true },
             { key: 'media', href: '/media', active: false, isRoute: true },
             { key: 'kalendarz', href: '/kalendarz', active: false, isRoute: true },
-            { key: 'repertuar', href: '#repertuar', active: false, isRoute: false },
-            { key: 'fundacja', href: '#fundacja', active: false, isRoute: false },
+            { key: 'repertuar', href: '/repertuar', active: false, isRoute: true },
+            { key: 'fundacja', href: '/#fundacja', active: false, isRoute: false },
             { key: 'kontakt', href: '/kontakt', active: false, isRoute: false },
           ].map((item) =>
             item.isRoute ? (

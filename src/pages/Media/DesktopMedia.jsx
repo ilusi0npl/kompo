@@ -211,11 +211,11 @@ export default function DesktopMedia() {
             { key: 'bio', href: '/bio', active: false },
             { key: 'media', href: '/media', active: true },
             { key: 'kalendarz', href: '/kalendarz', active: false },
-            { key: 'repertuar', href: '#repertuar', active: false },
-            { key: 'fundacja', href: '#fundacja', active: false },
+            { key: 'repertuar', href: '/repertuar', active: false },
+            { key: 'fundacja', href: '/#fundacja', active: false },
             { key: 'kontakt', href: '/kontakt', active: false },
           ].map((item) => (
-            item.href.startsWith('/') ? (
+            item.href.startsWith('/') && !item.href.includes('#') ? (
               <Link
                 key={item.key}
                 to={item.href}

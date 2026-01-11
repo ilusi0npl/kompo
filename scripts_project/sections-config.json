@@ -92,6 +92,28 @@
       "height": 847,
       "selector": "[data-section='kontakt']",
       "pageUrl": "http://localhost:5173/kontakt"
+    },
+    "repertuar": {
+      "figmaNodeId": "171-189",
+      "y": 0,
+      "height": 2177,
+      "selector": "[data-section='repertuar']",
+      "pageUrl": "http://localhost:5173/repertuar"
+    },
+    "repertuar-specjalne": {
+      "figmaNodeId": "171-329",
+      "y": 0,
+      "height": 2177,
+      "selector": "[data-section='repertuar-specjalne']",
+      "pageUrl": "http://localhost:5173/repertuar/specjalne"
+    },
+    "repertuar-mobile": {
+      "figmaNodeId": "189-1365",
+      "y": 0,
+      "height": 2715,
+      "selector": "[data-section='repertuar-mobile']",
+      "pageUrl": "http://localhost:5173/repertuar",
+      "pageWidth": 390
     }
   }
 }
