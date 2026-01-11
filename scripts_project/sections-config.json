@@ -79,6 +79,13 @@
       "selector": "[data-section='wydarzenie']",
       "pageUrl": "http://localhost:5173/wydarzenie/1"
     },
+    "wydarzenie-partnerzy": {
+      "figmaNodeId": "29-1501",
+      "y": 1602,
+      "height": 109,
+      "selector": "[data-section='wydarzenie']",
+      "pageUrl": "http://localhost:5173/wydarzenie/1"
+    },
     "kontakt": {
       "figmaNodeId": "71-599",
       "y": 0,

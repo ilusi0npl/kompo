@@ -9,7 +9,7 @@ export default function Wydarzenie() {
       desktopContent={<DesktopWydarzenie />}
       mobileContent={<MobileWydarzenie />}
       desktopHeight={DESKTOP_HEIGHT}
-      mobileHeight={2200}
+      mobileHeight={2500}
       backgroundColor="#FDFDFD"
       lineColor="#A0E38A"
       hideLines={true}

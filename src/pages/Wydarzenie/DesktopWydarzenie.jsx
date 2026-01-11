@@ -304,46 +304,101 @@ export default function DesktopWydarzenie() {
           <div
             className="flex items-center justify-between w-full"
           >
-            <img
-              src={eventData.partners[0].logo}
-              alt={eventData.partners[0].name}
+            {/* Logo Wrocław */}
+            <div
+              className="relative"
               style={{
                 width: '323px',
                 height: '42px',
-                objectFit: 'cover',
-                objectPosition: '50% 50%',
               }}
-            />
-            <img
-              src={eventData.partners[1].logo}
-              alt={eventData.partners[1].name}
+            >
+              <img
+                src={eventData.partners[0].logo}
+                alt={eventData.partners[0].name}
+                className="absolute"
+                style={{
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: '50% 50%',
+                }}
+              />
+            </div>
+
+            {/* Logo ZAIKS */}
+            <div
+              className="relative"
               style={{
                 width: '93px',
                 height: '42px',
-                objectFit: 'cover',
-                objectPosition: '50% 50%',
               }}
-            />
-            <img
-              src={eventData.partners[2].logo}
-              alt={eventData.partners[2].name}
+            >
+              <img
+                src={eventData.partners[1].logo}
+                alt={eventData.partners[1].name}
+                className="absolute"
+                style={{
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: '50% 50%',
+                }}
+              />
+            </div>
+
+            {/* Logo Recepcja - special positioning from Figma */}
+            <div
+              className="relative"
               style={{
                 width: '122px',
                 height: '42px',
-                objectFit: 'cover',
-                objectPosition: '50% 50%',
               }}
-            />
-            <img
-              src={eventData.partners[3].logo}
-              alt={eventData.partners[3].name}
+            >
+              <div
+                className="absolute"
+                style={{
+                  inset: 0,
+                  overflow: 'hidden',
+                }}
+              >
+                <img
+                  src={eventData.partners[2].logo}
+                  alt={eventData.partners[2].name}
+                  className="absolute"
+                  style={{
+                    height: '61.54%',
+                    left: '-0.06%',
+                    top: '25.96%',
+                    width: '100.12%',
+                    maxWidth: 'none',
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Logo Polmic */}
+            <div
+              className="relative"
               style={{
                 width: '129px',
                 height: '42px',
-                objectFit: 'cover',
-                objectPosition: '50% 50%',
               }}
-            />
+            >
+              <img
+                src={eventData.partners[3].logo}
+                alt={eventData.partners[3].name}
+                className="absolute"
+                style={{
+                  inset: 0,
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: '50% 50%',
+                }}
+              />
+            </div>
           </div>
         </div>
       </div>
