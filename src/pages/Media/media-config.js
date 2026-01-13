@@ -27,7 +27,7 @@ export const photos = [
     photographer: 'Alexander Banck-Petersen',
     images: [
       '/assets/media/photo1.jpg',
-      '/assets/media/photo1.jpg',
+      '/assets/media/photo1-2.jpg',
       '/assets/media/photo1.jpg',
     ],
   },
