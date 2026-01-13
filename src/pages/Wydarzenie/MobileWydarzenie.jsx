@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { Link } from 'react-router';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
+import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import { eventData } from './wydarzenie-config';
 
 const MOBILE_WIDTH = 390;
@@ -10,6 +12,7 @@ const LINE_COLOR = '#A0E38A';
 const TEXT_COLOR = '#131313';
 
 export default function MobileWydarzenie() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { t } = useTranslation();
 
   return (
@@ -49,8 +52,9 @@ export default function MobileWydarzenie() {
           overflow: 'clip',
         }}
       >
-        {/* MENU text - top right */}
-        <p
+        {/* MENU button - top right */}
+        <button
+          onClick={() => setIsMenuOpen(true)}
           style={{
             position: 'absolute',
             left: '312px',
@@ -60,10 +64,14 @@ export default function MobileWydarzenie() {
             fontSize: '24px',
             lineHeight: 'normal',
             color: TEXT_COLOR,
+            background: 'transparent',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
           }}
         >
           MENU
-        </p>
+        </button>
 
         {/* Logo - top left */}
         <Link
@@ -455,6 +463,9 @@ export default function MobileWydarzenie() {
         <p style={{ textDecoration: 'underline' }}>FACEBOOK</p>
         <p style={{ textDecoration: 'underline' }}>INSTAGRAM</p>
       </div>
+
+      {/* MobileMenu overlay */}
+      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </section>
   );
 }

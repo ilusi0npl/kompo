@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 import { useSwipeable } from 'react-swipeable';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
+import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import { useTranslation } from '../../hooks/useTranslation';
 
 const MOBILE_WIDTH = 390;
@@ -12,6 +13,7 @@ const TEXT_COLOR = '#131313';
 
 export default function MobileMediaGaleria({ album }) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -127,8 +129,9 @@ export default function MobileMediaGaleria({ album }) {
           />
         </Link>
 
-        {/* MENU text */}
-        <p
+        {/* MENU button */}
+        <button
+          onClick={() => setIsMenuOpen(true)}
           style={{
             position: 'absolute',
             left: '312px',
@@ -138,10 +141,14 @@ export default function MobileMediaGaleria({ album }) {
             fontSize: '24px',
             lineHeight: 'normal',
             color: TEXT_COLOR,
+            background: 'transparent',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
           }}
         >
           MENU
-        </p>
+        </button>
 
         {/* "Zdjęcia" title - horizontal, NOT rotated */}
         <p
@@ -308,6 +315,9 @@ export default function MobileMediaGaleria({ album }) {
         <p style={{ textDecoration: 'underline' }}>FACEBOOK</p>
         <p style={{ textDecoration: 'underline' }}>INSTAGRAM</p>
       </div>
+
+      {/* MobileMenu overlay */}
+      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </section>
   );
 }
