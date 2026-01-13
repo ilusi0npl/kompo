@@ -25,35 +25,70 @@ export const photos = [
     image: '/assets/media/photo1.jpg',
     title: 'Festiwal Klang',
     photographer: 'Alexander Banck-Petersen',
+    images: [
+      '/assets/media/photo1.jpg',
+      '/assets/media/photo1.jpg',
+      '/assets/media/photo1.jpg',
+    ],
   },
   {
     id: 2,
     image: '/assets/media/photo3.jpg',
     title: 'Nazwa wydarzenia',
     photographer: 'Wojciech Chrubasik',
+    images: [
+      '/assets/media/photo3.jpg',
+      '/assets/media/photo3.jpg',
+      '/assets/media/photo3.jpg',
+    ],
   },
   {
     id: 3,
     image: '/assets/media/photo5.jpg',
     title: 'Nazwa konceru',
     photographer: 'Alexander Banck-Petersen',
+    images: [
+      '/assets/media/photo5.jpg',
+      '/assets/media/photo5.jpg',
+      '/assets/media/photo5.jpg',
+    ],
   },
   {
     id: 4,
     image: '/assets/media/photo2.jpg',
     title: 'Festiwal Klang',
     photographer: 'Alexander Banck-Petersen',
+    images: [
+      '/assets/media/photo2.jpg',
+      '/assets/media/photo2.jpg',
+      '/assets/media/photo2.jpg',
+    ],
   },
   {
     id: 5,
     image: '/assets/media/photo4.jpg',
     title: 'Nazwa wydarzenia',
     photographer: 'Wojciech Chrubasik',
+    images: [
+      '/assets/media/photo4.jpg',
+      '/assets/media/photo4.jpg',
+      '/assets/media/photo4.jpg',
+    ],
   },
   {
     id: 6,
     image: '/assets/media/photo6.jpg',
     title: 'Nazwa konceru',
     photographer: 'Alexander Banck-Petersen',
+    images: [
+      '/assets/media/photo6.jpg',
+      '/assets/media/photo6.jpg',
+      '/assets/media/photo6.jpg',
+    ],
   },
 ];
+
+// Helper to get album by ID
+export const getAlbumById = (id) => {
+  return photos.find(photo => photo.id === parseInt(id));
+};
