@@ -5,8 +5,10 @@ import Bio from './pages/Bio';
 import Kalendarz from './pages/Kalendarz';
 import Archiwalne from './pages/Archiwalne';
 import Wydarzenie from './pages/Wydarzenie';
+import Wydarzenie2 from './pages/Wydarzenie2';
 import Media from './pages/Media';
 import MediaWideo from './pages/MediaWideo';
+import MediaGaleria from './pages/MediaGaleria';
 import Kontakt from './pages/Kontakt';
 import Repertuar from './pages/Repertuar';
 import RepertuarSpecjalne from './pages/Repertuar/specjalne';
@@ -20,9 +22,11 @@ function App() {
           <Route path="/bio" element={<Bio />} />
           <Route path="/media" element={<Media />} />
           <Route path="/media/wideo" element={<MediaWideo />} />
+          <Route path="/media/galeria/:id" element={<MediaGaleria />} />
           <Route path="/kalendarz" element={<Kalendarz />} />
           <Route path="/archiwalne" element={<Archiwalne />} />
           <Route path="/wydarzenie/:id" element={<Wydarzenie />} />
+          <Route path="/wydarzenie/2" element={<Wydarzenie2 />} />
           <Route path="/repertuar" element={<Repertuar />} />
           <Route path="/repertuar/specjalne" element={<RepertuarSpecjalne />} />
           <Route path="/kontakt" element={<Kontakt />} />
