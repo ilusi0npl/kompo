@@ -117,14 +117,17 @@ export default function DesktopMedia() {
 
       {/* Photo Grid */}
       {photos.map((photo, index) => (
-        <div
+        <Link
           key={photo.id}
+          to={`/media/galeria/${photo.id}`}
           className="absolute flex flex-col"
           style={{
             left: `${gridPositions[index].left}px`,
             top: `${gridPositions[index].top}px`,
             width: '300px',
             gap: '16px',
+            cursor: 'pointer',
+            textDecoration: 'none',
           }}
         >
           {/* Photo z smooth loading */}
@@ -173,7 +176,7 @@ export default function DesktopMedia() {
               fot. {photo.photographer}
             </p>
           </div>
-        </div>
+        </Link>
       ))}
 
       {/* Stopka */}
