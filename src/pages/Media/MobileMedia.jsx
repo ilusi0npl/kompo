@@ -58,7 +58,16 @@ export default function MobileMedia() {
         }}
       >
         {photos.map((photo) => (
-          <div key={photo.id} className="flex flex-col" style={{ gap: '16px' }}>
+          <Link
+            key={photo.id}
+            to={`/media/galeria/${photo.id}`}
+            className="flex flex-col"
+            style={{
+              gap: '16px',
+              cursor: 'pointer',
+              textDecoration: 'none',
+            }}
+          >
             {/* Zdjęcie z smooth loading */}
             <SmoothImage
               src={photo.image}
@@ -104,7 +113,7 @@ export default function MobileMedia() {
             >
               fot. {photo.photographer}
             </p>
-          </div>
+          </Link>
         ))}
       </div>
 
