@@ -16,8 +16,8 @@ export default function MobileFooter({
     textTransform: 'uppercase',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
-    gap: '16px',
+    alignItems: 'flex-start',
+    gap: '20px',
     ...style,
   };
 

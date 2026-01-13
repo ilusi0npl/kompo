@@ -275,9 +275,8 @@ export default function MobileRepertuar() {
       <MobileFooter
         style={{
           position: 'absolute',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          bottom: '58px',
+          left: '20px',
+          bottom: '50px',
         }}
         textColor="#131313"
       />
