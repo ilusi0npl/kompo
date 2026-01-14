@@ -63,10 +63,14 @@ export default function MobileRepertuar() {
   const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Calculate total height: header + tabs + composers list + footnote + footer + spacing
-  // Figma frame height: 2533px, but actual composers list is 457px taller (2281px vs 1824px)
-  // Adjusted total height: 2533 + 457 = 2990px
-  const totalHeight = 2990;
+  // Calculate total height based on content
+  // Footnote at 2239px + footnote height (~48px for 2 lines) + margin (50px) + footer height (~120px) + bottom margin (50px)
+  const footnoteTop = 2239;
+  const footnoteHeight = 48; // Approximate height for 2-line text
+  const marginToFooter = 50;
+  const footerHeight = 120; // Approximate footer height
+  const bottomMargin = 50;
+  const totalHeight = footnoteTop + footnoteHeight + marginToFooter + footerHeight + bottomMargin;
 
   // Mobile-specific ordering (from Figma design 189-1365)
   const mobileOrder = [
@@ -95,12 +99,6 @@ export default function MobileRepertuar() {
     'Kelley Sheehan',
     'Olgierd Żemojtel',
     'Matthew Shlomowitz',
-    'Michael Beil',
-    'Cezary Duchnowski',
-    'Kuba Krzewiński',
-    'Bogusław Schaeffer',
-    'Jacek Sotomski',
-    'Marek Chołoniewski',
   ];
 
   // Sort composers according to mobile order
@@ -221,7 +219,7 @@ export default function MobileRepertuar() {
           {t('repertuar.tabs.full')}
         </p>
         <Link
-          to="/repertuar/specjalne"
+          to="/specialne"
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontWeight: 600,
@@ -258,7 +256,7 @@ export default function MobileRepertuar() {
         className="absolute"
         style={{
           left: '20px',
-          top: '2696px',
+          top: '2239px',
           width: '350px',
           fontFamily: "'IBM Plex Mono', monospace",
           fontWeight: 500,
@@ -275,8 +273,9 @@ export default function MobileRepertuar() {
       <MobileFooter
         style={{
           position: 'absolute',
-          left: '20px',
-          bottom: '50px',
+          left: 'calc(25% + 18.5px)',
+          transform: 'translateX(-50%)',
+          top: `${footnoteTop + footnoteHeight + marginToFooter}px`,
         }}
         textColor="#131313"
       />

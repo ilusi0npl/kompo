@@ -103,16 +103,18 @@
     "repertuar": {
       "figmaNodeId": "171-189",
       "y": 0,
-      "height": 2177,
+      "height": 1285,
       "selector": "[data-section='repertuar']",
-      "pageUrl": "http://localhost:5173/repertuar"
+      "pageUrl": "http://localhost:5173/repertuar",
+      "comment": "25 composers - updated height from Figma metadata"
     },
-    "repertuar-specjalne": {
+    "specialne": {
       "figmaNodeId": "171-329",
       "y": 0,
-      "height": 2177,
-      "selector": "[data-section='repertuar-specjalne']",
-      "pageUrl": "http://localhost:5173/repertuar/specjalne"
+      "height": 827,
+      "selector": "[data-section='specialne']",
+      "pageUrl": "http://localhost:5173/specialne",
+      "comment": "7 composers - updated height from Figma metadata"
     },
     "repertuar-mobile": {
       "figmaNodeId": "189-1365",
@@ -121,6 +123,21 @@
       "selector": "[data-section='repertuar-mobile']",
       "pageUrl": "http://localhost:5173/repertuar",
       "pageWidth": 390
+    },
+    "fundacja": {
+      "figmaNodeId": "172-423",
+      "y": 0,
+      "height": 1379,
+      "selector": "[data-section='fundacja']",
+      "pageUrl": "http://localhost:5173/fundacja"
+    },
+    "fundacja-expanded": {
+      "figmaNodeId": "182-77",
+      "y": 0,
+      "height": 1651,
+      "selector": "[data-section='fundacja']",
+      "pageUrl": "http://localhost:5173/fundacja",
+      "comment": "Manual test: click declaration button before screenshot"
     }
   }
 }

@@ -1,10 +1,11 @@
-import MobileHeader from '../../components/MobileHeader/MobileHeader';
-import MobileFooter from '../../components/Footer/MobileFooter';
+import { useState } from 'react';
+import { Link } from 'react-router';
+import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
-import { fundacjaData } from './kontakt-config';
 
 const MOBILE_WIDTH = 390;
+const MOBILE_HEIGHT = 1071; // Dokładna wysokość z Figma
 const mobileLinePositions = [97, 195, 292];
 const BACKGROUND_COLOR = '#FF734C';
 const LINE_COLOR = '#FFBD19';
@@ -12,6 +13,7 @@ const TEXT_COLOR = '#131313';
 
 export default function MobileKontakt() {
   const { t } = useTranslation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <section
@@ -19,7 +21,7 @@ export default function MobileKontakt() {
       className="relative overflow-hidden"
       style={{
         width: `${MOBILE_WIDTH}px`,
-        minHeight: '100vh',
+        height: `${MOBILE_HEIGHT}px`,
         backgroundColor: BACKGROUND_COLOR,
       }}
     >
@@ -37,104 +39,155 @@ export default function MobileKontakt() {
         />
       ))}
 
-      {/* Header z tytułem */}
-      <MobileHeader
-        title={t('kontakt.sideTitle')}
-        textColor={TEXT_COLOR}
-      />
+      {/* Header Frame (0-218px) - zbudowany inline dla dokładnej wysokości */}
+      <div
+        className="absolute"
+        style={{
+          top: 0,
+          left: 0,
+          width: `${MOBILE_WIDTH}px`,
+          height: '218px',
+          backgroundColor: BACKGROUND_COLOR,
+        }}
+      >
+        {/* Logo */}
+        <Link to="/">
+          <img
+            src="/assets/logo.svg"
+            alt="Kompopolex"
+            className="absolute"
+            style={{
+              left: '20px',
+              top: '35.85px',
+              width: '104px',
+              height: '37.64px',
+            }}
+          />
+        </Link>
 
-      {/* Zdjęcie zespołu z smooth loading - 300x460px centered */}
-      <SmoothImage
-        src="/assets/kontakt/team-photo.jpg"
-        alt="Zespół Kompopolex"
-        className="mx-auto"
-        containerStyle={{
+        {/* MENU button */}
+        <button
+          onClick={() => setIsMenuOpen(true)}
+          className="absolute"
+          style={{
+            left: '312px',
+            top: '43px',
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 700,
+            fontSize: '24px',
+            lineHeight: 'normal',
+            color: TEXT_COLOR,
+            background: 'transparent',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+          }}
+        >
+          MENU
+        </button>
+
+        {/* Tytuł "Kontakt" */}
+        <div
+          className="absolute"
+          style={{
+            left: '20px',
+            top: '144px',
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 600,
+            fontSize: '48px',
+            lineHeight: 1.1,
+            color: TEXT_COLOR,
+          }}
+        >
+          {t('kontakt.sideTitle')}
+        </div>
+      </div>
+
+      {/* Email - y=278, height=35 */}
+      <a
+        href="mailto:KOMPOPOLEX@GMAIL.COM"
+        className="absolute block"
+        style={{
+          top: '278px',
+          left: '51px',
+          width: '288px',
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontWeight: 600,
+          fontSize: '24px',
+          lineHeight: 1.45,
+          color: TEXT_COLOR,
+          textDecoration: 'underline',
+          textUnderlinePosition: 'from-font',
+          textTransform: 'uppercase',
+          textAlign: 'center',
+        }}
+      >
+        KOMPOPOLEX@GMAIL.COM
+      </a>
+
+      {/* Zdjęcie zespołu - y=373, width=300, height=460 */}
+      <div
+        className="absolute"
+        style={{
+          top: '373px',
+          left: '45px',
           width: '300px',
           height: '460px',
         }}
-        style={{
-          width: '100%',
-          height: '100%',
-          objectFit: 'cover',
-          objectPosition: '50% 50%',
-        }}
-        placeholderColor="#e5e5e5"
-      />
+      >
+        <SmoothImage
+          src="/assets/kontakt/team-photo.jpg"
+          alt="Zespół Kompopolex"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: '50% 50%',
+          }}
+          placeholderColor="#e5e5e5"
+        />
+      </div>
 
-      {/* Dane fundacji */}
+      {/* Stopka - y=919, height=112 */}
       <div
-        className="flex flex-col"
+        className="absolute"
         style={{
-          marginTop: '40px',
-          marginLeft: '20px',
-          width: '350px',
-          gap: '16px',
+          top: '919px',
+          left: '20px',
+          width: '192px',
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontWeight: 600,
+          fontSize: '16px',
+          lineHeight: 1.48,
+          color: TEXT_COLOR,
+          textTransform: 'uppercase',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
+          gap: '20px',
         }}
       >
-        {/* Tytuł */}
-        <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '24px',
-            lineHeight: 1.4,
-            color: TEXT_COLOR,
-            textDecoration: 'underline',
-            textTransform: 'uppercase',
-          }}
-        >
-          {t('kontakt.title')}
-        </p>
-
-        {/* Dane */}
-        <div
-          className="flex flex-col"
-          style={{
-            gap: '16px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '16px',
-            lineHeight: 1.48,
-            color: TEXT_COLOR,
-          }}
-        >
-          <p>{t('kontakt.krs')} {fundacjaData.krs}</p>
-          <p>{t('kontakt.regon')} {fundacjaData.regon}</p>
-          <p>{t('kontakt.nip')} {fundacjaData.nip}</p>
-          <div>
-            <p>{t('kontakt.bankAccount')}</p>
-            <p>{fundacjaData.bankAccount}</p>
-          </div>
-        </div>
-
-        {/* Email */}
+        <p>KOMPOPOLEX@GMAIL.COM</p>
         <a
-          href={`mailto:${fundacjaData.email}`}
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '16px',
-            lineHeight: 1.48,
-            color: TEXT_COLOR,
-            textDecoration: 'underline',
-            textTransform: 'uppercase',
-          }}
+          href="https://www.facebook.com/ensemblekompopolex/?locale=pl_PL"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: 'underline' }}
         >
-          {fundacjaData.email}
+          FACEBOOK
+        </a>
+        <a
+          href="https://www.instagram.com/kompopolex/"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: 'underline' }}
+        >
+          INSTAGRAM
         </a>
       </div>
 
-      {/* Stopka */}
-      <MobileFooter
-        className="mt-16"
-        style={{
-          marginLeft: '20px',
-          marginRight: '20px',
-          marginBottom: '40px',
-          width: '350px',
-        }}
-        textColor={TEXT_COLOR}
-      />
+      {/* MobileMenu overlay */}
+      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </section>
   );
 }

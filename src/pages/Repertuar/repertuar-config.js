@@ -2,9 +2,9 @@
 // Dane bazowane na designie Figma node 171-189 (desktop) i 189-1365 (mobile)
 
 export const DESKTOP_WIDTH = 1440;
-export const DESKTOP_HEIGHT = 2177;
+export const DESKTOP_HEIGHT = 1285; // From Figma node 171-189
 export const MOBILE_WIDTH = 390;
-export const MOBILE_HEIGHT = 2715;
+export const MOBILE_HEIGHT = 2507; // Calculated: footnote(2239) + height(48) + margin(50) + footer(120) + bottom(50)
 
 // Pozycje pionowych linii (z Figma)
 export const desktopLinePositions = [155, 375, 595, 815, 1035, 1255];
@@ -73,7 +73,6 @@ export const composers = [
     year: '(1981)',
     works: [
       { title: 'b (2012)', isSpecial: false },
-      { title: 'H (2014-2018)', isSpecial: false },
     ],
   },
   {
@@ -151,35 +150,5 @@ export const composers = [
       { title: 'c_ut|e_#1 (2017)', isSpecial: false },
       { title: 'Body X Ultra (2023)', isSpecial: true },
     ],
-  },
-  {
-    name: 'Michael Beil',
-    year: '(1963)',
-    works: [{ title: 'Caravan (2017)', isSpecial: false }],
-  },
-  {
-    name: 'Cezary Duchnowski',
-    year: '(1971)',
-    works: [{ title: 'Wściekłość (2018)', isSpecial: true }],
-  },
-  {
-    name: 'Kuba Krzewiński',
-    year: '(1988)',
-    works: [{ title: 'Another Air (2017)', isSpecial: true }],
-  },
-  {
-    name: 'Bogusław Schaeffer',
-    year: '(1929-2019)',
-    works: [{ title: 'TIS MW2 (1963)', isSpecial: false }],
-  },
-  {
-    name: 'Jacek Sotomski',
-    year: '(1987)',
-    works: [{ title: 'CREDOPOL (2018, rev. 2019)', isSpecial: true }],
-  },
-  {
-    name: 'Marek Chołoniewski',
-    year: '(1953)',
-    works: [{ title: 'Assemblages dla konkretnych wykonawców (1975-79)', isSpecial: false }],
   },
 ];

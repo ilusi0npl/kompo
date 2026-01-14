@@ -314,8 +314,22 @@ export default function MobileWydarzenie2() {
         }}
       >
         <p>KOMPOPOLEX@GMAIL.COM</p>
-        <p style={{ textDecoration: 'underline' }}>FACEBOOK</p>
-        <p style={{ textDecoration: 'underline' }}>INSTAGRAM</p>
+        <a
+          href="https://www.facebook.com/ensemblekompopolex/?locale=pl_PL"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: 'underline', color: TEXT_COLOR }}
+        >
+          FACEBOOK
+        </a>
+        <a
+          href="https://www.instagram.com/kompopolex/"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ textDecoration: 'underline', color: TEXT_COLOR }}
+        >
+          INSTAGRAM
+        </a>
       </div>
 
       {/* MobileMenu overlay */}

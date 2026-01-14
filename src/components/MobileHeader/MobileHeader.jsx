@@ -27,7 +27,7 @@ export default function MobileHeader({
       className="relative"
       style={{
         width: `${MOBILE_WIDTH}px`,
-        height: '281px',
+        height: '257px',
         backgroundColor,
       }}
     >
@@ -118,7 +118,7 @@ export default function MobileHeader({
         className="absolute"
         style={{
           left: '20px',
-          top: '192px',
+          top: '152px',
         }}
       >
         <span
@@ -126,8 +126,8 @@ export default function MobileHeader({
             display: 'block',
             fontFamily: "'IBM Plex Mono', monospace",
             fontWeight: 600,
-            fontSize: '40px',
-            lineHeight: 1.2,
+            fontSize: '48px',
+            lineHeight: 1.35,
             color: textColor,
           }}
         >

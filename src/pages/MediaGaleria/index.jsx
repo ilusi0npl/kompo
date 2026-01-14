@@ -18,7 +18,7 @@ export default function MediaGaleria() {
       desktopContent={<DesktopMediaGaleria album={album} />}
       mobileContent={<MobileMediaGaleria album={album} />}
       desktopHeight={1043}
-      mobileHeight={900}
+      mobileHeight={1000}
       backgroundColor="#34B898"
       lineColor="#01936F"
       hideLines={true}

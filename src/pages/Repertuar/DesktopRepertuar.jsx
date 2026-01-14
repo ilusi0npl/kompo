@@ -15,7 +15,7 @@ const LINE_COLOR = '#A0E38A';
 const ComposerEntry = ({ composer }) => {
   return (
     <div style={{ width: '300px' }}>
-      <p style={{ marginBottom: 0, lineHeight: 1.48 }}>
+      <p style={{ margin: 0, lineHeight: 1.48 }}>
         <span
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
@@ -46,7 +46,8 @@ const ComposerEntry = ({ composer }) => {
             fontSize: '16px',
             color: '#131313',
             lineHeight: 1.48,
-            marginBottom: idx === composer.works.length - 1 ? 0 : '8px',
+            margin: 0,
+            marginTop: idx === 0 ? '0' : '0',
           }}
         >
           {work.title}
@@ -62,11 +63,11 @@ const ComposerEntry = ({ composer }) => {
 export default function DesktopRepertuar() {
   const { t } = useTranslation();
 
-  // Distribute composers into 3 columns (modulo 3)
-  const columns = [[], [], []];
-  composers.forEach((composer, index) => {
-    columns[index % 3].push(composer);
-  });
+  // Group composers into rows of 3
+  const rows = [];
+  for (let i = 0; i < composers.length; i += 3) {
+    rows.push(composers.slice(i, i + 3));
+  }
 
   return (
     <section
@@ -158,7 +159,7 @@ export default function DesktopRepertuar() {
           {t('repertuar.tabs.full')}
         </p>
         <Link
-          to="/repertuar/specjalne"
+          to="/specialne"
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontWeight: 600,
@@ -173,56 +174,60 @@ export default function DesktopRepertuar() {
         </Link>
       </div>
 
-      {/* Composers Grid - 3 columns */}
+      {/* Composers Grid and Footnote - flex container for dynamic spacing */}
       <div
         className="absolute"
         style={{
           left: '185px',
           top: '285px',
           width: '960px',
-          display: 'flex',
-          gap: '30px',
         }}
       >
-        {columns.map((columnComposers, colIndex) => (
-          <div
-            key={colIndex}
-            style={{
-              width: '300px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '30px',
-            }}
-          >
-            {columnComposers.map((composer, idx) => (
-              <ComposerEntry key={idx} composer={composer} />
-            ))}
-          </div>
-        ))}
-      </div>
+        {/* Composers Grid - Rows of 3 */}
+        <div
+          style={{
+            width: '960px',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '30px',
+          }}
+        >
+          {rows.map((rowComposers, rowIndex) => (
+            <div
+              key={rowIndex}
+              style={{
+                display: 'flex',
+                gap: '30px',
+              }}
+            >
+              {rowComposers.map((composer, idx) => (
+                <ComposerEntry key={idx} composer={composer} />
+              ))}
+            </div>
+          ))}
+        </div>
 
-      {/* Footnote */}
-      <p
-        className="absolute"
-        style={{
-          left: '185px',
-          top: '1079px',
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontWeight: 500,
-          fontSize: '16px',
-          lineHeight: 1.48,
-          color: '#761FE0',
-          margin: 0,
-        }}
-      >
-        {t('repertuar.footnote')}
-      </p>
+        {/* Footnote - 50px margin from composers (from Figma) */}
+        <p
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 500,
+            fontSize: '16px',
+            lineHeight: 1.48,
+            color: '#761FE0',
+            margin: 0,
+            marginTop: '50px',
+          }}
+        >
+          {t('repertuar.footnote')}
+        </p>
+      </div>
 
       {/* Footer */}
       <Footer
         style={{
           position: 'absolute',
-          left: 'calc(50% - 260px)',
+          left: '185px',
           bottom: '40px',
           width: '520px',
         }}
@@ -259,7 +264,7 @@ export default function DesktopRepertuar() {
             { key: 'media', href: '/media', active: false },
             { key: 'kalendarz', href: '/kalendarz', active: false },
             { key: 'repertuar', href: '/repertuar', active: true },
-            { key: 'fundacja', href: '/#fundacja', active: false },
+            { key: 'fundacja', href: '/fundacja', active: false },
             { key: 'kontakt', href: '/kontakt', active: false },
           ].map((item) =>
             item.href.startsWith('/') && !item.href.includes('#') ? (

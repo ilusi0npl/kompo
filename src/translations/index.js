@@ -10,6 +10,7 @@ import { pl as mediaPl, en as mediaEn } from './media';
 import { pl as wydarzeniePl, en as wydarzenieEn } from './wydarzenie';
 import { pl as archiwalnePl, en as archiwalneEn } from './archiwalne';
 import { pl as repertuarPl, en as repertuarEn } from './repertuar';
+import { fundacjaTranslations } from './fundacja';
 
 export const translations = {
   pl: {
@@ -22,6 +23,7 @@ export const translations = {
     wydarzenie: wydarzeniePl,
     archiwalne: archiwalnePl,
     repertuar: repertuarPl,
+    fundacja: fundacjaTranslations.pl,
   },
   en: {
     common: commonEn,
@@ -33,5 +35,6 @@ export const translations = {
     wydarzenie: wydarzenieEn,
     archiwalne: archiwalneEn,
     repertuar: repertuarEn,
+    fundacja: fundacjaTranslations.en,
   },
 };

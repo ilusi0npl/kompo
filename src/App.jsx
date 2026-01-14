@@ -11,7 +11,8 @@ import MediaWideo from './pages/MediaWideo';
 import MediaGaleria from './pages/MediaGaleria';
 import Kontakt from './pages/Kontakt';
 import Repertuar from './pages/Repertuar';
-import RepertuarSpecjalne from './pages/Repertuar/specjalne';
+import Specialne from './pages/Specialne';
+import Fundacja from './pages/Fundacja';
 
 function App() {
   return (
@@ -28,7 +29,8 @@ function App() {
           <Route path="/wydarzenie/:id" element={<Wydarzenie />} />
           <Route path="/wydarzenie/2" element={<Wydarzenie2 />} />
           <Route path="/repertuar" element={<Repertuar />} />
-          <Route path="/repertuar/specjalne" element={<RepertuarSpecjalne />} />
+          <Route path="/specialne" element={<Specialne />} />
+          <Route path="/fundacja" element={<Fundacja />} />
           <Route path="/kontakt" element={<Kontakt />} />
         </Routes>
       </BrowserRouter>

@@ -7,7 +7,6 @@ import {
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
   BACKGROUND_COLOR,
-  fundacjaData,
 } from './kontakt-config';
 
 // Pozycje linii pionowych z Figma
@@ -103,68 +102,27 @@ export default function DesktopKontakt() {
         placeholderColor="#e5e5e5"
       />
 
-      {/* Dane fundacji */}
-      <div
-        className="absolute flex flex-col"
+      {/* Email - główny element kontaktowy */}
+      <a
+        href="mailto:KOMPOPOLEX@GMAIL.COM"
+        className="absolute"
         style={{
           left: '618px',
-          top: '180px',
+          top: '371px',
           width: '480px',
-          gap: '32px',
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontWeight: 600,
+          fontSize: '40px',
+          lineHeight: 1.35,
+          color: '#131313',
+          textDecoration: 'underline',
+          textUnderlinePosition: 'from-font',
+          textTransform: 'uppercase',
+          whiteSpace: 'pre-wrap',
         }}
       >
-        {/* Tytuł */}
-        <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '32px',
-            lineHeight: 1.4,
-            color: '#131313',
-            textDecoration: 'underline',
-            textTransform: 'uppercase',
-          }}
-        >
-          {t('kontakt.title')}
-        </p>
-
-        {/* Dane */}
-        <div
-          className="flex flex-col"
-          style={{
-            gap: '32px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '24px',
-            lineHeight: 1.44,
-            color: '#131313',
-          }}
-        >
-          <p>{t('kontakt.krs')} {fundacjaData.krs}</p>
-          <p>{t('kontakt.regon')} {fundacjaData.regon}</p>
-          <p>{t('kontakt.nip')} {fundacjaData.nip}</p>
-          <div>
-            <p>{t('kontakt.bankAccount')}</p>
-            <p>{fundacjaData.bankAccount}</p>
-          </div>
-        </div>
-
-        {/* Email */}
-        <a
-          href={`mailto:${fundacjaData.email}`}
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '24px',
-            lineHeight: 1.45,
-            color: '#131313',
-            textDecoration: 'underline',
-            textTransform: 'uppercase',
-          }}
-        >
-          {fundacjaData.email}
-        </a>
-      </div>
+        KOMPOPOLEX@GMAIL.COM
+      </a>
 
       {/* Stopka */}
       <Footer
@@ -202,7 +160,7 @@ export default function DesktopKontakt() {
             { key: 'media', href: '/media', active: false },
             { key: 'kalendarz', href: '/kalendarz', active: false },
             { key: 'repertuar', href: '/repertuar', active: false },
-            { key: 'fundacja', href: '/#fundacja', active: false },
+            { key: 'fundacja', href: '/fundacja', active: false },
             { key: 'kontakt', href: '/kontakt', active: true },
           ].map((item) => (
             item.href.startsWith('/') && !item.href.includes('#') ? (

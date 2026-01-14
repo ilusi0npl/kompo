@@ -160,7 +160,7 @@ export default function DesktopHomepage() {
             { key: 'media', href: '/media', isRoute: true },
             { key: 'kalendarz', href: '/kalendarz', isRoute: true },
             { key: 'repertuar', href: '/repertuar', isRoute: true },
-            { key: 'fundacja', href: '/#fundacja', isRoute: false },
+            { key: 'fundacja', href: '/fundacja', isRoute: true },
             { key: 'kontakt', href: '/kontakt', isRoute: true },
           ].map((item) =>
             item.isRoute ? (

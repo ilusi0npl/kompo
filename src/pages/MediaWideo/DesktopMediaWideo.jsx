@@ -224,7 +224,7 @@ export default function DesktopMediaWideo() {
             { key: 'media', href: '/media', active: true },
             { key: 'kalendarz', href: '/kalendarz', active: false },
             { key: 'repertuar', href: '/repertuar', active: false },
-            { key: 'fundacja', href: '/#fundacja', active: false },
+            { key: 'fundacja', href: '/fundacja', active: false },
             { key: 'kontakt', href: '/kontakt', active: false },
           ].map((item) => (
             item.href.startsWith('/') && !item.href.includes('#') ? (

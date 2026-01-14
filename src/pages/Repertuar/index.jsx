@@ -7,8 +7,8 @@ export default function Repertuar() {
     <ResponsiveWrapper
       desktopContent={<DesktopRepertuar />}
       mobileContent={<MobileRepertuar />}
-      desktopHeight={2177}
-      mobileHeight="auto"
+      desktopHeight={1285}
+      mobileHeight={2507}
       hideLines={true}
     />
   );

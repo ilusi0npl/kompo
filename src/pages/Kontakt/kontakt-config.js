@@ -13,11 +13,5 @@ export const LINE_COLOR = '#FFBD19';
 // Background color (orange)
 export const BACKGROUND_COLOR = '#FF734C';
 
-// Fundacja data
-export const fundacjaData = {
-  krs: '0000590463',
-  regon: '363197180',
-  nip: '8982215656',
-  bankAccount: '13 1090 1522 0000 0001 4279 3816',
-  email: 'KOMPOPOLEX@GMAIL.COM',
-};
+// Contact email
+export const CONTACT_EMAIL = 'KOMPOPOLEX@GMAIL.COM';
