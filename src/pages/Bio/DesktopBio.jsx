@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router';
 import { useScrollColorChange } from '../../hooks/useScrollColorChange';
 import {
   desktopBioSlides,
@@ -150,6 +151,28 @@ export default function DesktopBio({ setCurrentColors }) {
                   )
                 )}
             </div>
+
+            {/* Link "WIĘCEJ" (tylko dla bio1 - ensemble) */}
+            {slide.id === 'bio1' && (
+              <Link
+                to="/bio/ensemble"
+                className="absolute"
+                style={{
+                  left: '625px',
+                  top: '624px',
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontWeight: 600,
+                  fontSize: '16px',
+                  lineHeight: 1.48,
+                  color: '#761FE0',
+                  textDecoration: 'underline',
+                  textTransform: 'uppercase',
+                  zIndex: 60,
+                }}
+              >
+                {t('bio.ensemble.more')}
+              </Link>
+            )}
 
             {/* Stopka (tylko dla slide 4 - bio4) */}
             {slide.hasFooter && (

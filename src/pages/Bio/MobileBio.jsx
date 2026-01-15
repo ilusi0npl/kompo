@@ -387,6 +387,27 @@ export default function MobileBio() {
                     {text}
                   </p>
                 ))}
+
+                {/* Link "WIĘCEJ" - tylko dla pierwszego slajdu (ensemble) */}
+                {index === 0 && (
+                  <Link
+                    to="/bio/ensemble"
+                    style={{
+                      marginLeft: '20px',
+                      display: 'inline-block',
+                      marginTop: '18px',
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontWeight: 600,
+                      fontSize: '16px',
+                      lineHeight: 1.48,
+                      color: '#761FE0',
+                      textDecoration: 'underline',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    {t('bio.ensemble.more')}
+                  </Link>
+                )}
               </div>
             );
           })}

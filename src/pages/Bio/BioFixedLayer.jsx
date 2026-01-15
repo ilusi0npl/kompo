@@ -8,7 +8,7 @@ const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 // Pozycje linii pionowych z Figma
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
 
-export default function BioFixedLayer({ currentColors, scale = 1 }) {
+export default function BioFixedLayer({ currentColors, scale = 1, height = 700 }) {
   const { t } = useTranslation();
 
   return (
@@ -20,7 +20,7 @@ export default function BioFixedLayer({ currentColors, scale = 1 }) {
           top: 0,
           left: 0,
           width: '100%',
-          height: '100vh',
+          height: `${height * scale}px`,
           pointerEvents: 'none',
           zIndex: 50,
         }}
@@ -32,7 +32,7 @@ export default function BioFixedLayer({ currentColors, scale = 1 }) {
             style={{
               left: `${x * scale}px`,
               width: `${1 * scale}px`,
-              height: '100%',
+              height: `${height * scale}px`,
               backgroundColor: currentColors.lineColor,
               transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
             }}
@@ -47,7 +47,7 @@ export default function BioFixedLayer({ currentColors, scale = 1 }) {
           zIndex: 100,
           pointerEvents: 'none',
           width: `${1440 * scale}px`,
-          height: `${700 * scale}px`,
+          height: `${height * scale}px`,
         }}
       >
         {/* Logo */}
