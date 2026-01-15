@@ -9,8 +9,8 @@ const DESKTOP_WIDTH = 1440;
 const BREAKPOINT = 768;
 
 export default function Bio() {
-  // Total height: 4 sections × 700px each
-  const totalDesktopHeight = desktopBioSlides.length * DESKTOP_HEIGHT;
+  // Total height: sum of all section heights (3×700px + 1×850px)
+  const totalDesktopHeight = desktopBioSlides.reduce((sum, slide) => sum + (slide.height || DESKTOP_HEIGHT), 0);
 
   // Track current colors for fixed elements
   const [currentColors, setCurrentColors] = useState(desktopBioSlides[0]);

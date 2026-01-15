@@ -95,7 +95,8 @@ export const desktopBioSlides = [
       'W 2018 roku był nominowany do nagrody polskiego środowiska muzycznego Koryfeusz Muzyki Polskiej w kategorii Odkrycie Roku. W 2011 roku założył z Mikołajem Laskowskim duet sultan hagavik, z którym dwa lata po rozpoczęciu działalności wygrał nagrodę nurtu OFF na Przeglądzie Piosenki Aktorskiej we Wrocławiu.'
     ],
     paragraphTops: [256, 416],
-    hasFooter: true
+    hasFooter: true,
+    height: 850
   }
 ];
 

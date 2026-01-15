@@ -51,8 +51,8 @@ export default function DesktopBio({ setCurrentColors }) {
     document.documentElement.style.setProperty('--line-color', currentColors.lineColor);
   }, [currentColors.backgroundColor, currentColors.lineColor]);
 
-  // Total height: 4 sections × 700px each
-  const totalHeight = desktopBioSlides.length * DESKTOP_HEIGHT;
+  // Total height: sum of all section heights (3×700px + 1×850px)
+  const totalHeight = desktopBioSlides.reduce((sum, slide) => sum + (slide.height || DESKTOP_HEIGHT), 0);
 
   return (
     <section
@@ -75,7 +75,7 @@ export default function DesktopBio({ setCurrentColors }) {
             ref={(el) => (sectionsRef.current[index] = el)}
             data-color={slide.id}
             style={{
-              height: `${DESKTOP_HEIGHT}px`,
+              height: `${slide.height || DESKTOP_HEIGHT}px`,
               position: 'relative',
               width: `${DESKTOP_WIDTH}px`,
             }}
@@ -157,7 +157,7 @@ export default function DesktopBio({ setCurrentColors }) {
                 className="absolute"
                 style={{
                   left: '185px',
-                  top: '652px',
+                  top: '752px',
                   width: '520px',
                   zIndex: 60,
                 }}
