@@ -45,12 +45,15 @@ export default function MobileKalendarz() {
         backgroundColor={BACKGROUND_COLOR}
         lineColor={LINE_COLOR}
         isFixed={true}
+        headerHeight={326}
+        navLinksTop={257}
+        navLinksGap={55}
         navLinks={[
           { label: t('common.tabs.upcoming'), to: '/kalendarz', isActive: true },
           { label: t('common.tabs.archived'), to: '/archiwalne', isActive: false },
         ]}
       />
-      <MobileHeaderSpacer />
+      <MobileHeaderSpacer height={326} />
 
       {/* Lista eventów */}
       <div

@@ -62,6 +62,8 @@ export default function MobileFundacja() {
       {/* Zdjęcie zespołu z smooth loading - 341x473px centered */}
       <div
         style={{
+          position: 'relative',
+          zIndex: 1,
           display: 'flex',
           justifyContent: 'center',
           paddingLeft: '9px',
@@ -88,6 +90,8 @@ export default function MobileFundacja() {
       <div
         className="flex flex-col"
         style={{
+          position: 'relative',
+          zIndex: 1,
           marginTop: '40px',
           marginLeft: 'auto',
           marginRight: 'auto',
@@ -327,6 +331,8 @@ export default function MobileFundacja() {
       <MobileFooter
         className="mt-16"
         style={{
+          position: 'relative',
+          zIndex: 1,
           marginLeft: 'auto',
           marginRight: 'auto',
           marginBottom: '40px',

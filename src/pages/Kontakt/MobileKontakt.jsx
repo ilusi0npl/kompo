@@ -9,7 +9,9 @@ import { useFixedMobileHeader } from '../../hooks/useFixedMobileHeader';
 
 const MOBILE_WIDTH = 390;
 const HEADER_HEIGHT = 218;
-const BACKGROUND_COLOR = '#FDFDFD';
+const mobileLinePositions = [97, 195, 292];
+const BACKGROUND_COLOR = '#FF734C';
+const LINE_COLOR = '#FFBD19';
 const TEXT_COLOR = '#131313';
 
 export default function MobileKontakt() {
@@ -27,6 +29,20 @@ export default function MobileKontakt() {
         backgroundColor: BACKGROUND_COLOR,
       }}
     >
+      {/* Pionowe linie */}
+      {mobileLinePositions.map((left, index) => (
+        <div
+          key={index}
+          className="absolute top-0"
+          style={{
+            left: `${left}px`,
+            width: '1px',
+            height: '100%',
+            backgroundColor: LINE_COLOR,
+          }}
+        />
+      ))}
+
       {/* Fixed header via portal */}
       {typeof document !== 'undefined' && createPortal(
         <div
@@ -40,6 +56,20 @@ export default function MobileKontakt() {
             zIndex: 100,
           }}
         >
+          {/* Pionowe linie w headerze */}
+          {mobileLinePositions.map((left, index) => (
+            <div
+              key={`header-line-${index}`}
+              className="absolute top-0"
+              style={{
+                left: `${left}px`,
+                width: '1px',
+                height: `${HEADER_HEIGHT}px`,
+                backgroundColor: LINE_COLOR,
+              }}
+            />
+          ))}
+
           {/* Logo */}
           <Link to="/">
             <img
@@ -106,6 +136,8 @@ export default function MobileKontakt() {
         href="mailto:KOMPOPOLEX@GMAIL.COM"
         className="block"
         style={{
+          position: 'relative',
+          zIndex: 1,
           marginTop: '60px',
           marginLeft: '51px',
           width: '288px',

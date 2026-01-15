@@ -20,6 +20,9 @@ const DEFAULT_LINE_POSITIONS = [97, 195, 292];
  * @param {number} headerHeight - Wysokość nagłówka dla fixed mode (domyślnie 257)
  * @param {string} lineColor - Kolor pionowych linii w nagłówku (opcjonalny)
  * @param {Array} linePositions - Pozycje X linii (domyślnie [97, 195, 292])
+ * @param {number} navLinksTop - Pozycja Y linków nawigacyjnych (domyślnie 120)
+ * @param {number} navLinksGap - Odstęp między linkami (domyślnie 20)
+ * @param {number} navLinksFontSize - Rozmiar fontu linków nawigacyjnych (domyślnie 16)
  */
 export default function MobileHeader({
   title,
@@ -31,6 +34,9 @@ export default function MobileHeader({
   headerHeight = DEFAULT_HEADER_HEIGHT,
   lineColor = null,
   linePositions = DEFAULT_LINE_POSITIONS,
+  navLinksTop = 120,
+  navLinksGap = 20,
+  navLinksFontSize = 16,
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { scale } = useFixedMobileHeader();
@@ -105,8 +111,8 @@ export default function MobileHeader({
           className="absolute flex"
           style={{
             left: '20px',
-            top: '120px',
-            gap: '20px',
+            top: `${navLinksTop}px`,
+            gap: `${navLinksGap}px`,
           }}
         >
           {navLinks.map((link, index) => (
@@ -116,7 +122,7 @@ export default function MobileHeader({
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 600,
-                  fontSize: '16px',
+                  fontSize: `${navLinksFontSize}px`,
                   lineHeight: 1.44,
                   color: activeColor,
                   textDecoration: 'underline',
@@ -133,7 +139,7 @@ export default function MobileHeader({
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 600,
-                  fontSize: '16px',
+                  fontSize: `${navLinksFontSize}px`,
                   lineHeight: 1.44,
                   color: textColor,
                 }}

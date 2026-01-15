@@ -45,13 +45,17 @@ export default function MobileMedia() {
         backgroundColor={BACKGROUND_COLOR}
         lineColor={LINE_COLOR}
         isFixed={true}
+        headerHeight={326}
         activeColor={ACTIVE_TAB_COLOR}
+        navLinksTop={257}
+        navLinksGap={101}
+        navLinksFontSize={20}
         navLinks={[
           { label: t('common.tabs.photos'), to: '/media', isActive: true },
           { label: t('common.tabs.video'), to: '/media/wideo', isActive: false },
         ]}
       />
-      <MobileHeaderSpacer />
+      <MobileHeaderSpacer height={326} />
 
       {/* Lista zdjęć */}
       <div
