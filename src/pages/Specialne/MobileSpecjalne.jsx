@@ -114,32 +114,31 @@ export default function MobileSpecjalne() {
       >
         <Link
           to="/repertuar"
+          className="nav-link"
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontWeight: 600,
             fontSize: '20px',
             lineHeight: 1.44,
             color: '#131313',
-            textDecoration: 'none',
             margin: 0,
           }}
         >
           {t('repertuar.tabs.full')}
         </Link>
-        <p
+        <span
+          className="nav-link--active"
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontWeight: 600,
             fontSize: '20px',
             lineHeight: 1.44,
             color: '#761FE0',
-            textDecoration: 'underline',
-            textUnderlinePosition: 'from-font',
             margin: 0,
           }}
         >
           {t('repertuar.tabs.special')}
-        </p>
+        </span>
       </div>
 
       {/* Header text */}

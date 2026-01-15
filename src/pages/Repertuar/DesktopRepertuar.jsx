@@ -135,44 +135,35 @@ export default function DesktopRepertuar() {
       </div>
 
       {/* Navigation Tabs */}
-      <div
-        className="absolute"
+      <span
+        className="absolute nav-link--active"
         style={{
           left: '185px',
           top: '190px',
-          display: 'flex',
-          gap: '330px',
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontWeight: 600,
+          fontSize: '24px',
+          lineHeight: 1.44,
+          color: '#761FE0',
         }}
       >
-        <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '24px',
-            lineHeight: 1.44,
-            color: '#761FE0',
-            textDecoration: 'underline',
-            textUnderlinePosition: 'from-font',
-            margin: 0,
-          }}
-        >
-          {t('repertuar.tabs.full')}
-        </p>
-        <Link
-          to="/specialne"
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '24px',
-            lineHeight: 1.44,
-            color: '#131313',
-            textDecoration: 'none',
-            margin: 0,
-          }}
-        >
-          {t('repertuar.tabs.special')}
-        </Link>
-      </div>
+        {t('repertuar.tabs.full')}
+      </span>
+      <Link
+        to="/specialne"
+        className="absolute nav-link"
+        style={{
+          left: '515px',
+          top: '190px',
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontWeight: 600,
+          fontSize: '24px',
+          lineHeight: 1.44,
+          color: '#131313',
+        }}
+      >
+        {t('repertuar.tabs.special')}
+      </Link>
 
       {/* Composers Grid and Footnote - flex container for dynamic spacing */}
       <div
@@ -271,14 +262,13 @@ export default function DesktopRepertuar() {
               <Link
                 key={item.key}
                 to={item.href}
+                className={`nav-link ${item.active ? 'nav-link--active' : ''}`}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 700,
                   fontSize: '18px',
                   lineHeight: 1.48,
                   color: '#131313',
-                  textDecoration: item.active ? 'underline' : 'none',
-                  textUnderlinePosition: item.active ? 'from-font' : undefined,
                 }}
               >
                 {t(`common.nav.${item.key}`)}
@@ -287,14 +277,13 @@ export default function DesktopRepertuar() {
               <a
                 key={item.key}
                 href={item.href}
+                className={`nav-link ${item.active ? 'nav-link--active' : ''}`}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 700,
                   fontSize: '18px',
                   lineHeight: 1.48,
                   color: '#131313',
-                  textDecoration: item.active ? 'underline' : 'none',
-                  textUnderlinePosition: item.active ? 'from-font' : undefined,
                 }}
               >
                 {t(`common.nav.${item.key}`)}

@@ -97,13 +97,13 @@ export default function MobileHeader({
               <Link
                 key={index}
                 to={link.to}
+                className="nav-link"
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 600,
                   fontSize: '16px',
                   lineHeight: 1.44,
                   color: textColor,
-                  textDecoration: 'none',
                 }}
               >
                 {link.label}

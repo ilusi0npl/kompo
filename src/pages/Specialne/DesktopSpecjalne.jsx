@@ -134,44 +134,35 @@ export default function DesktopSpecjalne() {
       </div>
 
       {/* Navigation Tabs */}
-      <div
-        className="absolute"
+      <Link
+        to="/repertuar"
+        className="absolute nav-link"
         style={{
           left: '185px',
           top: '190px',
-          display: 'flex',
-          gap: '330px',
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontWeight: 600,
+          fontSize: '24px',
+          lineHeight: 1.44,
+          color: '#131313',
         }}
       >
-        <Link
-          to="/repertuar"
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '24px',
-            lineHeight: 1.44,
-            color: '#131313',
-            textDecoration: 'none',
-            margin: 0,
-          }}
-        >
-          {t('repertuar.tabs.full')}
-        </Link>
-        <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '24px',
-            lineHeight: 1.44,
-            color: '#761FE0',
-            textDecoration: 'underline',
-            textUnderlinePosition: 'from-font',
-            margin: 0,
-          }}
-        >
-          {t('repertuar.tabs.special')}
-        </p>
-      </div>
+        {t('repertuar.tabs.full')}
+      </Link>
+      <span
+        className="absolute nav-link--active"
+        style={{
+          left: '515px',
+          top: '190px',
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontWeight: 600,
+          fontSize: '24px',
+          lineHeight: 1.44,
+          color: '#761FE0',
+        }}
+      >
+        {t('repertuar.tabs.special')}
+      </span>
 
       {/* Header text */}
       <p
@@ -290,14 +281,13 @@ export default function DesktopSpecjalne() {
               <Link
                 key={item.key}
                 to={item.href}
+                className={`nav-link ${item.active ? 'nav-link--active' : ''}`}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 700,
                   fontSize: '18px',
                   lineHeight: 1.48,
                   color: '#131313',
-                  textDecoration: item.active ? 'underline' : 'none',
-                  textUnderlinePosition: item.active ? 'from-font' : undefined,
                 }}
               >
                 {t(`common.nav.${item.key}`)}
@@ -306,14 +296,13 @@ export default function DesktopSpecjalne() {
               <a
                 key={item.key}
                 href={item.href}
+                className={`nav-link ${item.active ? 'nav-link--active' : ''}`}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 700,
                   fontSize: '18px',
                   lineHeight: 1.48,
                   color: '#131313',
-                  textDecoration: item.active ? 'underline' : 'none',
-                  textUnderlinePosition: item.active ? 'from-font' : undefined,
                 }}
               >
                 {t(`common.nav.${item.key}`)}

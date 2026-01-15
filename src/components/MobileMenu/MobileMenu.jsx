@@ -121,13 +121,13 @@ export default function MobileMenu({ isOpen, onClose }) {
             key={item.labelKey}
             to={item.to}
             onClick={onClose}
+            className="nav-link"
             style={{
               fontFamily: "'IBM Plex Mono', monospace",
               fontWeight: 700,
               fontSize: `${scaledFontSize}px`,
               lineHeight: 'normal',
               color: '#131313',
-              textDecoration: 'none',
             }}
           >
             {t(item.labelKey)}

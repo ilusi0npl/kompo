@@ -153,8 +153,30 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Bio navigation hover effect */
-.bio-nav-link:hover {
-  text-decoration: underline !important;
+/* Navigation link styles (menu, tabs) */
+.nav-link {
+  text-decoration: none;
   cursor: pointer;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.nav-link--active {
+  text-decoration: underline;
+}
+
+/* Alias for bio navigation */
+.bio-nav-link {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.bio-nav-link:hover {
+  text-decoration: underline;
+}
+
+.bio-nav-link--active {
+  text-decoration: underline;
 }

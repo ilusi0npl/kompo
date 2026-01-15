@@ -111,6 +111,7 @@ export default function MobileBioEnsemble() {
         {/* MENU button */}
         <Link
           to="/bio"
+          className="nav-link"
           style={{
             position: 'absolute',
             left: '312px',
@@ -120,7 +121,6 @@ export default function MobileBioEnsemble() {
             fontSize: '24px',
             lineHeight: 'normal',
             color: COLORS.textColor,
-            textDecoration: 'none',
             zIndex: 101,
           }}
         >

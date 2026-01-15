@@ -137,15 +137,13 @@ export default function BioFixedLayer({ currentColors, scale = 1, height = 700 }
                 <Link
                   key={item.key}
                   to={item.href}
-                  className="bio-nav-link"
+                  className={`bio-nav-link ${item.active ? 'bio-nav-link--active' : ''}`}
                   style={{
                     fontFamily: "'IBM Plex Mono', monospace",
                     fontWeight: 700,
                     fontSize: `${18 * scale}px`,
                     lineHeight: 1.48,
                     color: currentColors.textColor,
-                    textDecoration: item.active ? 'underline' : 'none',
-                    transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}, text-decoration ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
                   }}
                 >
                   {t(`common.nav.${item.key}`)}
@@ -154,15 +152,13 @@ export default function BioFixedLayer({ currentColors, scale = 1, height = 700 }
                 <a
                   key={item.key}
                   href={item.href}
-                  className="bio-nav-link"
+                  className={`bio-nav-link ${item.active ? 'bio-nav-link--active' : ''}`}
                   style={{
                     fontFamily: "'IBM Plex Mono', monospace",
                     fontWeight: 700,
                     fontSize: `${18 * scale}px`,
                     lineHeight: 1.48,
                     color: currentColors.textColor,
-                    textDecoration: item.active ? 'underline' : 'none',
-                    transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}, text-decoration ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
                   }}
                 >
                   {t(`common.nav.${item.key}`)}

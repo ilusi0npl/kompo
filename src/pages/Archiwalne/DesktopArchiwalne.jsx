@@ -83,7 +83,7 @@ export default function DesktopArchiwalne() {
       {/* Nawigacja Nadchodzące / Archiwalne */}
       <Link
         to="/kalendarz"
-        className="absolute"
+        className="absolute nav-link"
         style={{
           left: '185px',
           top: '190px',
@@ -92,14 +92,12 @@ export default function DesktopArchiwalne() {
           fontSize: '24px',
           lineHeight: 1.44,
           color: '#131313',
-          textDecoration: 'none',
-          cursor: 'pointer',
         }}
       >
         {t('common.tabs.upcoming')}
       </Link>
       <span
-        className="absolute"
+        className="absolute nav-link--active"
         style={{
           left: '405px',
           top: '190px',
@@ -108,8 +106,6 @@ export default function DesktopArchiwalne() {
           fontSize: '24px',
           lineHeight: 1.44,
           color: '#761FE0',
-          textDecoration: 'underline',
-          cursor: 'pointer',
         }}
       >
         {t('common.tabs.archived')}
@@ -237,13 +233,13 @@ export default function DesktopArchiwalne() {
               <Link
                 key={item.key}
                 to={item.href}
+                className={`nav-link ${item.active ? 'nav-link--active' : ''}`}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 700,
                   fontSize: '18px',
                   lineHeight: 1.48,
                   color: '#131313',
-                  textDecoration: item.active ? 'underline' : 'none',
                 }}
               >
                 {t(`common.nav.${item.key}`)}
@@ -252,13 +248,13 @@ export default function DesktopArchiwalne() {
               <a
                 key={item.key}
                 href={item.href}
+                className={`nav-link ${item.active ? 'nav-link--active' : ''}`}
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 700,
                   fontSize: '18px',
                   lineHeight: 1.48,
                   color: '#131313',
-                  textDecoration: item.active ? 'underline' : 'none',
                 }}
               >
                 {t(`common.nav.${item.key}`)}

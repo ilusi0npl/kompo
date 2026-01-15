@@ -167,13 +167,13 @@ export default function DesktopHomepage() {
               <Link
                 key={item.key}
                 to={item.href}
+                className="nav-link"
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 700,
                   fontSize: '18px',
                   lineHeight: 1.48,
                   color: currentData.textColor,
-                  textDecoration: 'none',
                   transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
                 }}
               >
@@ -183,13 +183,13 @@ export default function DesktopHomepage() {
               <a
                 key={item.key}
                 href={item.href}
+                className="nav-link"
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 700,
                   fontSize: '18px',
                   lineHeight: 1.48,
                   color: currentData.textColor,
-                  textDecoration: 'none',
                   transition: `color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
                 }}
               >

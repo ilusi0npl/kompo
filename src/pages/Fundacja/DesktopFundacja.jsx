@@ -414,13 +414,13 @@ export default function DesktopFundacja() {
             <Link
               key={item.key}
               to={item.href}
+              className={`nav-link ${item.active ? 'nav-link--active' : ''}`}
               style={{
                 fontFamily: "'IBM Plex Mono', monospace",
                 fontWeight: 700,
                 fontSize: '18px',
                 lineHeight: 1.48,
                 color: TEXT_COLOR,
-                textDecoration: item.active ? 'underline' : 'none',
               }}
             >
               {t(`common.nav.${item.key}`)}
