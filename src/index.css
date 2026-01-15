@@ -265,3 +265,24 @@ body {
 .text-link-btn:focus-visible .text-link-btn__arrow {
   opacity: 1;
 }
+
+/* Event title link (Kalendarz) */
+.event-title-link {
+  text-decoration: underline;
+  text-underline-position: from-font;
+  transition: color 0.2s ease;
+}
+
+.event-title-link:hover {
+  color: #761FE0 !important;
+}
+
+/* Event poster clickable */
+.event-poster-link {
+  display: block;
+  cursor: pointer;
+}
+
+.event-poster-link:hover {
+  opacity: 0.9;
+}

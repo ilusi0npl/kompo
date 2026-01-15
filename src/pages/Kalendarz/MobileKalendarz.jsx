@@ -58,23 +58,32 @@ export default function MobileKalendarz() {
       >
         {events.map((event, index) => (
           <div key={event.id} className="flex flex-col" style={{ gap: '16px' }}>
-            {/* Zdjęcie z smooth loading */}
-            <SmoothImage
-              src={event.image}
-              alt={event.title}
-              containerStyle={{
+            {/* Zdjęcie z smooth loading - klikalny plakat */}
+            <Link
+              to={`/wydarzenie/${event.id}`}
+              className="event-poster-link"
+              style={{
                 width: '300px',
                 height: '420px',
                 alignSelf: 'center',
               }}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: '50% 50%',
-              }}
-              placeholderColor="#e5e5e5"
-            />
+            >
+              <SmoothImage
+                src={event.image}
+                alt={event.title}
+                containerStyle={{
+                  width: '300px',
+                  height: '420px',
+                }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: '50% 50%',
+                }}
+                placeholderColor="#e5e5e5"
+              />
+            </Link>
 
             {/* Data */}
             <p
@@ -89,16 +98,16 @@ export default function MobileKalendarz() {
               {event.date}
             </p>
 
-            {/* Tytuł (link) */}
+            {/* Tytuł (link) z hover na fiolet */}
             <Link
               to={`/wydarzenie/${event.id}`}
+              className="event-title-link"
               style={{
                 fontFamily: "'IBM Plex Mono', monospace",
                 fontWeight: 600,
                 fontSize: '20px',
                 lineHeight: 1.4,
                 color: TEXT_COLOR,
-                textDecoration: 'underline',
                 textTransform: 'uppercase',
               }}
             >

@@ -123,25 +123,34 @@ export default function DesktopArchiwalne() {
             gap: '16px',
           }}
         >
-          {/* Image z smooth loading */}
-          <SmoothImage
-            src={event.image}
-            alt={event.title}
-            containerStyle={{
+          {/* Image z smooth loading - klikalny plakat */}
+          <Link
+            to={`/wydarzenie/${event.id}`}
+            className="event-poster-link"
+            style={{
               width: '300px',
               height: '420px',
               border: event.hasBorder ? '1px solid #131313' : 'none',
             }}
-            style={{
-              position: 'absolute',
-              inset: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: '50% 50%',
-            }}
-            placeholderColor="#e5e5e5"
-          />
+          >
+            <SmoothImage
+              src={event.image}
+              alt={event.title}
+              containerStyle={{
+                width: '300px',
+                height: '420px',
+              }}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: '50% 50%',
+              }}
+              placeholderColor="#e5e5e5"
+            />
+          </Link>
 
           {/* Text content */}
           <div className="flex flex-col" style={{ gap: '6px' }}>
@@ -162,13 +171,13 @@ export default function DesktopArchiwalne() {
             <div className="flex flex-col" style={{ gap: '16px' }}>
               <Link
                 to={`/wydarzenie/${event.id}`}
+                className="event-title-link"
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 600,
                   fontSize: '24px',
                   lineHeight: 1.45,
                   color: '#131313',
-                  textDecoration: 'underline',
                   textTransform: 'uppercase',
                 }}
               >

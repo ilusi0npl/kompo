@@ -14,17 +14,17 @@ import {
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
 const LINE_COLOR = '#A0E38A';
 
-// Helper to make title a link
+// Helper to make title a link with hover color change
 const EventTitle = ({ event, t }) => (
   <Link
     to={`/wydarzenie/${event.id}`}
+    className="event-title-link"
     style={{
       fontFamily: "'IBM Plex Mono', monospace",
       fontWeight: 600,
       fontSize: '32px',
       lineHeight: 1.4,
       color: '#131313',
-      textDecoration: 'underline',
       textTransform: 'uppercase',
     }}
   >
@@ -131,25 +131,33 @@ export default function DesktopKalendarz() {
       </Link>
 
       {/* Event 1 */}
-      <SmoothImage
-        src={events[0].image}
-        alt={events[0].title}
-        className="absolute"
-        containerStyle={{
+      <Link
+        to={`/wydarzenie/${events[0].id}`}
+        className="absolute event-poster-link"
+        style={{
           left: '185px',
           top: '275px',
           width: '330px',
           height: '462px',
         }}
-        style={{
-          ...events[0].imageStyle,
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-        }}
-        placeholderColor="#e5e5e5"
-      />
+      >
+        <SmoothImage
+          src={events[0].image}
+          alt={events[0].title}
+          containerStyle={{
+            width: '330px',
+            height: '462px',
+          }}
+          style={{
+            ...events[0].imageStyle,
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+          }}
+          placeholderColor="#e5e5e5"
+        />
+      </Link>
       <div className="absolute flex flex-col" style={{ left: '625px', top: '275px', width: '519px', gap: '20px' }}>
         <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: '#131313' }}>
           {events[0].date}
@@ -174,19 +182,27 @@ export default function DesktopKalendarz() {
       </div>
 
       {/* Event 2 */}
-      <SmoothImage
-        src={events[1].image}
-        alt={events[1].title}
-        className="absolute"
-        containerStyle={{
+      <Link
+        to={`/wydarzenie/${events[1].id}`}
+        className="absolute event-poster-link"
+        style={{
           left: '185px',
           top: '807px',
           width: '330px',
           height: '462px',
         }}
-        style={events[1].imageStyle}
-        placeholderColor="#e5e5e5"
-      />
+      >
+        <SmoothImage
+          src={events[1].image}
+          alt={events[1].title}
+          containerStyle={{
+            width: '330px',
+            height: '462px',
+          }}
+          style={events[1].imageStyle}
+          placeholderColor="#e5e5e5"
+        />
+      </Link>
       <div className="absolute flex flex-col" style={{ left: '625px', top: '807px', width: '519px', gap: '20px' }}>
         <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: '#131313' }}>
           {events[1].date}
@@ -211,25 +227,33 @@ export default function DesktopKalendarz() {
       </div>
 
       {/* Event 3 */}
-      <SmoothImage
-        src={events[2].image}
-        alt={events[2].title}
-        className="absolute"
-        containerStyle={{
+      <Link
+        to={`/wydarzenie/${events[2].id}`}
+        className="absolute event-poster-link"
+        style={{
           left: '185px',
           top: '1339px',
           width: '330px',
           height: '462px',
         }}
-        style={{
-          ...events[2].imageStyle,
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-        }}
-        placeholderColor="#e5e5e5"
-      />
+      >
+        <SmoothImage
+          src={events[2].image}
+          alt={events[2].title}
+          containerStyle={{
+            width: '330px',
+            height: '462px',
+          }}
+          style={{
+            ...events[2].imageStyle,
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+          }}
+          placeholderColor="#e5e5e5"
+        />
+      </Link>
       <div className="absolute flex flex-col" style={{ left: '625px', top: '1339px', width: '519px', gap: '20px' }}>
         <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: '#131313' }}>
           {events[2].date}

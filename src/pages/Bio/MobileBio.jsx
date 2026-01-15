@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router';
 import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useScrollColorChange } from '../../hooks/useScrollColorChange';
 import {
   mobileBioSlides,
   mobileLinePositions,
@@ -30,20 +31,19 @@ const mobileImageStyles = [
   { position: 'absolute', width: '301.44%', height: '140.43%', left: '-198.05%', top: '-0.22%', maxWidth: 'none' },
 ];
 
+// Heights for each mobile slide section
+const MOBILE_SLIDE_HEIGHTS = [950, 850, 750, 950];
+
 export default function MobileBio() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [loadedImages, setLoadedImages] = useState(new Set());
-  const [currentSlide, setCurrentSlide] = useState(0);
   const [linesVisible, setLinesVisible] = useState(false);
   const [scale, setScale] = useState(1);
-  const isAnimating = useRef(false);
+  const sectionsRef = useRef([]);
   const { t } = useTranslation();
-  const touchStartY = useRef(0);
-  const lastScrollTop = useRef(0);
-  const scrollAccumulator = useRef(0);
 
-  const currentData = mobileBioSlides[currentSlide];
-  const totalSlides = mobileBioSlides.length;
+  // Use scroll-based color detection (same as desktop)
+  const currentColors = useScrollColorChange(sectionsRef, mobileBioSlides);
 
   // Calculate scale factor for fixed header (must match ResponsiveWrapper)
   useEffect(() => {
@@ -67,22 +67,6 @@ export default function MobileBio() {
     return () => clearTimeout(timer);
   }, []);
 
-  const goToSlide = useCallback((toSlide) => {
-    if (isAnimating.current) return;
-    if (toSlide < 0 || toSlide >= totalSlides) return;
-
-    isAnimating.current = true;
-    setCurrentSlide(toSlide);
-
-    // Scroll window to top
-    window.scrollTo({ top: 0, behavior: 'instant' });
-    scrollAccumulator.current = 0;
-
-    setTimeout(() => {
-      isAnimating.current = false;
-    }, 600);
-  }, [totalSlides]);
-
   // Preload wszystkich obrazów Bio
   useEffect(() => {
     mobileBioSlides.forEach((slide, index) => {
@@ -96,82 +80,17 @@ export default function MobileBio() {
 
   // Sync background and line colors with CSS variables for ResponsiveWrapper
   useEffect(() => {
-    document.documentElement.style.setProperty('--page-bg', currentData.backgroundColor);
-    document.documentElement.style.setProperty('--line-color', currentData.lineColor);
-  }, [currentData.backgroundColor, currentData.lineColor]);
+    document.documentElement.style.setProperty('--page-bg', currentColors.backgroundColor);
+    document.documentElement.style.setProperty('--line-color', currentColors.lineColor);
+  }, [currentColors.backgroundColor, currentColors.lineColor]);
 
-  // Touch handlers for slide transitions at boundaries
+  // Reset scroll position on mount
   useEffect(() => {
-    const handleTouchStart = (e) => {
-      if (isAnimating.current) return;
-      touchStartY.current = e.touches[0].clientY;
-      lastScrollTop.current = window.scrollY;
-    };
+    window.scrollTo(0, 0);
+  }, []);
 
-    const handleTouchMove = (e) => {
-      if (isAnimating.current) return;
-
-      const touchY = e.touches[0].clientY;
-      const deltaY = touchStartY.current - touchY;
-      const scrollTop = window.scrollY;
-      const scrollHeight = document.documentElement.scrollHeight;
-      const clientHeight = window.innerHeight;
-
-      const isAtTop = scrollTop <= 5;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5;
-
-      // At bottom, swiping up → accumulate for next slide
-      if (isAtBottom && deltaY > 0 && currentSlide < totalSlides - 1) {
-        scrollAccumulator.current += Math.abs(deltaY - (lastScrollTop.current - scrollTop));
-      }
-      // At top, swiping down → accumulate for previous slide
-      else if (isAtTop && deltaY < 0 && currentSlide > 0) {
-        scrollAccumulator.current += Math.abs(deltaY);
-      }
-      else {
-        scrollAccumulator.current = 0;
-      }
-
-      lastScrollTop.current = scrollTop;
-    };
-
-    const handleTouchEnd = (e) => {
-      if (isAnimating.current) return;
-
-      const touchEndY = e.changedTouches[0].clientY;
-      const deltaY = touchStartY.current - touchEndY;
-
-      const scrollTop = window.scrollY;
-      const scrollHeight = document.documentElement.scrollHeight;
-      const clientHeight = window.innerHeight;
-
-      const isAtTop = scrollTop <= 5;
-      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 5;
-
-      const SWIPE_THRESHOLD = 80;
-
-      // Swipe up at bottom → next slide
-      if (isAtBottom && deltaY > SWIPE_THRESHOLD && currentSlide < totalSlides - 1) {
-        goToSlide(currentSlide + 1);
-      }
-      // Swipe down at top → previous slide
-      else if (isAtTop && deltaY < -SWIPE_THRESHOLD && currentSlide > 0) {
-        goToSlide(currentSlide - 1);
-      }
-
-      scrollAccumulator.current = 0;
-    };
-
-    document.addEventListener('touchstart', handleTouchStart, { passive: true });
-    document.addEventListener('touchmove', handleTouchMove, { passive: true });
-    document.addEventListener('touchend', handleTouchEnd, { passive: true });
-
-    return () => {
-      document.removeEventListener('touchstart', handleTouchStart);
-      document.removeEventListener('touchmove', handleTouchMove);
-      document.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [currentSlide, totalSlides, goToSlide]);
+  // Total height: sum of all section heights
+  const totalHeight = MOBILE_SLIDE_HEIGHTS.reduce((sum, h) => sum + h, 0);
 
   return (
     <section
@@ -179,9 +98,7 @@ export default function MobileBio() {
       className="relative"
       style={{
         width: `${MOBILE_WIDTH}px`,
-        minHeight: '100vh',
-        backgroundColor: currentData.backgroundColor,
-        transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+        minHeight: `${totalHeight}px`,
       }}
     >
       {/* Pionowe linie w tle - absolute, pełna wysokość sekcji */}
@@ -193,15 +110,12 @@ export default function MobileBio() {
             left: `${left}px`,
             width: '1px',
             height: '100%',
-            backgroundColor: currentData.lineColor,
+            backgroundColor: currentColors.lineColor,
             opacity: linesVisible ? 1 : 0,
             transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}, opacity 0.8s ${TRANSITION_EASING}`,
           }}
         />
       ))}
-
-      {/* Spacer for fixed header */}
-      <div style={{ height: '281px' }} />
 
       {/* Header z logo i menu - FIXED via portal */}
       {typeof document !== 'undefined' && createPortal(
@@ -210,7 +124,7 @@ export default function MobileBio() {
           style={{
             width: `${MOBILE_WIDTH}px`,
             height: '281px',
-            backgroundColor: currentData.backgroundColor,
+            backgroundColor: currentColors.backgroundColor,
             transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
             transform: `scale(${scale})`,
             transformOrigin: 'top left',
@@ -226,7 +140,7 @@ export default function MobileBio() {
                 left: `${left}px`,
                 width: '1px',
                 height: '281px',
-                backgroundColor: currentData.lineColor,
+                backgroundColor: currentColors.lineColor,
                 opacity: linesVisible ? 1 : 0,
                 transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}, opacity 0.8s ${TRANSITION_EASING}`,
               }}
@@ -259,7 +173,7 @@ export default function MobileBio() {
               fontWeight: 700,
               fontSize: '24px',
               lineHeight: 'normal',
-              color: currentData.textColor,
+              color: currentColors.textColor,
               background: 'transparent',
               border: 'none',
               padding: 0,
@@ -297,78 +211,67 @@ export default function MobileBio() {
         document.body
       )}
 
-      {/* Content area */}
-      <div style={{ paddingBottom: '60px' }}>
-        {/* Zdjęcie - 300x460px centered z smooth loading */}
-        <div
-          className="relative mx-auto"
-          style={{
-            width: '300px',
-            height: '460px',
-            overflow: 'hidden',
-            backgroundColor: currentData.backgroundColor,
-          }}
-        >
-          {mobileBioSlides.map((slide, index) => (
-            <img
-              key={slide.id}
-              src={slide.image}
-              alt={slide.name}
-              className="absolute"
-              style={{
-                ...mobileImageStyles[index],
-                opacity: index === currentSlide && loadedImages.has(index) ? 1 : 0,
-                transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-              }}
-            />
-          ))}
-        </div>
+      {/* SCROLLABLE CONTENT - All slides stacked vertically */}
+      <div style={{ position: 'relative' }}>
+        {mobileBioSlides.map((slide, index) => {
+          const translationKey = slideTranslationKeys[index];
+          const paragraphs = t(`bio.slides.${translationKey}.paragraphs`);
 
-        {/* Tytuł (imię) - 40px SemiBold */}
-        <div className="relative" style={{ marginTop: '60px', minHeight: '96px' }}>
-          {mobileBioSlides.map((slide, index) => {
-            const translationKey = slideTranslationKeys[index];
-            return (
-              <p
-                key={slide.id}
-                className="absolute"
+          return (
+            <section
+              key={slide.id}
+              ref={(el) => (sectionsRef.current[index] = el)}
+              data-color={slide.id}
+              style={{
+                minHeight: `${MOBILE_SLIDE_HEIGHTS[index]}px`,
+                position: 'relative',
+                width: `${MOBILE_WIDTH}px`,
+                backgroundColor: slide.backgroundColor,
+                overflow: 'hidden',
+              }}
+            >
+              {/* Spacer for fixed header (only first slide) */}
+              {index === 0 && <div style={{ height: '281px' }} />}
+
+              {/* Zdjęcie - 300x460px centered */}
+              <div
+                className="relative mx-auto"
                 style={{
-                  left: '20px',
-                  top: 0,
+                  width: '300px',
+                  height: '460px',
+                  overflow: 'hidden',
+                  marginTop: index === 0 ? '0' : '60px',
+                }}
+              >
+                <img
+                  src={slide.image}
+                  alt={slide.name}
+                  style={{
+                    ...mobileImageStyles[index],
+                    opacity: loadedImages.has(index) ? 1 : 0,
+                    transition: 'opacity 0.5s ease-in-out',
+                  }}
+                />
+              </div>
+
+              {/* Tytuł (imię) */}
+              <p
+                style={{
+                  marginTop: '40px',
+                  marginLeft: '20px',
                   width: '350px',
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 600,
                   fontSize: '40px',
                   lineHeight: 1.2,
                   color: slide.textColor,
-                  opacity: index === currentSlide ? 1 : 0,
-                  transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-                  pointerEvents: index === currentSlide ? 'auto' : 'none',
                 }}
               >
                 {t(`bio.slides.${translationKey}.name`)}
               </p>
-            );
-          })}
-        </div>
 
-        {/* Paragrafy tekstu */}
-        <div className="relative" style={{ marginTop: '20px' }}>
-          {mobileBioSlides.map((slide, index) => {
-            const translationKey = slideTranslationKeys[index];
-            const paragraphs = t(`bio.slides.${translationKey}.paragraphs`);
-            return (
-              <div
-                key={slide.id}
-                style={{
-                  opacity: index === currentSlide ? 1 : 0,
-                  transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-                  pointerEvents: index === currentSlide ? 'auto' : 'none',
-                  position: index === currentSlide ? 'relative' : 'absolute',
-                  top: 0,
-                  left: 0,
-                }}
-              >
+              {/* Paragrafy tekstu */}
+              <div style={{ marginTop: '20px' }}>
                 {Array.isArray(paragraphs) && paragraphs.map((text, pIndex) => (
                   <p
                     key={pIndex}
@@ -409,46 +312,22 @@ export default function MobileBio() {
                   </Link>
                 )}
               </div>
-            );
-          })}
-        </div>
 
-        {/* Stopka (tylko dla ostatniego slide) */}
-        {currentData.hasFooter && (
-          <MobileFooter
-            className="mt-16"
-            style={{
-              marginLeft: '20px',
-              marginRight: '20px',
-              width: '350px',
-            }}
-            textColor={currentData.textColor}
-          />
-        )}
-
-        {/* Slide indicator */}
-        <div
-          className="flex justify-center gap-2"
-          style={{ marginTop: '40px', paddingBottom: '40px' }}
-        >
-          {mobileBioSlides.map((_, index) => (
-            <button
-              key={index}
-              onClick={() => goToSlide(index)}
-              style={{
-                width: '8px',
-                height: '8px',
-                borderRadius: '50%',
-                backgroundColor: index === currentSlide ? currentData.textColor : 'transparent',
-                border: `1px solid ${currentData.textColor}`,
-                padding: 0,
-                cursor: 'pointer',
-                transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-              }}
-              aria-label={`Go to slide ${index + 1}`}
-            />
-          ))}
-        </div>
+              {/* Stopka (tylko dla ostatniego slide) */}
+              {slide.hasFooter && (
+                <MobileFooter
+                  style={{
+                    marginTop: '40px',
+                    marginLeft: '20px',
+                    marginRight: '20px',
+                    width: '350px',
+                  }}
+                  textColor={slide.textColor}
+                />
+              )}
+            </section>
+          );
+        })}
       </div>
     </section>
   );
