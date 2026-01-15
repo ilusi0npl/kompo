@@ -223,6 +223,7 @@ export default function MobileBioEnsemble() {
       {/* Link "NAJBLIŻSZE WYDARZENIA" */}
       <Link
         to="/kalendarz"
+        className="text-link-btn"
         style={{
           position: 'absolute',
           left: '20px',
@@ -232,12 +233,17 @@ export default function MobileBioEnsemble() {
           fontSize: '16px',
           lineHeight: 1.48,
           color: COLORS.linkColor,
-          textDecoration: 'underline',
           textTransform: 'uppercase',
           zIndex: 60,
         }}
       >
         {t('bio.ensemble.upcomingEvents')}
+        <img
+          src="/assets/media/arrow-right.svg"
+          alt=""
+          className="text-link-btn__arrow"
+          style={{ width: '24px', height: '24px' }}
+        />
       </Link>
 
       {/* Stopka - kolumna */}

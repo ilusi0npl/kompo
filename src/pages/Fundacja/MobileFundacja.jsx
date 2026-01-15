@@ -193,7 +193,7 @@ export default function MobileFundacja() {
                     href={project.linkUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center"
+                    className="flex items-center external-link-btn"
                     style={{
                       gap: '6px',
                       justifyContent: 'flex-end',
@@ -201,15 +201,14 @@ export default function MobileFundacja() {
                     }}
                   >
                     <span
+                      className="external-link-btn__text"
                       style={{
                         fontFamily: "'IBM Plex Mono', monospace",
                         fontWeight: 600,
                         fontSize: '16px',
                         lineHeight: 1.48,
                         color: LINK_COLOR,
-                        textDecoration: 'underline',
                         textTransform: 'uppercase',
-                        textUnderlinePosition: 'from-font',
                       }}
                     >
                       {project.linkText}
@@ -217,6 +216,7 @@ export default function MobileFundacja() {
                     <img
                       src="/assets/fundacja/arrow-up-right.svg"
                       alt="External link"
+                      className="external-link-btn__arrow"
                       style={{
                         width: '24px',
                         height: '24px',

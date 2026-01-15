@@ -125,7 +125,7 @@ export default function DesktopBioEnsemble() {
       {/* Link "NAJBLIŻSZE WYDARZENIA" */}
       <Link
         to="/kalendarz"
-        className="absolute"
+        className="absolute text-link-btn"
         style={{
           left: '295px',
           top: '1367px',
@@ -134,12 +134,17 @@ export default function DesktopBioEnsemble() {
           fontSize: '16px',
           lineHeight: 1.48,
           color: COLORS.linkColor,
-          textDecoration: 'underline',
           textTransform: 'uppercase',
           zIndex: 60,
         }}
       >
         {t('bio.ensemble.upcomingEvents')}
+        <img
+          src="/assets/media/arrow-right.svg"
+          alt=""
+          className="text-link-btn__arrow"
+          style={{ width: '24px', height: '24px' }}
+        />
       </Link>
 
       {/* Stopka */}
