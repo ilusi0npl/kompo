@@ -1,5 +1,5 @@
-import { useState, useRef, useLayoutEffect } from 'react';
-import MobileHeader from '../../components/MobileHeader/MobileHeader';
+import { useState } from 'react';
+import MobileHeader, { MobileHeaderSpacer } from '../../components/MobileHeader/MobileHeader';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
@@ -15,35 +15,15 @@ import {
 const MOBILE_WIDTH = 390;
 const mobileLinePositions = [97, 195, 292];
 const LINE_COLOR = '#01936F';
+const HEADER_HEIGHT = 257;
 
 export default function MobileFundacja() {
   const { t, language } = useTranslation();
   const [isDeclarationExpanded, setIsDeclarationExpanded] = useState(false);
-  const [sectionMinHeight, setSectionMinHeight] = useState(2200);
-  const contentRef = useRef(null);
 
   const toggleDeclaration = () => {
     setIsDeclarationExpanded(!isDeclarationExpanded);
   };
-
-  // Measure content and calculate section height
-  // useLayoutEffect runs synchronously before browser paint, preventing flash
-  useLayoutEffect(() => {
-    if (contentRef.current) {
-      const contentHeight = contentRef.current.offsetHeight;
-      const contentTop = 770; // Content starts at 770px from section top
-      const spaceBelowContent = 200; // Footer space (footer height + margin)
-
-      // Calculate total section height needed
-      // Section must fit: content (from top:770px) + its height + space below
-      const calculatedHeight = contentTop + contentHeight + spaceBelowContent;
-
-      // Use at least 2200px (collapsed state)
-      const finalHeight = Math.max(calculatedHeight, 2200);
-
-      setSectionMinHeight(finalHeight);
-    }
-  }, [isDeclarationExpanded, language]);
 
   return (
     <section
@@ -51,7 +31,7 @@ export default function MobileFundacja() {
       className="relative overflow-hidden"
       style={{
         width: `${MOBILE_WIDTH}px`,
-        minHeight: `${sectionMinHeight}px`,
+        minHeight: '100vh',
         backgroundColor: BACKGROUND_COLOR,
       }}
     >
@@ -69,18 +49,22 @@ export default function MobileFundacja() {
         />
       ))}
 
-      {/* Header z tytułem */}
-      <MobileHeader title={t('fundacja.sideTitle')} textColor={TEXT_COLOR} />
+      {/* Header z tytułem - fixed */}
+      <MobileHeader
+        title={t('fundacja.sideTitle')}
+        textColor={TEXT_COLOR}
+        backgroundColor={BACKGROUND_COLOR}
+        lineColor={LINE_COLOR}
+        isFixed={true}
+      />
+      <MobileHeaderSpacer />
 
       {/* Zdjęcie zespołu z smooth loading - 341x473px centered */}
       <div
         style={{
-          position: 'absolute',
-          left: 'calc(50% + 4.5px)',
-          top: '257px',
-          transform: 'translateX(-50%)',
-          width: '341px',
-          height: '473px',
+          display: 'flex',
+          justifyContent: 'center',
+          paddingLeft: '9px',
         }}
       >
         <SmoothImage
@@ -102,13 +86,11 @@ export default function MobileFundacja() {
 
       {/* Treść główna */}
       <div
-        ref={contentRef}
         className="flex flex-col"
         style={{
-          position: 'absolute',
-          left: '50%',
-          top: '770px',
-          transform: 'translateX(-50%)',
+          marginTop: '40px',
+          marginLeft: 'auto',
+          marginRight: 'auto',
           width: '350px',
           gap: '60px',
         }}
@@ -343,11 +325,11 @@ export default function MobileFundacja() {
 
       {/* Stopka */}
       <MobileFooter
+        className="mt-16"
         style={{
-          position: 'absolute',
-          left: '50%',
-          bottom: '40px',
-          transform: 'translateX(-50%)',
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          marginBottom: '40px',
           width: '350px',
         }}
         textColor={TEXT_COLOR}

@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import MobileHeader from '../../components/MobileHeader/MobileHeader';
+import MobileHeader, { MobileHeaderSpacer } from '../../components/MobileHeader/MobileHeader';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
@@ -38,15 +38,19 @@ export default function MobileArchiwalne() {
         />
       ))}
 
-      {/* Header z nawigacją */}
+      {/* Header z nawigacją - fixed */}
       <MobileHeader
         title={t('kalendarz.sideTitle')}
         textColor={TEXT_COLOR}
+        backgroundColor={BACKGROUND_COLOR}
+        lineColor={LINE_COLOR}
+        isFixed={true}
         navLinks={[
           { label: t('common.tabs.upcoming'), to: '/kalendarz', isActive: false },
           { label: t('common.tabs.archived'), to: '/archiwalne', isActive: true },
         ]}
       />
+      <MobileHeaderSpacer />
 
       {/* Lista eventów */}
       <div

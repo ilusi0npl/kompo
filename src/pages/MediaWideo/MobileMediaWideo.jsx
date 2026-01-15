@@ -1,4 +1,4 @@
-import MobileHeader from '../../components/MobileHeader/MobileHeader';
+import MobileHeader, { MobileHeaderSpacer } from '../../components/MobileHeader/MobileHeader';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
@@ -37,16 +37,20 @@ export default function MobileMediaWideo() {
         />
       ))}
 
-      {/* Header z nawigacją */}
+      {/* Header z nawigacją - fixed */}
       <MobileHeader
         title={t('media.sideTitle')}
         textColor={TEXT_COLOR}
+        backgroundColor={BACKGROUND_COLOR}
+        lineColor={LINE_COLOR}
+        isFixed={true}
         activeColor={ACTIVE_TAB_COLOR}
         navLinks={[
           { label: t('common.tabs.photos'), to: '/media', isActive: false },
           { label: t('common.tabs.video'), to: '/media/wideo', isActive: true },
         ]}
       />
+      <MobileHeaderSpacer />
 
       {/* Lista wideo */}
       <div

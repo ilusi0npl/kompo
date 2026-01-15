@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router';
 import { useTranslation } from '../../hooks/useTranslation';
+import MobileMenu from '../../components/MobileMenu/MobileMenu';
+import MobileFooter from '../../components/Footer/MobileFooter';
+import { useFixedMobileHeader } from '../../hooks/useFixedMobileHeader';
 
 const MOBILE_WIDTH = 390;
-const MOBILE_HEIGHT = 2290;
-const TRANSITION_DURATION = '1s';
-const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
+const HEADER_HEIGHT = 218;
 
 const COLORS = {
   backgroundColor: '#FFBD19',
@@ -20,6 +22,8 @@ const LINE_POSITIONS = [97, 195, 292];
 export default function MobileBioEnsemble() {
   const { t } = useTranslation();
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { scale } = useFixedMobileHeader();
 
   // Preload image
   useEffect(() => {
@@ -36,125 +40,126 @@ export default function MobileBioEnsemble() {
   return (
     <div
       data-section="bio-ensemble-mobile"
+      className="relative overflow-hidden"
       style={{
         backgroundColor: COLORS.backgroundColor,
         width: `${MOBILE_WIDTH}px`,
-        minHeight: `${MOBILE_HEIGHT}px`,
-        position: 'relative',
+        minHeight: '100vh',
       }}
     >
       {/* Pionowe linie */}
       {LINE_POSITIONS.map((x) => (
         <div
           key={x}
+          className="absolute top-0"
           style={{
-            position: 'absolute',
             left: `${x}px`,
-            top: 0,
             width: '1px',
-            height: `${MOBILE_HEIGHT}px`,
+            height: '100%',
             backgroundColor: COLORS.lineColor,
-            zIndex: 1,
           }}
         />
       ))}
 
-      {/* Fixed header */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: `${MOBILE_WIDTH}px`,
-          height: '218px',
-          backgroundColor: COLORS.backgroundColor,
-          overflow: 'hidden',
-          zIndex: 100,
-        }}
-      >
-        {/* Pionowe linie w fixed headerze */}
-        {LINE_POSITIONS.map((x) => (
-          <div
-            key={`header-line-${x}`}
+      {/* Fixed header via portal */}
+      {typeof document !== 'undefined' && createPortal(
+        <div
+          className="fixed top-0 left-0"
+          style={{
+            width: `${MOBILE_WIDTH}px`,
+            height: `${HEADER_HEIGHT}px`,
+            backgroundColor: COLORS.backgroundColor,
+            transform: `scale(${scale})`,
+            transformOrigin: 'top left',
+            zIndex: 100,
+          }}
+        >
+          {/* Pionowe linie w fixed headerze */}
+          {LINE_POSITIONS.map((x) => (
+            <div
+              key={`header-line-${x}`}
+              className="absolute top-0"
+              style={{
+                left: `${x}px`,
+                width: '1px',
+                height: `${HEADER_HEIGHT}px`,
+                backgroundColor: COLORS.lineColor,
+              }}
+            />
+          ))}
+
+          {/* Logo */}
+          <Link
+            to="/"
+            className="absolute"
             style={{
-              position: 'absolute',
-              left: `${x}px`,
-              top: 0,
-              width: '1px',
-              height: '218px',
-              backgroundColor: COLORS.lineColor,
-              zIndex: 1,
+              left: '20px',
+              top: '35.85px',
             }}
-          />
-        ))}
+          >
+            <img
+              src="/assets/logo.svg"
+              alt="Kompopolex"
+              style={{
+                width: '104.31px',
+                height: '37.64px',
+              }}
+            />
+          </Link>
 
-        {/* Logo */}
-        <Link
-          to="/"
-          style={{
-            position: 'absolute',
-            left: '20px',
-            top: '35.85px',
-            zIndex: 101,
-          }}
-        >
-          <img
-            src="/assets/logo.svg"
-            alt="Kompopolex"
+          {/* MENU button */}
+          <button
+            onClick={() => setIsMenuOpen(true)}
+            className="absolute"
             style={{
-              width: '104.31px',
-              height: '37.64px',
+              left: '312px',
+              top: '43px',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 700,
+              fontSize: '24px',
+              lineHeight: 'normal',
+              color: COLORS.textColor,
+              background: 'transparent',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer',
             }}
-          />
-        </Link>
+          >
+            MENU
+          </button>
 
-        {/* MENU button */}
-        <Link
-          to="/bio"
-          className="nav-link"
-          style={{
-            position: 'absolute',
-            left: '312px',
-            top: '43px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 700,
-            fontSize: '24px',
-            lineHeight: 'normal',
-            color: COLORS.textColor,
-            zIndex: 101,
-          }}
-        >
-          MENU
-        </Link>
+          {/* "Bio" text */}
+          <p
+            className="absolute"
+            style={{
+              left: '20px',
+              top: '144px',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 600,
+              fontSize: '48px',
+              lineHeight: 1.1,
+              color: COLORS.textColor,
+            }}
+          >
+            Bio
+          </p>
 
-        {/* "Bio" text */}
-        <p
-          style={{
-            position: 'absolute',
-            left: '20px',
-            top: '144px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '48px',
-            lineHeight: 1.1,
-            color: COLORS.textColor,
-            zIndex: 101,
-          }}
-        >
-          Bio
-        </p>
-      </div>
+          {/* MobileMenu inside portal */}
+          <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+        </div>,
+        document.body
+      )}
+
+      {/* Spacer for fixed header */}
+      <div style={{ height: `${HEADER_HEIGHT}px` }} />
 
       {/* Zdjęcie - 350x350px */}
       <div
         style={{
-          position: 'absolute',
-          left: '20px',
-          top: '217px',
+          marginLeft: '20px',
           width: '350px',
           height: '350px',
           overflow: 'hidden',
-          zIndex: 60,
         }}
       >
         <img
@@ -173,9 +178,8 @@ export default function MobileBioEnsemble() {
       {/* Tytuł */}
       <p
         style={{
-          position: 'absolute',
-          left: '20px',
-          top: '607px',
+          marginTop: '40px',
+          marginLeft: '20px',
           width: '258px',
           fontFamily: "'IBM Plex Mono', monospace",
           fontWeight: 600,
@@ -183,7 +187,6 @@ export default function MobileBioEnsemble() {
           lineHeight: 1.35,
           color: COLORS.textColor,
           whiteSpace: 'pre-wrap',
-          zIndex: 60,
         }}
       >
         {t('bio.ensemble.title')}
@@ -192,14 +195,12 @@ export default function MobileBioEnsemble() {
       {/* Treść - 5 paragrafów z gap 12px */}
       <div
         style={{
-          position: 'absolute',
-          left: '20px',
-          top: '737px',
+          marginTop: '20px',
+          marginLeft: '20px',
           width: '350px',
           display: 'flex',
           flexDirection: 'column',
           gap: '12px',
-          zIndex: 60,
         }}
       >
         {Array.isArray(t('bio.ensemble.extendedParagraphs')) &&
@@ -225,16 +226,15 @@ export default function MobileBioEnsemble() {
         to="/kalendarz"
         className="text-link-btn"
         style={{
-          position: 'absolute',
-          left: '20px',
-          top: '2025px',
+          display: 'inline-flex',
+          marginTop: '40px',
+          marginLeft: '20px',
           fontFamily: "'IBM Plex Mono', monospace",
           fontWeight: 600,
           fontSize: '16px',
           lineHeight: 1.48,
           color: COLORS.linkColor,
           textTransform: 'uppercase',
-          zIndex: 60,
         }}
       >
         {t('bio.ensemble.upcomingEvents')}
@@ -246,59 +246,17 @@ export default function MobileBioEnsemble() {
         />
       </Link>
 
-      {/* Stopka - kolumna */}
-      <div
+      {/* Stopka */}
+      <MobileFooter
+        className="mt-16"
         style={{
-          position: 'absolute',
-          left: '20px',
-          top: '2135px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '20px',
-          zIndex: 60,
+          marginLeft: '20px',
+          marginRight: '20px',
+          marginBottom: '40px',
+          width: '350px',
         }}
-      >
-        <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '16px',
-            lineHeight: 1.48,
-            color: COLORS.textColor,
-            textTransform: 'uppercase',
-          }}
-        >
-          KOMPOPOLEX@GMAIL.COM
-        </p>
-        <a
-          href="https://facebook.com"
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '16px',
-            lineHeight: 1.48,
-            color: COLORS.textColor,
-            textDecoration: 'underline',
-            textTransform: 'uppercase',
-          }}
-        >
-          FACEBOOK
-        </a>
-        <a
-          href="https://instagram.com"
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '16px',
-            lineHeight: 1.48,
-            color: COLORS.textColor,
-            textDecoration: 'underline',
-            textTransform: 'uppercase',
-          }}
-        >
-          INSTAGRAM
-        </a>
-      </div>
+        textColor={COLORS.textColor}
+      />
     </div>
   );
 }

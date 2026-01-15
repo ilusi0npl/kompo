@@ -1,8 +1,12 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router';
 import MobileMenu from '../MobileMenu/MobileMenu';
+import { useFixedMobileHeader } from '../../hooks/useFixedMobileHeader';
 
 const MOBILE_WIDTH = 390;
+const DEFAULT_HEADER_HEIGHT = 257;
+const DEFAULT_LINE_POSITIONS = [97, 195, 292];
 
 /**
  * Generyczny nagłówek mobilny z logo, MENU i tytułem strony
@@ -12,6 +16,10 @@ const MOBILE_WIDTH = 390;
  * @param {string} backgroundColor - Kolor tła (opcjonalny, domyślnie transparent)
  * @param {Array} navLinks - Opcjonalne linki nawigacyjne [{label, to, isActive}]
  * @param {string} activeColor - Kolor aktywnego linku (domyślnie #761FE0)
+ * @param {boolean} isFixed - Czy nagłówek ma być fixed (portal) - domyślnie false
+ * @param {number} headerHeight - Wysokość nagłówka dla fixed mode (domyślnie 257)
+ * @param {string} lineColor - Kolor pionowych linii w nagłówku (opcjonalny)
+ * @param {Array} linePositions - Pozycje X linii (domyślnie [97, 195, 292])
  */
 export default function MobileHeader({
   title,
@@ -19,18 +27,42 @@ export default function MobileHeader({
   backgroundColor = 'transparent',
   navLinks = null,
   activeColor = '#761FE0',
+  isFixed = false,
+  headerHeight = DEFAULT_HEADER_HEIGHT,
+  lineColor = null,
+  linePositions = DEFAULT_LINE_POSITIONS,
 }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { scale } = useFixedMobileHeader();
 
-  return (
+  const headerContent = (
     <div
-      className="relative"
+      className={isFixed ? 'fixed top-0 left-0' : 'relative'}
       style={{
         width: `${MOBILE_WIDTH}px`,
-        height: '257px',
+        height: `${headerHeight}px`,
         backgroundColor,
+        ...(isFixed && {
+          transform: `scale(${scale})`,
+          transformOrigin: 'top left',
+          zIndex: 100,
+        }),
       }}
     >
+      {/* Pionowe linie w nagłówku (tylko gdy isFixed i lineColor) */}
+      {isFixed && lineColor && linePositions.map((left, index) => (
+        <div
+          key={`header-line-${index}`}
+          className="absolute top-0"
+          style={{
+            left: `${left}px`,
+            width: '1px',
+            height: `${headerHeight}px`,
+            backgroundColor: lineColor,
+          }}
+        />
+      ))}
+
       {/* Logo */}
       <Link to="/">
         <img
@@ -139,4 +171,18 @@ export default function MobileHeader({
       <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
     </div>
   );
+
+  // When fixed, render via portal to document.body
+  if (isFixed && typeof document !== 'undefined') {
+    return createPortal(headerContent, document.body);
+  }
+
+  return headerContent;
+}
+
+/**
+ * Spacer component to offset content below fixed header
+ */
+export function MobileHeaderSpacer({ height = DEFAULT_HEADER_HEIGHT }) {
+  return <div style={{ height: `${height}px` }} />;
 }

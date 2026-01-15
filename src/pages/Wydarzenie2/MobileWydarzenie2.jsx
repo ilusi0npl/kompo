@@ -1,8 +1,11 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import MobileMenu from '../../components/MobileMenu/MobileMenu';
+import MobileFooter from '../../components/Footer/MobileFooter';
+import { useFixedMobileHeader } from '../../hooks/useFixedMobileHeader';
 import { eventData } from './wydarzenie-config';
 
 const MOBILE_WIDTH = 390;
@@ -10,113 +13,136 @@ const mobileLinePositions = [97, 195, 292];
 const BACKGROUND_COLOR = '#FDFDFD';
 const LINE_COLOR = '#A0E38A';
 const TEXT_COLOR = '#131313';
+const HEADER_HEIGHT = 257;
 
 export default function MobileWydarzenie2() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { t } = useTranslation();
+  const { scale } = useFixedMobileHeader();
 
   return (
     <section
       data-section="wydarzenie-mobile"
-      className="relative"
+      className="relative overflow-hidden"
       style={{
         width: `${MOBILE_WIDTH}px`,
-        minHeight: '3000px',
+        minHeight: '100vh',
         backgroundColor: BACKGROUND_COLOR,
       }}
     >
-      {/* Pionowe linie - 3 linie at x = 97, 195, 292 */}
+      {/* Pionowe linie */}
       {mobileLinePositions.map((left, index) => (
         <div
           key={index}
-          className="absolute"
+          className="absolute top-0"
           style={{
             left: `${left}px`,
-            top: '-38px',
             width: '1px',
-            height: '3863px',
+            height: '100%',
             backgroundColor: LINE_COLOR,
           }}
         />
       ))}
 
-      {/* Header - 326px height */}
-      <div
-        className="absolute"
-        style={{
-          left: 0,
-          top: 0,
-          width: '390px',
-          height: '326px',
-          backgroundColor: BACKGROUND_COLOR,
-          overflow: 'clip',
-        }}
-      >
-        {/* MENU button - top right */}
-        <button
-          onClick={() => setIsMenuOpen(true)}
+      {/* Fixed header via portal */}
+      {typeof document !== 'undefined' && createPortal(
+        <div
+          className="fixed top-0 left-0"
           style={{
-            position: 'absolute',
-            left: '312px',
-            top: '43px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 700,
-            fontSize: '24px',
-            lineHeight: 'normal',
-            color: TEXT_COLOR,
-            background: 'transparent',
-            border: 'none',
-            padding: 0,
-            cursor: 'pointer',
+            width: `${MOBILE_WIDTH}px`,
+            height: `${HEADER_HEIGHT}px`,
+            backgroundColor: BACKGROUND_COLOR,
+            transform: `scale(${scale})`,
+            transformOrigin: 'top left',
+            zIndex: 100,
           }}
         >
-          MENU
-        </button>
+          {/* Pionowe linie w fixed headerze */}
+          {mobileLinePositions.map((left, index) => (
+            <div
+              key={`header-line-${index}`}
+              className="absolute top-0"
+              style={{
+                left: `${left}px`,
+                width: '1px',
+                height: `${HEADER_HEIGHT}px`,
+                backgroundColor: LINE_COLOR,
+              }}
+            />
+          ))}
 
-        {/* Logo - top left */}
-        <Link
-          to="/"
-          className="absolute"
-          style={{
-            left: '20px',
-            top: '40px',
-            width: '104px',
-            height: '42px',
-          }}
-        >
-          <img
-            src="/assets/logo.svg"
-            alt="Kompopolex"
+          {/* MENU button - top right */}
+          <button
+            onClick={() => setIsMenuOpen(true)}
+            className="absolute"
             style={{
-              width: '100%',
-              height: '100%',
+              left: '312px',
+              top: '43px',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 700,
+              fontSize: '24px',
+              lineHeight: 'normal',
+              color: TEXT_COLOR,
+              background: 'transparent',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer',
             }}
-          />
-        </Link>
+          >
+            MENU
+          </button>
 
-        {/* "Wydarzenie" title - horizontal, 48px font */}
-        <p
-          style={{
-            position: 'absolute',
-            left: '20px',
-            top: '152px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '48px',
-            lineHeight: 1.35,
-            color: TEXT_COLOR,
-          }}
-        >
-          {t('wydarzenie.sideTitle')}
-        </p>
-      </div>
+          {/* Logo - top left */}
+          <Link
+            to="/"
+            className="absolute"
+            style={{
+              left: '20px',
+              top: '40px',
+              width: '104px',
+              height: '42px',
+            }}
+          >
+            <img
+              src="/assets/logo.svg"
+              alt="Kompopolex"
+              style={{
+                width: '100%',
+                height: '100%',
+              }}
+            />
+          </Link>
 
-      {/* Main content - top: 326px, left: 20px, width: 350px */}
+          {/* "Wydarzenie" title */}
+          <p
+            className="absolute"
+            style={{
+              left: '20px',
+              top: '152px',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 600,
+              fontSize: '48px',
+              lineHeight: 1.35,
+              color: TEXT_COLOR,
+            }}
+          >
+            {t('wydarzenie.sideTitle')}
+          </p>
+
+          {/* MobileMenu inside portal */}
+          <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+        </div>,
+        document.body
+      )}
+
+      {/* Spacer for fixed header */}
+      <div style={{ height: `${HEADER_HEIGHT}px` }} />
+
+      {/* Main content */}
       <div
-        className="absolute flex flex-col"
+        className="flex flex-col"
         style={{
-          left: '20px',
-          top: '326px',
+          marginLeft: '20px',
           width: '350px',
           gap: '40px',
         }}
@@ -297,43 +323,17 @@ export default function MobileWydarzenie2() {
         </a>
       </div>
 
-      {/* Stopka - bottom: 41px, left: calc(25% + 18.5px) */}
-      <div
-        className="absolute flex flex-col"
+      {/* Footer */}
+      <MobileFooter
+        className="mt-16"
         style={{
-          bottom: '41px',
-          left: 'calc(25% + 18.5px)',
-          transform: 'translateX(-50%)',
-          gap: '20px',
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontWeight: 600,
-          fontSize: '16px',
-          lineHeight: 1.48,
-          color: TEXT_COLOR,
-          textTransform: 'uppercase',
+          marginLeft: '20px',
+          marginRight: '20px',
+          marginBottom: '40px',
+          width: '350px',
         }}
-      >
-        <p>KOMPOPOLEX@GMAIL.COM</p>
-        <a
-          href="https://www.facebook.com/ensemblekompopolex/?locale=pl_PL"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ textDecoration: 'underline', color: TEXT_COLOR }}
-        >
-          FACEBOOK
-        </a>
-        <a
-          href="https://www.instagram.com/kompopolex/"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ textDecoration: 'underline', color: TEXT_COLOR }}
-        >
-          INSTAGRAM
-        </a>
-      </div>
-
-      {/* MobileMenu overlay */}
-      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+        textColor={TEXT_COLOR}
+      />
     </section>
   );
 }
