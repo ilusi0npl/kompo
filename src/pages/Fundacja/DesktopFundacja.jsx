@@ -1,23 +1,16 @@
 import { useState, useRef, useEffect } from 'react';
-import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
-import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import {
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
-  BACKGROUND_COLOR,
   TEXT_COLOR,
   LINK_COLOR,
   fundacjaData,
   projectsData,
   accessibilityDeclaration,
 } from './fundacja-config';
-
-// Pozycje linii pionowych z Figma
-const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
-const LINE_COLOR = '#01936F';
 
 export default function DesktopFundacja() {
   const { t, language } = useTranslation();
@@ -56,63 +49,10 @@ export default function DesktopFundacja() {
       style={{
         width: `${DESKTOP_WIDTH}px`,
         minHeight: `${sectionMinHeight}px`,
-        backgroundColor: BACKGROUND_COLOR,
+        backgroundColor: 'transparent',
+        zIndex: 60,
       }}
     >
-      {/* Pionowe linie dekoracyjne */}
-      {LINE_POSITIONS.map((x) => (
-        <div
-          key={x}
-          className="absolute top-0"
-          style={{
-            left: `${x}px`,
-            width: '1px',
-            height: '100%',
-            backgroundColor: LINE_COLOR,
-          }}
-        />
-      ))}
-
-      {/* Logo */}
-      <Link to="/">
-        <img
-          src="/assets/logo.svg"
-          alt="Kompopolex"
-          className="absolute"
-          style={{
-            left: '185px',
-            top: '60px',
-            width: '149px',
-            height: '60px',
-          }}
-        />
-      </Link>
-
-      {/* Fundacja - pionowy tekst po lewej (rotacja 90 stopni) */}
-      <div
-        className="absolute flex items-center justify-center"
-        style={{
-          left: '94px',
-          top: '180px',
-          width: '45px',
-          height: '307px',
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '64px',
-            lineHeight: 1.1,
-            color: TEXT_COLOR,
-            transform: 'rotate(90deg)',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {t('fundacja.sideTitle')}
-        </p>
-      </div>
-
       {/* Zdjęcie zespołu z smooth loading - 300x948px */}
       <div
         className="absolute overflow-hidden"
@@ -381,53 +321,6 @@ export default function DesktopFundacja() {
           width: '520px',
         }}
       />
-
-      {/* Prawa nawigacja */}
-      <div
-        className="absolute"
-        style={{
-          left: '1265px',
-          top: '60px',
-          width: '100px',
-        }}
-      >
-        {/* Language Toggle */}
-        <LanguageToggle textColor={TEXT_COLOR} />
-
-        {/* Menu items */}
-        <nav
-          className="absolute flex flex-col"
-          style={{
-            top: '308px',
-            left: '0',
-            gap: '22px',
-          }}
-        >
-          {[
-            { key: 'bio', href: '/bio', active: false },
-            { key: 'media', href: '/media', active: false },
-            { key: 'kalendarz', href: '/kalendarz', active: false },
-            { key: 'repertuar', href: '/repertuar', active: false },
-            { key: 'fundacja', href: '/fundacja', active: true },
-            { key: 'kontakt', href: '/kontakt', active: false },
-          ].map((item) => (
-            <Link
-              key={item.key}
-              to={item.href}
-              className={`nav-link ${item.active ? 'nav-link--active' : ''}`}
-              style={{
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontWeight: 700,
-                fontSize: '18px',
-                lineHeight: 1.48,
-                color: TEXT_COLOR,
-              }}
-            >
-              {t(`common.nav.${item.key}`)}
-            </Link>
-          ))}
-        </nav>
-      </div>
     </section>
   );
 }

@@ -1,17 +1,48 @@
+import { useState, useEffect } from 'react';
 import ResponsiveWrapper from '../../components/ResponsiveWrapper/ResponsiveWrapper';
 import DesktopKalendarz from './DesktopKalendarz';
 import MobileKalendarz from './MobileKalendarz';
+import KalendarzFixedLayer from './KalendarzFixedLayer';
+
+const DESKTOP_WIDTH = 1440;
+const DESKTOP_HEIGHT = 2008;
+const BREAKPOINT = 768;
 
 export default function Kalendarz() {
+  const [viewportWidth, setViewportWidth] = useState(
+    typeof window !== 'undefined' ? window.innerWidth : DESKTOP_WIDTH
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setViewportWidth(window.innerWidth);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = viewportWidth <= BREAKPOINT;
+  const scale = viewportWidth / DESKTOP_WIDTH;
+
   return (
-    <ResponsiveWrapper
-      desktopContent={<DesktopKalendarz />}
-      mobileContent={<MobileKalendarz />}
-      desktopHeight={2008}
-      mobileHeight="auto"
-      backgroundColor="#FDFDFD"
-      lineColor="#A0E38A"
-      hideLines={true}
-    />
+    <>
+      {/* Fixed layer - background, lines, and UI - outside ResponsiveWrapper */}
+      {!isMobile && (
+        <KalendarzFixedLayer
+          scale={scale}
+          viewportHeight={window.innerHeight}
+        />
+      )}
+
+      <ResponsiveWrapper
+        desktopContent={<DesktopKalendarz />}
+        mobileContent={<MobileKalendarz />}
+        desktopHeight={DESKTOP_HEIGHT}
+        mobileHeight="auto"
+        backgroundColor="#FDFDFD"
+        lineColor="#A0E38A"
+        hideLines={!isMobile}
+      />
+    </>
   );
 }

@@ -1,19 +1,11 @@
-import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
-import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import {
   videos,
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
-  BACKGROUND_COLOR,
-  ACTIVE_TAB_COLOR,
 } from './media-wideo-config';
-
-// Pozycje linii pionowych z Figma
-const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
-const LINE_COLOR = '#3478FF';
 
 export default function DesktopMediaWideo() {
   const { t } = useTranslation();
@@ -33,82 +25,10 @@ export default function DesktopMediaWideo() {
       style={{
         width: `${DESKTOP_WIDTH}px`,
         height: `${DESKTOP_HEIGHT}px`,
-        backgroundColor: BACKGROUND_COLOR,
+        backgroundColor: 'transparent',
+        zIndex: 60,
       }}
     >
-      {/* Pionowe linie dekoracyjne */}
-      {LINE_POSITIONS.map((x) => (
-        <div
-          key={x}
-          className="absolute top-0"
-          style={{
-            left: `${x}px`,
-            width: '1px',
-            height: '100%',
-            backgroundColor: LINE_COLOR,
-          }}
-        />
-      ))}
-
-      {/* Logo */}
-      <Link to="/">
-        <img
-          src="/assets/logo.svg"
-          alt="Kompopolex"
-          className="absolute"
-          style={{
-            left: '185px',
-            top: '60px',
-            width: '149px',
-            height: '60px',
-          }}
-        />
-      </Link>
-
-      {/* Media - pionowy tekst po lewej */}
-      <img
-        src="/assets/media/media-text.svg"
-        alt="Media"
-        className="absolute"
-        style={{
-          left: '94px',
-          top: '275px',
-          width: '49px',
-          height: '187px',
-        }}
-      />
-
-      {/* Nawigacja Zdjęcia / Wideo */}
-      <Link
-        to="/media"
-        className="absolute nav-link"
-        style={{
-          left: '185px',
-          top: '190px',
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontWeight: 600,
-          fontSize: '24px',
-          lineHeight: 1.44,
-          color: '#131313',
-        }}
-      >
-        {t('common.tabs.photos')}
-      </Link>
-      <span
-        className="absolute nav-link--active"
-        style={{
-          left: '405px',
-          top: '190px',
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontWeight: 600,
-          fontSize: '24px',
-          lineHeight: 1.44,
-          color: ACTIVE_TAB_COLOR,
-        }}
-      >
-        {t('common.tabs.video')}
-      </span>
-
       {/* Video Grid */}
       {videos.map((video, index) => (
         <div
@@ -193,70 +113,6 @@ export default function DesktopMediaWideo() {
           width: '520px',
         }}
       />
-
-      {/* Prawa nawigacja */}
-      <div
-        className="absolute"
-        style={{
-          left: '1265px',
-          top: '60px',
-          width: '100px',
-        }}
-      >
-        {/* Language Toggle */}
-        <LanguageToggle textColor="#131313" />
-
-        {/* Menu items */}
-        <nav
-          className="absolute flex flex-col"
-          style={{
-            top: '308px',
-            left: '0',
-            gap: '22px',
-          }}
-        >
-          {[
-            { key: 'bio', href: '/bio', active: false },
-            { key: 'media', href: '/media', active: true },
-            { key: 'kalendarz', href: '/kalendarz', active: false },
-            { key: 'repertuar', href: '/repertuar', active: false },
-            { key: 'fundacja', href: '/fundacja', active: false },
-            { key: 'kontakt', href: '/kontakt', active: false },
-          ].map((item) => (
-            item.href.startsWith('/') && !item.href.includes('#') ? (
-              <Link
-                key={item.key}
-                to={item.href}
-                className={`nav-link ${item.active ? 'nav-link--active' : ''}`}
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontWeight: 700,
-                  fontSize: '18px',
-                  lineHeight: 1.48,
-                  color: '#131313',
-                }}
-              >
-                {t(`common.nav.${item.key}`)}
-              </Link>
-            ) : (
-              <a
-                key={item.key}
-                href={item.href}
-                className={`nav-link ${item.active ? 'nav-link--active' : ''}`}
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontWeight: 700,
-                  fontSize: '18px',
-                  lineHeight: 1.48,
-                  color: '#131313',
-                }}
-              >
-                {t(`common.nav.${item.key}`)}
-              </a>
-            )
-          ))}
-        </nav>
-      </div>
     </section>
   );
 }

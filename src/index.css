@@ -181,6 +181,21 @@ body {
   text-decoration: underline;
 }
 
+/* Filter tab styles (Nadchodzące/Archiwalne, Zdjęcia/Wideo) */
+.filter-tab {
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.filter-tab:hover {
+  color: #761FE0;
+}
+
+.filter-tab--active {
+  text-decoration: underline;
+}
+
 /* External link button styles (CROSSFADE, REQUIEM, NAJBLIŻSZE WYDARZENIA) */
 .external-link-btn {
   display: inline-flex;

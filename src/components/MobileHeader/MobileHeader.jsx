@@ -119,13 +119,13 @@ export default function MobileHeader({
             link.isActive ? (
               <span
                 key={index}
+                className="filter-tab filter-tab--active"
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 600,
                   fontSize: `${navLinksFontSize}px`,
                   lineHeight: 1.44,
                   color: activeColor,
-                  textDecoration: 'underline',
                   cursor: 'pointer',
                 }}
               >
@@ -135,7 +135,7 @@ export default function MobileHeader({
               <Link
                 key={index}
                 to={link.to}
-                className="nav-link"
+                className="filter-tab"
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 600,
