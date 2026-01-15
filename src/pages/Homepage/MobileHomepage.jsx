@@ -168,62 +168,6 @@ export default function MobileHomepage() {
           {t(`homepage.slides.${slide.word.toLowerCase()}.tagline`)}
         </p>
       ))}
-
-      {/* Stopka - positioned at bottom */}
-      <div
-        className="absolute flex flex-col"
-        style={{
-          bottom: '40px',
-          left: 'calc(25% + 18.5px)',
-          transform: 'translateX(-50%)',
-          gap: '20px',
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontWeight: 600,
-          fontSize: '16px',
-          lineHeight: 1.48,
-          textTransform: 'uppercase',
-        }}
-      >
-        {mobileSlides.map((slide, index) => (
-          <div
-            key={slide.id}
-            style={{
-              opacity: index === currentSlide ? 1 : 0,
-              transition: `opacity ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-              pointerEvents: index === currentSlide ? 'auto' : 'none',
-              color: slide.textColor,
-            }}
-          >
-            <p>KOMPOPOLEX@GMAIL.COM</p>
-            <a
-              href="https://www.facebook.com/ensemblekompopolex/?locale=pl_PL"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                textDecoration: 'underline',
-                display: 'block',
-                marginTop: '20px',
-                color: 'inherit',
-              }}
-            >
-              FACEBOOK
-            </a>
-            <a
-              href="https://www.instagram.com/kompopolex/"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                textDecoration: 'underline',
-                display: 'block',
-                marginTop: '20px',
-                color: 'inherit',
-              }}
-            >
-              INSTAGRAM
-            </a>
-          </div>
-        ))}
-      </div>
     </section>
   );
 }

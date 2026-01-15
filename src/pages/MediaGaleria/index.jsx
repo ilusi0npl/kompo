@@ -17,7 +17,7 @@ export default function MediaGaleria() {
     <ResponsiveWrapper
       desktopContent={<DesktopMediaGaleria album={album} />}
       mobileContent={<MobileMediaGaleria album={album} />}
-      desktopHeight={1043}
+      desktopHeight={856}
       mobileHeight={1000}
       backgroundColor="#34B898"
       lineColor="#01936F"

@@ -70,7 +70,7 @@ export default function DesktopMediaGaleria({ album }) {
       className="relative"
       style={{
         width: '1440px',
-        height: '1043px',
+        height: '856px',
         backgroundColor: BACKGROUND_COLOR,
       }}
     >
@@ -249,7 +249,7 @@ export default function DesktopMediaGaleria({ album }) {
       <Footer
         className="absolute"
         style={{
-          bottom: '40px',
+          top: '792px',
           left: 'calc(50% - 275px)',
           transform: 'translateX(-50%)',
           width: '520px',

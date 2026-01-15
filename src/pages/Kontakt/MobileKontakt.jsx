@@ -6,9 +6,6 @@ import SmoothImage from '../../components/SmoothImage/SmoothImage';
 
 const MOBILE_WIDTH = 390;
 const MOBILE_HEIGHT = 1071; // Dokładna wysokość z Figma
-const mobileLinePositions = [97, 195, 292];
-const BACKGROUND_COLOR = '#FF734C';
-const LINE_COLOR = '#FFBD19';
 const TEXT_COLOR = '#131313';
 
 export default function MobileKontakt() {
@@ -22,23 +19,8 @@ export default function MobileKontakt() {
       style={{
         width: `${MOBILE_WIDTH}px`,
         height: `${MOBILE_HEIGHT}px`,
-        backgroundColor: BACKGROUND_COLOR,
       }}
     >
-      {/* Pionowe linie w tle */}
-      {mobileLinePositions.map((left, index) => (
-        <div
-          key={index}
-          className="absolute top-0"
-          style={{
-            left: `${left}px`,
-            width: '1px',
-            height: '100%',
-            backgroundColor: LINE_COLOR,
-          }}
-        />
-      ))}
-
       {/* Header Frame (0-218px) - zbudowany inline dla dokładnej wysokości */}
       <div
         className="absolute"
@@ -47,7 +29,6 @@ export default function MobileKontakt() {
           left: 0,
           width: `${MOBILE_WIDTH}px`,
           height: '218px',
-          backgroundColor: BACKGROUND_COLOR,
         }}
       >
         {/* Logo */}

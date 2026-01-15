@@ -3,7 +3,7 @@
 
 export const desktopBioSlides = [
   {
-    id: 1,
+    id: 'bio1',
     backgroundColor: '#FDFDFD',
     name: 'Ensemble KOMPOPOLEX',
     lineColor: '#A0E38A',
@@ -25,7 +25,7 @@ export const desktopBioSlides = [
     hasFooter: false
   },
   {
-    id: 2,
+    id: 'bio2',
     backgroundColor: '#FF734C',
     name: 'Aleksandra Gołaj',
     lineColor: '#FFBD19',
@@ -49,7 +49,7 @@ export const desktopBioSlides = [
     hasFooter: false
   },
   {
-    id: 3,
+    id: 'bio3',
     backgroundColor: '#34B898',
     name: 'Rafał Łuc',
     lineColor: '#01936F',
@@ -74,7 +74,7 @@ export const desktopBioSlides = [
     hasFooter: false
   },
   {
-    id: 4,
+    id: 'bio4',
     backgroundColor: '#73A1FE',
     name: 'Jacek Sotomski',
     lineColor: '#3478FF',

@@ -9,10 +9,6 @@ import {
   BACKGROUND_COLOR,
 } from './kontakt-config';
 
-// Pozycje linii pionowych z Figma
-const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
-const LINE_COLOR = '#FFBD19';
-
 export default function DesktopKontakt() {
   const { t, language } = useTranslation();
 
@@ -23,23 +19,8 @@ export default function DesktopKontakt() {
       style={{
         width: `${DESKTOP_WIDTH}px`,
         height: `${DESKTOP_HEIGHT}px`,
-        backgroundColor: BACKGROUND_COLOR,
       }}
     >
-      {/* Pionowe linie dekoracyjne */}
-      {LINE_POSITIONS.map((x) => (
-        <div
-          key={x}
-          className="absolute top-0"
-          style={{
-            left: `${x}px`,
-            width: '1px',
-            height: '100%',
-            backgroundColor: LINE_COLOR,
-          }}
-        />
-      ))}
-
       {/* Logo */}
       <Link to="/">
         <img

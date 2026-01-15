@@ -4,6 +4,7 @@ export default function LanguageToggle({
   textColor = '#131313',
   style = {},
   transition = null,
+  scale = 1,
 }) {
   const { language, toggleLanguage } = useLanguage();
 
@@ -15,7 +16,7 @@ export default function LanguageToggle({
       onClick={toggleLanguage}
       className="flex items-center"
       style={{
-        gap: '20px',
+        gap: `${20 * scale}px`,
         background: 'none',
         border: 'none',
         padding: 0,
@@ -27,7 +28,7 @@ export default function LanguageToggle({
         style={{
           fontFamily: "'IBM Plex Mono', monospace",
           fontWeight: 700,
-          fontSize: '20px',
+          fontSize: `${20 * scale}px`,
           lineHeight: 1.44,
           color: textColor,
           textTransform: 'uppercase',
@@ -40,8 +41,8 @@ export default function LanguageToggle({
         src="/assets/eye-icon.svg"
         alt="Language toggle"
         style={{
-          width: '28px',
-          height: '28px',
+          width: `${28 * scale}px`,
+          height: `${28 * scale}px`,
         }}
       />
     </button>

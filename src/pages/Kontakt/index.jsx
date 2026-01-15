@@ -8,10 +8,9 @@ export default function Kontakt() {
       desktopContent={<DesktopKontakt />}
       mobileContent={<MobileKontakt />}
       desktopHeight={847}
-      mobileHeight={1250}
+      mobileHeight={1071}
       backgroundColor="#FF734C"
       lineColor="#FFBD19"
-      hideLines={true}
     />
   );
 }
