@@ -195,7 +195,7 @@ export default function MobileBio() {
             height: '100%',
             backgroundColor: currentData.lineColor,
             opacity: linesVisible ? 1 : 0,
-            transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}, opacity 0.8s ${TRANSITION_EASING} ${index * 0.15}s`,
+            transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}, opacity 0.8s ${TRANSITION_EASING}`,
           }}
         />
       ))}
@@ -206,7 +206,7 @@ export default function MobileBio() {
       {/* Header z logo i menu - FIXED via portal */}
       {typeof document !== 'undefined' && createPortal(
         <div
-          className="fixed top-0 left-0 z-50"
+          className="fixed top-0 left-0"
           style={{
             width: `${MOBILE_WIDTH}px`,
             height: '281px',
@@ -214,6 +214,7 @@ export default function MobileBio() {
             transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
             transform: `scale(${scale})`,
             transformOrigin: 'top left',
+            zIndex: 100,
           }}
         >
           {/* Pionowe linie w FIXED headerze */}
@@ -227,7 +228,7 @@ export default function MobileBio() {
                 height: '281px',
                 backgroundColor: currentData.lineColor,
                 opacity: linesVisible ? 1 : 0,
-                transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}, opacity 0.8s ${TRANSITION_EASING} ${index * 0.15}s`,
+                transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}, opacity 0.8s ${TRANSITION_EASING}`,
               }}
             />
           ))}

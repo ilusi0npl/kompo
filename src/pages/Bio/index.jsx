@@ -33,7 +33,23 @@ export default function Bio() {
 
   return (
     <>
-      {/* Fixed layer - outside ResponsiveWrapper so position:fixed works */}
+      {/* Fixed background - behind lines */}
+      {!isMobile && (
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100vh',
+            backgroundColor: currentColors.backgroundColor,
+            transition: 'background-color 1s cubic-bezier(0.4, 0, 0.2, 1)',
+            zIndex: 0,
+          }}
+        />
+      )}
+
+      {/* Fixed layer - lines and UI - outside ResponsiveWrapper so position:fixed works */}
       {!isMobile && <BioFixedLayer currentColors={currentColors} scale={scale} />}
 
       <ResponsiveWrapper

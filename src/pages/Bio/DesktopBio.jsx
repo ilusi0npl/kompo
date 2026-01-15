@@ -61,15 +61,12 @@ export default function DesktopBio({ setCurrentColors }) {
       style={{
         width: `${DESKTOP_WIDTH}px`,
         minHeight: `${totalHeight}px`,
-        backgroundColor: currentColors.backgroundColor,
-        transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
       }}
     >
       {/* SCROLLABLE LAYER - Bio sections (document scroll) - pod fixedowymi elementami */}
       <div
         style={{
           position: 'relative',
-          zIndex: 1,
         }}
       >
         {desktopBioSlides.map((slide, index) => (
@@ -94,6 +91,7 @@ export default function DesktopBio({ setCurrentColors }) {
                 height: '460px',
                 overflow: 'hidden',
                 backgroundColor: slide.backgroundColor,
+                zIndex: 60,
               }}
             >
               <img
@@ -118,6 +116,7 @@ export default function DesktopBio({ setCurrentColors }) {
                 fontSize: '40px',
                 lineHeight: 1.35,
                 color: slide.textColor,
+                zIndex: 60,
               }}
             >
               {t(`bio.slides.${slideTranslationKeys[index]}.name`)}
@@ -143,6 +142,7 @@ export default function DesktopBio({ setCurrentColors }) {
                         lineHeight: 1.48,
                         color: slide.textColor,
                         whiteSpace: 'pre-wrap',
+                        zIndex: 60,
                       }}
                     >
                       {text}
@@ -159,6 +159,7 @@ export default function DesktopBio({ setCurrentColors }) {
                   left: '185px',
                   top: '652px',
                   width: '520px',
+                  zIndex: 60,
                 }}
                 textColor={slide.textColor}
               />

@@ -22,7 +22,7 @@ export default function BioFixedLayer({ currentColors, scale = 1 }) {
           width: '100%',
           height: '100vh',
           pointerEvents: 'none',
-          zIndex: 1,
+          zIndex: 50,
         }}
       >
         {LINE_POSITIONS.map((x) => (
