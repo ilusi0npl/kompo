@@ -48,6 +48,7 @@ export default function MobileKalendarz() {
         headerHeight={326}
         navLinksTop={257}
         navLinksGap={55}
+        navLinksFontSize={20}
         navLinks={[
           { label: t('common.tabs.upcoming'), to: '/kalendarz', isActive: true },
           { label: t('common.tabs.archived'), to: '/archiwalne', isActive: false },

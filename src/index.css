@@ -190,6 +190,7 @@ body {
 
 .filter-tab:hover {
   color: #761FE0;
+  text-decoration: underline;
 }
 
 .filter-tab--active {
