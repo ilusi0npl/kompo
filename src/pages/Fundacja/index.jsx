@@ -37,7 +37,7 @@ export default function Fundacja() {
       <ResponsiveWrapper
         desktopContent={<DesktopFundacja />}
         mobileContent={<MobileFundacja />}
-        desktopHeight={DESKTOP_HEIGHT}
+        desktopHeight="auto"
         mobileHeight="auto"
         backgroundColor="#34B898"
         lineColor="#01936F"
