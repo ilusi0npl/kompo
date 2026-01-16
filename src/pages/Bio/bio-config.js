@@ -8,7 +8,7 @@ export const desktopBioSlides = [
     name: 'Ensemble KOMPOPOLEX',
     lineColor: '#A0E38A',
     textColor: '#131313',
-    image: '/assets/bio/bio1-ensemble.jpg',
+    image: '/assets/bio/bio1-ensemble.webp',
     // Bio1 uses object-cover centered (different base image)
     imageStyle: {
       width: '100%',
@@ -30,7 +30,7 @@ export const desktopBioSlides = [
     name: 'Aleksandra Gołaj',
     lineColor: '#FFBD19',
     textColor: '#131313',
-    image: '/assets/bio/bio2-aleksandra.jpg',
+    image: '/assets/bio/bio2-aleksandra.webp',
     // From Figma: h-[159.57%] left-[0.75%] top-[-28.91%] w-[342.5%]
     imageStyle: {
       position: 'absolute',
@@ -54,7 +54,7 @@ export const desktopBioSlides = [
     name: 'Rafał Łuc',
     lineColor: '#01936F',
     textColor: '#131313',
-    image: '/assets/bio/bio3-rafal.jpg',
+    image: '/assets/bio/bio3-rafal.webp',
     // From Figma: h-[153.91%] left-[-101.18%] top-[-13.7%] w-[330.37%]
     imageStyle: {
       position: 'absolute',
@@ -79,7 +79,7 @@ export const desktopBioSlides = [
     name: 'Jacek Sotomski',
     lineColor: '#3478FF',
     textColor: '#131313',
-    image: '/assets/bio/bio4-jacek.jpg',
+    image: '/assets/bio/bio4-jacek.webp',
     // From Figma: h-[140.43%] left-[-198.05%] top-[-0.22%] w-[301.44%]
     imageStyle: {
       position: 'absolute',
@@ -107,7 +107,7 @@ export const mobileBioSlides = [
     name: 'Ensemble KOMPOPOLEX',
     lineColor: '#A0E38A',
     textColor: '#131313',
-    image: '/assets/bio/bio1-ensemble.jpg',
+    image: '/assets/bio/bio1-ensemble.webp',
     logoSrc: '/assets/logo.svg',
     paragraphs: [
       'Trio specjalizujące się w muzyce najnowszej, założone 2017 roku we Wrocławiu. Wykonują utwory zaangażowane i angażujące, często porzucają swoje instrumenty na rzecz kabli, keyboardów, tańca i śpiewu. W jego skład wchodzą Aleksandra Gołaj (perkusja), Rafał Łuc (akordeon) i Jacek Sotomski (komputery).',
@@ -121,7 +121,7 @@ export const mobileBioSlides = [
     name: 'Aleksandra Gołaj',
     lineColor: '#FFBD19',
     textColor: '#131313',
-    image: '/assets/bio/bio2-aleksandra.jpg',
+    image: '/assets/bio/bio2-aleksandra.webp',
     logoSrc: '/assets/logo.svg',
     paragraphs: [
       'Na stałe związana z Orkiestrą Symfoniczną NFM Filharmonia Wrocławska. Jako kameralistka regularnie występuje na festiwalach związanych z muzyką współczesną m. in. MUSMA, Musica Polonica Nova, Musica Electronica Nova, ISCM World Music Days 2014, Poznańska Wiosna Muzyczna, Muzyka na Szczytach, Warszawska Jesień.',
@@ -135,7 +135,7 @@ export const mobileBioSlides = [
     name: 'Rafał Łuc',
     lineColor: '#01936F',
     textColor: '#131313',
-    image: '/assets/bio/bio3-rafal.jpg',
+    image: '/assets/bio/bio3-rafal.webp',
     logoSrc: '/assets/logo.svg',
     paragraphs: [
       'Wielokrotnie nagradzany muzyk, akordeonista. Absolwent Royal Academy of Music w Londynie, Musikene w San Sebastian, Akademii Muzycznej im. Karola Lipińskiego we Wrocławiu, w której zatrudniony jest na stanowisku adiunkta. We wrześniu 2018 r. uzyskał tytuł doktora habilitowanego, dwukrotnie kandydat do nominacji Paszportów Polityki.',
@@ -150,7 +150,7 @@ export const mobileBioSlides = [
     name: 'Jacek Sotomski',
     lineColor: '#3478FF',
     textColor: '#131313',
-    image: '/assets/bio/bio4-jacek.jpg',
+    image: '/assets/bio/bio4-jacek.webp',
     logoSrc: '/assets/logo.svg',
     paragraphs: [
       'Jego utwory były wykonywane na festiwalach World Music Days, Warszawska Jesień, BIFEM w Bendigo (Australia), Ostrava Music Days, Musica Polonica Nova, Musica Electronica Nova, oprócz tego jako wykonawca wystąpił na Festival Licences w Paryżu, Ring Ring w Belgradzie, Cinemascope w Mińsku.',

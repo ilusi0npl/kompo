@@ -30,7 +30,7 @@ export default function MobileBioEnsemble() {
   useEffect(() => {
     const img = new Image();
     img.onload = () => setImageLoaded(true);
-    img.src = '/assets/bio/bio-ensemble-large.jpg';
+    img.src = '/assets/bio/bio-ensemble-large.webp';
   }, []);
 
   // Reset scroll position on mount
@@ -166,7 +166,7 @@ export default function MobileBioEnsemble() {
         }}
       >
         <img
-          src="/assets/bio/bio-ensemble-large.jpg"
+          src="/assets/bio/bio-ensemble-large.webp"
           alt="Ensemble KOMPOPOLEX"
           style={{
             width: '100%',
