@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { useTranslation } from '../../hooks/useTranslation';
 import Footer from '../../components/Footer/Footer';
+import ArrowRight from '../../components/ArrowRight/ArrowRight';
 
 const DESKTOP_WIDTH = 1440;
 const DESKTOP_HEIGHT = 1599;
@@ -139,9 +140,7 @@ export default function DesktopBioEnsemble() {
         }}
       >
         {t('bio.ensemble.upcomingEvents')}
-        <img
-          src="/assets/media/arrow-right.svg"
-          alt=""
+        <ArrowRight
           className="text-link-btn__arrow"
           style={{ width: '24px', height: '24px' }}
         />

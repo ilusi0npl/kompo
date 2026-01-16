@@ -7,6 +7,7 @@ import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useFixedMobileHeader } from '../../hooks/useFixedMobileHeader';
+import ArrowRight from '../../components/ArrowRight/ArrowRight';
 
 const MOBILE_WIDTH = 390;
 const mobileLinePositions = [97, 195, 292];
@@ -283,9 +284,7 @@ export default function MobileMediaGaleria({ album }) {
             padding: 0,
           }}
         >
-          <img
-            src="/assets/media/arrow-right.svg"
-            alt="Previous"
+          <ArrowRight
             style={{
               width: '100%',
               height: '100%',
@@ -307,9 +306,7 @@ export default function MobileMediaGaleria({ album }) {
             padding: 0,
           }}
         >
-          <img
-            src="/assets/media/arrow-right.svg"
-            alt="Next"
+          <ArrowRight
             style={{
               width: '100%',
               height: '100%',

@@ -14,7 +14,7 @@ export default function LanguageToggle({
   return (
     <button
       onClick={toggleLanguage}
-      className="flex items-center"
+      className="flex items-center language-toggle"
       style={{
         gap: `${20 * scale}px`,
         background: 'none',

@@ -5,6 +5,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useFixedMobileHeader } from '../../hooks/useFixedMobileHeader';
+import ArrowRight from '../../components/ArrowRight/ArrowRight';
 
 const MOBILE_WIDTH = 390;
 const HEADER_HEIGHT = 218;
@@ -238,9 +239,7 @@ export default function MobileBioEnsemble() {
         }}
       >
         {t('bio.ensemble.upcomingEvents')}
-        <img
-          src="/assets/media/arrow-right.svg"
-          alt=""
+        <ArrowRight
           className="text-link-btn__arrow"
           style={{ width: '24px', height: '24px' }}
         />

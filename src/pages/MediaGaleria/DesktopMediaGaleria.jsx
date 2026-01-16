@@ -4,6 +4,7 @@ import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import Footer from '../../components/Footer/Footer';
 import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
 import { useTranslation } from '../../hooks/useTranslation';
+import ArrowRight from '../../components/ArrowRight/ArrowRight';
 
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
 const LINE_COLOR = '#01936F';
@@ -170,9 +171,7 @@ export default function DesktopMediaGaleria({ album }) {
           padding: 0,
         }}
       >
-        <img
-          src="/assets/media/arrow-right.svg"
-          alt="Previous"
+        <ArrowRight
           style={{
             width: '100%',
             height: '100%',
@@ -197,9 +196,7 @@ export default function DesktopMediaGaleria({ album }) {
           padding: 0,
         }}
       >
-        <img
-          src="/assets/media/arrow-right.svg"
-          alt="Next"
+        <ArrowRight
           style={{
             width: '100%',
             height: '100%',
