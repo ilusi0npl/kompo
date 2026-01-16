@@ -85,7 +85,7 @@ Migrated events:
 🔍 Verify in Sanity Studio:
   1. Open: http://localhost:3333
   2. Navigate to "Event" in left sidebar
-  3. Or use Vision with query: *[_type == "event"] | order(eventDate asc)
+  3. Or use Vision with query: *[_type == "event"] | order(date asc)
 ```
 
 ## Verification
@@ -103,16 +103,16 @@ Migrated events:
 2. Run query:
 
 ```groq
-*[_type == "event"] | order(eventDate asc) {
+*[_type == "event"] | order(date asc) {
   _id,
   title,
-  eventDate,
+  date,
   performers,
   program,
   location,
   status,
   publishedAt,
-  "imageUrl": zdjecie.asset->url
+  "imageUrl": image.asset->url
 }
 ```
 
@@ -230,12 +230,12 @@ const client = createClient({
 {
   _type: 'event',
   title: string,
-  eventDate: datetime (ISO 8601),
+  date: datetime (ISO 8601),
   performers: string | undefined,
   program: array | undefined,
   description: text,
   location: text,
-  zdjecie: {
+  image: {
     _type: 'image',
     asset: { _ref: imageAssetId }
   },

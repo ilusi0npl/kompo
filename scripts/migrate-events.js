@@ -22,8 +22,8 @@ const __dirname = path.dirname(__filename);
 
 // Sanity client configuration
 const client = createClient({
-  projectId: 'cy9ddq1w',
-  dataset: 'production',
+  projectId: process.env.VITE_SANITY_PROJECT_ID || 'cy9ddq1w',
+  dataset: process.env.VITE_SANITY_DATASET || 'production',
   useCdn: false,
   apiVersion: '2025-01-16',
   token: process.env.SANITY_AUTH_TOKEN,
@@ -112,6 +112,17 @@ async function uploadImage(imagePath) {
 async function createEvent(eventData, imageAsset) {
   console.log(`  → Creating event document: ${eventData.title}`);
 
+  // Check if event already exists
+  const existing = await client.fetch(
+    `*[_type == "event" && title == $title][0]`,
+    { title: eventData.title }
+  );
+
+  if (existing) {
+    console.log(`  ⚠️  Event already exists: ${existing._id}`);
+    return existing;
+  }
+
   const doc = {
     _type: 'event',
     title: eventData.title,
@@ -156,11 +167,28 @@ async function migrate() {
     process.exit(1);
   }
 
-  const results = [];
+  // Pre-flight validation: Check all images exist
+  console.log('🔍 Pre-flight validation...');
+  const missingImages = [];
+  for (const event of events) {
+    if (!fs.existsSync(event.imagePath)) {
+      missingImages.push(event.imagePath);
+    }
+  }
 
-  try {
-    for (const event of events) {
-      console.log(`\n[${event.id}/3] Processing: ${event.title}`);
+  if (missingImages.length > 0) {
+    console.error('\n❌ Error: Missing image files:');
+    missingImages.forEach(path => console.error(`  - ${path}`));
+    process.exit(1);
+  }
+  console.log('✓ All image files found\n');
+
+  const results = [];
+  const failures = [];
+
+  for (const event of events) {
+    try {
+      console.log(`\n[${event.id}/${events.length}] Processing: ${event.title}`);
 
       // Upload image
       const imageAsset = await uploadImage(event.imagePath);
@@ -174,26 +202,47 @@ async function migrate() {
         sanityId: eventDoc._id,
         imageId: imageAsset._id,
       });
+    } catch (error) {
+      console.error(`  ❌ Failed to migrate: ${event.title}`);
+      console.error(`  Error: ${error.message}`);
+      failures.push({
+        id: event.id,
+        title: event.title,
+        error: error.message,
+      });
     }
+  }
 
-    console.log('\n✅ Migration completed successfully!\n');
-    console.log('Migrated events:');
+  // Summary
+  console.log('\n' + '='.repeat(60));
+  if (results.length > 0) {
+    console.log('\n✅ Successfully migrated events:\n');
     results.forEach((r) => {
       console.log(`  • ${r.title} (${r.sanityId})`);
     });
+  }
 
-    console.log('\n📊 Summary:');
-    console.log(`  Total events: ${results.length}`);
-    console.log(`  Images uploaded: ${results.length}`);
+  if (failures.length > 0) {
+    console.log('\n❌ Failed events:\n');
+    failures.forEach((f) => {
+      console.log(`  • ${f.title}: ${f.error}`);
+    });
+  }
 
+  console.log('\n📊 Summary:');
+  console.log(`  Total events: ${events.length}`);
+  console.log(`  Successful: ${results.length}`);
+  console.log(`  Failed: ${failures.length}`);
+
+  if (results.length > 0) {
     console.log('\n🔍 Verify in Sanity Studio:');
     console.log('  1. Open: http://localhost:3333');
     console.log('  2. Navigate to "Event" in left sidebar');
-    console.log('  3. Or use Vision with query: *[_type == "event"] | order(eventDate asc)');
+    console.log('  3. Or use Vision with query: *[_type == "event"] | order(date asc)');
+  }
 
-  } catch (error) {
-    console.error('\n❌ Migration failed:');
-    console.error(error);
+  // Exit with error code if any failures
+  if (failures.length > 0) {
     process.exit(1);
   }
 }
