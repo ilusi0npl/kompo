@@ -1,3 +1,5 @@
+import type {Rule} from '@sanity/types'
+
 export default {
   name: 'event',
   title: 'Wydarzenia',
@@ -7,13 +9,13 @@ export default {
       name: 'title',
       title: 'Tytuł',
       type: 'string',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'date',
       title: 'Data i godzina',
       type: 'datetime',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'performers',
@@ -28,8 +30,18 @@ export default {
       of: [{
         type: 'object',
         fields: [
-          {name: 'composer', type: 'string', title: 'Kompozytor'},
-          {name: 'piece', type: 'string', title: 'Utwór'},
+          {
+            name: 'composer',
+            type: 'string',
+            title: 'Kompozytor',
+            validation: (Rule: Rule) => Rule.required(),
+          },
+          {
+            name: 'piece',
+            type: 'string',
+            title: 'Utwór',
+            validation: (Rule: Rule) => Rule.required(),
+          },
         ],
       }],
     },
@@ -37,20 +49,20 @@ export default {
       name: 'description',
       title: 'Opis',
       type: 'text',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'location',
       title: 'Lokalizacja',
       type: 'text',
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'image',
       title: 'Zdjęcie',
       type: 'image',
       options: {hotspot: true},
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'imageStyle',
@@ -77,7 +89,7 @@ export default {
         ],
         layout: 'radio',
       },
-      validation: (Rule: any) => Rule.required(),
+      validation: (Rule: Rule) => Rule.required(),
       initialValue: 'upcoming',
     },
     {
