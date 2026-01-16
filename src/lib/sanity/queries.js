@@ -147,3 +147,15 @@ export const fundacjaPageQuery = `
     accessibilityDeclarationEn
   }
 `
+
+// Photo albums (published only, sorted by order ascending)
+export const photoAlbumsQuery = `
+  *[_type == "photoAlbum" && defined(publishedAt)] | order(order asc) {
+    _id,
+    title,
+    photographer,
+    order,
+    "thumbnailUrl": thumbnail.asset->url,
+    "imageUrls": images[].asset->url
+  }
+`
