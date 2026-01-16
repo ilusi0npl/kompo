@@ -53,6 +53,38 @@ export default function DesktopBio({ setCurrentColors }) {
   // MUST BE BEFORE ANY CONDITIONAL RETURNS (React Hooks rule)
   const currentColors = useScrollColorChange(sectionsRef, desktopBioSlides);
 
+  // ALL useEffect HOOKS MUST BE BEFORE CONDITIONAL RETURNS (React Hooks rule)
+
+  // Pass colors to parent (for fixed layer outside ResponsiveWrapper)
+  useEffect(() => {
+    if (setCurrentColors) {
+      setCurrentColors(currentColors);
+    }
+  }, [currentColors, setCurrentColors]);
+
+  // Preload wszystkich obrazów Bio
+  useEffect(() => {
+    desktopBioSlides.forEach((slide, index) => {
+      const img = new Image();
+      img.onload = () => {
+        setLoadedImages((prev) => new Set(prev).add(index));
+      };
+      img.src = slide.image;
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Reset scroll position on mount (document scroll)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Sync background and line colors with CSS variables for ResponsiveWrapper
+  useEffect(() => {
+    document.documentElement.style.setProperty('--page-bg', currentColors.backgroundColor);
+    document.documentElement.style.setProperty('--line-color', currentColors.lineColor);
+  }, [currentColors.backgroundColor, currentColors.lineColor]);
+
   // Show loading state only when using Sanity
   if (USE_SANITY && loading) {
     return (
@@ -106,35 +138,6 @@ export default function DesktopBio({ setCurrentColors }) {
       </section>
     );
   }
-
-  // Pass colors to parent (for fixed layer outside ResponsiveWrapper)
-  useEffect(() => {
-    if (setCurrentColors) {
-      setCurrentColors(currentColors);
-    }
-  }, [currentColors, setCurrentColors]);
-
-  // Preload wszystkich obrazów Bio
-  useEffect(() => {
-    desktopBioSlides.forEach((slide, index) => {
-      const img = new Image();
-      img.onload = () => {
-        setLoadedImages((prev) => new Set(prev).add(index));
-      };
-      img.src = slide.image;
-    });
-  }, []);
-
-  // Reset scroll position on mount (document scroll)
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  // Sync background and line colors with CSS variables for ResponsiveWrapper
-  useEffect(() => {
-    document.documentElement.style.setProperty('--page-bg', currentColors.backgroundColor);
-    document.documentElement.style.setProperty('--line-color', currentColors.lineColor);
-  }, [currentColors.backgroundColor, currentColors.lineColor]);
 
   // Total height: sum of all section heights (3×700px + 1×850px)
   const totalHeight = desktopBioSlides.reduce((sum, slide) => sum + (slide.height || DESKTOP_HEIGHT), 0);
