@@ -1,14 +1,74 @@
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
+import { useSanityVideos } from '../../hooks/useSanityVideos';
 import {
-  videos,
+  videos as configVideos,
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
 } from './media-wideo-config';
 
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
+
+/**
+ * Transform Sanity videos to match config structure
+ */
+function transformSanityVideos(sanityVideos) {
+  return sanityVideos.map((video, index) => ({
+    id: index + 1,
+    thumbnail: video.thumbnailUrl,
+    title: video.title,
+    youtubeUrl: video.videoUrl,
+  }));
+}
+
 export default function DesktopMediaWideo() {
   const { t } = useTranslation();
+
+  // Fetch from Sanity if enabled
+  const { videos: sanityVideos, loading, error } = useSanityVideos();
+
+  // Use Sanity data if enabled, otherwise use config
+  const videos = USE_SANITY ? transformSanityVideos(sanityVideos) : configVideos;
+
+  // Loading state
+  if (USE_SANITY && loading) {
+    return (
+      <section
+        data-section="media-wideo"
+        className="relative flex items-center justify-center"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          height: `${DESKTOP_HEIGHT}px`,
+          backgroundColor: 'transparent',
+        }}
+      >
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '20px' }}>
+          Ładowanie filmów...
+        </p>
+      </section>
+    );
+  }
+
+  // Error state
+  if (USE_SANITY && error) {
+    console.error('Failed to load videos from Sanity:', error);
+    return (
+      <section
+        data-section="media-wideo"
+        className="relative flex items-center justify-center"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          height: `${DESKTOP_HEIGHT}px`,
+          backgroundColor: 'transparent',
+        }}
+      >
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '20px', color: '#ff0000' }}>
+          Błąd ładowania filmów
+        </p>
+      </section>
+    );
+  }
 
   // Grid positions for 2 columns x 2 rows
   const gridPositions = [

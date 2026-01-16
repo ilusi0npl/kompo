@@ -2,7 +2,8 @@ import MobileHeader, { MobileHeaderSpacer } from '../../components/MobileHeader/
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
-import { videos, ACTIVE_TAB_COLOR } from './media-wideo-config';
+import { useSanityVideos } from '../../hooks/useSanityVideos';
+import { videos as configVideos, ACTIVE_TAB_COLOR } from './media-wideo-config';
 
 const MOBILE_WIDTH = 390;
 const mobileLinePositions = [97, 195, 292];
@@ -10,8 +11,67 @@ const BACKGROUND_COLOR = '#73A1FE';
 const LINE_COLOR = '#3478FF';
 const TEXT_COLOR = '#131313';
 
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
+
+/**
+ * Transform Sanity videos to match config structure
+ */
+function transformSanityVideos(sanityVideos) {
+  return sanityVideos.map((video, index) => ({
+    id: index + 1,
+    thumbnail: video.thumbnailUrl,
+    title: video.title,
+    youtubeUrl: video.videoUrl,
+  }));
+}
+
 export default function MobileMediaWideo() {
   const { t } = useTranslation();
+
+  // Fetch from Sanity if enabled
+  const { videos: sanityVideos, loading, error } = useSanityVideos();
+
+  // Use Sanity data if enabled, otherwise use config
+  const videos = USE_SANITY ? transformSanityVideos(sanityVideos) : configVideos;
+
+  // Loading state
+  if (USE_SANITY && loading) {
+    return (
+      <section
+        data-section="media-wideo-mobile"
+        className="relative overflow-hidden flex items-center justify-center"
+        style={{
+          width: `${MOBILE_WIDTH}px`,
+          minHeight: '100vh',
+          backgroundColor: BACKGROUND_COLOR,
+        }}
+      >
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px' }}>
+          Ładowanie filmów...
+        </p>
+      </section>
+    );
+  }
+
+  // Error state
+  if (USE_SANITY && error) {
+    console.error('Failed to load videos from Sanity:', error);
+    return (
+      <section
+        data-section="media-wideo-mobile"
+        className="relative overflow-hidden flex items-center justify-center"
+        style={{
+          width: `${MOBILE_WIDTH}px`,
+          minHeight: '100vh',
+          backgroundColor: BACKGROUND_COLOR,
+        }}
+      >
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px', color: '#ff0000' }}>
+          Błąd ładowania filmów
+        </p>
+      </section>
+    );
+  }
 
   return (
     <section

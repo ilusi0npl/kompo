@@ -55,6 +55,14 @@ export default {
       }),
     },
     {
+      name: 'thumbnail',
+      title: 'Miniatura (dla wideo)',
+      type: 'image',
+      description: 'Miniatura wyświetlana dla filmu',
+      options: {hotspot: true},
+      hidden: ({parent}: any) => parent?.type !== 'video',
+    },
+    {
       name: 'publishedAt',
       title: 'Data publikacji',
       type: 'datetime',

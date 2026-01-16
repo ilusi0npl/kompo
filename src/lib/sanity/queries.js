@@ -98,6 +98,16 @@ export const mediaItemsQuery = `
   }
 `
 
+// Video items (published only, type="video")
+export const videoItemsQuery = `
+  *[_type == "mediaItem" && type == "video" && defined(publishedAt)] | order(publishedAt desc) {
+    _id,
+    title,
+    videoUrl,
+    "thumbnailUrl": thumbnail.asset->url
+  }
+`
+
 // Homepage slides (published only, sorted by order ascending)
 export const homepageSlidesQuery = `
   *[_type == "homepageSlide" && defined(publishedAt)] | order(order asc) {
