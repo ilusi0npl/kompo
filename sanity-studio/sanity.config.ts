@@ -1,18 +1,22 @@
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
-import {schemaTypes} from './schemaTypes'
+import {colorInput} from '@sanity/color-input'
 
 export default defineConfig({
-  name: 'default',
+  name: 'kompopolex',
   title: 'Kompopolex CMS',
 
-  projectId: 'cy9ddq1w',
-  dataset: 'production',
+  projectId: process.env.SANITY_STUDIO_PROJECT_ID || '',
+  dataset: process.env.SANITY_STUDIO_DATASET || 'production',
 
-  plugins: [structureTool(), visionTool()],
+  plugins: [
+    structureTool(),
+    visionTool(),
+    colorInput(),
+  ],
 
   schema: {
-    types: schemaTypes,
+    types: [],
   },
 })
