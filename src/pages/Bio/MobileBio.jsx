@@ -34,7 +34,7 @@ const mobileImageStyles = [
 // Heights for each mobile slide section
 const MOBILE_SLIDE_HEIGHTS = [950, 850, 750, 950];
 
-export default function MobileBio() {
+export default function MobileBio({ setCurrentColors }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [loadedImages, setLoadedImages] = useState(new Set());
   const [linesVisible, setLinesVisible] = useState(false);
@@ -44,6 +44,13 @@ export default function MobileBio() {
 
   // Use scroll-based color detection (same as desktop)
   const currentColors = useScrollColorChange(sectionsRef, mobileBioSlides);
+
+  // Pass colors to parent (for fixed background and lines outside ResponsiveWrapper)
+  useEffect(() => {
+    if (setCurrentColors) {
+      setCurrentColors(currentColors);
+    }
+  }, [currentColors, setCurrentColors]);
 
   // Calculate scale factor for fixed header (must match ResponsiveWrapper)
   useEffect(() => {
@@ -101,22 +108,6 @@ export default function MobileBio() {
         minHeight: `${totalHeight}px`,
       }}
     >
-      {/* Pionowe linie w tle - absolute, pełna wysokość sekcji */}
-      {mobileLinePositions.map((left, index) => (
-        <div
-          key={index}
-          className="absolute top-0"
-          style={{
-            left: `${left}px`,
-            width: '1px',
-            height: '100%',
-            backgroundColor: currentColors.lineColor,
-            opacity: linesVisible ? 1 : 0,
-            transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}, opacity 0.8s ${TRANSITION_EASING}`,
-          }}
-        />
-      ))}
-
       {/* Header z logo i menu - FIXED via portal */}
       {typeof document !== 'undefined' && createPortal(
         <div
@@ -226,8 +217,6 @@ export default function MobileBio() {
                 minHeight: `${MOBILE_SLIDE_HEIGHTS[index]}px`,
                 position: 'relative',
                 width: `${MOBILE_WIDTH}px`,
-                backgroundColor: slide.backgroundColor,
-                overflow: 'hidden',
               }}
             >
               {/* Spacer for fixed header (only first slide) */}
