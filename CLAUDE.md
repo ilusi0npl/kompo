@@ -605,3 +605,182 @@ make verify-section SECTION=kalendarz SECTIONS_CONFIG=scripts_project/sections-c
    ```bash
    make verify-sections SECTIONS_CONFIG=scripts_project/sections-config.json
    ```
+
+---
+
+## Sanity CMS Integration
+
+### Overview
+
+Kompopolex uses **Sanity CMS v3** for content management with a feature flag system for gradual rollout.
+
+**Feature Flag**: `VITE_USE_SANITY` (default: `false`)
+- When `true`: Content fetched from Sanity CMS
+- When `false`: Content from local config files (backward compatible)
+
+### Environment Setup
+
+Required in `.env`:
+
+```bash
+# Sanity Configuration
+VITE_SANITY_PROJECT_ID=cy9ddq1w
+VITE_SANITY_DATASET=production
+SANITY_AUTH_TOKEN=<your-token-here>
+
+# Feature Flag
+VITE_USE_SANITY=false  # Set to 'true' to enable Sanity CMS
+```
+
+### Sanity Studio
+
+Start Studio locally:
+
+```bash
+cd sanity-studio
+npm install
+npm run dev
+```
+
+Studio runs at: `http://localhost:3333`
+
+### Content Schemas
+
+| Schema | Type | Content |
+|--------|------|---------|
+| `event` | document | Upcoming and archived events |
+| `bioProfile` | document | Bio page profiles (4 profiles) |
+| `homepageSlide` | document | Homepage hero slides (4 slides) |
+| `kontaktPage` | singleton | Contact page data |
+| `fundacjaPage` | singleton | Foundation page data |
+| `photoAlbum` | document | Photo galleries |
+| `mediaItem` | document | Individual media items |
+
+### Migration Scripts
+
+All content migrated from local configs to Sanity CMS:
+
+```bash
+# Run individual migrations
+node scripts/migrate-homepage-slides.js
+node scripts/migrate-archived-events.js
+node scripts/migrate-kontakt-page.js
+node scripts/migrate-fundacja-page.js
+node scripts/migrate-photo-albums.js
+```
+
+**Note**: Migrations have duplicate detection - safe to run multiple times.
+
+### GROQ Queries
+
+All queries centralized in `src/lib/sanity/queries.js`:
+
+```javascript
+// Example query
+export const upcomingEventsQuery = `
+  *[_type == "event" && status == "upcoming" && defined(publishedAt)] | order(date asc) {
+    _id,
+    title,
+    date,
+    performers,
+    program,
+    description,
+    location,
+    "imageUrl": image.asset->url,
+    imageStyle
+  }
+`
+```
+
+### React Hooks
+
+Custom hooks provide data fetching:
+
+```javascript
+// Example usage
+import { useSanityEvents } from '../../hooks/useSanityEvents'
+
+const { events, loading, error } = useSanityEvents()
+```
+
+Available hooks:
+- `useSanityEvents()` - Upcoming events
+- `useSanityBioProfiles()` - Bio profiles
+- `useSanityHomepageSlides()` - Homepage slides
+- `useSanityKontaktPage()` - Contact page
+- `useSanityFundacjaPage()` - Foundation page
+- `useSanityPhotoAlbums()` - Photo albums
+
+### Component Integration Pattern
+
+All components follow this pattern:
+
+```javascript
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
+
+// Fetch from Sanity
+const { data, loading, error } = useSanityHook();
+
+// Transform to match config structure
+const content = USE_SANITY && data
+  ? transformData(data)
+  : localConfigData;
+
+// Loading state (Sanity only)
+if (USE_SANITY && loading) {
+  return <LoadingState />;
+}
+
+// Error state (Sanity only)
+if (USE_SANITY && error) {
+  return <ErrorState />;
+}
+
+// Normal render
+return <Component content={content} />;
+```
+
+### Publishing Workflow
+
+1. **Edit content** in Sanity Studio (http://localhost:3333)
+2. **Set publishedAt** date to make content live
+3. **Content appears** automatically on website (when `VITE_USE_SANITY=true`)
+
+**Note**: Only documents with `publishedAt` field are fetched by queries.
+
+### Deployment
+
+**Production Checklist**:
+1. Ensure `SANITY_AUTH_TOKEN` is set in production environment
+2. Set `VITE_USE_SANITY=true` in production `.env`
+3. Deploy Sanity Studio to hosting (optional: `npx sanity deploy`)
+4. Grant Sanity Studio access to content editors
+5. Monitor API usage in Sanity dashboard
+
+### Asset Management
+
+All images uploaded to **Sanity CDN**:
+- Automatic optimization
+- Global CDN distribution
+- Image transformations available
+- No need to commit images to git
+
+### Documentation
+
+Full migration details: `docs/SANITY_MIGRATION_SUMMARY.md`
+
+### Troubleshooting
+
+**Issue**: Content not loading
+- Check `VITE_USE_SANITY=true` in `.env`
+- Verify `SANITY_AUTH_TOKEN` is set
+- Check console for errors
+
+**Issue**: Old content showing
+- Ensure documents have `publishedAt` field set
+- Check query filters in `src/lib/sanity/queries.js`
+- Clear browser cache
+
+**Issue**: Build errors
+- Run `npm run build` to check for TypeScript errors
+- Verify all hooks imported correctly
