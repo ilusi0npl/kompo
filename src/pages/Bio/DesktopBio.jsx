@@ -43,8 +43,62 @@ export default function DesktopBio({ setCurrentColors }) {
   // Fetch from Sanity if enabled
   const { profiles: sanityProfiles, loading, error } = useSanityBioProfiles();
 
+  // Show loading state only when using Sanity - BEFORE any data transformation
+  if (USE_SANITY && loading) {
+    return (
+      <section
+        data-section="bio"
+        className="relative"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          minHeight: `${DESKTOP_HEIGHT}px`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: '#131313',
+          }}
+        >
+          Ładowanie profili...
+        </div>
+      </section>
+    );
+  }
+
+  // Show error state only when using Sanity - BEFORE any data transformation
+  if (USE_SANITY && error) {
+    return (
+      <section
+        data-section="bio"
+        className="relative"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          minHeight: `${DESKTOP_HEIGHT}px`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: '#ff0000',
+          }}
+        >
+          Błąd ładowania profili
+        </div>
+      </section>
+    );
+  }
+
   // Transform and use Sanity data if enabled, otherwise use config
-  const desktopBioSlides = USE_SANITY
+  const desktopBioSlides = USE_SANITY && sanityProfiles && sanityProfiles.length > 0
     ? transformSanityProfiles(sanityProfiles)
     : configSlides;
 
@@ -82,60 +136,6 @@ export default function DesktopBio({ setCurrentColors }) {
 
   // Total height: sum of all section heights (3×700px + 1×850px)
   const totalHeight = desktopBioSlides.reduce((sum, slide) => sum + (slide.height || DESKTOP_HEIGHT), 0);
-
-  // Show loading state only when using Sanity
-  if (USE_SANITY && loading) {
-    return (
-      <section
-        data-section="bio"
-        className="relative"
-        style={{
-          width: `${DESKTOP_WIDTH}px`,
-          minHeight: `${DESKTOP_HEIGHT}px`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <div
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: '16px',
-            color: '#131313',
-          }}
-        >
-          Ładowanie profili...
-        </div>
-      </section>
-    );
-  }
-
-  // Show error state only when using Sanity
-  if (USE_SANITY && error) {
-    return (
-      <section
-        data-section="bio"
-        className="relative"
-        style={{
-          width: `${DESKTOP_WIDTH}px`,
-          minHeight: `${DESKTOP_HEIGHT}px`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <div
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontSize: '16px',
-            color: '#FF0000',
-          }}
-        >
-          Błąd ładowania profili. Spróbuj ponownie później.
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section

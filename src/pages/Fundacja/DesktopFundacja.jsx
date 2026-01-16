@@ -44,8 +44,8 @@ export default function DesktopFundacja() {
       }
     : accessibilityDeclaration;
 
-  const textColor = USE_SANITY && sanityData ? sanityData.textColor : textColor;
-  const linkColor = USE_SANITY && sanityData ? sanityData.linkColor : linkColor;
+  const textColor = USE_SANITY && sanityData ? sanityData.textColor : TEXT_COLOR;
+  const linkColor = USE_SANITY && sanityData ? sanityData.linkColor : LINK_COLOR;
 
   const toggleDeclaration = () => {
     setIsDeclarationExpanded(!isDeclarationExpanded);
