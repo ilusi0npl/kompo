@@ -37,7 +37,7 @@ const ComposerEntry = ({ composer }) => {
       </p>
       {composer.works.map((work, idx) => (
         <p
-          key={idx}
+          key={work._key || work.title || idx}
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontWeight: 500,
@@ -169,7 +169,7 @@ export default function DesktopSpecjalne() {
               }}
             >
               {columnComposers.map((composer, idx) => (
-                <ComposerEntry key={idx} composer={composer} />
+                <ComposerEntry key={composer._id || composer.name || idx} composer={composer} />
               ))}
             </div>
           ))}

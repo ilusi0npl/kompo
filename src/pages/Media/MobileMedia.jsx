@@ -67,8 +67,8 @@ export default function MobileMedia() {
       >
         {photos.map((photo) => (
           <Link
-            key={photo.id}
-            to={`/media/galeria/${photo.id}`}
+            key={photo._id || photo.id}
+            to={`/media/galeria/${photo._id || photo.id}`}
             className="flex flex-col"
             style={{
               gap: '16px',

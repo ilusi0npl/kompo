@@ -108,8 +108,8 @@ export default function DesktopMedia() {
       {/* Photo Grid */}
       {transformedAlbums.map((photo, index) => (
         <Link
-          key={photo.id}
-          to={`/media/galeria/${photo.id}`}
+          key={photo._id || photo.id}
+          to={`/media/galeria/${photo._id || photo.id}`}
           className="absolute flex flex-col"
           style={{
             left: `${gridPositions[index].left}px`,
