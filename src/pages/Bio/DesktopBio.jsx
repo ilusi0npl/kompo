@@ -43,7 +43,17 @@ export default function DesktopBio({ setCurrentColors }) {
   // Fetch from Sanity if enabled
   const { profiles: sanityProfiles, loading, error } = useSanityBioProfiles();
 
-  // Show loading state only when using Sanity - BEFORE any data transformation
+  // Transform and use Sanity data if enabled, otherwise use config
+  // MUST BE BEFORE ANY CONDITIONAL RETURNS (React Hooks rule)
+  const desktopBioSlides = USE_SANITY && sanityProfiles && sanityProfiles.length > 0
+    ? transformSanityProfiles(sanityProfiles)
+    : configSlides;
+
+  // Use scroll-based color detection
+  // MUST BE BEFORE ANY CONDITIONAL RETURNS (React Hooks rule)
+  const currentColors = useScrollColorChange(sectionsRef, desktopBioSlides);
+
+  // Show loading state only when using Sanity
   if (USE_SANITY && loading) {
     return (
       <section
@@ -70,7 +80,7 @@ export default function DesktopBio({ setCurrentColors }) {
     );
   }
 
-  // Show error state only when using Sanity - BEFORE any data transformation
+  // Show error state only when using Sanity
   if (USE_SANITY && error) {
     return (
       <section
@@ -96,14 +106,6 @@ export default function DesktopBio({ setCurrentColors }) {
       </section>
     );
   }
-
-  // Transform and use Sanity data if enabled, otherwise use config
-  const desktopBioSlides = USE_SANITY && sanityProfiles && sanityProfiles.length > 0
-    ? transformSanityProfiles(sanityProfiles)
-    : configSlides;
-
-  // Use scroll-based color detection
-  const currentColors = useScrollColorChange(sectionsRef, desktopBioSlides);
 
   // Pass colors to parent (for fixed layer outside ResponsiveWrapper)
   useEffect(() => {
