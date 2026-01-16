@@ -2,32 +2,18 @@ import { Link } from 'react-router';
 import { useTranslation } from '../../hooks/useTranslation';
 import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
 
-const DESKTOP_WIDTH = 1440;
+// Pozycje linii pionowych z Figma
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
-const LINE_COLOR = '#3478FF';
-const BACKGROUND_COLOR = '#73A1FE';
+const LINE_COLOR = '#A0E38A';
+const BACKGROUND_COLOR = '#FDFDFD';
 const TEXT_COLOR = '#131313';
-const ACTIVE_COLOR = '#761FE0';
 
-export default function MediaWideoFixedLayer({ scale = 1, viewportHeight = 700 }) {
+export default function WydarzenieFixedLayer({ scale = 1 }) {
   const { t } = useTranslation();
 
   return (
     <>
-      {/* Fixed background */}
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: '100vh',
-          backgroundColor: BACKGROUND_COLOR,
-          zIndex: 0,
-        }}
-      />
-
-      {/* Pionowe linie dekoracyjne - scrollable full height */}
+      {/* Pionowe linie dekoracyjne - full height */}
       <div
         style={{
           position: 'fixed',
@@ -54,7 +40,7 @@ export default function MediaWideoFixedLayer({ scale = 1, viewportHeight = 700 }
         ))}
       </div>
 
-      {/* FIXED LAYER - Logo, Side Title, Tabs, Menu */}
+      {/* FIXED LAYER - Logo, Side Title, Menu */}
       <div
         style={{
           position: 'fixed',
@@ -62,26 +48,10 @@ export default function MediaWideoFixedLayer({ scale = 1, viewportHeight = 700 }
           left: 0,
           zIndex: 100,
           pointerEvents: 'none',
-          width: `${DESKTOP_WIDTH * scale}px`,
-          height: `${250 * scale}px`,
-          backgroundColor: BACKGROUND_COLOR,
+          width: `${1440 * scale}px`,
+          height: '100vh',
         }}
       >
-        {/* Pionowe linie w fixed header */}
-        {LINE_POSITIONS.map((x) => (
-          <div
-            key={`header-${x}`}
-            style={{
-              position: 'absolute',
-              left: `${x * scale}px`,
-              top: 0,
-              width: `${1 * scale}px`,
-              height: '100%',
-              backgroundColor: LINE_COLOR,
-              zIndex: 101,
-            }}
-          />
-        ))}
 
         {/* Logo */}
         <Link
@@ -104,56 +74,34 @@ export default function MediaWideoFixedLayer({ scale = 1, viewportHeight = 700 }
           />
         </Link>
 
-        {/* Media - pionowy tekst po lewej (SVG) */}
-        <img
-          src="/assets/media/media-text.svg"
-          alt="Media"
+        {/* Wydarzenie - pionowy tekst po lewej (rotacja 90 stopni) */}
+        <div
           style={{
             position: 'absolute',
             left: `${94 * scale}px`,
-            top: `${275 * scale}px`,
-            width: `${49 * scale}px`,
-            height: `${187 * scale}px`,
-            zIndex: 101,
-          }}
-        />
-
-        {/* Nawigacja Zdjęcia / Wideo - Wideo active */}
-        <Link
-          to="/media"
-          className="filter-tab"
-          style={{
-            position: 'absolute',
-            left: `${185 * scale}px`,
-            top: `${190 * scale}px`,
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: `${24 * scale}px`,
-            lineHeight: 1.44,
-            color: TEXT_COLOR,
-            pointerEvents: 'auto',
+            top: `${220 * scale}px`,
+            width: `${45 * scale}px`,
+            height: `${384 * scale}px`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             zIndex: 101,
           }}
         >
-          {t('common.tabs.photos')}
-        </Link>
-        <span
-          className="filter-tab filter-tab--active"
-          style={{
-            position: 'absolute',
-            left: `${405 * scale}px`,
-            top: `${190 * scale}px`,
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: `${24 * scale}px`,
-            lineHeight: 1.44,
-            color: ACTIVE_COLOR,
-            pointerEvents: 'auto',
-            zIndex: 101,
-          }}
-        >
-          {t('common.tabs.video')}
-        </span>
+          <p
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 600,
+              fontSize: `${64 * scale}px`,
+              lineHeight: 1.1,
+              color: TEXT_COLOR,
+              transform: 'rotate(90deg)',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {t('wydarzenie.sideTitle')}
+          </p>
+        </div>
 
         {/* Language Toggle - top right */}
         <div
@@ -183,8 +131,8 @@ export default function MediaWideoFixedLayer({ scale = 1, viewportHeight = 700 }
         >
           {[
             { key: 'bio', href: '/bio', active: false },
-            { key: 'media', href: '/media', active: true },
-            { key: 'kalendarz', href: '/kalendarz', active: false },
+            { key: 'media', href: '/media', active: false },
+            { key: 'kalendarz', href: '/kalendarz', active: true },
             { key: 'repertuar', href: '/repertuar', active: false },
             { key: 'fundacja', href: '/fundacja', active: false },
             { key: 'kontakt', href: '/kontakt', active: false },

@@ -1,17 +1,11 @@
-import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
-import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import {
   eventData,
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
 } from './wydarzenie-config';
-
-// Pozycje linii pionowych z Figma
-const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
-const LINE_COLOR = '#A0E38A';
 
 export default function DesktopWydarzenie() {
   const { t } = useTranslation();
@@ -23,63 +17,10 @@ export default function DesktopWydarzenie() {
       style={{
         width: `${DESKTOP_WIDTH}px`,
         height: `${DESKTOP_HEIGHT}px`,
-        backgroundColor: '#FDFDFD',
+        backgroundColor: 'transparent',
+        zIndex: 60,
       }}
     >
-      {/* Pionowe linie dekoracyjne */}
-      {LINE_POSITIONS.map((x) => (
-        <div
-          key={x}
-          className="absolute top-0"
-          style={{
-            left: `${x}px`,
-            width: '1px',
-            height: '100%',
-            backgroundColor: LINE_COLOR,
-          }}
-        />
-      ))}
-
-      {/* Logo */}
-      <Link to="/">
-        <img
-          src="/assets/logo.svg"
-          alt="Kompopolex"
-          className="absolute"
-          style={{
-            left: '185px',
-            top: '60px',
-            width: '149px',
-            height: '60px',
-          }}
-        />
-      </Link>
-
-      {/* Wydarzenie - pionowy tekst po lewej (rotacja 90 stopni) - Figma: left=94px */}
-      <div
-        className="absolute flex items-center justify-center"
-        style={{
-          left: '94px',
-          top: '220px',
-          width: '45px',
-          height: '384px',
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '64px',
-            lineHeight: 1.1,
-            color: '#131313',
-            transform: 'rotate(90deg)',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          {t('wydarzenie.sideTitle')}
-        </p>
-      </div>
-
       {/* Tytuł wydarzenia - centered in 850px frame */}
       <div
         className="absolute flex items-center justify-center"
@@ -412,80 +353,6 @@ export default function DesktopWydarzenie() {
           width: '520px',
         }}
       />
-
-      {/* Prawa nawigacja - Frame 8 at x=1265, y=60, h=580 */}
-      <div
-        className="absolute"
-        style={{
-          left: '1265px',
-          top: '60px',
-          width: '100px',
-          height: '580px',
-        }}
-      >
-        {/* Language Toggle */}
-        <LanguageToggle textColor="#131313" />
-
-        {/* Frame 7 - Menu items at y=308 */}
-        <nav
-          className="absolute"
-          style={{
-            left: '0',
-            top: '308px',
-            width: '100px',
-            height: '272px',
-          }}
-        >
-          {[
-            { key: 'bio', href: '/bio', active: false, top: 0 },
-            { key: 'media', href: '/media', active: false, top: 49 },
-            { key: 'kalendarz', href: '/kalendarz', active: true, top: 98 },
-            { key: 'repertuar', href: '/repertuar', active: false, top: 147 },
-            { key: 'fundacja', href: '/fundacja', active: false, top: 196 },
-            { key: 'kontakt', href: '/kontakt', active: false, top: 245 },
-          ].map((item) =>
-            item.href.startsWith('/') && !item.href.includes('#') ? (
-              <Link
-                key={item.key}
-                to={item.href}
-                className={`absolute nav-link ${item.active ? 'nav-link--active' : ''}`}
-                style={{
-                  left: '0',
-                  top: `${item.top}px`,
-                  width: '100px',
-                  height: '27px',
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontWeight: 700,
-                  fontSize: '18px',
-                  lineHeight: 1.48,
-                  color: '#131313',
-                }}
-              >
-                {t(`common.nav.${item.key}`)}
-              </Link>
-            ) : (
-              <a
-                key={item.key}
-                href={item.href}
-                className={`absolute nav-link ${item.active ? 'nav-link--active' : ''}`}
-                style={{
-                  left: '0',
-                  top: `${item.top}px`,
-                  width: '100px',
-                  height: '27px',
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontWeight: 700,
-                  fontSize: '18px',
-                  lineHeight: 1.48,
-                  color: '#131313',
-                }}
-              >
-                {t(`common.nav.${item.key}`)}
-              </a>
-            )
-          )}
-        </nav>
-      </div>
     </section>
   );
 }
