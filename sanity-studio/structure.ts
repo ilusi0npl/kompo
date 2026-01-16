@@ -82,7 +82,7 @@ export const structure = (S: StructureBuilder) =>
               S.documentTypeListItem('photoAlbum')
                 .title('Galeria (Albumy)')
                 .icon(() => '📷'),
-              S.documentTypeListItem('media')
+              S.documentTypeListItem('mediaItem')
                 .title('Wideo')
                 .icon(() => '🎥'),
             ])
@@ -151,7 +151,7 @@ export const structure = (S: StructureBuilder) =>
               S.documentTypeListItem('fundacjaPage').title('Fundacja Page'),
               S.documentTypeListItem('homepageSlide').title('Homepage Slides'),
               S.documentTypeListItem('kontaktPage').title('Kontakt Page'),
-              S.documentTypeListItem('media').title('Media Items'),
+              S.documentTypeListItem('mediaItem').title('Media Items'),
               S.documentTypeListItem('photoAlbum').title('Photo Albums'),
             ])
         ),
