@@ -318,3 +318,25 @@ body {
 .event-poster-link:hover {
   opacity: 0.9;
 }
+
+/* Ticket button (KUP BILET) */
+.ticket-btn {
+  transition: background-color 0.2s ease, border 0.2s ease;
+  border: 3px solid transparent;
+}
+
+.ticket-btn:hover {
+  background-color: #3478ff !important;
+}
+
+.ticket-btn:active {
+  background-color: #3478ff !important;
+  border: 3px solid #131313 !important;
+}
+
+.ticket-btn:disabled,
+.ticket-btn[aria-disabled="true"] {
+  background-color: #5b5b5b !important;
+  cursor: not-allowed;
+  pointer-events: none;
+}

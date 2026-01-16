@@ -184,7 +184,7 @@ export default function DesktopWydarzenie2() {
         href={eventData.ticketUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="absolute flex items-center justify-center"
+        className="absolute flex items-center justify-center ticket-btn"
         style={{
           left: '624px',
           top: '990px',
@@ -196,6 +196,7 @@ export default function DesktopWydarzenie2() {
           gap: '10px',
           cursor: 'pointer',
           textDecoration: 'none',
+          border: '3px solid transparent',
         }}
       >
         <p
