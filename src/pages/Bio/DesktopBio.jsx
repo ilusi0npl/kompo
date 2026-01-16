@@ -28,6 +28,7 @@ function transformSanityProfiles(profiles) {
     textColor: profile.textColor,
     image: profile.imageUrl,
     imageStyle: profile.imageStyle || {},
+    logoSrc: '/assets/logo.svg', // Logo is the same for all slides
     paragraphs: profile.paragraphs,
     paragraphTops: profile.paragraphTops,
     hasFooter: profile.hasFooter,
