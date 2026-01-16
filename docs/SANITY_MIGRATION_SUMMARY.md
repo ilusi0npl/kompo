@@ -69,6 +69,32 @@ All planned content has been successfully migrated to Sanity CMS.
 - **Hook**: `useSanityPhotoAlbums`
 - **Component**: `src/pages/Media/DesktopMedia.jsx`
 
+### 8. MediaWideo (Videos) ✅
+- **Schema**: `mediaItem` (type="video", 4 documents)
+- **Content**: 4 YouTube videos with thumbnails
+  - Rafał Zapała - black serial MIDI music
+  - Michael Beil - Key Jane
+  - Viacheslav Kyrylov - I'm the real pig blood soaked fucking homecoming queen
+  - Marta Śniady - Body X Ultra: Limited Edition
+- **Assets**: Video thumbnails (JPG)
+- **Features**: YouTube URL, thumbnail support for videos
+- **Hook**: `useSanityVideos`
+- **Components**: `src/pages/MediaWideo/DesktopMediaWideo.jsx`, `MobileMediaWideo.jsx`
+
+### 9. Repertuar (Composers) ✅
+- **Schema**: `composer` (category="repertuar", 25 documents)
+- **Content**: 25 composers with their works
+- **Features**: Composer name, year, works array with isSpecial flag, order
+- **Hook**: `useSanityRepertuarComposers`
+- **Components**: `src/pages/Repertuar/DesktopRepertuar.jsx`, `MobileRepertuar.jsx`
+
+### 10. Specialne (Special Projects Composers) ✅
+- **Schema**: `composer` (category="specialne", 7 documents)
+- **Content**: 7 composers for special projects with guest artists
+- **Features**: Composer name, year, works array with isSpecial flag, order
+- **Hook**: `useSanitySpecjalneComposers`
+- **Components**: `src/pages/Specialne/DesktopSpecjalne.jsx`, `MobileSpecjalne.jsx`
+
 ## Technical Implementation
 
 ### Feature Flag System
@@ -101,9 +127,10 @@ Each integrated component follows this pattern:
 | `kontaktPage` | document (singleton) | 1 | Contact page data |
 | `fundacjaPage` | document (singleton) | 1 | Foundation page data |
 | `photoAlbum` | document | 3 | Photo galleries |
-| `mediaItem` | document | 0 | Individual media items (for future) |
+| `mediaItem` | document | 4 | Videos (YouTube) with thumbnails |
+| `composer` | document | 32 | Composers for Repertuar (25) and Specialne (7) |
 
-**Total**: 7 schemas, 19 documents migrated
+**Total**: 8 schemas, 55 documents migrated
 
 ### Migration Scripts
 
@@ -121,6 +148,8 @@ Scripts located in `scripts/`:
 - `migrate-kontakt-page.js`
 - `migrate-fundacja-page.js`
 - `migrate-photo-albums.js`
+- `migrate-videos.js`
+- `migrate-composers.js`
 
 ## Sanity Studio
 
@@ -140,7 +169,8 @@ sanity-studio/
     ├── kontaktPage.ts      # Kontakt page schema
     ├── fundacjaPage.ts     # Fundacja page schema
     ├── photoAlbum.ts       # Photo albums schema
-    └── media.ts            # Media items schema
+    ├── media.ts            # Media items schema (videos)
+    └── composer.ts         # Composers schema (Repertuar + Specialne)
 ```
 
 ## GROQ Queries
@@ -154,6 +184,9 @@ All queries are centralized in `src/lib/sanity/queries.js`:
 - `kontaktPageQuery` - Kontakt page (singleton)
 - `fundacjaPageQuery` - Fundacja page (singleton)
 - `photoAlbumsQuery` - Photo albums (sorted by order asc)
+- `videoItemsQuery` - Videos (type="video", sorted by publishedAt desc)
+- `repertuarComposersQuery` - Repertuar composers (category="repertuar", sorted by order asc)
+- `specialneComposersQuery` - Specialne composers (category="specialne", sorted by order asc)
 
 All queries filter by `defined(publishedAt)` to ensure only published content is displayed.
 
@@ -167,6 +200,9 @@ Custom hooks provide data fetching with loading/error states:
 - `useSanityKontaktPage()` - Fetches kontakt page
 - `useSanityFundacjaPage()` - Fetches fundacja page
 - `useSanityPhotoAlbums()` - Fetches photo albums
+- `useSanityVideos()` - Fetches videos
+- `useSanityRepertuarComposers()` - Fetches repertuar composers
+- `useSanitySpecjalneComposers()` - Fetches specialne composers
 
 Located in `src/hooks/`.
 
@@ -233,13 +269,15 @@ Key commits on `kompo-cms` branch:
 3. `9879c79` - feat: migrate Kontakt page to Sanity CMS
 4. `b726a3a` - feat: migrate Fundacja page to Sanity CMS
 5. `1ca2ff5` - feat: migrate photo albums to Sanity CMS
+6. `42508c8` - feat: migrate MediaWideo page to Sanity CMS
+7. `44ad4f4` - feat: migrate Repertuar and Specialne pages to Sanity CMS
 
 ## Migration Success Metrics
 
 - **0 errors** during migration
 - **0 data loss**
 - **100% backward compatibility** (feature flag ensures fallback)
-- **19 documents** successfully migrated
+- **55 documents** successfully migrated
 - **All assets** uploaded to CDN
 - **All components** integrated with loading/error states
 
