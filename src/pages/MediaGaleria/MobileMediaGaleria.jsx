@@ -100,7 +100,6 @@ export default function MobileMediaGaleria({ album }) {
             width: '1px',
             height: '100%',
             backgroundColor: LINE_COLOR,
-            zIndex: 0,
           }}
         />
       ))}
@@ -204,8 +203,6 @@ export default function MobileMediaGaleria({ album }) {
           display: 'flex',
           flexDirection: 'column',
           gap: '24px',
-          position: 'relative',
-          zIndex: 1,
         }}
       >
         {/* Title and credit (before photo on mobile) */}

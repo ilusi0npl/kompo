@@ -34,7 +34,6 @@ export default function MobileArchiwalne() {
             width: '1px',
             height: '100%',
             backgroundColor: LINE_COLOR,
-            zIndex: 0,
           }}
         />
       ))}
@@ -63,8 +62,6 @@ export default function MobileArchiwalne() {
         style={{
           padding: '0 20px',
           gap: '40px',
-          position: 'relative',
-          zIndex: 1,
         }}
       >
         {archivedEvents.map((event) => (

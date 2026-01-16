@@ -116,7 +116,7 @@ export default function ResponsiveWrapper({
           position: 'absolute',
           left: 0,
           top: 0,
-          zIndex: 1,
+          zIndex: 55,
         }}
       >
         {isMobile ? mobileContent : desktopContent}

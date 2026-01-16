@@ -129,7 +129,6 @@ export default function MobileRepertuar() {
             width: '1px',
             height: '100%',
             backgroundColor: LINE_COLOR,
-            zIndex: 0,
           }}
         />
       ))}
@@ -270,8 +269,6 @@ export default function MobileRepertuar() {
           display: 'flex',
           flexDirection: 'column',
           gap: '20px',
-          position: 'relative',
-          zIndex: 1,
         }}
       >
         {sortedComposers.map((composer, idx) => (

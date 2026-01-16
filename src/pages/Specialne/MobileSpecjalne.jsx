@@ -89,7 +89,6 @@ export default function MobileSpecjalne() {
             width: '1px',
             height: '100%',
             backgroundColor: LINE_COLOR,
-            zIndex: 0,
           }}
         />
       ))}
@@ -247,8 +246,6 @@ export default function MobileSpecjalne() {
           display: 'flex',
           flexDirection: 'column',
           gap: '20px',
-          position: 'relative',
-          zIndex: 1,
         }}
       >
         {composers.map((composer, idx) => (

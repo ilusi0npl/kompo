@@ -40,7 +40,6 @@ export default function MobileWydarzenie() {
             width: '1px',
             height: '100%',
             backgroundColor: LINE_COLOR,
-            zIndex: 0,
           }}
         />
       ))}
@@ -139,8 +138,6 @@ export default function MobileWydarzenie() {
       {/* Spacer for fixed header */}
       <div style={{ height: `${HEADER_HEIGHT}px` }} />
 
-      {/* Content wrapper with z-index */}
-      <div style={{ position: 'relative', zIndex: 1 }}>
       {/* Tytuł wydarzenia */}
       <p
         style={{
@@ -472,7 +469,6 @@ export default function MobileWydarzenie() {
             </div>
           </div>
         </div>
-      </div>
       </div>
 
       {/* Stopka */}

@@ -39,7 +39,6 @@ export default function MobileKontakt() {
             width: '1px',
             height: '100%',
             backgroundColor: LINE_COLOR,
-            zIndex: 0,
           }}
         />
       ))}
@@ -163,8 +162,6 @@ export default function MobileKontakt() {
           marginLeft: '45px',
           width: '300px',
           height: '460px',
-          position: 'relative',
-          zIndex: 1,
         }}
       >
         <SmoothImage
