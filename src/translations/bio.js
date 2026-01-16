@@ -2,6 +2,18 @@
 // Artist biographies
 
 export const pl = {
+  ensemble: {
+    more: 'Więcej',
+    title: 'Ensemble KOMPOPOLEX',
+    upcomingEvents: 'Najbliższe wydarzenia',
+    extendedParagraphs: [
+      'Trio specjalizujące się w muzyce najnowszej, założone 2017 roku we Wrocławiu. Wykonują utwory zaangażowane i angażujące, często porzucają swoje instrumenty na rzecz kabli, keyboardów, tańca i śpiewu. W jego skład wchodzą Aleksandra Gołaj (perkusja), Rafał Łuc (akordeon) i Jacek Sotomski (komputery).',
+      'Przez lata działalności zespół zdążył zagrać na najważniejszych festiwalach muzyki nowej w Polsce i za granicą: Mixtur Festival, Warszawskiej Jesieni, Sacrum Profanum, Festiwalu Prawykonań, Musica Polonica Nova oraz Musica Electronica Nova. Wystąpił również na MMMM 2.1 w Stalowej Woli, Eksperymentalnych Wtorkach w Sinfonii Varsovii, teatralnym Festiwalu Kontrapunkt w Szczecinie, Festiwalu NeoArte Syntezator Sztuki.',
+      'Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque.',
+      'Rorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.',
+      'Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.',
+    ],
+  },
   slides: {
     ensemble: {
       name: 'Ensemble KOMPOPOLEX',
@@ -36,6 +48,18 @@ export const pl = {
 };
 
 export const en = {
+  ensemble: {
+    more: 'More',
+    title: 'Ensemble KOMPOPOLEX',
+    upcomingEvents: 'Upcoming Events',
+    extendedParagraphs: [
+      'A trio specializing in contemporary music, founded in 2017 in Wrocław. They perform engaged and engaging pieces, often abandoning their instruments for cables, keyboards, dance and singing. Members include Aleksandra Gołaj (percussion), Rafał Łuc (accordion) and Jacek Sotomski (computers).',
+      'Over the years, the ensemble has performed at the most important new music festivals in Poland and abroad: Mixtur Festival, Warsaw Autumn, Sacrum Profanum, Premiere Festival, Musica Polonica Nova and Musica Electronica Nova. They also appeared at MMMM 2.1 in Stalowa Wola, Experimental Tuesdays at Sinfonia Varsovia, the theatrical Kontrapunkt Festival in Szczecin, and the NeoArte Art Synthesizer Festival.',
+      'Sorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque.',
+      'Rorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis. Ut commodo efficitur neque. Ut diam quam, semper iaculis condimentum ac, vestibulum eu nisl.',
+      'Norem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.',
+    ],
+  },
   slides: {
     ensemble: {
       name: 'Ensemble KOMPOPOLEX',

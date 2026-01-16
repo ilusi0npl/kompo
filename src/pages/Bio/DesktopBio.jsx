@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router';
 import { useScrollColorChange } from '../../hooks/useScrollColorChange';
 import {
   desktopBioSlides,
@@ -51,8 +52,8 @@ export default function DesktopBio({ setCurrentColors }) {
     document.documentElement.style.setProperty('--line-color', currentColors.lineColor);
   }, [currentColors.backgroundColor, currentColors.lineColor]);
 
-  // Total height: 4 sections × 700px each
-  const totalHeight = desktopBioSlides.length * DESKTOP_HEIGHT;
+  // Total height: sum of all section heights (3×700px + 1×850px)
+  const totalHeight = desktopBioSlides.reduce((sum, slide) => sum + (slide.height || DESKTOP_HEIGHT), 0);
 
   return (
     <section
@@ -61,15 +62,12 @@ export default function DesktopBio({ setCurrentColors }) {
       style={{
         width: `${DESKTOP_WIDTH}px`,
         minHeight: `${totalHeight}px`,
-        backgroundColor: currentColors.backgroundColor,
-        transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
       }}
     >
       {/* SCROLLABLE LAYER - Bio sections (document scroll) - pod fixedowymi elementami */}
       <div
         style={{
           position: 'relative',
-          zIndex: 1,
         }}
       >
         {desktopBioSlides.map((slide, index) => (
@@ -78,7 +76,7 @@ export default function DesktopBio({ setCurrentColors }) {
             ref={(el) => (sectionsRef.current[index] = el)}
             data-color={slide.id}
             style={{
-              height: `${DESKTOP_HEIGHT}px`,
+              height: `${slide.height || DESKTOP_HEIGHT}px`,
               position: 'relative',
               width: `${DESKTOP_WIDTH}px`,
             }}
@@ -94,6 +92,7 @@ export default function DesktopBio({ setCurrentColors }) {
                 height: '460px',
                 overflow: 'hidden',
                 backgroundColor: slide.backgroundColor,
+                zIndex: 60,
               }}
             >
               <img
@@ -118,6 +117,7 @@ export default function DesktopBio({ setCurrentColors }) {
                 fontSize: '40px',
                 lineHeight: 1.35,
                 color: slide.textColor,
+                zIndex: 60,
               }}
             >
               {t(`bio.slides.${slideTranslationKeys[index]}.name`)}
@@ -143,6 +143,7 @@ export default function DesktopBio({ setCurrentColors }) {
                         lineHeight: 1.48,
                         color: slide.textColor,
                         whiteSpace: 'pre-wrap',
+                        zIndex: 60,
                       }}
                     >
                       {text}
@@ -151,14 +152,37 @@ export default function DesktopBio({ setCurrentColors }) {
                 )}
             </div>
 
+            {/* Link "WIĘCEJ" (tylko dla bio1 - ensemble) */}
+            {slide.id === 'bio1' && (
+              <Link
+                to="/bio/ensemble"
+                className="absolute"
+                style={{
+                  left: '625px',
+                  top: '624px',
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontWeight: 600,
+                  fontSize: '16px',
+                  lineHeight: 1.48,
+                  color: '#761FE0',
+                  textDecoration: 'underline',
+                  textTransform: 'uppercase',
+                  zIndex: 60,
+                }}
+              >
+                {t('bio.ensemble.more')}
+              </Link>
+            )}
+
             {/* Stopka (tylko dla slide 4 - bio4) */}
             {slide.hasFooter && (
               <Footer
                 className="absolute"
                 style={{
                   left: '185px',
-                  top: '652px',
+                  top: '752px',
                   width: '520px',
+                  zIndex: 60,
                 }}
                 textColor={slide.textColor}
               />

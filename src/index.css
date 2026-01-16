@@ -152,3 +152,153 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Navigation link styles (menu, tabs) */
+.nav-link {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  text-decoration: underline;
+}
+
+.nav-link--active {
+  text-decoration: underline;
+}
+
+/* Alias for bio navigation */
+.bio-nav-link {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.bio-nav-link:hover {
+  text-decoration: underline;
+}
+
+.bio-nav-link--active {
+  text-decoration: underline;
+}
+
+/* Filter tab styles (Nadchodzące/Archiwalne, Zdjęcia/Wideo) */
+.filter-tab {
+  text-decoration: none;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.filter-tab:hover {
+  color: #761FE0;
+  text-decoration: underline;
+}
+
+.filter-tab--active {
+  text-decoration: underline;
+}
+
+/* External link button styles (CROSSFADE, REQUIEM, NAJBLIŻSZE WYDARZENIA) */
+.external-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  border: 2px solid transparent;
+  padding: 0;
+  background: none;
+  outline: none;
+  transition: border-color 0.2s ease, padding 0.2s ease;
+}
+
+.external-link-btn .external-link-btn__text {
+  text-decoration: underline;
+  text-underline-position: from-font;
+}
+
+/* Arrow hidden by default, visible on hover/focus */
+.external-link-btn .external-link-btn__arrow {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.external-link-btn:hover .external-link-btn__arrow {
+  opacity: 1;
+}
+
+.external-link-btn:hover .external-link-btn__text {
+  text-decoration: underline;
+}
+
+.external-link-btn:focus-visible {
+  border-color: #761FE0;
+  padding: 6px 8px;
+}
+
+.external-link-btn:focus-visible .external-link-btn__arrow {
+  opacity: 1;
+}
+
+.external-link-btn:focus-visible .external-link-btn__text {
+  text-decoration: none;
+}
+
+/* Text link button (internal links like NAJBLIŻSZE WYDARZENIA) */
+.text-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-position: from-font;
+  border: 2px solid transparent;
+  padding: 0;
+  background: none;
+  outline: none;
+  transition: border-color 0.2s ease, padding 0.2s ease, text-decoration 0.2s ease;
+}
+
+/* Arrow hidden by default, visible on hover/focus */
+.text-link-btn .text-link-btn__arrow {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.text-link-btn:hover .text-link-btn__arrow {
+  opacity: 1;
+}
+
+.text-link-btn:hover {
+  text-decoration: underline;
+}
+
+.text-link-btn:focus-visible {
+  border-color: #761FE0;
+  padding: 6px 8px;
+  text-decoration: none;
+}
+
+.text-link-btn:focus-visible .text-link-btn__arrow {
+  opacity: 1;
+}
+
+/* Event title link (Kalendarz) */
+.event-title-link {
+  text-decoration: underline;
+  text-underline-position: from-font;
+  transition: color 0.2s ease;
+}
+
+.event-title-link:hover {
+  color: #761FE0 !important;
+}
+
+/* Event poster clickable */
+.event-poster-link {
+  display: block;
+  cursor: pointer;
+}
+
+.event-poster-link:hover {
+  opacity: 0.9;
+}

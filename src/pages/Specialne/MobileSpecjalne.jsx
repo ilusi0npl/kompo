@@ -1,14 +1,20 @@
 import { Link } from 'react-router';
-import MobileHeader from '../../components/MobileHeader/MobileHeader';
+import { useState } from 'react';
+import { createPortal } from 'react-dom';
+import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useFixedMobileHeader } from '../../hooks/useFixedMobileHeader';
 import {
   composers,
   MOBILE_WIDTH,
   mobileLinePositions,
 } from './specialne-config';
 
+const BACKGROUND_COLOR = '#FDFDFD';
 const LINE_COLOR = '#A0E38A';
+const TEXT_COLOR = '#131313';
+const HEADER_HEIGHT = 355;
 
 // Helper component to render a single composer entry
 const ComposerEntry = ({ composer }) => {
@@ -20,7 +26,7 @@ const ComposerEntry = ({ composer }) => {
             fontFamily: "'IBM Plex Mono', monospace",
             fontWeight: 700,
             fontSize: '16px',
-            color: '#131313',
+            color: TEXT_COLOR,
           }}
         >
           {composer.name}{' '}
@@ -30,7 +36,7 @@ const ComposerEntry = ({ composer }) => {
             fontFamily: "'IBM Plex Mono', monospace",
             fontWeight: 500,
             fontSize: '16px',
-            color: '#131313',
+            color: TEXT_COLOR,
           }}
         >
           {composer.year}
@@ -43,7 +49,7 @@ const ComposerEntry = ({ composer }) => {
             fontFamily: "'IBM Plex Mono', monospace",
             fontWeight: 500,
             fontSize: '16px',
-            color: '#131313',
+            color: TEXT_COLOR,
             lineHeight: 1.48,
             marginBottom: idx === composer.works.length - 1 ? 0 : '8px',
           }}
@@ -60,34 +66,26 @@ const ComposerEntry = ({ composer }) => {
 
 export default function MobileSpecjalne() {
   const { t } = useTranslation();
-
-  // Calculate total height based on content
-  // Footnote at 996px + footnote height (~48px for 2 lines) + margin (50px) + footer height (~120px) + bottom margin (50px)
-  const footnoteTop = 996;
-  const footnoteHeight = 48; // Approximate height for 2-line text
-  const marginToFooter = 50;
-  const footerHeight = 120; // Approximate footer height
-  const bottomMargin = 50;
-  const totalHeight = footnoteTop + footnoteHeight + marginToFooter + footerHeight + bottomMargin;
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { scale } = useFixedMobileHeader();
 
   return (
     <section
       data-section="specialne-mobile"
+      className="relative overflow-hidden"
       style={{
         width: `${MOBILE_WIDTH}px`,
-        height: `${totalHeight}px`,
-        backgroundColor: '#FDFDFD',
-        position: 'relative',
+        minHeight: '100vh',
+        backgroundColor: BACKGROUND_COLOR,
       }}
     >
-      {/* Pionowe linie dekoracyjne - renderowane ręcznie */}
+      {/* Pionowe linie dekoracyjne */}
       {mobileLinePositions.map((x) => (
         <div
           key={x}
-          className="absolute"
+          className="absolute top-0"
           style={{
             left: `${x}px`,
-            top: 0,
             width: '1px',
             height: '100%',
             backgroundColor: LINE_COLOR,
@@ -95,66 +93,145 @@ export default function MobileSpecjalne() {
         />
       ))}
 
-      {/* Header z logo, MENU button, tytułem */}
-      <MobileHeader
-        title={t('repertuar.sideTitle')}
-        navLinks={null}
-      />
+      {/* Fixed header via portal */}
+      {typeof document !== 'undefined' && createPortal(
+        <div
+          className="fixed top-0 left-0"
+          style={{
+            width: `${MOBILE_WIDTH}px`,
+            height: `${HEADER_HEIGHT}px`,
+            backgroundColor: BACKGROUND_COLOR,
+            transform: `scale(${scale})`,
+            transformOrigin: 'top left',
+            zIndex: 100,
+          }}
+        >
+          {/* Pionowe linie w fixed headerze */}
+          {mobileLinePositions.map((x) => (
+            <div
+              key={`header-line-${x}`}
+              className="absolute top-0"
+              style={{
+                left: `${x}px`,
+                width: '1px',
+                height: `${HEADER_HEIGHT}px`,
+                backgroundColor: LINE_COLOR,
+              }}
+            />
+          ))}
 
-      {/* Navigation Tabs */}
-      <div
-        className="absolute"
-        style={{
-          left: '20px',
-          top: '237px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '20px',
-        }}
-      >
-        <Link
-          to="/repertuar"
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '20px',
-            lineHeight: 1.44,
-            color: '#131313',
-            textDecoration: 'none',
-            margin: 0,
-          }}
-        >
-          {t('repertuar.tabs.full')}
-        </Link>
-        <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '20px',
-            lineHeight: 1.44,
-            color: '#761FE0',
-            textDecoration: 'underline',
-            textUnderlinePosition: 'from-font',
-            margin: 0,
-          }}
-        >
-          {t('repertuar.tabs.special')}
-        </p>
-      </div>
+          {/* Logo */}
+          <Link to="/">
+            <img
+              src="/assets/logo.svg"
+              alt="Kompopolex"
+              className="absolute"
+              style={{
+                left: '20px',
+                top: '40px',
+                width: '104px',
+                height: '42px',
+              }}
+            />
+          </Link>
+
+          {/* MENU button */}
+          <button
+            onClick={() => setIsMenuOpen(true)}
+            className="absolute"
+            style={{
+              left: '312px',
+              top: '43px',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 700,
+              fontSize: '24px',
+              lineHeight: 'normal',
+              color: TEXT_COLOR,
+              background: 'transparent',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer',
+            }}
+          >
+            MENU
+          </button>
+
+          {/* Tytuł "Repertuar" */}
+          <p
+            className="absolute"
+            style={{
+              left: '20px',
+              top: '152px',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 600,
+              fontSize: '48px',
+              lineHeight: 1.35,
+              color: TEXT_COLOR,
+              margin: 0,
+            }}
+          >
+            {t('repertuar.sideTitle')}
+          </p>
+
+          {/* Navigation Tabs - fixed */}
+          <div
+            className="absolute"
+            style={{
+              left: '20px',
+              top: '237px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '20px',
+            }}
+          >
+            <Link
+              to="/repertuar"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontWeight: 600,
+                fontSize: '20px',
+                lineHeight: 1.44,
+                color: TEXT_COLOR,
+                textDecoration: 'none',
+              }}
+            >
+              {t('repertuar.tabs.full')}
+            </Link>
+            <span
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontWeight: 600,
+                fontSize: '20px',
+                lineHeight: 1.44,
+                color: '#761FE0',
+                textDecoration: 'underline',
+              }}
+            >
+              {t('repertuar.tabs.special')}
+            </span>
+          </div>
+
+          {/* MobileMenu inside portal */}
+          <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+        </div>,
+        document.body
+      )}
+
+      {/* Spacer for fixed header */}
+      <div style={{ height: `${HEADER_HEIGHT}px` }} />
 
       {/* Header text */}
       <p
-        className="absolute"
         style={{
-          left: '20px',
-          top: '355px',
           width: '350px',
           fontFamily: "'IBM Plex Mono', monospace",
           fontWeight: 700,
           fontSize: '18px',
           lineHeight: 1.48,
-          color: '#131313',
+          color: TEXT_COLOR,
           margin: 0,
+          marginLeft: '20px',
+          marginTop: '20px',
         }}
       >
         {t('repertuar.specialHeader')}
@@ -163,9 +240,8 @@ export default function MobileSpecjalne() {
       {/* Composers List - Single column */}
       <div
         style={{
-          position: 'absolute',
-          left: '20px',
-          top: '476px',
+          marginLeft: '20px',
+          marginTop: '40px',
           width: '300px',
           display: 'flex',
           flexDirection: 'column',
@@ -179,10 +255,7 @@ export default function MobileSpecjalne() {
 
       {/* Footnote */}
       <p
-        className="absolute"
         style={{
-          left: '20px',
-          top: '996px',
           width: '350px',
           fontFamily: "'IBM Plex Mono', monospace",
           fontWeight: 500,
@@ -190,6 +263,8 @@ export default function MobileSpecjalne() {
           lineHeight: 1.48,
           color: '#761FE0',
           margin: 0,
+          marginLeft: '20px',
+          marginTop: '40px',
         }}
       >
         {t('repertuar.footnote')}
@@ -197,13 +272,14 @@ export default function MobileSpecjalne() {
 
       {/* Footer */}
       <MobileFooter
+        className="mt-12"
         style={{
-          position: 'absolute',
-          left: 'calc(25% + 18.5px)',
-          transform: 'translateX(-50%)',
-          top: `${footnoteTop + footnoteHeight + marginToFooter}px`,
+          marginLeft: '20px',
+          marginRight: '20px',
+          marginBottom: '40px',
+          width: '350px',
         }}
-        textColor="#131313"
+        textColor={TEXT_COLOR}
       />
     </section>
   );

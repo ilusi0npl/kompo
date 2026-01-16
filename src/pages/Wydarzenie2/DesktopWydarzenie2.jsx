@@ -486,7 +486,7 @@ export default function DesktopWydarzenie2() {
               <Link
                 key={item.key}
                 to={item.href}
-                className="absolute"
+                className={`absolute nav-link ${item.active ? 'nav-link--active' : ''}`}
                 style={{
                   left: '0',
                   top: `${item.top}px`,
@@ -497,7 +497,6 @@ export default function DesktopWydarzenie2() {
                   fontSize: '18px',
                   lineHeight: 1.48,
                   color: '#131313',
-                  textDecoration: item.active ? 'underline' : 'none',
                 }}
               >
                 {t(`common.nav.${item.key}`)}
@@ -506,7 +505,7 @@ export default function DesktopWydarzenie2() {
               <a
                 key={item.key}
                 href={item.href}
-                className="absolute"
+                className={`absolute nav-link ${item.active ? 'nav-link--active' : ''}`}
                 style={{
                   left: '0',
                   top: `${item.top}px`,
@@ -517,7 +516,6 @@ export default function DesktopWydarzenie2() {
                   fontSize: '18px',
                   lineHeight: 1.48,
                   color: '#131313',
-                  textDecoration: item.active ? 'underline' : 'none',
                 }}
               >
                 {t(`common.nav.${item.key}`)}

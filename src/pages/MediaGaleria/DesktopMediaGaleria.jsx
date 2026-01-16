@@ -279,12 +279,12 @@ export default function DesktopMediaGaleria({ album }) {
             gap: '22px',
           }}
         >
-          <Link to="/bio" style={{ color: TEXT_COLOR, textDecoration: 'none' }}>Bio</Link>
-          <Link to="/media" style={{ color: TEXT_COLOR, textDecoration: 'underline' }}>Media</Link>
-          <Link to="/kalendarz" style={{ color: TEXT_COLOR, textDecoration: 'none' }}>Kalendarz</Link>
-          <Link to="/repertuar" style={{ color: TEXT_COLOR, textDecoration: 'none' }}>Repertuar</Link>
-          <Link to="/fundacja" style={{ color: TEXT_COLOR, textDecoration: 'none' }}>Fundacja</Link>
-          <Link to="/kontakt" style={{ color: TEXT_COLOR, textDecoration: 'none' }}>Kontakt</Link>
+          <Link to="/bio" className="nav-link" style={{ color: TEXT_COLOR }}>Bio</Link>
+          <Link to="/media" className="nav-link nav-link--active" style={{ color: TEXT_COLOR }}>Media</Link>
+          <Link to="/kalendarz" className="nav-link" style={{ color: TEXT_COLOR }}>Kalendarz</Link>
+          <Link to="/repertuar" className="nav-link" style={{ color: TEXT_COLOR }}>Repertuar</Link>
+          <Link to="/fundacja" className="nav-link" style={{ color: TEXT_COLOR }}>Fundacja</Link>
+          <Link to="/kontakt" className="nav-link" style={{ color: TEXT_COLOR }}>Kontakt</Link>
         </nav>
       </div>
     </section>

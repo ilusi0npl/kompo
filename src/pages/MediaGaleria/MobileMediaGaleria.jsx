@@ -1,21 +1,26 @@
 import { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router';
 import { useSwipeable } from 'react-swipeable';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import MobileMenu from '../../components/MobileMenu/MobileMenu';
+import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useFixedMobileHeader } from '../../hooks/useFixedMobileHeader';
 
 const MOBILE_WIDTH = 390;
 const mobileLinePositions = [97, 195, 292];
 const BACKGROUND_COLOR = '#34B898';
 const LINE_COLOR = '#01936F';
 const TEXT_COLOR = '#131313';
+const HEADER_HEIGHT = 240;
 
 export default function MobileMediaGaleria({ album }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
+  const { scale } = useFixedMobileHeader();
 
   // Navigation handlers
   const handlePrev = () => {
@@ -77,10 +82,10 @@ export default function MobileMediaGaleria({ album }) {
   return (
     <section
       data-section="media-galeria-mobile"
-      className="relative"
+      className="relative overflow-hidden"
       style={{
         width: `${MOBILE_WIDTH}px`,
-        height: '1000px',
+        minHeight: '100vh',
         backgroundColor: BACKGROUND_COLOR,
       }}
     >
@@ -88,91 +93,112 @@ export default function MobileMediaGaleria({ album }) {
       {mobileLinePositions.map((x) => (
         <div
           key={x}
-          className="absolute"
+          className="absolute top-0"
           style={{
             left: `${x}px`,
-            top: '-38px',
             width: '1px',
-            height: '3863px',
+            height: '100%',
             backgroundColor: LINE_COLOR,
           }}
         />
       ))}
 
-      {/* Header */}
-      <div
-        className="absolute"
-        style={{
-          left: 0,
-          top: 0,
-          width: '390px',
-          height: '240px',
-          backgroundColor: BACKGROUND_COLOR,
-          overflow: 'clip',
-        }}
-      >
-        {/* Logo */}
-        <Link
-          to="/"
+      {/* Fixed header via portal */}
+      {typeof document !== 'undefined' && createPortal(
+        <div
+          className="fixed top-0 left-0"
           style={{
-            position: 'absolute',
-            left: '20px',
-            top: '40px',
-            width: '104px',
-            height: '42px',
+            width: `${MOBILE_WIDTH}px`,
+            height: `${HEADER_HEIGHT}px`,
+            backgroundColor: BACKGROUND_COLOR,
+            transform: `scale(${scale})`,
+            transformOrigin: 'top left',
+            zIndex: 100,
           }}
         >
-          <img
-            src="/assets/logo.svg"
-            alt="Kompopolex"
-            style={{ width: '100%', height: '100%' }}
-          />
-        </Link>
+          {/* Pionowe linie w fixed headerze */}
+          {mobileLinePositions.map((x) => (
+            <div
+              key={`header-line-${x}`}
+              className="absolute top-0"
+              style={{
+                left: `${x}px`,
+                width: '1px',
+                height: `${HEADER_HEIGHT}px`,
+                backgroundColor: LINE_COLOR,
+              }}
+            />
+          ))}
 
-        {/* MENU button */}
-        <button
-          onClick={() => setIsMenuOpen(true)}
-          style={{
-            position: 'absolute',
-            left: '312px',
-            top: '43px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 700,
-            fontSize: '24px',
-            lineHeight: 'normal',
-            color: TEXT_COLOR,
-            background: 'transparent',
-            border: 'none',
-            padding: 0,
-            cursor: 'pointer',
-          }}
-        >
-          MENU
-        </button>
+          {/* Logo */}
+          <Link
+            to="/"
+            className="absolute"
+            style={{
+              left: '20px',
+              top: '40px',
+              width: '104px',
+              height: '42px',
+            }}
+          >
+            <img
+              src="/assets/logo.svg"
+              alt="Kompopolex"
+              style={{ width: '100%', height: '100%' }}
+            />
+          </Link>
 
-        {/* "Zdjęcia" title - horizontal, NOT rotated */}
-        <p
-          style={{
-            position: 'absolute',
-            left: '20px',
-            top: '166px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '48px',
-            lineHeight: 1.1,
-            color: TEXT_COLOR,
-          }}
-        >
-          Zdjęcia
-        </p>
-      </div>
+          {/* MENU button */}
+          <button
+            onClick={() => setIsMenuOpen(true)}
+            className="absolute"
+            style={{
+              left: '312px',
+              top: '43px',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 700,
+              fontSize: '24px',
+              lineHeight: 'normal',
+              color: TEXT_COLOR,
+              background: 'transparent',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer',
+            }}
+          >
+            MENU
+          </button>
+
+          {/* "Zdjęcia" title */}
+          <p
+            className="absolute"
+            style={{
+              left: '20px',
+              top: '166px',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 600,
+              fontSize: '48px',
+              lineHeight: 1.1,
+              color: TEXT_COLOR,
+            }}
+          >
+            Zdjęcia
+          </p>
+
+          {/* MobileMenu inside portal */}
+          <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+        </div>,
+        document.body
+      )}
+
+      {/* Spacer for fixed header */}
+      <div style={{ height: `${HEADER_HEIGHT}px` }} />
 
       {/* Title + Photo section */}
       <div
         style={{
-          position: 'absolute',
-          left: '20px',
-          top: '260px',
+          marginLeft: '20px',
+          marginTop: '20px',
           display: 'flex',
           flexDirection: 'column',
           gap: '24px',
@@ -236,9 +262,8 @@ export default function MobileMediaGaleria({ album }) {
       {/* Navigation arrows */}
       <div
         style={{
-          position: 'absolute',
-          left: '20px',
-          top: '625px',
+          marginLeft: '20px',
+          marginTop: '40px',
           width: '350px',
           display: 'flex',
           alignItems: 'center',
@@ -294,44 +319,16 @@ export default function MobileMediaGaleria({ album }) {
       </div>
 
       {/* Footer */}
-      <div
+      <MobileFooter
+        className="mt-16"
         style={{
-          position: 'absolute',
-          bottom: '39px',
-          left: 'calc(25% + 18.5px)',
-          transform: 'translateX(-50%)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '20px',
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontWeight: 600,
-          fontSize: '16px',
-          lineHeight: 1.48,
-          color: TEXT_COLOR,
-          textTransform: 'uppercase',
+          marginLeft: '20px',
+          marginRight: '20px',
+          marginBottom: '40px',
+          width: '350px',
         }}
-      >
-        <p>KOMPOPOLEX@GMAIL.COM</p>
-        <a
-          href="https://www.facebook.com/ensemblekompopolex/?locale=pl_PL"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ textDecoration: 'underline', color: TEXT_COLOR }}
-        >
-          FACEBOOK
-        </a>
-        <a
-          href="https://www.instagram.com/kompopolex/"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ textDecoration: 'underline', color: TEXT_COLOR }}
-        >
-          INSTAGRAM
-        </a>
-      </div>
-
-      {/* MobileMenu overlay */}
-      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+        textColor={TEXT_COLOR}
+      />
     </section>
   );
 }

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router';
 import { LanguageProvider } from './context/LanguageContext';
 import Homepage from './pages/Homepage';
 import Bio from './pages/Bio';
+import BioEnsemble from './pages/BioEnsemble';
 import Kalendarz from './pages/Kalendarz';
 import Archiwalne from './pages/Archiwalne';
 import Wydarzenie from './pages/Wydarzenie';
@@ -21,6 +22,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/bio" element={<Bio />} />
+          <Route path="/bio/ensemble" element={<BioEnsemble />} />
           <Route path="/media" element={<Media />} />
           <Route path="/media/wideo" element={<MediaWideo />} />
           <Route path="/media/galeria/:id" element={<MediaGaleria />} />

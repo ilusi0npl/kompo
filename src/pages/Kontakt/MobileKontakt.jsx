@@ -1,16 +1,23 @@
 import { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router';
 import MobileMenu from '../../components/MobileMenu/MobileMenu';
+import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
+import { useFixedMobileHeader } from '../../hooks/useFixedMobileHeader';
 
 const MOBILE_WIDTH = 390;
-const MOBILE_HEIGHT = 1071; // Dokładna wysokość z Figma
+const HEADER_HEIGHT = 218;
+const mobileLinePositions = [97, 195, 292];
+const BACKGROUND_COLOR = '#FF734C';
+const LINE_COLOR = '#FFBD19';
 const TEXT_COLOR = '#131313';
 
 export default function MobileKontakt() {
   const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { scale } = useFixedMobileHeader();
 
   return (
     <section
@@ -18,79 +25,121 @@ export default function MobileKontakt() {
       className="relative overflow-hidden"
       style={{
         width: `${MOBILE_WIDTH}px`,
-        height: `${MOBILE_HEIGHT}px`,
+        minHeight: '100vh',
+        backgroundColor: BACKGROUND_COLOR,
       }}
     >
-      {/* Header Frame (0-218px) - zbudowany inline dla dokładnej wysokości */}
-      <div
-        className="absolute"
-        style={{
-          top: 0,
-          left: 0,
-          width: `${MOBILE_WIDTH}px`,
-          height: '218px',
-        }}
-      >
-        {/* Logo */}
-        <Link to="/">
-          <img
-            src="/assets/logo.svg"
-            alt="Kompopolex"
+      {/* Pionowe linie */}
+      {mobileLinePositions.map((left, index) => (
+        <div
+          key={index}
+          className="absolute top-0"
+          style={{
+            left: `${left}px`,
+            width: '1px',
+            height: '100%',
+            backgroundColor: LINE_COLOR,
+          }}
+        />
+      ))}
+
+      {/* Fixed header via portal */}
+      {typeof document !== 'undefined' && createPortal(
+        <div
+          className="fixed top-0 left-0"
+          style={{
+            width: `${MOBILE_WIDTH}px`,
+            height: `${HEADER_HEIGHT}px`,
+            backgroundColor: BACKGROUND_COLOR,
+            transform: `scale(${scale})`,
+            transformOrigin: 'top left',
+            zIndex: 100,
+          }}
+        >
+          {/* Pionowe linie w headerze */}
+          {mobileLinePositions.map((left, index) => (
+            <div
+              key={`header-line-${index}`}
+              className="absolute top-0"
+              style={{
+                left: `${left}px`,
+                width: '1px',
+                height: `${HEADER_HEIGHT}px`,
+                backgroundColor: LINE_COLOR,
+              }}
+            />
+          ))}
+
+          {/* Logo */}
+          <Link to="/">
+            <img
+              src="/assets/logo.svg"
+              alt="Kompopolex"
+              className="absolute"
+              style={{
+                left: '20px',
+                top: '35.85px',
+                width: '104px',
+                height: '37.64px',
+              }}
+            />
+          </Link>
+
+          {/* MENU button */}
+          <button
+            onClick={() => setIsMenuOpen(true)}
+            className="absolute"
+            style={{
+              left: '312px',
+              top: '43px',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 700,
+              fontSize: '24px',
+              lineHeight: 'normal',
+              color: TEXT_COLOR,
+              background: 'transparent',
+              border: 'none',
+              padding: 0,
+              cursor: 'pointer',
+            }}
+          >
+            MENU
+          </button>
+
+          {/* Tytuł "Kontakt" */}
+          <div
             className="absolute"
             style={{
               left: '20px',
-              top: '35.85px',
-              width: '104px',
-              height: '37.64px',
+              top: '144px',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 600,
+              fontSize: '48px',
+              lineHeight: 1.1,
+              color: TEXT_COLOR,
             }}
-          />
-        </Link>
+          >
+            {t('kontakt.sideTitle')}
+          </div>
 
-        {/* MENU button */}
-        <button
-          onClick={() => setIsMenuOpen(true)}
-          className="absolute"
-          style={{
-            left: '312px',
-            top: '43px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 700,
-            fontSize: '24px',
-            lineHeight: 'normal',
-            color: TEXT_COLOR,
-            background: 'transparent',
-            border: 'none',
-            padding: 0,
-            cursor: 'pointer',
-          }}
-        >
-          MENU
-        </button>
+          {/* MobileMenu inside portal */}
+          <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+        </div>,
+        document.body
+      )}
 
-        {/* Tytuł "Kontakt" */}
-        <div
-          className="absolute"
-          style={{
-            left: '20px',
-            top: '144px',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 600,
-            fontSize: '48px',
-            lineHeight: 1.1,
-            color: TEXT_COLOR,
-          }}
-        >
-          {t('kontakt.sideTitle')}
-        </div>
-      </div>
+      {/* Spacer for fixed header */}
+      <div style={{ height: `${HEADER_HEIGHT}px` }} />
 
-      {/* Email - y=278, height=35 */}
+      {/* Email */}
       <a
         href="mailto:KOMPOPOLEX@GMAIL.COM"
-        className="absolute block"
+        className="block"
         style={{
-          top: '278px',
-          left: '51px',
+          position: 'relative',
+          zIndex: 1,
+          marginTop: '60px',
+          marginLeft: '51px',
           width: '288px',
           fontFamily: "'IBM Plex Mono', monospace",
           fontWeight: 600,
@@ -106,12 +155,11 @@ export default function MobileKontakt() {
         KOMPOPOLEX@GMAIL.COM
       </a>
 
-      {/* Zdjęcie zespołu - y=373, width=300, height=460 */}
+      {/* Zdjęcie zespołu */}
       <div
-        className="absolute"
         style={{
-          top: '373px',
-          left: '45px',
+          marginTop: '60px',
+          marginLeft: '45px',
           width: '300px',
           height: '460px',
         }}
@@ -129,46 +177,17 @@ export default function MobileKontakt() {
         />
       </div>
 
-      {/* Stopka - y=919, height=112 */}
-      <div
-        className="absolute"
+      {/* Stopka */}
+      <MobileFooter
+        className="mt-16"
         style={{
-          top: '919px',
-          left: '20px',
-          width: '192px',
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontWeight: 600,
-          fontSize: '16px',
-          lineHeight: 1.48,
-          color: TEXT_COLOR,
-          textTransform: 'uppercase',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'flex-start',
-          gap: '20px',
+          marginLeft: '20px',
+          marginRight: '20px',
+          marginBottom: '40px',
+          width: '350px',
         }}
-      >
-        <p>KOMPOPOLEX@GMAIL.COM</p>
-        <a
-          href="https://www.facebook.com/ensemblekompopolex/?locale=pl_PL"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ textDecoration: 'underline' }}
-        >
-          FACEBOOK
-        </a>
-        <a
-          href="https://www.instagram.com/kompopolex/"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ textDecoration: 'underline' }}
-        >
-          INSTAGRAM
-        </a>
-      </div>
-
-      {/* MobileMenu overlay */}
-      <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+        textColor={TEXT_COLOR}
+      />
     </section>
   );
 }

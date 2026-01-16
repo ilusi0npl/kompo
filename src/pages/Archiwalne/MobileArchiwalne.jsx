@@ -1,5 +1,5 @@
 import { Link } from 'react-router';
-import MobileHeader from '../../components/MobileHeader/MobileHeader';
+import MobileHeader, { MobileHeaderSpacer } from '../../components/MobileHeader/MobileHeader';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
@@ -38,15 +38,23 @@ export default function MobileArchiwalne() {
         />
       ))}
 
-      {/* Header z nawigacją */}
+      {/* Header z nawigacją - fixed */}
       <MobileHeader
         title={t('kalendarz.sideTitle')}
         textColor={TEXT_COLOR}
+        backgroundColor={BACKGROUND_COLOR}
+        lineColor={LINE_COLOR}
+        isFixed={true}
+        headerHeight={326}
+        navLinksTop={257}
+        navLinksGap={55}
+        navLinksFontSize={20}
         navLinks={[
           { label: t('common.tabs.upcoming'), to: '/kalendarz', isActive: false },
           { label: t('common.tabs.archived'), to: '/archiwalne', isActive: true },
         ]}
       />
+      <MobileHeaderSpacer height={326} />
 
       {/* Lista eventów */}
       <div
@@ -58,24 +66,33 @@ export default function MobileArchiwalne() {
       >
         {archivedEvents.map((event) => (
           <div key={event.id} className="flex flex-col" style={{ gap: '16px' }}>
-            {/* Zdjęcie z smooth loading */}
-            <SmoothImage
-              src={event.image}
-              alt={event.title}
-              containerStyle={{
+            {/* Zdjęcie z smooth loading - klikalny plakat */}
+            <Link
+              to={`/wydarzenie/${event.id}`}
+              className="event-poster-link"
+              style={{
                 width: '300px',
                 height: '420px',
                 alignSelf: 'center',
                 border: event.hasBorder ? '1px solid #131313' : 'none',
               }}
-              style={{
-                width: '100%',
-                height: '100%',
-                objectFit: 'cover',
-                objectPosition: '50% 50%',
-              }}
-              placeholderColor="#e5e5e5"
-            />
+            >
+              <SmoothImage
+                src={event.image}
+                alt={event.title}
+                containerStyle={{
+                  width: '300px',
+                  height: '420px',
+                }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: '50% 50%',
+                }}
+                placeholderColor="#e5e5e5"
+              />
+            </Link>
 
             {/* Data */}
             <p
@@ -90,16 +107,16 @@ export default function MobileArchiwalne() {
               {event.date}
             </p>
 
-            {/* Tytuł (link) */}
+            {/* Tytuł (link) z hover na fiolet */}
             <Link
               to={`/wydarzenie/${event.id}`}
+              className="event-title-link"
               style={{
                 fontFamily: "'IBM Plex Mono', monospace",
                 fontWeight: 600,
                 fontSize: '18px',
                 lineHeight: 1.45,
                 color: TEXT_COLOR,
-                textDecoration: 'underline',
                 textTransform: 'uppercase',
               }}
             >
