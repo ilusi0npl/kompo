@@ -217,6 +217,7 @@ export default function MobileBio({ setCurrentColors }) {
                 minHeight: `${MOBILE_SLIDE_HEIGHTS[index]}px`,
                 position: 'relative',
                 width: `${MOBILE_WIDTH}px`,
+                zIndex: 1,
               }}
             >
               {/* Spacer for fixed header (only first slide) */}

@@ -163,6 +163,8 @@ export default function MobileKontakt() {
           marginLeft: '45px',
           width: '300px',
           height: '460px',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         <SmoothImage

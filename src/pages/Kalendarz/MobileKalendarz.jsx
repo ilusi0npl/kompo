@@ -63,6 +63,8 @@ export default function MobileKalendarz() {
         style={{
           padding: '0 20px',
           gap: '60px',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         {events.map((event, index) => (

@@ -247,6 +247,8 @@ export default function MobileSpecjalne() {
           display: 'flex',
           flexDirection: 'column',
           gap: '20px',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         {composers.map((composer, idx) => (

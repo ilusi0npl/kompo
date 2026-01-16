@@ -204,6 +204,8 @@ export default function MobileMediaGaleria({ album }) {
           display: 'flex',
           flexDirection: 'column',
           gap: '24px',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         {/* Title and credit (before photo on mobile) */}

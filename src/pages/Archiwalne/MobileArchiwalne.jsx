@@ -63,6 +63,8 @@ export default function MobileArchiwalne() {
         style={{
           padding: '0 20px',
           gap: '40px',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         {archivedEvents.map((event) => (
