@@ -5,7 +5,7 @@ import {schemaTypes} from './schemaTypes'
 
 export default defineConfig({
   name: 'default',
-  title: 'kompopolex',
+  title: 'Kompopolex CMS',
 
   projectId: 'cy9ddq1w',
   dataset: 'production',
