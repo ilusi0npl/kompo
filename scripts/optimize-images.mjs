@@ -12,6 +12,7 @@ const MAX_WIDTH = 1200; // Max width for images
 const IMAGE_DIRS = [
   { path: 'public/assets/bio', maxWidth: 900 },      // Bio images shown at 300px
   { path: 'public/assets/kalendarz', maxWidth: 990 }, // Event images shown at 330px
+  { path: 'public/assets/slides', maxWidth: 1440 },   // Homepage slides (full width)
   { path: 'public/assets', maxWidth: 1200 },          // Hero and other images
 ];
 
