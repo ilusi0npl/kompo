@@ -2,12 +2,15 @@ import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router';
 import { useScrollColorChange } from '../../hooks/useScrollColorChange';
 import {
-  desktopBioSlides,
+  desktopBioSlides as configSlides,
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
 } from './bio-config';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useSanityBioProfiles } from '../../hooks/useSanityBioProfiles';
+
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
 const TRANSITION_DURATION = '1s';
 const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
@@ -15,10 +18,35 @@ const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 // Map slide indices to translation keys
 const slideTranslationKeys = ['ensemble', 'aleksandra', 'rafal', 'jacek'];
 
+// Transform Sanity profiles to match config structure
+function transformSanityProfiles(profiles) {
+  return profiles.map((profile, index) => ({
+    id: `bio${profile.order}`,
+    backgroundColor: profile.backgroundColor,
+    name: profile.name,
+    lineColor: profile.lineColor,
+    textColor: profile.textColor,
+    image: profile.imageUrl,
+    imageStyle: profile.imageStyle || {},
+    paragraphs: profile.paragraphs,
+    paragraphTops: profile.paragraphTops,
+    hasFooter: profile.hasFooter,
+    height: profile.hasFooter ? 850 : DESKTOP_HEIGHT,
+  }));
+}
+
 export default function DesktopBio({ setCurrentColors }) {
   const { t } = useTranslation();
   const [loadedImages, setLoadedImages] = useState(new Set());
   const sectionsRef = useRef([]);
+
+  // Fetch from Sanity if enabled
+  const { profiles: sanityProfiles, loading, error } = useSanityBioProfiles();
+
+  // Transform and use Sanity data if enabled, otherwise use config
+  const desktopBioSlides = USE_SANITY
+    ? transformSanityProfiles(sanityProfiles)
+    : configSlides;
 
   // Use scroll-based color detection
   const currentColors = useScrollColorChange(sectionsRef, desktopBioSlides);
@@ -54,6 +82,60 @@ export default function DesktopBio({ setCurrentColors }) {
 
   // Total height: sum of all section heights (3×700px + 1×850px)
   const totalHeight = desktopBioSlides.reduce((sum, slide) => sum + (slide.height || DESKTOP_HEIGHT), 0);
+
+  // Show loading state only when using Sanity
+  if (USE_SANITY && loading) {
+    return (
+      <section
+        data-section="bio"
+        className="relative"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          minHeight: `${DESKTOP_HEIGHT}px`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: '#131313',
+          }}
+        >
+          Ładowanie profili...
+        </div>
+      </section>
+    );
+  }
+
+  // Show error state only when using Sanity
+  if (USE_SANITY && error) {
+    return (
+      <section
+        data-section="bio"
+        className="relative"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          minHeight: `${DESKTOP_HEIGHT}px`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: '#FF0000',
+          }}
+        >
+          Błąd ładowania profili. Spróbuj ponownie później.
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -120,36 +202,36 @@ export default function DesktopBio({ setCurrentColors }) {
                 zIndex: 60,
               }}
             >
-              {t(`bio.slides.${slideTranslationKeys[index]}.name`)}
+              {USE_SANITY
+                ? slide.name
+                : t(`bio.slides.${slideTranslationKeys[index]}.name`)}
             </p>
 
             {/* Paragrafy tekstu */}
             <div>
-              {Array.isArray(
-                t(`bio.slides.${slideTranslationKeys[index]}.paragraphs`)
-              ) &&
-                t(`bio.slides.${slideTranslationKeys[index]}.paragraphs`).map(
-                  (text, pIndex) => (
-                    <p
-                      key={pIndex}
-                      className="absolute"
-                      style={{
-                        left: '625px',
-                        top: `${slide.paragraphTops[pIndex]}px`,
-                        width: '520px',
-                        fontFamily: "'IBM Plex Mono', monospace",
-                        fontWeight: 500,
-                        fontSize: '16px',
-                        lineHeight: 1.48,
-                        color: slide.textColor,
-                        whiteSpace: 'pre-wrap',
-                        zIndex: 60,
-                      }}
-                    >
-                      {text}
-                    </p>
-                  )
-                )}
+              {(USE_SANITY
+                ? slide.paragraphs
+                : t(`bio.slides.${slideTranslationKeys[index]}.paragraphs`)
+              ).map((text, pIndex) => (
+                <p
+                  key={pIndex}
+                  className="absolute"
+                  style={{
+                    left: '625px',
+                    top: `${slide.paragraphTops[pIndex]}px`,
+                    width: '520px',
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontWeight: 500,
+                    fontSize: '16px',
+                    lineHeight: 1.48,
+                    color: slide.textColor,
+                    whiteSpace: 'pre-wrap',
+                    zIndex: 60,
+                  }}
+                >
+                  {text}
+                </p>
+              ))}
             </div>
 
             {/* Link "WIĘCEJ" (tylko dla bio1 - ensemble) */}
