@@ -161,6 +161,8 @@ export default function MobileBioEnsemble() {
           width: '350px',
           height: '350px',
           overflow: 'hidden',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         <img
@@ -188,6 +190,8 @@ export default function MobileBioEnsemble() {
           lineHeight: 1.35,
           color: COLORS.textColor,
           whiteSpace: 'pre-wrap',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         {t('bio.ensemble.title')}
@@ -202,6 +206,8 @@ export default function MobileBioEnsemble() {
           display: 'flex',
           flexDirection: 'column',
           gap: '12px',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         {Array.isArray(t('bio.ensemble.extendedParagraphs')) &&
