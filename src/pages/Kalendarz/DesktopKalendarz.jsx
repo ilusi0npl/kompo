@@ -2,11 +2,32 @@ import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
+import { useSanityEvents } from '../../hooks/useSanityEvents';
 import {
-  events,
+  events as configEvents,
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
 } from './kalendarz-config';
+
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
+
+// Format date for display (handle both config string and Sanity datetime)
+const formatEventDate = (dateValue) => {
+  // If it's already formatted string from config (e.g., "13.12.25 | 18:00"), return as-is
+  if (typeof dateValue === 'string' && dateValue.includes('|')) {
+    return dateValue;
+  }
+
+  // Otherwise parse as datetime and format
+  const date = new Date(dateValue);
+  return date.toLocaleDateString('pl-PL', {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).replace(',', ' |');
+};
 
 // Helper to make title a link with hover color change
 const EventTitle = ({ event, t }) => (
@@ -28,6 +49,52 @@ const EventTitle = ({ event, t }) => (
 
 export default function DesktopKalendarz() {
   const { t } = useTranslation();
+
+  // Fetch from Sanity if enabled
+  const { events: sanityEvents, loading, error } = useSanityEvents('upcoming');
+
+  // Use Sanity data if enabled, otherwise use config
+  const events = USE_SANITY ? sanityEvents : configEvents;
+
+  // Show loading state only when using Sanity
+  if (USE_SANITY && loading) {
+    return (
+      <div
+        className="relative"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          height: `${DESKTOP_HEIGHT}px`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <div style={{fontSize: '18px', fontFamily: "'IBM Plex Mono', monospace"}}>
+          Ładowanie wydarzeń...
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state only when using Sanity
+  if (USE_SANITY && error) {
+    return (
+      <div
+        className="relative"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          height: `${DESKTOP_HEIGHT}px`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <div style={{fontSize: '18px', fontFamily: "'IBM Plex Mono', monospace", color: '#FF0000'}}>
+          Błąd ładowania wydarzeń. Spróbuj ponownie później.
+        </div>
+      </div>
+    );
+  }
 
   return (
     <section
@@ -52,7 +119,7 @@ export default function DesktopKalendarz() {
         }}
       >
         <SmoothImage
-          src={events[0].image}
+          src={events[0].image || events[0].imageUrl}
           alt={events[0].title}
           containerStyle={{
             width: '330px',
@@ -70,7 +137,7 @@ export default function DesktopKalendarz() {
       </Link>
       <div className="absolute flex flex-col" style={{ left: '625px', top: '275px', width: '519px', gap: '20px' }}>
         <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: '#131313' }}>
-          {events[0].date}
+          {formatEventDate(events[0].date)}
         </p>
         <div className="flex flex-col" style={{ gap: '32px' }}>
           <div className="flex flex-col" style={{ gap: '16px' }}>
@@ -103,7 +170,7 @@ export default function DesktopKalendarz() {
         }}
       >
         <SmoothImage
-          src={events[1].image}
+          src={events[1].image || events[1].imageUrl}
           alt={events[1].title}
           containerStyle={{
             width: '330px',
@@ -115,7 +182,7 @@ export default function DesktopKalendarz() {
       </Link>
       <div className="absolute flex flex-col" style={{ left: '625px', top: '807px', width: '519px', gap: '20px' }}>
         <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: '#131313' }}>
-          {events[1].date}
+          {formatEventDate(events[1].date)}
         </p>
         <div className="flex flex-col" style={{ gap: '32px' }}>
           <div className="flex flex-col" style={{ gap: '16px' }}>
@@ -148,7 +215,7 @@ export default function DesktopKalendarz() {
         }}
       >
         <SmoothImage
-          src={events[2].image}
+          src={events[2].image || events[2].imageUrl}
           alt={events[2].title}
           containerStyle={{
             width: '330px',
@@ -166,7 +233,7 @@ export default function DesktopKalendarz() {
       </Link>
       <div className="absolute flex flex-col" style={{ left: '625px', top: '1339px', width: '519px', gap: '20px' }}>
         <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: '#131313' }}>
-          {events[2].date}
+          {formatEventDate(events[2].date)}
         </p>
         <div className="flex flex-col" style={{ gap: '32px' }}>
           <div className="flex flex-col">
