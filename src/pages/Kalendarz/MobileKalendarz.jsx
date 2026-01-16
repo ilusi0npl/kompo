@@ -34,6 +34,7 @@ export default function MobileKalendarz() {
             width: '1px',
             height: '100%',
             backgroundColor: LINE_COLOR,
+            zIndex: 0,
           }}
         />
       ))}

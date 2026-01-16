@@ -40,6 +40,7 @@ export default function MobileWydarzenie() {
             width: '1px',
             height: '100%',
             backgroundColor: LINE_COLOR,
+            zIndex: 0,
           }}
         />
       ))}

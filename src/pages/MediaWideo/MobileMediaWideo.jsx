@@ -33,6 +33,7 @@ export default function MobileMediaWideo() {
             width: '1px',
             height: '100%',
             backgroundColor: LINE_COLOR,
+            zIndex: 0,
           }}
         />
       ))}

@@ -82,7 +82,7 @@ export default function Bio() {
             height: '100vh',
             backgroundColor: mobileColors.lineColor,
             transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-            zIndex: 1,
+            zIndex: 0,
           }}
         />
       ))}

@@ -39,6 +39,7 @@ export default function MobileKontakt() {
             width: '1px',
             height: '100%',
             backgroundColor: LINE_COLOR,
+            zIndex: 0,
           }}
         />
       ))}
