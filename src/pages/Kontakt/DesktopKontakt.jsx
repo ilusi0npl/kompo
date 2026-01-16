@@ -4,10 +4,79 @@ import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import {
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
+  CONTACT_EMAIL,
 } from './kontakt-config';
+import { useSanityKontaktPage } from '../../hooks/useSanityKontaktPage';
+
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
 export default function DesktopKontakt() {
   const { t } = useTranslation();
+
+  // Fetch from Sanity if enabled
+  const { data: sanityData, loading, error } = useSanityKontaktPage();
+
+  // Use Sanity data if enabled, otherwise use config
+  const email = USE_SANITY && sanityData ? sanityData.email : CONTACT_EMAIL;
+  const teamImageSrc = USE_SANITY && sanityData
+    ? sanityData.teamImageUrl
+    : '/assets/kontakt/team-photo.jpg';
+
+  // Show loading state only when using Sanity
+  if (USE_SANITY && loading) {
+    return (
+      <section
+        data-section="kontakt"
+        className="relative"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          height: `${DESKTOP_HEIGHT}px`,
+          backgroundColor: 'transparent',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: '#131313',
+          }}
+        >
+          Ładowanie strony kontakt...
+        </div>
+      </section>
+    );
+  }
+
+  // Show error state only when using Sanity
+  if (USE_SANITY && error) {
+    return (
+      <section
+        data-section="kontakt"
+        className="relative"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          height: `${DESKTOP_HEIGHT}px`,
+          backgroundColor: 'transparent',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: '#FF0000',
+          }}
+        >
+          Błąd ładowania strony kontakt. Spróbuj ponownie później.
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -22,7 +91,7 @@ export default function DesktopKontakt() {
     >
       {/* Zdjęcie zespołu z smooth loading */}
       <SmoothImage
-        src="/assets/kontakt/team-photo.jpg"
+        src={teamImageSrc}
         alt="Zespół Kompopolex"
         className="absolute"
         containerStyle={{
@@ -44,7 +113,7 @@ export default function DesktopKontakt() {
 
       {/* Email - główny element kontaktowy */}
       <a
-        href="mailto:KOMPOPOLEX@GMAIL.COM"
+        href={`mailto:${email}`}
         className="absolute"
         style={{
           left: '618px',
@@ -61,7 +130,7 @@ export default function DesktopKontakt() {
           whiteSpace: 'pre-wrap',
         }}
       >
-        KOMPOPOLEX@GMAIL.COM
+        {email}
       </a>
 
       {/* Stopka */}

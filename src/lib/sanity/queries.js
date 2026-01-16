@@ -115,3 +115,15 @@ export const homepageSlidesQuery = `
     logoSrc
   }
 `
+
+// Kontakt page (singleton, published only)
+export const kontaktPageQuery = `
+  *[_type == "kontaktPage" && defined(publishedAt)][0] {
+    _id,
+    title,
+    "backgroundColor": backgroundColor.hex,
+    "lineColor": lineColor.hex,
+    email,
+    "teamImageUrl": teamImage.asset->url
+  }
+`

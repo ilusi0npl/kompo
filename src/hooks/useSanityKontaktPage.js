@@ -1,0 +1,29 @@
+import { useState, useEffect } from 'react'
+import { client } from '../lib/sanity/client'
+import { kontaktPageQuery } from '../lib/sanity/queries'
+
+/**
+ * Hook to fetch kontakt page data from Sanity CMS
+ * @returns {object} - { data, loading, error }
+ */
+export function useSanityKontaktPage() {
+  const [data, setData] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    client
+      .fetch(kontaktPageQuery)
+      .then(pageData => {
+        setData(pageData)
+        setLoading(false)
+      })
+      .catch(err => {
+        console.error('Failed to fetch kontakt page:', err)
+        setError(err)
+        setLoading(false)
+      })
+  }, [])
+
+  return { data, loading, error }
+}
