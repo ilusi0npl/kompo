@@ -97,3 +97,21 @@ export const mediaItemsQuery = `
     publishedAt
   }
 `
+
+// Homepage slides (published only, sorted by order ascending)
+export const homepageSlidesQuery = `
+  *[_type == "homepageSlide" && defined(publishedAt)] | order(order asc) {
+    _id,
+    word,
+    order,
+    tagline,
+    "backgroundColor": backgroundColor.hex,
+    "textColor": textColor.hex,
+    "lineColor": lineColor.hex,
+    "imageUrl": image.asset->url,
+    "wordSvgUrl": wordSvg.asset->url,
+    wordPosition,
+    taglineX,
+    logoSrc
+  }
+`

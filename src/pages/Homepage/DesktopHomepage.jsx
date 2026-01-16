@@ -5,10 +5,13 @@ import { useTranslation } from '../../hooks/useTranslation';
 import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
 import SmoothSlideshow from '../../components/SmoothImage/SmoothSlideshow';
 import {
-  desktopSlides,
+  desktopSlides as configSlides,
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
 } from './slides-config';
+import { useSanityHomepageSlides } from '../../hooks/useSanityHomepageSlides';
+
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
 const TRANSITION_DURATION = '1s';
 const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
@@ -16,16 +19,100 @@ const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 // Map slide words to translation keys
 const slideTranslationKeys = ['trio', 'kompo', 'polex', 'ensemble'];
 
+// Transform Sanity slides to match config structure
+function transformSanitySlides(slides) {
+  return slides.map((slide) => ({
+    id: slide.order,
+    word: slide.word,
+    tagline: slide.tagline,
+    backgroundColor: slide.backgroundColor,
+    textColor: slide.textColor,
+    lineColor: slide.lineColor,
+    image: slide.imageUrl,
+    wordSvg: slide.wordSvgUrl,
+    wordY: slide.wordPosition?.wordY,
+    wordHeight: slide.wordPosition?.wordHeight,
+    wordWidth: slide.wordPosition?.wordWidth,
+    taglineX: slide.taglineX,
+    logoSrc: slide.logoSrc,
+  }));
+}
+
 export default function DesktopHomepage() {
-  const { currentSlide } = useScrollSlides(desktopSlides.length);
-  const currentData = desktopSlides[currentSlide];
   const { t } = useTranslation();
+
+  // Fetch from Sanity if enabled
+  const { slides: sanitySlides, loading, error } = useSanityHomepageSlides();
+
+  // Transform and use Sanity data if enabled, otherwise use config
+  const desktopSlides = USE_SANITY
+    ? transformSanitySlides(sanitySlides)
+    : configSlides;
+
+  const { currentSlide } = useScrollSlides(desktopSlides.length);
+  const currentData = desktopSlides[currentSlide] || configSlides[0];
 
   // Sync background and line colors with CSS variables for ResponsiveWrapper
   useEffect(() => {
     document.documentElement.style.setProperty('--page-bg', currentData.backgroundColor);
     document.documentElement.style.setProperty('--line-color', currentData.lineColor);
   }, [currentData.backgroundColor, currentData.lineColor]);
+
+  // Show loading state only when using Sanity
+  if (USE_SANITY && loading) {
+    return (
+      <section
+        data-section="hero"
+        className="relative"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          height: `${DESKTOP_HEIGHT}px`,
+          backgroundColor: '#FDFDFD',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: '#131313',
+          }}
+        >
+          Ładowanie slajdów...
+        </div>
+      </section>
+    );
+  }
+
+  // Show error state only when using Sanity
+  if (USE_SANITY && error) {
+    return (
+      <section
+        data-section="hero"
+        className="relative"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          height: `${DESKTOP_HEIGHT}px`,
+          backgroundColor: '#FDFDFD',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: '#FF0000',
+          }}
+        >
+          Błąd ładowania slajdów. Spróbuj ponownie później.
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -108,7 +195,9 @@ export default function DesktopHomepage() {
             pointerEvents: index === currentSlide ? 'auto' : 'none',
           }}
         >
-          {t(`homepage.slides.${slideTranslationKeys[index]}.tagline`)}
+          {USE_SANITY
+            ? slide.tagline
+            : t(`homepage.slides.${slideTranslationKeys[index]}.tagline`)}
         </p>
       ))}
 
