@@ -235,7 +235,6 @@ export default function MobileBio({ setCurrentColors }) {
                 <img
                   src={slide.image}
                   alt={slide.name}
-                  loading={index > 0 ? 'lazy' : 'eager'}
                   style={{
                     ...mobileImageStyles[index],
                     opacity: loadedImages.has(index) ? 1 : 0,

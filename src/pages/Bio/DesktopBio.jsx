@@ -98,7 +98,6 @@ export default function DesktopBio({ setCurrentColors }) {
               <img
                 src={slide.image}
                 alt={slide.name}
-                loading={index > 0 ? 'lazy' : 'eager'}
                 style={{
                   ...slide.imageStyle,
                   opacity: loadedImages.has(index) ? 1 : 0,
