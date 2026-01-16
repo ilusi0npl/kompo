@@ -8,6 +8,7 @@
 
 import dotenv from 'dotenv';
 import { createClient } from '@sanity/client';
+import { nanoid } from 'nanoid';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -141,6 +142,7 @@ async function createPhotoAlbum(albumData, thumbnailAsset, imageAssets) {
       },
     },
     images: imageAssets.map(asset => ({
+      _key: nanoid(),
       _type: 'image',
       asset: {
         _type: 'reference',

@@ -10,6 +10,7 @@
 
 import dotenv from 'dotenv';
 import { createClient } from '@sanity/client';
+import { nanoid } from 'nanoid';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -128,7 +129,9 @@ async function createEvent(eventData, imageAsset) {
     title: eventData.title,
     date: eventData.dateISO,
     performers: eventData.performers || undefined,
-    program: eventData.program || undefined,
+    program: eventData.program
+      ? eventData.program.map(item => ({ ...item, _key: nanoid() }))
+      : undefined,
     description: eventData.description,
     location: eventData.location,
     image: {

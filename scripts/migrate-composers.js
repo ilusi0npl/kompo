@@ -10,6 +10,7 @@
 
 import dotenv from 'dotenv';
 import { createClient } from '@sanity/client';
+import { nanoid } from 'nanoid';
 
 dotenv.config();
 
@@ -220,7 +221,10 @@ async function createComposer(composerData, category, order) {
     _type: 'composer',
     name: composerData.name,
     year: composerData.year,
-    works: composerData.works,
+    works: composerData.works.map(work => ({
+      ...work,
+      _key: nanoid(),
+    })),
     category,
     order,
     publishedAt: new Date().toISOString(),
