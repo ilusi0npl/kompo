@@ -127,3 +127,23 @@ export const kontaktPageQuery = `
     "teamImageUrl": teamImage.asset->url
   }
 `
+
+// Fundacja page (singleton, published only)
+export const fundacjaPageQuery = `
+  *[_type == "fundacjaPage" && defined(publishedAt)][0] {
+    _id,
+    title,
+    "backgroundColor": backgroundColor.hex,
+    "lineColor": lineColor.hex,
+    "textColor": textColor.hex,
+    "linkColor": linkColor.hex,
+    krs,
+    regon,
+    nip,
+    bankAccount,
+    email,
+    projects,
+    accessibilityDeclarationPl,
+    accessibilityDeclarationEn
+  }
+`

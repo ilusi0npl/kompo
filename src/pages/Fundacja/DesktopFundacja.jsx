@@ -11,12 +11,41 @@ import {
   projectsData,
   accessibilityDeclaration,
 } from './fundacja-config';
+import { useSanityFundacjaPage } from '../../hooks/useSanityFundacjaPage';
+
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
 export default function DesktopFundacja() {
   const { t, language } = useTranslation();
   const [isDeclarationExpanded, setIsDeclarationExpanded] = useState(false);
   const [sectionMinHeight, setSectionMinHeight] = useState(DESKTOP_HEIGHT);
   const contentRef = useRef(null);
+
+  // Fetch from Sanity if enabled
+  const { data: sanityData, loading, error } = useSanityFundacjaPage();
+
+  // Use Sanity data if enabled, otherwise use config
+  const fundacjaInfo = USE_SANITY && sanityData
+    ? {
+        krs: sanityData.krs,
+        regon: sanityData.regon,
+        nip: sanityData.nip,
+        bankAccount: sanityData.bankAccount,
+        email: sanityData.email,
+      }
+    : fundacjaData;
+
+  const projects = USE_SANITY && sanityData ? sanityData.projects : projectsData;
+
+  const accessibilityText = USE_SANITY && sanityData
+    ? {
+        pl: sanityData.accessibilityDeclarationPl || [],
+        en: sanityData.accessibilityDeclarationEn || [],
+      }
+    : accessibilityDeclaration;
+
+  const textColor = USE_SANITY && sanityData ? sanityData.textColor : textColor;
+  const linkColor = USE_SANITY && sanityData ? sanityData.linkColor : linkColor;
 
   const toggleDeclaration = () => {
     setIsDeclarationExpanded(!isDeclarationExpanded);
@@ -41,6 +70,62 @@ export default function DesktopFundacja() {
       }, 100);
     }
   }, [isDeclarationExpanded, language]);
+
+  // Show loading state only when using Sanity
+  if (USE_SANITY && loading) {
+    return (
+      <section
+        data-section="fundacja"
+        className="relative"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          minHeight: `${DESKTOP_HEIGHT}px`,
+          backgroundColor: 'transparent',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: '#131313',
+          }}
+        >
+          Ładowanie strony fundacji...
+        </div>
+      </section>
+    );
+  }
+
+  // Show error state only when using Sanity
+  if (USE_SANITY && error) {
+    return (
+      <section
+        data-section="fundacja"
+        className="relative"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          minHeight: `${DESKTOP_HEIGHT}px`,
+          backgroundColor: 'transparent',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: '#FF0000',
+          }}
+        >
+          Błąd ładowania strony fundacji. Spróbuj ponownie później.
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -99,7 +184,7 @@ export default function DesktopFundacja() {
             fontWeight: 600,
             fontSize: '40px',
             lineHeight: 1.35,
-            color: TEXT_COLOR,
+            color: textColor,
             marginBottom: '32px',
           }}
         >
@@ -113,7 +198,7 @@ export default function DesktopFundacja() {
             fontWeight: 500,
             fontSize: '16px',
             lineHeight: 1.48,
-            color: TEXT_COLOR,
+            color: textColor,
             marginBottom: '42px',
           }}
         >
@@ -134,7 +219,7 @@ export default function DesktopFundacja() {
               fontWeight: 700,
               fontSize: '16px',
               lineHeight: 1.48,
-              color: TEXT_COLOR,
+              color: textColor,
             }}
           >
             {t('fundacja.projectsTitle')}
@@ -146,7 +231,7 @@ export default function DesktopFundacja() {
               gap: '32px',
             }}
           >
-            {projectsData.map((project, index) => (
+            {projects.map((project, index) => (
               <div key={index} className="flex flex-col" style={{ gap: '12px' }}>
                 <p
                   style={{
@@ -154,7 +239,7 @@ export default function DesktopFundacja() {
                     fontWeight: 500,
                     fontSize: '16px',
                     lineHeight: 1.48,
-                    color: TEXT_COLOR,
+                    color: textColor,
                     paddingLeft: '24px',
                     position: 'relative',
                   }}
@@ -167,7 +252,7 @@ export default function DesktopFundacja() {
                   >
                     •
                   </span>
-                  {t(`fundacja.projects.${index}.text`)}
+                  {USE_SANITY && sanityData ? project.text : t(`fundacja.projects.${index}.text`)}
                 </p>
                 {project.linkText && (
                   <a
@@ -188,7 +273,7 @@ export default function DesktopFundacja() {
                         fontWeight: 600,
                         fontSize: '16px',
                         lineHeight: 1.48,
-                        color: LINK_COLOR,
+                        color: linkColor,
                         textTransform: 'uppercase',
                       }}
                     >
@@ -224,7 +309,7 @@ export default function DesktopFundacja() {
               fontWeight: 700,
               fontSize: '20px',
               lineHeight: 1.44,
-              color: TEXT_COLOR,
+              color: textColor,
               textDecoration: 'underline',
               textTransform: 'uppercase',
             }}
@@ -240,15 +325,15 @@ export default function DesktopFundacja() {
               fontWeight: 600,
               fontSize: '16px',
               lineHeight: 1.48,
-              color: TEXT_COLOR,
+              color: textColor,
               textTransform: 'uppercase',
             }}
           >
-            <p>KRS: {fundacjaData.krs}</p>
-            <p>REGON: {fundacjaData.regon}</p>
-            <p>NIP: {fundacjaData.nip}</p>
-            <p>NR KONTA: {fundacjaData.bankAccount}</p>
-            <p>{fundacjaData.email}</p>
+            <p>KRS: {fundacjaInfo.krs}</p>
+            <p>REGON: {fundacjaInfo.regon}</p>
+            <p>NIP: {fundacjaInfo.nip}</p>
+            <p>NR KONTA: {fundacjaInfo.bankAccount}</p>
+            <p>{fundacjaInfo.email}</p>
           </div>
         </div>
 
@@ -271,7 +356,7 @@ export default function DesktopFundacja() {
               fontWeight: 700,
               fontSize: '20px',
               lineHeight: 1.44,
-              color: isDeclarationExpanded ? LINK_COLOR : TEXT_COLOR,
+              color: isDeclarationExpanded ? linkColor : textColor,
               textTransform: 'uppercase',
             }}
           >
@@ -302,10 +387,10 @@ export default function DesktopFundacja() {
               fontWeight: 500,
               fontSize: '16px',
               lineHeight: 1.48,
-              color: TEXT_COLOR,
+              color: textColor,
             }}
           >
-            {accessibilityDeclaration[language].map((paragraph, index) => (
+            {accessibilityText[language].map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
             ))}
           </div>
