@@ -22,7 +22,18 @@ export function useScrollColorChange(sectionsRef, sectionData) {
           section.offsetTop <= scrollPoint &&
           section.offsetTop + section.offsetHeight > scrollPoint
         ) {
-          setCurrentColors(sectionData[i]);
+          // Only update if colors actually changed (prevent infinite loop)
+          const newColors = sectionData[i];
+          setCurrentColors((prevColors) => {
+            if (
+              prevColors.backgroundColor === newColors.backgroundColor &&
+              prevColors.lineColor === newColors.lineColor &&
+              prevColors.textColor === newColors.textColor
+            ) {
+              return prevColors; // No change, keep previous state
+            }
+            return newColors;
+          });
           break;
         }
       }
