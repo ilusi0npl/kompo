@@ -19,21 +19,19 @@ const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 const slideTranslationKeys = ['ensemble', 'aleksandra', 'rafal', 'jacek'];
 
 // Transform Sanity profiles to match config structure
-function transformSanityProfiles(profiles) {
-  return profiles.map((profile, index) => ({
-    id: `bio${profile.order}`,
-    backgroundColor: profile.backgroundColor,
-    name: profile.name,
-    lineColor: profile.lineColor,
-    textColor: profile.textColor,
-    image: profile.imageUrl,
-    imageStyle: profile.imageStyle || {},
-    logoSrc: '/assets/logo.svg', // Logo is the same for all slides
-    paragraphs: profile.paragraphs,
-    paragraphTops: profile.paragraphTops,
-    hasFooter: profile.hasFooter,
-    height: profile.hasFooter ? 850 : DESKTOP_HEIGHT,
-  }));
+// Merges CMS content (name, image, paragraphs) with hardcoded design values
+function transformSanityProfiles(sanityProfiles) {
+  return configSlides.map((configSlide, index) => {
+    const sanityProfile = sanityProfiles[index];
+    if (!sanityProfile) return configSlide;
+
+    return {
+      ...configSlide, // All design from bio-config.js
+      name: sanityProfile.name,
+      image: sanityProfile.imageUrl,
+      paragraphs: sanityProfile.paragraphs,
+    };
+  });
 }
 
 export default function DesktopBio({ setCurrentColors }) {

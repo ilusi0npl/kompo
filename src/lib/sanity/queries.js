@@ -20,8 +20,7 @@ export const upcomingEventsQuery = `
     program,
     description,
     location,
-    "imageUrl": image.asset->url,
-    imageStyle
+    "imageUrl": image.asset->url
   }
 `
 
@@ -35,8 +34,7 @@ export const archivedEventsQuery = `
     program,
     description,
     location,
-    "imageUrl": image.asset->url,
-    imageStyle
+    "imageUrl": image.asset->url
   }
 `
 
@@ -52,20 +50,13 @@ export const allEventsQuery = `
   }
 `
 
-// Bio profiles (published only, sorted by order ascending)
+// Bio profiles (published only, sorted by creation date ascending)
 export const bioProfilesQuery = `
-  *[_type == "bioProfile" && defined(publishedAt)] | order(order asc) {
+  *[_type == "bioProfile" && defined(publishedAt)] | order(_createdAt asc) {
     _id,
     name,
-    order,
-    "backgroundColor": backgroundColor.hex,
-    "lineColor": lineColor.hex,
-    "textColor": textColor.hex,
     "imageUrl": image.asset->url,
-    imageStyle,
-    paragraphs,
-    paragraphTops,
-    hasFooter
+    paragraphs
   }
 `
 
@@ -80,7 +71,6 @@ export const eventByIdQuery = `
     description,
     location,
     "imageUrl": image.asset->url,
-    imageStyle,
     status,
     publishedAt
   }
@@ -108,31 +98,19 @@ export const videoItemsQuery = `
   }
 `
 
-// Homepage slides (published only, sorted by order ascending)
+// Homepage slides (published only, sorted by creation date ascending)
 export const homepageSlidesQuery = `
-  *[_type == "homepageSlide" && defined(publishedAt)] | order(order asc) {
+  *[_type == "homepageSlide" && defined(publishedAt)] | order(_createdAt asc) {
     _id,
     word,
-    order,
     tagline,
-    "backgroundColor": backgroundColor.hex,
-    "textColor": textColor.hex,
-    "lineColor": lineColor.hex,
-    "imageUrl": image.asset->url,
-    "wordSvgUrl": wordSvg.asset->url,
-    wordPosition,
-    taglineX,
-    logoSrc
+    "imageUrl": image.asset->url
   }
 `
 
 // Kontakt page (singleton, published only)
 export const kontaktPageQuery = `
   *[_type == "kontaktPage" && defined(publishedAt)][0] {
-    _id,
-    title,
-    "backgroundColor": backgroundColor.hex,
-    "lineColor": lineColor.hex,
     email,
     "teamImageUrl": teamImage.asset->url
   }
@@ -141,12 +119,6 @@ export const kontaktPageQuery = `
 // Fundacja page (singleton, published only)
 export const fundacjaPageQuery = `
   *[_type == "fundacjaPage" && defined(publishedAt)][0] {
-    _id,
-    title,
-    "backgroundColor": backgroundColor.hex,
-    "lineColor": lineColor.hex,
-    "textColor": textColor.hex,
-    "linkColor": linkColor.hex,
     krs,
     regon,
     nip,
@@ -158,36 +130,33 @@ export const fundacjaPageQuery = `
   }
 `
 
-// Photo albums (published only, sorted by order ascending)
+// Photo albums (published only, sorted by creation date ascending)
 export const photoAlbumsQuery = `
-  *[_type == "photoAlbum" && defined(publishedAt)] | order(order asc) {
+  *[_type == "photoAlbum" && defined(publishedAt)] | order(_createdAt asc) {
     _id,
     title,
     photographer,
-    order,
     "thumbnailUrl": thumbnail.asset->url,
     "imageUrls": images[].asset->url
   }
 `
 
-// Repertuar composers (published only, sorted by order ascending)
+// Repertuar composers (published only, sorted by creation date ascending)
 export const repertuarComposersQuery = `
-  *[_type == "composer" && category == "repertuar" && defined(publishedAt)] | order(order asc) {
+  *[_type == "composer" && category == "repertuar" && defined(publishedAt)] | order(_createdAt asc) {
     _id,
     name,
     year,
-    works,
-    order
+    works
   }
 `
 
-// Specialne composers (published only, sorted by order ascending)
+// Specialne composers (published only, sorted by creation date ascending)
 export const specialneComposersQuery = `
-  *[_type == "composer" && category == "specialne" && defined(publishedAt)] | order(order asc) {
+  *[_type == "composer" && category == "specialne" && defined(publishedAt)] | order(_createdAt asc) {
     _id,
     name,
     year,
-    works,
-    order
+    works
   }
 `

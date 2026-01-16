@@ -20,22 +20,19 @@ const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 const slideTranslationKeys = ['trio', 'kompo', 'polex', 'ensemble'];
 
 // Transform Sanity slides to match config structure
-function transformSanitySlides(slides) {
-  return slides.map((slide) => ({
-    id: slide.order,
-    word: slide.word,
-    tagline: slide.tagline,
-    backgroundColor: slide.backgroundColor,
-    textColor: slide.textColor,
-    lineColor: slide.lineColor,
-    image: slide.imageUrl,
-    wordSvg: slide.wordSvgUrl,
-    wordY: slide.wordPosition?.wordY,
-    wordHeight: slide.wordPosition?.wordHeight,
-    wordWidth: slide.wordPosition?.wordWidth,
-    taglineX: slide.taglineX,
-    logoSrc: slide.logoSrc,
-  }));
+// Merges CMS content (word, tagline, image) with hardcoded design values
+function transformSanitySlides(sanitySlides) {
+  return configSlides.map((configSlide, index) => {
+    const sanitySlide = sanitySlides[index];
+    if (!sanitySlide) return configSlide;
+
+    return {
+      ...configSlide, // All design from config (colors, SVGs, positions)
+      word: sanitySlide.word,
+      tagline: sanitySlide.tagline,
+      image: sanitySlide.imageUrl,
+    };
+  });
 }
 
 export default function DesktopHomepage() {

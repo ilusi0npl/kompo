@@ -47,7 +47,7 @@ export const structure = (S: StructureBuilder) =>
                 .child(
                   S.documentTypeList('event')
                     .title('Nadchodzące wydarzenia')
-                    .filter('_type == "event" && date >= now() && defined(publishedAt)')
+                    .filter('_type == "event" && status == "upcoming" && defined(publishedAt)')
                     .defaultOrdering([{field: 'date', direction: 'asc'}])
                 ),
               S.listItem()
@@ -56,7 +56,7 @@ export const structure = (S: StructureBuilder) =>
                 .child(
                   S.documentTypeList('event')
                     .title('Archiwalne wydarzenia')
-                    .filter('_type == "event" && date < now() && defined(publishedAt)')
+                    .filter('_type == "event" && status == "archived" && defined(publishedAt)')
                     .defaultOrdering([{field: 'date', direction: 'desc'}])
                 ),
               S.listItem()
@@ -97,7 +97,7 @@ export const structure = (S: StructureBuilder) =>
           S.documentTypeList('composer')
             .title('Kompozytorzy (Repertuar)')
             .filter('_type == "composer" && category == "repertuar" && defined(publishedAt)')
-            .defaultOrdering([{field: 'order', direction: 'asc'}])
+            .defaultOrdering([{field: '_createdAt', direction: 'asc'}])
         ),
 
       S.divider(),
@@ -109,7 +109,7 @@ export const structure = (S: StructureBuilder) =>
           S.documentTypeList('composer')
             .title('Kompozytorzy (Projekty Specjalne)')
             .filter('_type == "composer" && category == "specialne" && defined(publishedAt)')
-            .defaultOrdering([{field: 'order', direction: 'asc'}])
+            .defaultOrdering([{field: '_createdAt', direction: 'asc'}])
         ),
 
       S.divider(),

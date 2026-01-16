@@ -3,13 +3,104 @@ import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import {
-  archivedEvents,
+  archivedEvents as configEvents,
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
 } from './archiwalne-config';
+import { useSanityEvents } from '../../hooks/useSanityEvents';
+
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
+
+// Grid layout positions (3 columns x 1 row for CMS data)
+const GRID_LAYOUT = [
+  { left: 185, top: 275, hasBorder: true },   // Column 1
+  { left: 515, top: 275, hasBorder: false },  // Column 2
+  { left: 845, top: 275, hasBorder: false },  // Column 3
+];
+
+// Transform Sanity archived events to match config structure with grid layout
+function transformSanityEvents(sanityEvents) {
+  return sanityEvents.map((event, index) => ({
+    id: event._id,
+    date: new Date(event.date).toLocaleDateString('pl-PL', {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+    }).replace(/\./g, '.').replace(/(\d{2})\.(\d{2})\.(\d{2})/, '$1.$2.$3 '),
+    title: event.title,
+    performers: event.performers,
+    image: event.imageUrl,
+    position: GRID_LAYOUT[index] || GRID_LAYOUT[0], // Fallback to first position
+    hasBorder: GRID_LAYOUT[index]?.hasBorder || false,
+  }));
+}
 
 export default function DesktopArchiwalne() {
   const { t } = useTranslation();
+
+  // Fetch from Sanity if enabled
+  const { events: sanityEvents, loading, error } = useSanityEvents('archived');
+
+  // Transform and use Sanity data if enabled, otherwise use config
+  const archivedEvents = USE_SANITY && sanityEvents && sanityEvents.length > 0
+    ? transformSanityEvents(sanityEvents)
+    : configEvents;
+
+  // Show loading state only when using Sanity
+  if (USE_SANITY && loading) {
+    return (
+      <section
+        data-section="archiwalne"
+        className="relative"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          height: `${DESKTOP_HEIGHT}px`,
+          backgroundColor: 'transparent',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: '#131313',
+          }}
+        >
+          Ładowanie wydarzeń...
+        </div>
+      </section>
+    );
+  }
+
+  // Show error state only when using Sanity
+  if (USE_SANITY && error) {
+    return (
+      <section
+        data-section="archiwalne"
+        className="relative"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          height: `${DESKTOP_HEIGHT}px`,
+          backgroundColor: 'transparent',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: '#FF0000',
+          }}
+        >
+          Błąd ładowania wydarzeń. Spróbuj ponownie później.
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
