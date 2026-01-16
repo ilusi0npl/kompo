@@ -290,7 +290,7 @@ export default function MobileWydarzenie2() {
           href={eventData.ticketUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center justify-center"
+          className="flex items-center justify-center ticket-btn"
           style={{
             width: '100%',
             backgroundColor: '#761FE0',
@@ -301,6 +301,7 @@ export default function MobileWydarzenie2() {
             gap: '10px',
             cursor: 'pointer',
             textDecoration: 'none',
+            border: '3px solid transparent',
           }}
         >
           <p

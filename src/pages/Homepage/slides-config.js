@@ -12,7 +12,7 @@ export const desktopSlides = [
     wordWidth: 49,    // SVG width from Figma
     tagline: 'specjalizujemy się w muzyce najnowszej',
     taglineX: 514,
-    image: '/assets/slides/hero-1.jpg',
+    image: '/assets/slides/hero-1.webp',
     textColor: '#131313',
     lineColor: '#A0E38A',
     logoSrc: '/assets/logo.svg'
@@ -27,7 +27,7 @@ export const desktopSlides = [
     wordWidth: 58,    // SVG width from Figma
     tagline: 'gramy wszystko i na wszystkim',
     taglineX: 612,
-    image: '/assets/slides/hero-2.jpg',
+    image: '/assets/slides/hero-2.webp',
     textColor: '#FDFDFD',
     lineColor: '#A0E38A',
     logoSrc: '/assets/logo-white.svg'
@@ -42,7 +42,7 @@ export const desktopSlides = [
     wordWidth: 49,    // SVG width from Figma
     tagline: 'jesteśmy z Polski',
     taglineX: 741,
-    image: '/assets/slides/hero-3.jpg',
+    image: '/assets/slides/hero-3.webp',
     textColor: '#131313',
     lineColor: '#01936F',
     logoSrc: '/assets/logo.svg'
@@ -57,7 +57,7 @@ export const desktopSlides = [
     wordWidth: 49,    // SVG width from Figma
     tagline: 'komponuje dla nas cały świat',
     taglineX: 622,
-    image: '/assets/slides/hero-4.jpg',
+    image: '/assets/slides/hero-4.webp',
     textColor: '#131313',
     lineColor: '#5B5B5B',
     logoSrc: '/assets/logo.svg'
@@ -73,7 +73,7 @@ export const mobileSlides = [
     wordWidth: 49,
     wordHeight: 149,
     tagline: 'specjalizujące się w muzyce najnowszej',
-    image: '/assets/slides/hero-1.jpg',
+    image: '/assets/slides/hero-1.webp',
     textColor: '#131313',
     lineColor: '#A0E38A',
     logoSrc: '/assets/logo.svg'
@@ -86,7 +86,7 @@ export const mobileSlides = [
     wordWidth: 58,
     wordHeight: 185,
     tagline: 'gramy wszystko i na wszystkim',
-    image: '/assets/slides/hero-2.jpg',
+    image: '/assets/slides/hero-2.webp',
     textColor: '#FDFDFD',
     lineColor: '#A0E38A',
     logoSrc: '/assets/logo-white.svg'
@@ -99,7 +99,7 @@ export const mobileSlides = [
     wordWidth: 49,
     wordHeight: 185,
     tagline: 'jesteśmy z Polski',
-    image: '/assets/slides/hero-3.jpg',
+    image: '/assets/slides/hero-3.webp',
     textColor: '#131313',
     lineColor: '#01936F',
     logoSrc: '/assets/logo.svg'
@@ -112,7 +112,7 @@ export const mobileSlides = [
     wordWidth: 35,
     wordHeight: 215,
     tagline: 'komponuje dla nas cały świat',
-    image: '/assets/slides/hero-4.jpg',
+    image: '/assets/slides/hero-4.webp',
     textColor: '#131313',
     lineColor: '#5B5B5B',
     logoSrc: '/assets/logo.svg'

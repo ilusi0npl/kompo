@@ -9,7 +9,7 @@ export const events = [
     performers: 'Aleksandra Gołaj, Rafał Łuc, Jacek Sotomski',
     description: 'Lorem ipsum dolor sit amet consectetur. Nunc aenean in auctor eu. Tellus non nulla odio donec. Eu lorem vitae praesent dictumst elit malesuada ultricies. Magna dolor sed in dui. Viverra consequat in suspendisse massa. Gravida aliquet dignissim ut eget.',
     location: 'ASP WROCŁAW, PL. POLSKI 3/4',
-    image: '/assets/kalendarz/event1.jpg',
+    image: '/assets/kalendarz/event1.webp',
     imageStyle: {
       objectFit: 'cover',
       objectPosition: '50% 50%',
@@ -22,7 +22,7 @@ export const events = [
     performers: 'Julia Łabowska, Karolina Kułaga, Oleś Kulczewicz, Szymon Kępczyński, Tymoteusz Lasik',
     description: 'Lorem ipsum dolor sit amet consectetur. Nunc aenean in auctor eu. Tellus non nulla odio donec. Eu lorem vitae praesent dictumst elit malesuada ultricies. Magna dolor sed in dui. Viverra consequat in suspendisse massa. Gravida aliquet dignissim ut eget.',
     location: 'Akademia Muzyczna im. K. Lipińskiego\nwe Wrocławiu',
-    image: '/assets/kalendarz/event2.jpg',
+    image: '/assets/kalendarz/event2.webp',
     imageStyle: {
       position: 'absolute',
       width: '209.97%',
@@ -46,7 +46,7 @@ export const events = [
       { composer: 'La Monte Young', piece: 'Composition #13' },
     ],
     location: 'Nau Bostik, Barcelona',
-    image: '/assets/kalendarz/event3.jpg',
+    image: '/assets/kalendarz/event3.webp',
     imageStyle: {
       objectFit: 'cover',
       objectPosition: '50% 50%',

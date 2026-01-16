@@ -27,7 +27,7 @@ export default function RepertuarFixedLayer({ scale = 1, viewportHeight = 700 })
         }}
       />
 
-      {/* Pionowe linie dekoracyjne - fixed */}
+      {/* Pionowe linie dekoracyjne - scrollable full height */}
       <div
         style={{
           position: 'fixed',
@@ -58,12 +58,31 @@ export default function RepertuarFixedLayer({ scale = 1, viewportHeight = 700 })
       <div
         style={{
           position: 'fixed',
+          top: 0,
+          left: 0,
           zIndex: 100,
           pointerEvents: 'none',
           width: `${DESKTOP_WIDTH * scale}px`,
-          height: `${viewportHeight}px`,
+          height: `${250 * scale}px`,
+          backgroundColor: BACKGROUND_COLOR,
         }}
       >
+        {/* Pionowe linie w fixed header */}
+        {LINE_POSITIONS.map((x) => (
+          <div
+            key={`header-${x}`}
+            style={{
+              position: 'absolute',
+              left: `${x * scale}px`,
+              top: 0,
+              width: `${1 * scale}px`,
+              height: '100%',
+              backgroundColor: LINE_COLOR,
+              zIndex: 101,
+            }}
+          />
+        ))}
+
         {/* Logo */}
         <Link
           to="/"

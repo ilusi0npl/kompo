@@ -5,6 +5,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useFixedMobileHeader } from '../../hooks/useFixedMobileHeader';
+import ArrowRight from '../../components/ArrowRight/ArrowRight';
 
 const MOBILE_WIDTH = 390;
 const HEADER_HEIGHT = 218;
@@ -29,7 +30,7 @@ export default function MobileBioEnsemble() {
   useEffect(() => {
     const img = new Image();
     img.onload = () => setImageLoaded(true);
-    img.src = '/assets/bio/bio-ensemble-large.jpg';
+    img.src = '/assets/bio/bio-ensemble-large.webp';
   }, []);
 
   // Reset scroll position on mount
@@ -160,10 +161,12 @@ export default function MobileBioEnsemble() {
           width: '350px',
           height: '350px',
           overflow: 'hidden',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         <img
-          src="/assets/bio/bio-ensemble-large.jpg"
+          src="/assets/bio/bio-ensemble-large.webp"
           alt="Ensemble KOMPOPOLEX"
           style={{
             width: '100%',
@@ -187,6 +190,8 @@ export default function MobileBioEnsemble() {
           lineHeight: 1.35,
           color: COLORS.textColor,
           whiteSpace: 'pre-wrap',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         {t('bio.ensemble.title')}
@@ -201,6 +206,8 @@ export default function MobileBioEnsemble() {
           display: 'flex',
           flexDirection: 'column',
           gap: '12px',
+          position: 'relative',
+          zIndex: 1,
         }}
       >
         {Array.isArray(t('bio.ensemble.extendedParagraphs')) &&
@@ -238,9 +245,7 @@ export default function MobileBioEnsemble() {
         }}
       >
         {t('bio.ensemble.upcomingEvents')}
-        <img
-          src="/assets/media/arrow-right.svg"
-          alt=""
+        <ArrowRight
           className="text-link-btn__arrow"
           style={{ width: '24px', height: '24px' }}
         />
