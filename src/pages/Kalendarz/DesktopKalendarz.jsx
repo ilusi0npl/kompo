@@ -30,22 +30,27 @@ const formatEventDate = (dateValue) => {
 };
 
 // Helper to make title a link with hover color change
-const EventTitle = ({ event, t }) => (
-  <Link
-    to={`/wydarzenie/${event.id}`}
-    className="event-title-link"
-    style={{
-      fontFamily: "'IBM Plex Mono', monospace",
-      fontWeight: 600,
-      fontSize: '32px',
-      lineHeight: 1.4,
-      color: '#131313',
-      textTransform: 'uppercase',
-    }}
-  >
-    {t(`kalendarz.events.event${event.id}.title`)}
-  </Link>
-);
+const EventTitle = ({ event, t, useSanity }) => {
+  const eventId = event._id || event.id;
+  const title = useSanity ? event.title : t(`kalendarz.events.event${event.id}.title`);
+
+  return (
+    <Link
+      to={`/wydarzenie/${eventId}`}
+      className="event-title-link"
+      style={{
+        fontFamily: "'IBM Plex Mono', monospace",
+        fontWeight: 600,
+        fontSize: '32px',
+        lineHeight: 1.4,
+        color: '#131313',
+        textTransform: 'uppercase',
+      }}
+    >
+      {title}
+    </Link>
+  );
+};
 
 export default function DesktopKalendarz() {
   const { t } = useTranslation();
@@ -109,7 +114,7 @@ export default function DesktopKalendarz() {
     >
       {/* Event 1 */}
       <Link
-        to={`/wydarzenie/${events[0].id}`}
+        to={`/wydarzenie/${events[0]._id || events[0].id}`}
         className="absolute event-poster-link"
         style={{
           left: '185px',
@@ -120,7 +125,7 @@ export default function DesktopKalendarz() {
       >
         <SmoothImage
           src={events[0].image || events[0].imageUrl}
-          alt={events[0].title}
+          alt={USE_SANITY ? events[0].title : t(`kalendarz.events.event${events[0].id}.title`)}
           containerStyle={{
             width: '330px',
             height: '462px',
@@ -141,7 +146,7 @@ export default function DesktopKalendarz() {
         </p>
         <div className="flex flex-col" style={{ gap: '32px' }}>
           <div className="flex flex-col" style={{ gap: '16px' }}>
-            <EventTitle event={events[0]} t={t} />
+            <EventTitle event={events[0]} t={t} useSanity={USE_SANITY} />
             <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
               {events[0].performers}
             </p>
@@ -160,7 +165,7 @@ export default function DesktopKalendarz() {
 
       {/* Event 2 */}
       <Link
-        to={`/wydarzenie/${events[1].id}`}
+        to={`/wydarzenie/${events[1]._id || events[1].id}`}
         className="absolute event-poster-link"
         style={{
           left: '185px',
@@ -171,7 +176,7 @@ export default function DesktopKalendarz() {
       >
         <SmoothImage
           src={events[1].image || events[1].imageUrl}
-          alt={events[1].title}
+          alt={USE_SANITY ? events[1].title : t(`kalendarz.events.event${events[1].id}.title`)}
           containerStyle={{
             width: '330px',
             height: '462px',
@@ -186,7 +191,7 @@ export default function DesktopKalendarz() {
         </p>
         <div className="flex flex-col" style={{ gap: '32px' }}>
           <div className="flex flex-col" style={{ gap: '16px' }}>
-            <EventTitle event={events[1]} t={t} />
+            <EventTitle event={events[1]} t={t} useSanity={USE_SANITY} />
             <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
               {events[1].performers}
             </p>
@@ -205,7 +210,7 @@ export default function DesktopKalendarz() {
 
       {/* Event 3 */}
       <Link
-        to={`/wydarzenie/${events[2].id}`}
+        to={`/wydarzenie/${events[2]._id || events[2].id}`}
         className="absolute event-poster-link"
         style={{
           left: '185px',
@@ -216,7 +221,7 @@ export default function DesktopKalendarz() {
       >
         <SmoothImage
           src={events[2].image || events[2].imageUrl}
-          alt={events[2].title}
+          alt={USE_SANITY ? events[2].title : t(`kalendarz.events.event${events[2].id}.title`)}
           containerStyle={{
             width: '330px',
             height: '462px',
@@ -237,11 +242,11 @@ export default function DesktopKalendarz() {
         </p>
         <div className="flex flex-col" style={{ gap: '32px' }}>
           <div className="flex flex-col">
-            <EventTitle event={events[2]} t={t} />
+            <EventTitle event={events[2]} t={t} useSanity={USE_SANITY} />
           </div>
           <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px', lineHeight: 1.48, color: '#131313', width: '519px' }}>
-            {events[2].program.map((item, idx) => (
-              <p key={idx} style={{ marginBottom: idx < events[2].program.length - 1 ? '8px' : '0' }}>
+            {events[2].program && events[2].program.map((item, idx) => (
+              <p key={item._key || idx} style={{ marginBottom: idx < events[2].program.length - 1 ? '8px' : '0' }}>
                 <span style={{ fontWeight: 700 }}>• {item.composer}</span>
                 <span style={{ fontWeight: 500 }}> - {item.piece}</span>
               </p>

@@ -3,7 +3,10 @@ import MobileHeader, { MobileHeaderSpacer } from '../../components/MobileHeader/
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
-import { events } from './kalendarz-config';
+import { useSanityEvents } from '../../hooks/useSanityEvents';
+import { events as configEvents } from './kalendarz-config';
+
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
 const MOBILE_WIDTH = 390;
 const mobileLinePositions = [97, 195, 292];
@@ -11,8 +14,70 @@ const BACKGROUND_COLOR = '#FDFDFD';
 const LINE_COLOR = '#A0E38A';
 const TEXT_COLOR = '#131313';
 
+// Format date for display (handle both config string and Sanity datetime)
+const formatEventDate = (dateValue) => {
+  // If it's already formatted string from config (e.g., "13.12.25 | 18:00"), return as-is
+  if (typeof dateValue === 'string' && dateValue.includes('|')) {
+    return dateValue;
+  }
+
+  // Otherwise parse as datetime and format
+  const date = new Date(dateValue);
+  return date.toLocaleDateString('pl-PL', {
+    day: '2-digit',
+    month: '2-digit',
+    year: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  }).replace(',', ' |');
+};
+
 export default function MobileKalendarz() {
   const { t } = useTranslation();
+
+  // Fetch from Sanity if enabled
+  const { events: sanityEvents, loading, error } = useSanityEvents('upcoming');
+
+  // Use Sanity data if enabled, otherwise use config
+  const events = USE_SANITY ? sanityEvents : configEvents;
+
+  // Show loading state only when using Sanity
+  if (USE_SANITY && loading) {
+    return (
+      <div
+        style={{
+          width: `${MOBILE_WIDTH}px`,
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <div style={{fontSize: '16px', fontFamily: "'IBM Plex Mono', monospace"}}>
+          Ładowanie wydarzeń...
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state only when using Sanity
+  if (USE_SANITY && error) {
+    return (
+      <div
+        style={{
+          width: `${MOBILE_WIDTH}px`,
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <div style={{fontSize: '16px', fontFamily: "'IBM Plex Mono', monospace", color: '#FF0000'}}>
+          Błąd ładowania wydarzeń
+        </div>
+      </div>
+    );
+  }
 
   return (
     <section
@@ -65,10 +130,10 @@ export default function MobileKalendarz() {
         }}
       >
         {events.map((event, index) => (
-          <div key={event.id} className="flex flex-col" style={{ gap: '16px' }}>
+          <div key={event._id || event.id} className="flex flex-col" style={{ gap: '16px' }}>
             {/* Zdjęcie z smooth loading - klikalny plakat */}
             <Link
-              to={`/wydarzenie/${event.id}`}
+              to={`/wydarzenie/${event._id || event.id}`}
               className="event-poster-link"
               style={{
                 width: '300px',
@@ -77,8 +142,8 @@ export default function MobileKalendarz() {
               }}
             >
               <SmoothImage
-                src={event.image}
-                alt={event.title}
+                src={event.image || event.imageUrl}
+                alt={USE_SANITY ? event.title : t(`kalendarz.events.event${event.id}.title`)}
                 containerStyle={{
                   width: '300px',
                   height: '420px',
@@ -103,12 +168,12 @@ export default function MobileKalendarz() {
                 color: TEXT_COLOR,
               }}
             >
-              {event.date}
+              {formatEventDate(event.date)}
             </p>
 
             {/* Tytuł (link) z hover na fiolet */}
             <Link
-              to={`/wydarzenie/${event.id}`}
+              to={`/wydarzenie/${event._id || event.id}`}
               className="event-title-link"
               style={{
                 fontFamily: "'IBM Plex Mono', monospace",
@@ -119,7 +184,7 @@ export default function MobileKalendarz() {
                 textTransform: 'uppercase',
               }}
             >
-              {t(`kalendarz.events.event${event.id}.title`)}
+              {USE_SANITY ? event.title : t(`kalendarz.events.event${event.id}.title`)}
             </Link>
 
             {/* Wykonawcy lub Program */}
@@ -147,7 +212,7 @@ export default function MobileKalendarz() {
                 }}
               >
                 {event.program.map((item, idx) => (
-                  <p key={idx} style={{ marginBottom: idx < event.program.length - 1 ? '4px' : '0' }}>
+                  <p key={item._key || idx} style={{ marginBottom: idx < event.program.length - 1 ? '4px' : '0' }}>
                     <span style={{ fontWeight: 700 }}>• {item.composer}</span>
                     <span style={{ fontWeight: 500 }}> - {item.piece}</span>
                   </p>
