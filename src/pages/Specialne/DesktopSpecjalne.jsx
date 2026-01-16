@@ -1,10 +1,13 @@
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useSanitySpecjalneComposers } from '../../hooks/useSanitySpecjalneComposers';
 import {
-  composers,
+  composers as configComposers,
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
 } from './specialne-config';
+
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
 // Helper component to render a single composer entry
 const ComposerEntry = ({ composer }) => {
@@ -56,6 +59,51 @@ const ComposerEntry = ({ composer }) => {
 
 export default function DesktopSpecjalne() {
   const { t } = useTranslation();
+
+  // Fetch from Sanity if enabled
+  const { composers: sanityComposers, loading, error } = useSanitySpecjalneComposers();
+
+  // Use Sanity data if enabled, otherwise use config
+  const composers = USE_SANITY ? sanityComposers : configComposers;
+
+  // Loading state
+  if (USE_SANITY && loading) {
+    return (
+      <section
+        data-section="specialne"
+        className="relative flex items-center justify-center"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          height: `${DESKTOP_HEIGHT}px`,
+          backgroundColor: 'transparent',
+        }}
+      >
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '20px' }}>
+          Ładowanie projektów specjalnych...
+        </p>
+      </section>
+    );
+  }
+
+  // Error state
+  if (USE_SANITY && error) {
+    console.error('Failed to load specialne composers from Sanity:', error);
+    return (
+      <section
+        data-section="specialne"
+        className="relative flex items-center justify-center"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          height: `${DESKTOP_HEIGHT}px`,
+          backgroundColor: 'transparent',
+        }}
+      >
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '20px', color: '#ff0000' }}>
+          Błąd ładowania projektów specjalnych
+        </p>
+      </section>
+    );
+  }
 
   // Distribute composers into 3 columns (modulo 3)
   const columns = [[], [], []];

@@ -5,11 +5,14 @@ import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useFixedMobileHeader } from '../../hooks/useFixedMobileHeader';
+import { useSanitySpecjalneComposers } from '../../hooks/useSanitySpecjalneComposers';
 import {
-  composers,
+  composers as configComposers,
   MOBILE_WIDTH,
   mobileLinePositions,
 } from './specialne-config';
+
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
 const BACKGROUND_COLOR = '#FDFDFD';
 const LINE_COLOR = '#A0E38A';
@@ -68,6 +71,51 @@ export default function MobileSpecjalne() {
   const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { scale } = useFixedMobileHeader();
+
+  // Fetch from Sanity if enabled
+  const { composers: sanityComposers, loading, error } = useSanitySpecjalneComposers();
+
+  // Use Sanity data if enabled, otherwise use config
+  const composers = USE_SANITY ? sanityComposers : configComposers;
+
+  // Loading state
+  if (USE_SANITY && loading) {
+    return (
+      <section
+        data-section="specialne-mobile"
+        className="relative overflow-hidden flex items-center justify-center"
+        style={{
+          width: `${MOBILE_WIDTH}px`,
+          minHeight: '100vh',
+          backgroundColor: BACKGROUND_COLOR,
+        }}
+      >
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px' }}>
+          Ładowanie projektów specjalnych...
+        </p>
+      </section>
+    );
+  }
+
+  // Error state
+  if (USE_SANITY && error) {
+    console.error('Failed to load specialne composers from Sanity:', error);
+    return (
+      <section
+        data-section="specialne-mobile"
+        className="relative overflow-hidden flex items-center justify-center"
+        style={{
+          width: `${MOBILE_WIDTH}px`,
+          minHeight: '100vh',
+          backgroundColor: BACKGROUND_COLOR,
+        }}
+      >
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px', color: '#ff0000' }}>
+          Błąd ładowania projektów specjalnych
+        </p>
+      </section>
+    );
+  }
 
   return (
     <section

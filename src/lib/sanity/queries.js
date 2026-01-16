@@ -169,3 +169,25 @@ export const photoAlbumsQuery = `
     "imageUrls": images[].asset->url
   }
 `
+
+// Repertuar composers (published only, sorted by order ascending)
+export const repertuarComposersQuery = `
+  *[_type == "composer" && category == "repertuar" && defined(publishedAt)] | order(order asc) {
+    _id,
+    name,
+    year,
+    works,
+    order
+  }
+`
+
+// Specialne composers (published only, sorted by order ascending)
+export const specialneComposersQuery = `
+  *[_type == "composer" && category == "specialne" && defined(publishedAt)] | order(order asc) {
+    _id,
+    name,
+    year,
+    works,
+    order
+  }
+`

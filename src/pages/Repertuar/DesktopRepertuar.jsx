@@ -1,10 +1,13 @@
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useSanityRepertuarComposers } from '../../hooks/useSanityRepertuarComposers';
 import {
-  composers,
+  composers as configComposers,
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
 } from './repertuar-config';
+
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
 // Helper component to render a single composer entry
 const ComposerEntry = ({ composer }) => {
@@ -57,6 +60,51 @@ const ComposerEntry = ({ composer }) => {
 
 export default function DesktopRepertuar() {
   const { t } = useTranslation();
+
+  // Fetch from Sanity if enabled
+  const { composers: sanityComposers, loading, error } = useSanityRepertuarComposers();
+
+  // Use Sanity data if enabled, otherwise use config
+  const composers = USE_SANITY ? sanityComposers : configComposers;
+
+  // Loading state
+  if (USE_SANITY && loading) {
+    return (
+      <section
+        data-section="repertuar"
+        className="relative flex items-center justify-center"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          height: `${DESKTOP_HEIGHT}px`,
+          backgroundColor: 'transparent',
+        }}
+      >
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '20px' }}>
+          Ładowanie repertuaru...
+        </p>
+      </section>
+    );
+  }
+
+  // Error state
+  if (USE_SANITY && error) {
+    console.error('Failed to load repertuar composers from Sanity:', error);
+    return (
+      <section
+        data-section="repertuar"
+        className="relative flex items-center justify-center"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          height: `${DESKTOP_HEIGHT}px`,
+          backgroundColor: 'transparent',
+        }}
+      >
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '20px', color: '#ff0000' }}>
+          Błąd ładowania repertuaru
+        </p>
+      </section>
+    );
+  }
 
   // Group composers into rows of 3
   const rows = [];
