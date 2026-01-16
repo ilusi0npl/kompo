@@ -30,7 +30,15 @@ export default {
       title: 'Plik',
       type: 'image',
       description: 'Upload zdjęcia',
+      options: {hotspot: true},
       hidden: ({parent}: any) => parent?.type === 'video',
+      validation: (Rule: Rule) => Rule.custom((file: any, context: any) => {
+        const type = context.parent?.type
+        if (type === 'photo' && !file) {
+          return 'Plik zdjęcia jest wymagany'
+        }
+        return true
+      }),
     },
     {
       name: 'videoUrl',
@@ -67,4 +75,16 @@ export default {
       }
     },
   },
+  orderings: [
+    {
+      title: 'Data publikacji (najnowsze)',
+      name: 'publishedAtDesc',
+      by: [{field: 'publishedAt', direction: 'desc'}],
+    },
+    {
+      title: 'Tytuł (A-Z)',
+      name: 'titleAsc',
+      by: [{field: 'title', direction: 'asc'}],
+    },
+  ],
 }
