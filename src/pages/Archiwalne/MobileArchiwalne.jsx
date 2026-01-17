@@ -3,7 +3,10 @@ import MobileHeader, { MobileHeaderSpacer } from '../../components/MobileHeader/
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
-import { archivedEvents } from './archiwalne-config';
+import { archivedEvents as configEvents } from './archiwalne-config';
+import { useSanityEvents } from '../../hooks/useSanityEvents';
+
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
 const MOBILE_WIDTH = 390;
 const mobileLinePositions = [97, 195, 292];
@@ -11,8 +14,88 @@ const BACKGROUND_COLOR = '#FDFDFD';
 const LINE_COLOR = '#A0E38A';
 const TEXT_COLOR = '#131313';
 
+// Transform Sanity archived events to match config structure
+function transformSanityEvents(sanityEvents) {
+  return sanityEvents.map((event) => ({
+    id: event._id,
+    date: new Date(event.date).toLocaleDateString('pl-PL', {
+      day: '2-digit',
+      month: '2-digit',
+      year: '2-digit',
+    }).replace(/\./g, '.').replace(/(\d{2})\.(\d{2})\.(\d{2})/, '$1.$2.$3 '),
+    title: event.title,
+    performers: event.performers,
+    image: event.imageUrl,
+    hasBorder: false,
+  }));
+}
+
 export default function MobileArchiwalne() {
   const { t } = useTranslation();
+
+  // Fetch from Sanity if enabled
+  const { events: sanityEvents, loading, error } = useSanityEvents('archived');
+
+  // Transform and use Sanity data if enabled, otherwise use config
+  const archivedEvents = USE_SANITY && sanityEvents && sanityEvents.length > 0
+    ? transformSanityEvents(sanityEvents)
+    : configEvents;
+
+  // Show loading state only when using Sanity
+  if (USE_SANITY && loading) {
+    return (
+      <section
+        data-section="archiwalne-mobile"
+        className="relative overflow-hidden"
+        style={{
+          width: `${MOBILE_WIDTH}px`,
+          minHeight: '100vh',
+          backgroundColor: BACKGROUND_COLOR,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: TEXT_COLOR,
+          }}
+        >
+          Ładowanie wydarzeń...
+        </div>
+      </section>
+    );
+  }
+
+  // Show error state only when using Sanity
+  if (USE_SANITY && error) {
+    return (
+      <section
+        data-section="archiwalne-mobile"
+        className="relative overflow-hidden"
+        style={{
+          width: `${MOBILE_WIDTH}px`,
+          minHeight: '100vh',
+          backgroundColor: BACKGROUND_COLOR,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: '#FF0000',
+          }}
+        >
+          Błąd ładowania wydarzeń. Spróbuj ponownie później.
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
