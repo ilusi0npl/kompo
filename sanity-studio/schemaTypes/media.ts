@@ -5,11 +5,36 @@ export default {
   title: 'Media',
   type: 'document',
   fields: [
+    // Bilingual title fields
     {
-      name: 'title',
-      title: 'Tytuł',
+      name: 'titlePl',
+      title: 'Tytuł (PL)',
       type: 'string',
       validation: (Rule: Rule) => Rule.required(),
+    },
+    {
+      name: 'titleEn',
+      title: 'Tytuł (EN)',
+      type: 'string',
+      validation: (Rule: Rule) => Rule.required(),
+    },
+    // Old title field - hidden for backward compatibility
+    {
+      name: 'title',
+      title: 'Tytuł (deprecated)',
+      type: 'string',
+      hidden: true,
+    },
+    // Bilingual description fields
+    {
+      name: 'descriptionPl',
+      title: 'Opis (PL)',
+      type: 'text',
+    },
+    {
+      name: 'descriptionEn',
+      title: 'Opis (EN)',
+      type: 'text',
     },
     {
       name: 'type',
@@ -71,7 +96,7 @@ export default {
   ],
   preview: {
     select: {
-      title: 'title',
+      title: 'titlePl',
       type: 'type',
       media: 'file',
     },
@@ -92,7 +117,7 @@ export default {
     {
       title: 'Tytuł (A-Z)',
       name: 'titleAsc',
-      by: [{field: 'title', direction: 'asc'}],
+      by: [{field: 'titlePl', direction: 'asc'}],
     },
   ],
 }

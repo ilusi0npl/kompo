@@ -61,16 +61,43 @@ export default {
           name: 'project',
           title: 'Projekt',
           fields: [
+            // Bilingual text fields
             {
-              name: 'text',
-              title: 'Opis projektu',
+              name: 'textPl',
+              title: 'Opis projektu (PL)',
               type: 'text',
               validation: (Rule: Rule) => Rule.required(),
             },
             {
-              name: 'linkText',
-              title: 'Tekst linku (opcjonalny)',
+              name: 'textEn',
+              title: 'Opis projektu (EN)',
+              type: 'text',
+              validation: (Rule: Rule) => Rule.required(),
+            },
+            // Old text field - hidden for backward compatibility
+            {
+              name: 'text',
+              title: 'Opis projektu (deprecated)',
+              type: 'text',
+              hidden: true,
+            },
+            // Bilingual link text fields
+            {
+              name: 'linkTextPl',
+              title: 'Tekst linku PL (opcjonalny)',
               type: 'string',
+            },
+            {
+              name: 'linkTextEn',
+              title: 'Tekst linku EN (opcjonalny)',
+              type: 'string',
+            },
+            // Old linkText field - hidden for backward compatibility
+            {
+              name: 'linkText',
+              title: 'Tekst linku (deprecated)',
+              type: 'string',
+              hidden: true,
             },
             {
               name: 'linkUrl',
@@ -80,8 +107,8 @@ export default {
           ],
           preview: {
             select: {
-              title: 'text',
-              subtitle: 'linkText',
+              title: 'textPl',
+              subtitle: 'linkTextPl',
             },
           },
         },

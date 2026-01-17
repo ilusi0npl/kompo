@@ -5,11 +5,25 @@ export default {
   title: 'Wydarzenia',
   type: 'document',
   fields: [
+    // Bilingual title fields
     {
-      name: 'title',
-      title: 'Tytuł',
+      name: 'titlePl',
+      title: 'Tytuł (PL)',
       type: 'string',
       validation: (Rule: Rule) => Rule.required(),
+    },
+    {
+      name: 'titleEn',
+      title: 'Tytuł (EN)',
+      type: 'string',
+      validation: (Rule: Rule) => Rule.required(),
+    },
+    // Old title field - hidden for backward compatibility
+    {
+      name: 'title',
+      title: 'Tytuł (deprecated)',
+      type: 'string',
+      hidden: true,
     },
     {
       name: 'date',
@@ -17,11 +31,25 @@ export default {
       type: 'datetime',
       validation: (Rule: Rule) => Rule.required(),
     },
+    // Bilingual performers fields
     {
-      name: 'performers',
-      title: 'Wykonawcy',
+      name: 'performersPl',
+      title: 'Wykonawcy (PL)',
       type: 'text',
       description: 'Opcjonalne - jeśli brak, użyj Program',
+    },
+    {
+      name: 'performersEn',
+      title: 'Wykonawcy (EN)',
+      type: 'text',
+      description: 'Optional - if empty, use Program',
+    },
+    // Old performers field - hidden for backward compatibility
+    {
+      name: 'performers',
+      title: 'Wykonawcy (deprecated)',
+      type: 'text',
+      hidden: true,
     },
     {
       name: 'program',
@@ -45,17 +73,45 @@ export default {
         ],
       }],
     },
+    // Bilingual description fields
     {
-      name: 'description',
-      title: 'Opis',
+      name: 'descriptionPl',
+      title: 'Opis (PL)',
       type: 'text',
       validation: (Rule: Rule) => Rule.required(),
     },
     {
-      name: 'location',
-      title: 'Lokalizacja',
+      name: 'descriptionEn',
+      title: 'Opis (EN)',
       type: 'text',
       validation: (Rule: Rule) => Rule.required(),
+    },
+    // Old description field - hidden for backward compatibility
+    {
+      name: 'description',
+      title: 'Opis (deprecated)',
+      type: 'text',
+      hidden: true,
+    },
+    // Bilingual location fields
+    {
+      name: 'locationPl',
+      title: 'Lokalizacja (PL)',
+      type: 'text',
+      validation: (Rule: Rule) => Rule.required(),
+    },
+    {
+      name: 'locationEn',
+      title: 'Lokalizacja (EN)',
+      type: 'text',
+      validation: (Rule: Rule) => Rule.required(),
+    },
+    // Old location field - hidden for backward compatibility
+    {
+      name: 'location',
+      title: 'Lokalizacja (deprecated)',
+      type: 'text',
+      hidden: true,
     },
     {
       name: 'image',
@@ -136,7 +192,7 @@ export default {
   ],
   preview: {
     select: {
-      title: 'title',
+      title: 'titlePl',
       date: 'date',
       media: 'image',
       status: 'status',

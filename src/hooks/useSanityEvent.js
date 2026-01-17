@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import { client } from '../lib/sanity/client'
 import { eventByIdQuery } from '../lib/sanity/queries'
+import { useLanguage } from '../context/LanguageContext'
 
 /**
- * Hook to fetch single event from Sanity CMS by ID
+ * Hook to fetch single event from Sanity CMS by ID with bilingual support
  * @param {string} id - Event ID
  * @returns {object} - { event, loading, error }
  */
@@ -11,6 +12,7 @@ export function useSanityEvent(id) {
   const [event, setEvent] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const { language } = useLanguage()
 
   useEffect(() => {
     if (!id) {
@@ -21,7 +23,22 @@ export function useSanityEvent(id) {
     client
       .fetch(eventByIdQuery, { id })
       .then((eventData) => {
-        setEvent(eventData)
+        if (!eventData) {
+          setEvent(null)
+          setLoading(false)
+          return
+        }
+
+        // Transform data based on current language
+        const transformedEvent = {
+          ...eventData,
+          title: language === 'pl' ? eventData.titlePl : eventData.titleEn,
+          performers: language === 'pl' ? eventData.performersPl : eventData.performersEn,
+          description: language === 'pl' ? eventData.descriptionPl : eventData.descriptionEn,
+          location: language === 'pl' ? eventData.locationPl : eventData.locationEn,
+        }
+
+        setEvent(transformedEvent)
         setLoading(false)
       })
       .catch((err) => {
@@ -29,7 +46,7 @@ export function useSanityEvent(id) {
         setError(err)
         setLoading(false)
       })
-  }, [id])
+  }, [id, language])
 
   return { event, loading, error }
 }

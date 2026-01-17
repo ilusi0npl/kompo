@@ -5,19 +5,49 @@ export default {
   title: 'Slajd Homepage',
   type: 'document',
   fields: [
+    // Bilingual word fields
     {
-      name: 'word',
-      title: 'Słowo',
+      name: 'wordPl',
+      title: 'Słowo (PL)',
       type: 'string',
       description: 'Główne słowo slajdu (np. "Trio", "Kompo", "Polex", "Ensemble")',
       validation: (Rule: Rule) => Rule.required(),
     },
     {
-      name: 'tagline',
-      title: 'Tagline',
+      name: 'wordEn',
+      title: 'Słowo (EN)',
+      type: 'string',
+      description: 'Main slide word (e.g., "Trio", "Kompo", "Polex", "Ensemble")',
+      validation: (Rule: Rule) => Rule.required(),
+    },
+    // Old word field - hidden for backward compatibility
+    {
+      name: 'word',
+      title: 'Słowo (deprecated)',
+      type: 'string',
+      hidden: true,
+    },
+    // Bilingual tagline fields
+    {
+      name: 'taglinePl',
+      title: 'Tagline (PL)',
       type: 'string',
       description: 'Opis pod słowem (np. "specjalizujemy się w muzyce najnowszej")',
       validation: (Rule: Rule) => Rule.required(),
+    },
+    {
+      name: 'taglineEn',
+      title: 'Tagline (EN)',
+      type: 'string',
+      description: 'Description under the word (e.g., "we specialize in contemporary music")',
+      validation: (Rule: Rule) => Rule.required(),
+    },
+    // Old tagline field - hidden for backward compatibility
+    {
+      name: 'tagline',
+      title: 'Tagline (deprecated)',
+      type: 'string',
+      hidden: true,
     },
     {
       name: 'image',
@@ -35,8 +65,8 @@ export default {
   ],
   preview: {
     select: {
-      title: 'word',
-      tagline: 'tagline',
+      title: 'wordPl',
+      tagline: 'taglinePl',
       media: 'image',
     },
     prepare({title, tagline, media}: any) {

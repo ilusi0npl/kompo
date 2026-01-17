@@ -5,11 +5,25 @@ export default {
   title: 'Profile Bio',
   type: 'document',
   fields: [
+    // Bilingual name fields
     {
-      name: 'name',
-      title: 'Nazwa',
+      name: 'namePl',
+      title: 'Nazwa (PL)',
       type: 'string',
       validation: (Rule: Rule) => Rule.required(),
+    },
+    {
+      name: 'nameEn',
+      title: 'Nazwa (EN)',
+      type: 'string',
+      validation: (Rule: Rule) => Rule.required(),
+    },
+    // Old name field - hidden for backward compatibility
+    {
+      name: 'name',
+      title: 'Nazwa (deprecated)',
+      type: 'string',
+      hidden: true,
     },
     {
       name: 'image',
@@ -18,12 +32,28 @@ export default {
       options: {hotspot: true},
       validation: (Rule: Rule) => Rule.required(),
     },
+    // Bilingual paragraphs fields
     {
-      name: 'paragraphs',
-      title: 'Paragrafy',
+      name: 'paragraphsPl',
+      title: 'Paragrafy (PL)',
       type: 'array',
       of: [{type: 'text'}],
       validation: (Rule: Rule) => Rule.required().min(1),
+    },
+    {
+      name: 'paragraphsEn',
+      title: 'Paragrafy (EN)',
+      type: 'array',
+      of: [{type: 'text'}],
+      validation: (Rule: Rule) => Rule.required().min(1),
+    },
+    // Old paragraphs field - hidden for backward compatibility
+    {
+      name: 'paragraphs',
+      title: 'Paragrafy (deprecated)',
+      type: 'array',
+      of: [{type: 'text'}],
+      hidden: true,
     },
     {
       name: 'publishedAt',
@@ -34,7 +64,7 @@ export default {
   ],
   preview: {
     select: {
-      title: 'name',
+      title: 'namePl',
       media: 'image',
     },
     prepare({title, media}: any) {

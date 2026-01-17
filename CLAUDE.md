@@ -656,6 +656,46 @@ Studio runs at: `http://localhost:3333`
 | `photoAlbum` | document | Photo galleries |
 | `mediaItem` | document | Individual media items |
 
+### Bilingual Support (Polish/English)
+
+All content in Sanity CMS supports **two languages: Polish (PL) and English (EN)**.
+
+**Pattern**: Separate fields (`titlePl`, `titleEn`) in the same document.
+
+**Bilingual Schemas**:
+- `event` - title, performers, description, location
+- `bioProfile` - name, paragraphs
+- `homepageSlide` - word, tagline
+- `fundacjaPage` - projects (text, linkText)
+- `photoAlbum` - title
+- `mediaItem` - title, description
+
+**Special Cases**:
+- Repertoire/Specialne: Composer and piece names are **NOT translated** (stay in Polish)
+- UI texts: Remain in translation files (`/src/translations/`)
+
+**Language Transformation**:
+- All hooks use `useLanguage()` from `LanguageContext`
+- Data is transformed based on current language when fetched
+- Example: `title: language === 'pl' ? event.titlePl : event.titleEn`
+
+**Migration**:
+- ✅ Existing data migrated with Polish content in `*Pl` fields
+- ✅ All content automatically translated to English
+- Editors can review and improve translations in Sanity Studio
+
+**Migration Scripts**:
+```bash
+node scripts/migrate-events-i18n.js
+node scripts/migrate-bio-profiles-i18n.js
+node scripts/migrate-homepage-slides-i18n.js
+node scripts/migrate-fundacja-page-i18n.js
+node scripts/migrate-photo-albums-i18n.js
+node scripts/migrate-media-items-i18n.js
+```
+
+All scripts have duplicate detection and are safe to run multiple times.
+
 ### Migration Scripts
 
 All content migrated from local configs to Sanity CMS:

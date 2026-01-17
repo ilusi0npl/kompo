@@ -1,21 +1,28 @@
 import { useState, useEffect } from 'react'
 import { client } from '../lib/sanity/client'
 import { photoAlbumsQuery } from '../lib/sanity/queries'
+import { useLanguage } from '../context/LanguageContext'
 
 /**
- * Hook to fetch photo albums from Sanity CMS
+ * Hook to fetch photo albums from Sanity CMS with bilingual support
  * @returns {object} - { albums, loading, error }
  */
 export function useSanityPhotoAlbums() {
   const [albums, setAlbums] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const { language } = useLanguage()
 
   useEffect(() => {
     client
       .fetch(photoAlbumsQuery)
       .then(data => {
-        setAlbums(data)
+        // Transform data based on current language
+        const transformedAlbums = data.map(album => ({
+          ...album,
+          title: language === 'pl' ? album.titlePl : album.titleEn,
+        }))
+        setAlbums(transformedAlbums)
         setLoading(false)
       })
       .catch(err => {
@@ -23,7 +30,7 @@ export function useSanityPhotoAlbums() {
         setError(err)
         setLoading(false)
       })
-  }, [])
+  }, [language])
 
   return { albums, loading, error }
 }

@@ -14,12 +14,16 @@
 export const upcomingEventsQuery = `
   *[_type == "event" && status == "upcoming" && defined(publishedAt)] | order(date asc) {
     _id,
-    title,
+    titlePl,
+    titleEn,
     date,
-    performers,
+    performersPl,
+    performersEn,
     program,
-    description,
-    location,
+    descriptionPl,
+    descriptionEn,
+    locationPl,
+    locationEn,
     "imageUrl": image.asset->url,
     ticketUrl,
     showTicketButton,
@@ -34,12 +38,16 @@ export const upcomingEventsQuery = `
 export const archivedEventsQuery = `
   *[_type == "event" && status == "archived" && defined(publishedAt)] | order(date desc) {
     _id,
-    title,
+    titlePl,
+    titleEn,
     date,
-    performers,
+    performersPl,
+    performersEn,
     program,
-    description,
-    location,
+    descriptionPl,
+    descriptionEn,
+    locationPl,
+    locationEn,
     "imageUrl": image.asset->url,
     ticketUrl,
     showTicketButton,
@@ -54,7 +62,8 @@ export const archivedEventsQuery = `
 export const allEventsQuery = `
   *[_type == "event"] | order(date desc) {
     _id,
-    title,
+    titlePl,
+    titleEn,
     date,
     status,
     publishedAt,
@@ -66,9 +75,11 @@ export const allEventsQuery = `
 export const bioProfilesQuery = `
   *[_type == "bioProfile" && defined(publishedAt)] | order(_createdAt asc) {
     _id,
-    name,
+    namePl,
+    nameEn,
     "imageUrl": image.asset->url,
-    paragraphs
+    paragraphsPl,
+    paragraphsEn
   }
 `
 
@@ -76,12 +87,16 @@ export const bioProfilesQuery = `
 export const eventByIdQuery = `
   *[_type == "event" && _id == $id][0] {
     _id,
-    title,
+    titlePl,
+    titleEn,
     date,
-    performers,
+    performersPl,
+    performersEn,
     program,
-    description,
-    location,
+    descriptionPl,
+    descriptionEn,
+    locationPl,
+    locationEn,
     "imageUrl": image.asset->url,
     ticketUrl,
     showTicketButton,
@@ -98,8 +113,11 @@ export const eventByIdQuery = `
 export const mediaItemsQuery = `
   *[_type == "mediaItem" && defined(publishedAt)] | order(publishedAt desc) {
     _id,
-    title,
+    titlePl,
+    titleEn,
     type,
+    descriptionPl,
+    descriptionEn,
     "imageUrl": file.asset->url,
     videoUrl,
     publishedAt
@@ -110,7 +128,10 @@ export const mediaItemsQuery = `
 export const videoItemsQuery = `
   *[_type == "mediaItem" && type == "video" && defined(publishedAt)] | order(publishedAt desc) {
     _id,
-    title,
+    titlePl,
+    titleEn,
+    descriptionPl,
+    descriptionEn,
     videoUrl,
     "thumbnailUrl": thumbnail.asset->url
   }
@@ -120,8 +141,10 @@ export const videoItemsQuery = `
 export const homepageSlidesQuery = `
   *[_type == "homepageSlide" && defined(publishedAt)] | order(_createdAt asc) {
     _id,
-    word,
-    tagline,
+    wordPl,
+    wordEn,
+    taglinePl,
+    taglineEn,
     "imageUrl": image.asset->url
   }
 `
@@ -142,7 +165,13 @@ export const fundacjaPageQuery = `
     nip,
     bankAccount,
     email,
-    projects,
+    projects[] {
+      textPl,
+      textEn,
+      linkTextPl,
+      linkTextEn,
+      linkUrl
+    },
     accessibilityDeclarationPl,
     accessibilityDeclarationEn
   }
@@ -152,7 +181,8 @@ export const fundacjaPageQuery = `
 export const photoAlbumsQuery = `
   *[_type == "photoAlbum" && defined(publishedAt)] | order(_createdAt asc) {
     _id,
-    title,
+    titlePl,
+    titleEn,
     photographer,
     "thumbnailUrl": thumbnail.asset->url,
     "imageUrls": images[].asset->url

@@ -15,11 +15,25 @@ export default {
   title: 'Album Zdjęciowy',
   type: 'document',
   fields: [
+    // Bilingual title fields
     {
-      name: 'title',
-      title: 'Tytuł albumu',
+      name: 'titlePl',
+      title: 'Tytuł albumu (PL)',
       type: 'string',
       validation: (Rule: Rule) => Rule.required(),
+    },
+    {
+      name: 'titleEn',
+      title: 'Tytuł albumu (EN)',
+      type: 'string',
+      validation: (Rule: Rule) => Rule.required(),
+    },
+    // Old title field - hidden for backward compatibility
+    {
+      name: 'title',
+      title: 'Tytuł albumu (deprecated)',
+      type: 'string',
+      hidden: true,
     },
     {
       name: 'photographer',
@@ -61,7 +75,7 @@ export default {
   ],
   preview: {
     select: {
-      title: 'title',
+      title: 'titlePl',
       photographer: 'photographer',
       media: 'thumbnail',
     },
