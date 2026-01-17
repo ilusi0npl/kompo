@@ -43,7 +43,7 @@ export default function Wydarzenie() {
       )}
 
       {/* Fixed layer - lines and UI */}
-      {!isMobile && <WydarzenieFixedLayer scale={scale} />}
+      {!isMobile && <WydarzenieFixedLayer scale={scale} pageHeight={DESKTOP_HEIGHT} />}
 
       <ResponsiveWrapper
         desktopContent={<DesktopWydarzenie />}

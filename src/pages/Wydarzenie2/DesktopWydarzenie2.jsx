@@ -1,7 +1,8 @@
 import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
-import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
+import LanguageText from '../../components/LanguageText/LanguageText';
+import ContrastToggle from '../../components/ContrastToggle/ContrastToggle';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import {
   eventData,
@@ -463,7 +464,8 @@ export default function DesktopWydarzenie2() {
         }}
       >
         {/* Language Toggle */}
-        <LanguageToggle textColor="#131313" />
+        <LanguageText textColor={TEXT_COLOR} />
+          <ContrastToggle iconColor={TEXT_COLOR} />
 
         {/* Frame 7 - Menu items at y=308 */}
         <nav

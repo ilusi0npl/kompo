@@ -1,6 +1,8 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { useTranslation } from '../../hooks/useTranslation';
-import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
+import LanguageText from '../../components/LanguageText/LanguageText';
+import ContrastToggle from '../../components/ContrastToggle/ContrastToggle';
 
 const DESKTOP_WIDTH = 1440;
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
@@ -9,6 +11,23 @@ const BACKGROUND_COLOR = '#34B898';
 const TEXT_COLOR = '#131313';
 
 export default function FundacjaFixedLayer({ scale = 1, viewportHeight = 700 }) {
+  const [documentHeight, setDocumentHeight] = useState(0);
+
+  useEffect(() => {
+    const updateHeight = () => {
+      setDocumentHeight(Math.max(document.documentElement.scrollHeight, window.innerHeight));
+    };
+    updateHeight();
+    window.addEventListener('resize', updateHeight);
+    // Update on content changes
+    const observer = new MutationObserver(updateHeight);
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => {
+      window.removeEventListener('resize', updateHeight);
+      observer.disconnect();
+    };
+  }, []);
+
   const { t } = useTranslation();
 
   return (
@@ -20,7 +39,7 @@ export default function FundacjaFixedLayer({ scale = 1, viewportHeight = 700 }) 
           top: 0,
           left: 0,
           width: '100%',
-          height: '100vh',
+          height: `${documentHeight}px`,
           backgroundColor: BACKGROUND_COLOR,
           zIndex: 0,
         }}
@@ -33,7 +52,7 @@ export default function FundacjaFixedLayer({ scale = 1, viewportHeight = 700 }) 
           top: 0,
           left: 0,
           width: '100%',
-          height: '100vh',
+          height: `${documentHeight}px`,
           pointerEvents: 'none',
           zIndex: 50,
         }}
@@ -113,7 +132,7 @@ export default function FundacjaFixedLayer({ scale = 1, viewportHeight = 700 }) 
           </p>
         </div>
 
-        {/* Language Toggle - top right */}
+        {/* Language & Contrast Controls - top right */}
         <div
           style={{
             position: 'absolute',
@@ -121,9 +140,13 @@ export default function FundacjaFixedLayer({ scale = 1, viewportHeight = 700 }) 
             top: `${60 * scale}px`,
             pointerEvents: 'auto',
             zIndex: 101,
+            display: 'flex',
+            alignItems: 'center',
+            gap: `${20 * scale}px`,
           }}
         >
-          <LanguageToggle textColor={TEXT_COLOR} scale={scale} />
+          <LanguageText textColor={TEXT_COLOR} scale={scale} />
+          <ContrastToggle iconColor={TEXT_COLOR} scale={scale} />
         </div>
 
         {/* Prawa nawigacja - menu items */}

@@ -92,7 +92,7 @@ export default function DesktopMediaWideo() {
   const lastRowTop = GRID_START_TOP + ((numRows - 1) * ROW_SPACING);
   const lastVideoBottom = lastRowTop + VIDEO_HEIGHT;
   const footerTop = lastVideoBottom + FOOTER_SPACING;
-  const totalHeight = footerTop + 200; // footer height (~80px) + bottom margin (120px)
+  const totalHeight = footerTop + 70; // footer height (~30px) + bottom margin (40px)
 
   return (
     <section

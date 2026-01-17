@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import { useTranslation } from '../../hooks/useTranslation';
-import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
+import LanguageText from '../../components/LanguageText/LanguageText';
+import ContrastToggle from '../../components/ContrastToggle/ContrastToggle';
 
 // Pozycje linii pionowych z Figma
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
@@ -8,19 +9,19 @@ const LINE_COLOR = '#A0E38A';
 const BACKGROUND_COLOR = '#FDFDFD';
 const TEXT_COLOR = '#131313';
 
-export default function WydarzenieFixedLayer({ scale = 1 }) {
+export default function WydarzenieFixedLayer({ scale = 1, pageHeight = 1941 }) {
   const { t } = useTranslation();
 
   return (
     <>
-      {/* Pionowe linie dekoracyjne - full height */}
+      {/* Pionowe linie dekoracyjne - full page height */}
       <div
         style={{
-          position: 'fixed',
+          position: 'absolute',
           top: 0,
           left: 0,
           width: '100%',
-          height: '100vh',
+          height: `${pageHeight * scale}px`,
           pointerEvents: 'none',
           zIndex: 50,
         }}
@@ -49,7 +50,7 @@ export default function WydarzenieFixedLayer({ scale = 1 }) {
           zIndex: 100,
           pointerEvents: 'none',
           width: `${1440 * scale}px`,
-          height: '100vh',
+          height: `${documentHeight}px`,
         }}
       >
 
@@ -103,7 +104,7 @@ export default function WydarzenieFixedLayer({ scale = 1 }) {
           </p>
         </div>
 
-        {/* Language Toggle - top right */}
+        {/* Language & Contrast Controls - top right */}
         <div
           style={{
             position: 'absolute',
@@ -111,9 +112,13 @@ export default function WydarzenieFixedLayer({ scale = 1 }) {
             top: `${60 * scale}px`,
             pointerEvents: 'auto',
             zIndex: 101,
+            display: 'flex',
+            alignItems: 'center',
+            gap: `${20 * scale}px`,
           }}
         >
-          <LanguageToggle textColor={TEXT_COLOR} scale={scale} />
+          <LanguageText textColor={TEXT_COLOR} scale={scale} />
+          <ContrastToggle iconColor={TEXT_COLOR} scale={scale} />
         </div>
 
         {/* Prawa nawigacja - menu items */}

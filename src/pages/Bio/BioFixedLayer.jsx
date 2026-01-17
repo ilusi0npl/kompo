@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import { useTranslation } from '../../hooks/useTranslation';
-import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
+import LanguageText from '../../components/LanguageText/LanguageText';
+import ContrastToggle from '../../components/ContrastToggle/ContrastToggle';
 
 const TRANSITION_DURATION = '1s';
 const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
@@ -96,7 +97,7 @@ export default function BioFixedLayer({ currentColors, scale = 1, height = 700 }
           />
         </svg>
 
-        {/* Language Toggle - top right */}
+        {/* Language & Contrast Controls - top right */}
         <div
           style={{
             position: 'absolute',
@@ -104,10 +105,18 @@ export default function BioFixedLayer({ currentColors, scale = 1, height = 700 }
             top: `${60 * scale}px`,
             pointerEvents: 'auto',
             zIndex: 101,
+            display: 'flex',
+            alignItems: 'center',
+            gap: `${20 * scale}px`,
           }}
         >
-          <LanguageToggle
+          <LanguageText
             textColor={currentColors.textColor}
+            transition={`${TRANSITION_DURATION} ${TRANSITION_EASING}`}
+            scale={scale}
+          />
+          <ContrastToggle
+            iconColor={currentColors.textColor}
             transition={`${TRANSITION_DURATION} ${TRANSITION_EASING}`}
             scale={scale}
           />

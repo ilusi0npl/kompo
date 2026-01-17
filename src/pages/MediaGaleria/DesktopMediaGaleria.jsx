@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import Footer from '../../components/Footer/Footer';
-import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
+import LanguageText from '../../components/LanguageText/LanguageText';
+import ContrastToggle from '../../components/ContrastToggle/ContrastToggle';
 import { useTranslation } from '../../hooks/useTranslation';
 import ArrowRight from '../../components/ArrowRight/ArrowRight';
 
@@ -253,37 +254,41 @@ export default function DesktopMediaGaleria({ album }) {
         }}
       />
 
-      {/* Right navigation menu */}
+      {/* Language & Contrast Controls - top right */}
       <div
-        className="absolute flex flex-col"
+        className="absolute flex"
         style={{
           left: '1265px',
           top: '60px',
-          width: '100px',
-          gap: '279px',
+          alignItems: 'center',
+          gap: '20px',
         }}
       >
-        <LanguageToggle />
-
-        <nav
-          className="flex flex-col"
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 700,
-            fontSize: '18px',
-            lineHeight: 1.48,
-            color: TEXT_COLOR,
-            gap: '22px',
-          }}
-        >
-          <Link to="/bio" className="nav-link" style={{ color: TEXT_COLOR }}>Bio</Link>
-          <Link to="/media" className="nav-link nav-link--active" style={{ color: TEXT_COLOR }}>Media</Link>
-          <Link to="/kalendarz" className="nav-link" style={{ color: TEXT_COLOR }}>Kalendarz</Link>
-          <Link to="/repertuar" className="nav-link" style={{ color: TEXT_COLOR }}>Repertuar</Link>
-          <Link to="/fundacja" className="nav-link" style={{ color: TEXT_COLOR }}>Fundacja</Link>
-          <Link to="/kontakt" className="nav-link" style={{ color: TEXT_COLOR }}>Kontakt</Link>
-        </nav>
+        <LanguageText textColor={TEXT_COLOR} />
+        <ContrastToggle iconColor={TEXT_COLOR} />
       </div>
+
+      {/* Right navigation menu */}
+      <nav
+        className="absolute flex flex-col"
+        style={{
+          left: '1265px',
+          top: '368px',
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontWeight: 700,
+          fontSize: '18px',
+          lineHeight: 1.48,
+          color: TEXT_COLOR,
+          gap: '22px',
+        }}
+      >
+        <Link to="/bio" className="nav-link" style={{ color: TEXT_COLOR }}>Bio</Link>
+        <Link to="/media" className="nav-link nav-link--active" style={{ color: TEXT_COLOR }}>Media</Link>
+        <Link to="/kalendarz" className="nav-link" style={{ color: TEXT_COLOR }}>Kalendarz</Link>
+        <Link to="/repertuar" className="nav-link" style={{ color: TEXT_COLOR }}>Repertuar</Link>
+        <Link to="/fundacja" className="nav-link" style={{ color: TEXT_COLOR }}>Fundacja</Link>
+        <Link to="/kontakt" className="nav-link" style={{ color: TEXT_COLOR }}>Kontakt</Link>
+      </nav>
     </section>
   );
 }

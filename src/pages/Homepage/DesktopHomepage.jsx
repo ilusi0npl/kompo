@@ -2,7 +2,8 @@ import { useEffect } from 'react';
 import { Link } from 'react-router';
 import { useScrollSlides } from './useScrollSlides';
 import { useTranslation } from '../../hooks/useTranslation';
-import LanguageToggle from '../../components/LanguageToggle/LanguageToggle';
+import LanguageText from '../../components/LanguageText/LanguageText';
+import ContrastToggle from '../../components/ContrastToggle/ContrastToggle';
 import SmoothSlideshow from '../../components/SmoothImage/SmoothSlideshow';
 import {
   desktopSlides as configSlides,
@@ -226,11 +227,22 @@ export default function DesktopHomepage() {
           width: '100px',
         }}
       >
-        {/* Language Toggle */}
-        <LanguageToggle
-          textColor={currentData.textColor}
-          transition={`${TRANSITION_DURATION} ${TRANSITION_EASING}`}
-        />
+        {/* Language & Contrast Controls */}
+        <div
+          className="flex items-center"
+          style={{
+            gap: '20px',
+          }}
+        >
+          <LanguageText
+            textColor={currentData.textColor}
+            transition={`${TRANSITION_DURATION} ${TRANSITION_EASING}`}
+          />
+          <ContrastToggle
+            iconColor={currentData.textColor}
+            transition={`${TRANSITION_DURATION} ${TRANSITION_EASING}`}
+          />
+        </div>
 
         {/* Menu items */}
         <nav

@@ -340,3 +340,9 @@ body {
   cursor: not-allowed;
   pointer-events: none;
 }
+
+/* High Contrast Mode */
+body.high-contrast {
+  filter: contrast(1.5) grayscale(1);
+  transition: filter 0.3s ease;
+}

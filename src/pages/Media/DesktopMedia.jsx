@@ -51,7 +51,7 @@ export default function DesktopMedia() {
   const lastRowTop = GRID_START_TOP + ((numRows - 1) * ROW_SPACING);
   const lastAlbumBottom = lastRowTop + ALBUM_HEIGHT;
   const footerTop = lastAlbumBottom + FOOTER_SPACING;
-  const totalHeight = footerTop + 200; // footer height (~80px) + bottom margin (120px)
+  const totalHeight = footerTop + 70; // footer height (~30px) + bottom margin (40px)
 
   // Show loading state only when using Sanity
   if (USE_SANITY && loading) {
