@@ -71,26 +71,32 @@ export default function MobileWydarzenie() {
   return (
     <section
       data-section="wydarzenie-mobile"
-      className="relative overflow-hidden"
+      className="relative"
       style={{
         width: `${MOBILE_WIDTH}px`,
-        minHeight: '100vh',
         backgroundColor: BACKGROUND_COLOR,
       }}
     >
       {/* Pionowe linie */}
-      {mobileLinePositions.map((left, index) => (
-        <div
-          key={index}
-          className="absolute top-0"
-          style={{
-            left: `${left}px`,
-            width: '1px',
-            height: '100%',
-            backgroundColor: LINE_COLOR,
-          }}
-        />
-      ))}
+      <div
+        className="absolute top-0 left-0 w-full pointer-events-none"
+        style={{
+          height: '100%',
+        }}
+      >
+        {mobileLinePositions.map((left, index) => (
+          <div
+            key={index}
+            className="absolute top-0"
+            style={{
+              left: `${left}px`,
+              width: '1px',
+              height: '100%',
+              backgroundColor: LINE_COLOR,
+            }}
+          />
+        ))}
+      </div>
 
       {/* Fixed header via portal */}
       {typeof document !== 'undefined' && createPortal(
@@ -568,18 +574,18 @@ export default function MobileWydarzenie() {
       </div>
 
       {/* Stopka */}
-      <MobileFooter
-        className="mt-16"
-        style={{
-          position: 'relative',
-          zIndex: 10,
-          marginLeft: '20px',
-          marginRight: '20px',
-          marginBottom: '40px',
-          width: '350px',
-        }}
-        textColor={TEXT_COLOR}
-      />
+      <div style={{ marginTop: '64px', marginBottom: '40px' }}>
+        <MobileFooter
+          style={{
+            position: 'relative',
+            zIndex: 10,
+            marginLeft: '20px',
+            marginRight: '20px',
+            width: '350px',
+          }}
+          textColor={TEXT_COLOR}
+        />
+      </div>
     </section>
   );
 }

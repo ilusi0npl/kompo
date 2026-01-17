@@ -50,7 +50,7 @@ export default function WydarzenieFixedLayer({ scale = 1, pageHeight = 1941 }) {
           zIndex: 100,
           pointerEvents: 'none',
           width: `${1440 * scale}px`,
-          height: `${documentHeight}px`,
+          height: `${pageHeight * scale}px`,
         }}
       >
 
