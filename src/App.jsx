@@ -28,8 +28,8 @@ function App() {
           <Route path="/media/galeria/:id" element={<MediaGaleria />} />
           <Route path="/kalendarz" element={<Kalendarz />} />
           <Route path="/archiwalne" element={<Archiwalne />} />
-          <Route path="/wydarzenie/:id" element={<Wydarzenie />} />
           <Route path="/wydarzenie/2" element={<Wydarzenie2 />} />
+          <Route path="/wydarzenie/:id" element={<Wydarzenie />} />
           <Route path="/repertuar" element={<Repertuar />} />
           <Route path="/specialne" element={<Specialne />} />
           <Route path="/fundacja" element={<Fundacja />} />

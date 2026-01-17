@@ -297,7 +297,7 @@ export default function MobileSpecjalne() {
         }}
       >
         {composers.map((composer, idx) => (
-          <ComposerEntry key={work._key || work.title || idx} composer={composer} />
+          <ComposerEntry key={composer._id || idx} composer={composer} />
         ))}
       </div>
 

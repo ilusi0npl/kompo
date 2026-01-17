@@ -37,7 +37,7 @@ export default function MediaWideo() {
       <ResponsiveWrapper
         desktopContent={<DesktopMediaWideo />}
         mobileContent={<MobileMediaWideo />}
-        desktopHeight={DESKTOP_HEIGHT}
+        desktopHeight="auto"
         mobileHeight="auto"
         backgroundColor="#73A1FE"
         lineColor="#3478FF"

@@ -6,7 +6,6 @@ import { Rule } from 'sanity'
  * Singleton document for foundation page configuration
  *
  * Features:
- * - Page colors (background, lines, text)
  * - Foundation registration data (KRS, REGON, NIP, bank account, email)
  * - Projects list with optional links
  * - Accessibility declaration (multilingual)
@@ -16,41 +15,6 @@ export default {
   title: 'Strona Fundacja',
   type: 'document',
   fields: [
-    {
-      name: 'title',
-      title: 'Tytuł',
-      type: 'string',
-      initialValue: 'Fundacja',
-      validation: (Rule: Rule) => Rule.required(),
-    },
-    {
-      name: 'backgroundColor',
-      title: 'Kolor tła',
-      type: 'color',
-      description: 'Jasny zielony kolor tła (#34B898)',
-      validation: (Rule: Rule) => Rule.required(),
-    },
-    {
-      name: 'lineColor',
-      title: 'Kolor linii',
-      type: 'color',
-      description: 'Ciemny zielony kolor linii (#01936F)',
-      validation: (Rule: Rule) => Rule.required(),
-    },
-    {
-      name: 'textColor',
-      title: 'Kolor tekstu',
-      type: 'color',
-      description: 'Kolor tekstu (#131313)',
-      validation: (Rule: Rule) => Rule.required(),
-    },
-    {
-      name: 'linkColor',
-      title: 'Kolor linków',
-      type: 'color',
-      description: 'Kolor linków (#761FE0)',
-      validation: (Rule: Rule) => Rule.required(),
-    },
     {
       name: 'krs',
       title: 'KRS',
@@ -149,13 +113,12 @@ export default {
   ],
   preview: {
     select: {
-      title: 'title',
       krs: 'krs',
     },
-    prepare(selection: { title: string; krs: string }) {
-      const { title, krs } = selection
+    prepare(selection: { krs: string }) {
+      const { krs } = selection
       return {
-        title: title || 'Fundacja',
+        title: 'Fundacja',
         subtitle: `KRS: ${krs}`,
       }
     },

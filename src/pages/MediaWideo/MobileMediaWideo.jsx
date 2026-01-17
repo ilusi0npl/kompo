@@ -32,7 +32,7 @@ export default function MobileMediaWideo() {
   const { videos: sanityVideos, loading, error } = useSanityVideos();
 
   // Use Sanity data if enabled, otherwise use config
-  const videos = USE_SANITY ? transformSanityVideos(sanityVideos) : configVideos;
+  const videos = USE_SANITY && sanityVideos ? transformSanityVideos(sanityVideos) : configVideos;
 
   // Loading state
   if (USE_SANITY && loading) {

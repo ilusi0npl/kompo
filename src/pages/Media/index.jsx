@@ -38,7 +38,7 @@ export default function Media() {
       <ResponsiveWrapper
         desktopContent={<DesktopMedia />}
         mobileContent={<MobileMedia />}
-        desktopHeight={DESKTOP_HEIGHT}
+        desktopHeight="auto"
         mobileHeight="auto"
         backgroundColor="#34B898"
         lineColor="#01936F"

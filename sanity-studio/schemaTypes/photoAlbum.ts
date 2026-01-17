@@ -9,7 +9,6 @@ import { Rule } from 'sanity'
  * - Album title and photographer credit
  * - Thumbnail image (cover)
  * - Multiple images in the album
- * - Order for display
  */
 export default {
   name: 'photoAlbum',
@@ -27,12 +26,6 @@ export default {
       title: 'Fotograf',
       type: 'string',
       validation: (Rule: Rule) => Rule.required(),
-    },
-    {
-      name: 'order',
-      title: 'Kolejność wyświetlania',
-      type: 'number',
-      validation: (Rule: Rule) => Rule.required().min(1).integer(),
     },
     {
       name: 'thumbnail',
@@ -71,23 +64,17 @@ export default {
       title: 'title',
       photographer: 'photographer',
       media: 'thumbnail',
-      order: 'order',
     },
-    prepare(selection: { title: string; photographer: string; media: any; order: number }) {
-      const { title, photographer, order } = selection
+    prepare(selection: { title: string; photographer: string; media: any }) {
+      const { title, photographer } = selection
       return {
-        title: `${order}. ${title}`,
+        title,
         subtitle: `Fotograf: ${photographer}`,
         media: selection.media,
       }
     },
   },
   orderings: [
-    {
-      title: 'Kolejność (rosnąco)',
-      name: 'orderAsc',
-      by: [{ field: 'order', direction: 'asc' }],
-    },
     {
       title: 'Data publikacji (najnowsze)',
       name: 'publishedAtDesc',

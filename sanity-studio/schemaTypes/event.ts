@@ -65,17 +65,52 @@ export default {
       validation: (Rule: Rule) => Rule.required(),
     },
     {
-      name: 'imageStyle',
-      title: 'Styl obrazu (Figma CSS)',
-      type: 'object',
-      description: 'Pozycjonowanie z Figma - opcjonalne',
-      fields: [
-        {name: 'objectFit', type: 'string', title: 'Object Fit'},
-        {name: 'objectPosition', type: 'string', title: 'Object Position'},
-        {name: 'width', type: 'string', title: 'Width'},
-        {name: 'height', type: 'string', title: 'Height'},
-        {name: 'left', type: 'string', title: 'Left'},
-        {name: 'top', type: 'string', title: 'Top'},
+      name: 'ticketUrl',
+      title: 'Link do biletu',
+      type: 'url',
+      description: 'URL do strony z biletami (opcjonalne)',
+      validation: (Rule: Rule) =>
+        Rule.uri({
+          scheme: ['http', 'https'],
+        }),
+    },
+    {
+      name: 'showTicketButton',
+      title: 'Pokaż przycisk "Kup bilet"',
+      type: 'boolean',
+      description: 'Czy wyświetlić przycisk kupna biletu na stronie wydarzenia',
+      initialValue: false,
+    },
+    {
+      name: 'partners',
+      title: 'Partnerzy',
+      type: 'array',
+      description: 'Lista partnerów wydarzenia (wyświetlana na dole strony)',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'name',
+              type: 'string',
+              title: 'Nazwa partnera',
+              validation: (Rule: Rule) => Rule.required(),
+            },
+            {
+              name: 'logo',
+              type: 'image',
+              title: 'Logo partnera',
+              options: {hotspot: true},
+              validation: (Rule: Rule) => Rule.required(),
+            },
+          ],
+          preview: {
+            select: {
+              title: 'name',
+              media: 'logo',
+            },
+          },
+        },
       ],
     },
     {

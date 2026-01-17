@@ -29,7 +29,7 @@ export default function DesktopMediaWideo() {
   const { videos: sanityVideos, loading, error } = useSanityVideos();
 
   // Use Sanity data if enabled, otherwise use config
-  const videos = USE_SANITY ? transformSanityVideos(sanityVideos) : configVideos;
+  const videos = USE_SANITY && sanityVideos ? transformSanityVideos(sanityVideos) : configVideos;
 
   // Loading state
   if (USE_SANITY && loading) {
@@ -70,13 +70,29 @@ export default function DesktopMediaWideo() {
     );
   }
 
-  // Grid positions for 2 columns x 2 rows
-  const gridPositions = [
-    { left: 185, top: 275 },  // Row 1, Col 1
-    { left: 690, top: 275 },  // Row 1, Col 2
-    { left: 185, top: 655 },  // Row 2, Col 1
-    { left: 690, top: 655 },  // Row 2, Col 2
-  ];
+  // Dynamic grid calculation (2 columns, unlimited rows)
+  const GRID_START_LEFT = 185;
+  const GRID_START_TOP = 275;
+  const COL_SPACING = 505; // 690 - 185
+  const ROW_SPACING = 380; // 655 - 275
+  const VIDEO_HEIGHT = 301; // thumbnail (256) + gap (16) + title (~29)
+  const FOOTER_SPACING = 155; // space between last video and footer
+
+  const calculatePosition = (index) => {
+    const col = index % 2;
+    const row = Math.floor(index / 2);
+    return {
+      left: GRID_START_LEFT + (col * COL_SPACING),
+      top: GRID_START_TOP + (row * ROW_SPACING),
+    };
+  };
+
+  // Calculate dynamic height based on number of videos
+  const numRows = Math.ceil(videos.length / 2);
+  const lastRowTop = GRID_START_TOP + ((numRows - 1) * ROW_SPACING);
+  const lastVideoBottom = lastRowTop + VIDEO_HEIGHT;
+  const footerTop = lastVideoBottom + FOOTER_SPACING;
+  const totalHeight = footerTop + 200; // footer height (~80px) + bottom margin (120px)
 
   return (
     <section
@@ -84,23 +100,25 @@ export default function DesktopMediaWideo() {
       className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
-        height: `${DESKTOP_HEIGHT}px`,
+        height: `${totalHeight}px`,
         backgroundColor: 'transparent',
         zIndex: 60,
       }}
     >
       {/* Video Grid */}
-      {videos.map((video, index) => (
-        <div
-          key={video.id}
-          className="absolute flex flex-col"
-          style={{
-            left: `${gridPositions[index].left}px`,
-            top: `${gridPositions[index].top}px`,
-            width: '455px',
-            gap: '16px',
-          }}
-        >
+      {videos.map((video, index) => {
+        const position = calculatePosition(index);
+        return (
+          <div
+            key={video.id}
+            className="absolute flex flex-col"
+            style={{
+              left: `${position.left}px`,
+              top: `${position.top}px`,
+              width: '455px',
+              gap: '16px',
+            }}
+          >
           {/* Video Thumbnail with Play Button - smooth loading */}
           <a
             href={video.youtubeUrl}
@@ -162,14 +180,15 @@ export default function DesktopMediaWideo() {
             {video.title}
           </p>
         </div>
-      ))}
+        );
+      })}
 
-      {/* Stopka */}
+      {/* Stopka - dynamic position */}
       <Footer
         className="absolute"
         style={{
           left: '185px',
-          top: '1111px',
+          top: `${footerTop}px`,
           width: '520px',
         }}
       />

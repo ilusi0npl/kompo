@@ -6,7 +6,6 @@ import { Rule } from 'sanity'
  * Singleton document for contact page configuration
  *
  * Features:
- * - Page colors (background, lines)
  * - Contact email
  * - Team photo
  */
@@ -15,27 +14,6 @@ export default {
   title: 'Strona Kontakt',
   type: 'document',
   fields: [
-    {
-      name: 'title',
-      title: 'Tytuł',
-      type: 'string',
-      initialValue: 'Kontakt',
-      validation: (Rule: Rule) => Rule.required(),
-    },
-    {
-      name: 'backgroundColor',
-      title: 'Kolor tła',
-      type: 'color',
-      description: 'Pomarańczowy kolor tła strony (#FF734C)',
-      validation: (Rule: Rule) => Rule.required(),
-    },
-    {
-      name: 'lineColor',
-      title: 'Kolor linii',
-      type: 'color',
-      description: 'Żółty kolor pionowych linii (#FFBD19)',
-      validation: (Rule: Rule) => Rule.required(),
-    },
     {
       name: 'email',
       title: 'Email kontaktowy',
@@ -66,14 +44,13 @@ export default {
   ],
   preview: {
     select: {
-      title: 'title',
       email: 'email',
       media: 'teamImage',
     },
-    prepare(selection: { title: string; email: string; media: any }) {
-      const { title, email } = selection
+    prepare(selection: { email: string; media: any }) {
+      const { email } = selection
       return {
-        title: title || 'Kontakt',
+        title: 'Kontakt',
         subtitle: email,
         media: selection.media,
       }

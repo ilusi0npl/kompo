@@ -37,7 +37,7 @@ export default function Kalendarz() {
       <ResponsiveWrapper
         desktopContent={<DesktopKalendarz />}
         mobileContent={<MobileKalendarz />}
-        desktopHeight={DESKTOP_HEIGHT}
+        desktopHeight="auto"
         mobileHeight="auto"
         backgroundColor="#FDFDFD"
         lineColor="#A0E38A"

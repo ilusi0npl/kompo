@@ -72,13 +72,6 @@ export default {
       description: 'Wybierz, gdzie kompozytor powinien się wyświetlać',
     },
     {
-      name: 'order',
-      title: 'Kolejność wyświetlania',
-      type: 'number',
-      description: 'Kolejność w liście (1, 2, 3, ...)',
-      validation: (Rule: Rule) => Rule.required().min(1).integer(),
-    },
-    {
       name: 'publishedAt',
       title: 'Data publikacji',
       type: 'datetime',
@@ -103,11 +96,6 @@ export default {
     },
   },
   orderings: [
-    {
-      title: 'Kolejność (rosnąco)',
-      name: 'orderAsc',
-      by: [{field: 'order', direction: 'asc'}],
-    },
     {
       title: 'Nazwisko (A-Z)',
       name: 'nameAsc',

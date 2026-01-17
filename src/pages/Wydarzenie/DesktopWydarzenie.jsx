@@ -1,14 +1,63 @@
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
+import { useParams } from 'react-router';
+import { useSanityEvent } from '../../hooks/useSanityEvent';
 import {
   eventData,
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
 } from './wydarzenie-config';
 
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
+
 export default function DesktopWydarzenie() {
   const { t } = useTranslation();
+  const { id } = useParams();
+
+  // Fetch from Sanity if enabled
+  const { event: sanityEvent, loading, error } = useSanityEvent(id);
+
+  // Format date from ISO to display format
+  const formatDate = (isoDate) => {
+    if (!isoDate) return '';
+    const date = new Date(isoDate);
+    return date
+      .toLocaleDateString('pl-PL', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit',
+      })
+      .replace(/\./g, '.') + ' ';
+  };
+
+  const formatTime = (isoDate) => {
+    if (!isoDate) return '';
+    const date = new Date(isoDate);
+    return date.toLocaleTimeString('pl-PL', {
+      hour: '2-digit',
+      minute: '2-digit',
+    }) + ' ';
+  };
+
+  // Transform Sanity data to match config structure
+  const event = USE_SANITY && sanityEvent
+    ? {
+        ...sanityEvent,
+        date: formatDate(sanityEvent.date),
+        time: formatTime(sanityEvent.date),
+        image: sanityEvent.imageUrl,
+        artists: sanityEvent.performers || '',
+        program: sanityEvent.program || [],
+        // Transform partners from Sanity format to UI format
+        partners: sanityEvent.partners && sanityEvent.partners.length > 0
+          ? sanityEvent.partners.map(p => ({
+              name: p.name,
+              logo: p.logoUrl,
+            }))
+          : eventData.partners, // Fallback to hardcoded if no partners in CMS
+      }
+    : eventData;
 
   return (
     <section
@@ -41,14 +90,14 @@ export default function DesktopWydarzenie() {
             textTransform: 'uppercase',
           }}
         >
-          {eventData.title}
+          {event.title}
         </p>
       </div>
 
       {/* Obraz wydarzenia - centered at 555px (1440/2 - 330/2 = 555) z smooth loading */}
       <SmoothImage
-        src={eventData.image}
-        alt={eventData.title}
+        src={event.image}
+        alt={event.title}
         className="absolute"
         containerStyle={{
           left: '555px',
@@ -90,7 +139,7 @@ export default function DesktopWydarzenie() {
               color: '#131313',
             }}
           >
-            {eventData.date}| {eventData.time}
+            {event.date}| {event.time}
           </p>
         </div>
 
@@ -115,17 +164,57 @@ export default function DesktopWydarzenie() {
               color: '#131313',
             }}
           >
-            {eventData.location}
+            {event.location}
           </p>
         </div>
       </div>
+
+      {/* Przycisk KUP BILET */}
+      {event.showTicketButton && event.ticketUrl && (
+        <a
+          href={event.ticketUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute flex items-center justify-center ticket-btn"
+          style={{
+            left: '624px',
+            top: '990px',
+            backgroundColor: '#761FE0',
+            paddingLeft: '24px',
+            paddingRight: '22px',
+            paddingTop: '14px',
+            paddingBottom: '14px',
+            gap: '10px',
+            cursor: 'pointer',
+            textDecoration: 'none',
+          }}
+        >
+          <p
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 700,
+              fontSize: '20px',
+              lineHeight: 1.44,
+              color: '#FDFDFD',
+              textTransform: 'uppercase',
+            }}
+          >
+            kup bilet
+          </p>
+          <img
+            src="/assets/wydarzenie/arrow-up-right.svg"
+            alt="Arrow"
+            style={{ width: '28px', height: '28px' }}
+          />
+        </a>
+      )}
 
       {/* Główna treść - flex column with gap 50px */}
       <div
         className="absolute flex flex-col"
         style={{
           left: '295px',
-          top: '990px',
+          top: event.showTicketButton && event.ticketUrl ? '1087px' : '990px',
           width: '850px',
           gap: '50px',
         }}
@@ -142,7 +231,7 @@ export default function DesktopWydarzenie() {
             whiteSpace: 'pre-wrap',
           }}
         >
-          {eventData.description}
+          {event.description}
         </p>
 
         {/* Artyści frame */}
@@ -176,7 +265,7 @@ export default function DesktopWydarzenie() {
               color: '#131313',
             }}
           >
-            {eventData.artists}
+            {event.artists}
           </p>
         </div>
 
@@ -211,8 +300,8 @@ export default function DesktopWydarzenie() {
               paddingLeft: '24px',
             }}
           >
-            {eventData.program.map((item, idx) => (
-              <li key={idx} style={{ marginBottom: idx < eventData.program.length - 1 ? '8px' : '0' }}>
+            {event.program.map((item, idx) => (
+              <li key={idx} style={{ marginBottom: idx < event.program.length - 1 ? '8px' : '0' }}>
                 <span style={{ fontWeight: 700 }}>{item.composer}</span>
                 <span style={{ fontWeight: 500 }}>- {item.piece}</span>
               </li>
@@ -254,8 +343,8 @@ export default function DesktopWydarzenie() {
               }}
             >
               <img
-                src={eventData.partners[0].logo}
-                alt={eventData.partners[0].name}
+                src={event.partners[0].logo}
+                alt={event.partners[0].name}
                 className="absolute"
                 style={{
                   inset: 0,
@@ -276,8 +365,8 @@ export default function DesktopWydarzenie() {
               }}
             >
               <img
-                src={eventData.partners[1].logo}
-                alt={eventData.partners[1].name}
+                src={event.partners[1].logo}
+                alt={event.partners[1].name}
                 className="absolute"
                 style={{
                   inset: 0,
@@ -305,8 +394,8 @@ export default function DesktopWydarzenie() {
                 }}
               >
                 <img
-                  src={eventData.partners[2].logo}
-                  alt={eventData.partners[2].name}
+                  src={event.partners[2].logo}
+                  alt={event.partners[2].name}
                   className="absolute"
                   style={{
                     height: '61.54%',
@@ -328,8 +417,8 @@ export default function DesktopWydarzenie() {
               }}
             >
               <img
-                src={eventData.partners[3].logo}
-                alt={eventData.partners[3].name}
+                src={event.partners[3].logo}
+                alt={event.partners[3].name}
                 className="absolute"
                 style={{
                   inset: 0,

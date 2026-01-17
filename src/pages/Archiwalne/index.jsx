@@ -37,8 +37,8 @@ export default function Archiwalne() {
       <ResponsiveWrapper
         desktopContent={<DesktopArchiwalne />}
         mobileContent={<MobileArchiwalne />}
-        desktopHeight={DESKTOP_HEIGHT}
-        mobileHeight={4000}
+        desktopHeight="auto"
+        mobileHeight="auto"
         backgroundColor="#FDFDFD"
         lineColor="#A0E38A"
         hideLines={!isMobile}

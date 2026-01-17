@@ -20,7 +20,8 @@ export default function DesktopMedia() {
   // Transform Sanity albums to match config structure
   const transformedAlbums = USE_SANITY && sanityAlbums
     ? sanityAlbums.map((album) => ({
-        id: album.order,
+        _id: album._id,
+        id: album._id,
         image: album.thumbnailUrl,
         title: album.title,
         photographer: album.photographer,
@@ -28,15 +29,29 @@ export default function DesktopMedia() {
       }))
     : photos;
 
-  // Grid positions for 3 columns x 2 rows
-  const gridPositions = [
-    { left: 185, top: 276 },  // Row 1, Col 1
-    { left: 515, top: 276 },  // Row 1, Col 2
-    { left: 845, top: 276 },  // Row 1, Col 3
-    { left: 185, top: 613 },  // Row 2, Col 1
-    { left: 515, top: 613 },  // Row 2, Col 2
-    { left: 845, top: 613 },  // Row 2, Col 3
-  ];
+  // Dynamic grid calculation (3 columns, unlimited rows)
+  const GRID_START_LEFT = 185;
+  const GRID_START_TOP = 276;
+  const COL_SPACING = 330; // 515 - 185
+  const ROW_SPACING = 337; // 613 - 276
+  const ALBUM_HEIGHT = 290; // thumbnail (214) + gap (16) + text (~60)
+  const FOOTER_SPACING = 113; // space between last album and footer
+
+  const calculatePosition = (index) => {
+    const col = index % 3;
+    const row = Math.floor(index / 3);
+    return {
+      left: GRID_START_LEFT + (col * COL_SPACING),
+      top: GRID_START_TOP + (row * ROW_SPACING),
+    };
+  };
+
+  // Calculate dynamic height based on number of albums
+  const numRows = Math.ceil(transformedAlbums.length / 3);
+  const lastRowTop = GRID_START_TOP + ((numRows - 1) * ROW_SPACING);
+  const lastAlbumBottom = lastRowTop + ALBUM_HEIGHT;
+  const footerTop = lastAlbumBottom + FOOTER_SPACING;
+  const totalHeight = footerTop + 200; // footer height (~80px) + bottom margin (120px)
 
   // Show loading state only when using Sanity
   if (USE_SANITY && loading) {
@@ -100,26 +115,28 @@ export default function DesktopMedia() {
       className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
-        height: `${DESKTOP_HEIGHT}px`,
+        height: `${totalHeight}px`,
         backgroundColor: 'transparent',
         zIndex: 60,
       }}
     >
       {/* Photo Grid */}
-      {transformedAlbums.map((photo, index) => (
-        <Link
-          key={photo._id || photo.id}
-          to={`/media/galeria/${photo._id || photo.id}`}
-          className="absolute flex flex-col"
-          style={{
-            left: `${gridPositions[index].left}px`,
-            top: `${gridPositions[index].top}px`,
-            width: '300px',
-            gap: '16px',
-            cursor: 'pointer',
-            textDecoration: 'none',
-          }}
-        >
+      {transformedAlbums.map((photo, index) => {
+        const position = calculatePosition(index);
+        return (
+          <Link
+            key={photo._id || photo.id}
+            to={`/media/galeria/${photo._id || photo.id}`}
+            className="absolute flex flex-col"
+            style={{
+              left: `${position.left}px`,
+              top: `${position.top}px`,
+              width: '300px',
+              gap: '16px',
+              cursor: 'pointer',
+              textDecoration: 'none',
+            }}
+          >
           {/* Photo z smooth loading */}
           <SmoothImage
             src={photo.image}
@@ -167,14 +184,15 @@ export default function DesktopMedia() {
             </p>
           </div>
         </Link>
-      ))}
+        );
+      })}
 
-      {/* Stopka */}
+      {/* Stopka - dynamic position */}
       <Footer
         className="absolute"
         style={{
           left: '185px',
-          top: '1016px',
+          top: `${footerTop}px`,
           width: '520px',
         }}
       />

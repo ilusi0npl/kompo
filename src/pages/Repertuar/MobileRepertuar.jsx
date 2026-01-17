@@ -320,7 +320,7 @@ export default function MobileRepertuar() {
         }}
       >
         {sortedComposers.map((composer, idx) => (
-          <ComposerEntry key={work._key || work.title || idx} composer={composer} />
+          <ComposerEntry key={composer._id || idx} composer={composer} />
         ))}
       </div>
 

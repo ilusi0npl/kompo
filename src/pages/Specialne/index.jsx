@@ -37,8 +37,8 @@ export default function Specialne() {
       <ResponsiveWrapper
         desktopContent={<DesktopSpecjalne />}
         mobileContent={<MobileSpecjalne />}
-        desktopHeight={DESKTOP_HEIGHT}
-        mobileHeight={1264}
+        desktopHeight="auto"
+        mobileHeight="auto"
         backgroundColor="#FDFDFD"
         lineColor="#A0E38A"
         hideLines={!isMobile}

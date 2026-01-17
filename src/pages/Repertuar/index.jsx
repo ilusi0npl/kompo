@@ -37,8 +37,8 @@ export default function Repertuar() {
       <ResponsiveWrapper
         desktopContent={<DesktopRepertuar />}
         mobileContent={<MobileRepertuar />}
-        desktopHeight={DESKTOP_HEIGHT}
-        mobileHeight={2507}
+        desktopHeight="auto"
+        mobileHeight="auto"
         backgroundColor="#FDFDFD"
         lineColor="#A0E38A"
         hideLines={!isMobile}

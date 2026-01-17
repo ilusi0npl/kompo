@@ -20,7 +20,13 @@ export const upcomingEventsQuery = `
     program,
     description,
     location,
-    "imageUrl": image.asset->url
+    "imageUrl": image.asset->url,
+    ticketUrl,
+    showTicketButton,
+    partners[] {
+      name,
+      "logoUrl": logo.asset->url
+    }
   }
 `
 
@@ -34,7 +40,13 @@ export const archivedEventsQuery = `
     program,
     description,
     location,
-    "imageUrl": image.asset->url
+    "imageUrl": image.asset->url,
+    ticketUrl,
+    showTicketButton,
+    partners[] {
+      name,
+      "logoUrl": logo.asset->url
+    }
   }
 `
 
@@ -71,6 +83,12 @@ export const eventByIdQuery = `
     description,
     location,
     "imageUrl": image.asset->url,
+    ticketUrl,
+    showTicketButton,
+    partners[] {
+      name,
+      "logoUrl": logo.asset->url
+    },
     status,
     publishedAt
   }
