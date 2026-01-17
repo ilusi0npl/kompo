@@ -4,6 +4,7 @@ import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import { photos, ACTIVE_TAB_COLOR } from './media-config';
+import { useSanityPhotoAlbums } from '../../hooks/useSanityPhotoAlbums';
 
 const MOBILE_WIDTH = 390;
 const mobileLinePositions = [97, 195, 292];
@@ -11,8 +12,75 @@ const BACKGROUND_COLOR = '#34B898';
 const LINE_COLOR = '#01936F';
 const TEXT_COLOR = '#131313';
 
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
+
 export default function MobileMedia() {
   const { t } = useTranslation();
+
+  // Fetch from Sanity if enabled
+  const { albums: sanityAlbums, loading, error } = useSanityPhotoAlbums();
+
+  // Transform Sanity albums to match config structure
+  const albums = USE_SANITY && sanityAlbums && Array.isArray(sanityAlbums)
+    ? sanityAlbums.map((album) => ({
+        _id: album._id,
+        id: album._id,
+        image: album.thumbnailUrl || '',
+        title: album.title || 'Untitled',
+        photographer: album.photographer || '',
+        images: album.imageUrls || [],
+      }))
+    : photos;
+
+  // Show loading state only when using Sanity
+  if (USE_SANITY && loading) {
+    return (
+      <section
+        data-section="media-mobile"
+        className="relative overflow-hidden flex items-center justify-center"
+        style={{
+          width: `${MOBILE_WIDTH}px`,
+          minHeight: '100vh',
+          backgroundColor: BACKGROUND_COLOR,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: TEXT_COLOR,
+          }}
+        >
+          {t('common.loading.albums')}
+        </div>
+      </section>
+    );
+  }
+
+  // Show error state only when using Sanity
+  if (USE_SANITY && error) {
+    return (
+      <section
+        data-section="media-mobile"
+        className="relative overflow-hidden flex items-center justify-center"
+        style={{
+          width: `${MOBILE_WIDTH}px`,
+          minHeight: '100vh',
+          backgroundColor: BACKGROUND_COLOR,
+        }}
+      >
+        <div
+          style={{
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: '#ff0000',
+          }}
+        >
+          Błąd ładowania galerii
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -65,10 +133,10 @@ export default function MobileMedia() {
           gap: '40px',
         }}
       >
-        {photos.map((photo) => (
+        {albums.map((album) => (
           <Link
-            key={photo._id || photo.id}
-            to={`/media/galeria/${photo._id || photo.id}`}
+            key={album._id || album.id}
+            to={`/media/galeria/${album._id || album.id}`}
             className="flex flex-col"
             style={{
               gap: '16px',
@@ -78,8 +146,8 @@ export default function MobileMedia() {
           >
             {/* Zdjęcie z smooth loading */}
             <SmoothImage
-              src={photo.image}
-              alt={photo.title}
+              src={album.image}
+              alt={album.title}
               containerStyle={{
                 width: '300px',
                 height: '214px',
@@ -106,7 +174,7 @@ export default function MobileMedia() {
                 textTransform: 'uppercase',
               }}
             >
-              {photo.title}
+              {album.title}
             </p>
 
             {/* Fotograf */}
@@ -119,7 +187,7 @@ export default function MobileMedia() {
                 color: TEXT_COLOR,
               }}
             >
-              fot. {photo.photographer}
+              fot. {album.photographer}
             </p>
           </Link>
         ))}
