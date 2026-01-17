@@ -346,3 +346,8 @@ body.high-contrast {
   filter: contrast(1.5) grayscale(1);
   transition: filter 0.3s ease;
 }
+
+/* Exclude contrast toggle from high contrast filter - reverse the grayscale and add extra contrast */
+body.high-contrast .contrast-toggle-btn {
+  filter: grayscale(0) contrast(2);
+}

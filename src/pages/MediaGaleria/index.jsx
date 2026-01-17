@@ -4,11 +4,13 @@ import DesktopMediaGaleria from './DesktopMediaGaleria';
 import MobileMediaGaleria from './MobileMediaGaleria';
 import { getAlbumById } from '../Media/media-config';
 import { useSanityPhotoAlbums } from '../../hooks/useSanityPhotoAlbums';
+import { useTranslation } from '../../hooks/useTranslation';
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
 export default function MediaGaleria() {
   const { id } = useParams();
+  const { t } = useTranslation();
 
   // Fetch from Sanity if enabled
   const { albums: sanityAlbums, loading, error } = useSanityPhotoAlbums();

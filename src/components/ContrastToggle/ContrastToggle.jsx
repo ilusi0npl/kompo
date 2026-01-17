@@ -42,6 +42,7 @@ export default function ContrastToggle({
   return (
     <button
       onClick={handleClick}
+      className="contrast-toggle-btn"
       style={{
         background: 'none',
         border: 'none',
