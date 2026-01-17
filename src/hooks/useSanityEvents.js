@@ -20,6 +20,13 @@ export function useSanityEvents(status = 'upcoming') {
     client
       .fetch(query)
       .then(data => {
+        // Handle null/undefined data
+        if (!data || !Array.isArray(data)) {
+          setEvents([])
+          setLoading(false)
+          return
+        }
+
         // Transform data based on current language
         const transformedEvents = data.map(event => ({
           ...event,

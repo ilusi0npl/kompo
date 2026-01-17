@@ -17,6 +17,13 @@ export function useSanityBioProfiles() {
     client
       .fetch(bioProfilesQuery)
       .then(data => {
+        // Handle null/undefined data
+        if (!data || !Array.isArray(data)) {
+          setProfiles([])
+          setLoading(false)
+          return
+        }
+
         // Transform data based on current language
         const transformedProfiles = data.map(profile => ({
           ...profile,

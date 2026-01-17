@@ -18,13 +18,13 @@ export default function DesktopMedia() {
   const { albums: sanityAlbums, loading, error } = useSanityPhotoAlbums();
 
   // Transform Sanity albums to match config structure
-  const transformedAlbums = USE_SANITY && sanityAlbums
+  const transformedAlbums = USE_SANITY && sanityAlbums && Array.isArray(sanityAlbums)
     ? sanityAlbums.map((album) => ({
         _id: album._id,
         id: album._id,
-        image: album.thumbnailUrl,
-        title: album.title,
-        photographer: album.photographer,
+        image: album.thumbnailUrl || '',
+        title: album.title || 'Untitled',
+        photographer: album.photographer || '',
         images: album.imageUrls || [],
       }))
     : photos;

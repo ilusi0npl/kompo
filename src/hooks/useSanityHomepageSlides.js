@@ -17,6 +17,13 @@ export function useSanityHomepageSlides() {
     client
       .fetch(homepageSlidesQuery)
       .then(data => {
+        // Handle null/undefined data
+        if (!data || !Array.isArray(data)) {
+          setSlides([])
+          setLoading(false)
+          return
+        }
+
         // Transform data based on current language
         const transformedSlides = data.map(slide => ({
           ...slide,

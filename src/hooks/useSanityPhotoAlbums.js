@@ -17,6 +17,13 @@ export function useSanityPhotoAlbums() {
     client
       .fetch(photoAlbumsQuery)
       .then(data => {
+        // Handle null/undefined data
+        if (!data || !Array.isArray(data)) {
+          setAlbums([])
+          setLoading(false)
+          return
+        }
+
         // Transform data based on current language
         const transformedAlbums = data.map(album => ({
           ...album,
