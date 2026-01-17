@@ -17,6 +17,13 @@ export function useSanityVideos() {
     client
       .fetch(videoItemsQuery)
       .then(data => {
+        // Handle null/undefined data
+        if (!data || !Array.isArray(data)) {
+          setVideos([])
+          setLoading(false)
+          return
+        }
+
         // Transform data based on current language
         const transformedVideos = data.map(video => ({
           ...video,

@@ -17,11 +17,15 @@ const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
  * Transform Sanity videos to match config structure
  */
 function transformSanityVideos(sanityVideos) {
+  if (!sanityVideos || !Array.isArray(sanityVideos)) {
+    return [];
+  }
+
   return sanityVideos.map((video, index) => ({
     id: index + 1,
-    thumbnail: video.thumbnailUrl,
-    title: video.title,
-    youtubeUrl: video.videoUrl,
+    thumbnail: video.thumbnailUrl || '',
+    title: video.title || 'Untitled',
+    youtubeUrl: video.videoUrl || '',
   }));
 }
 
