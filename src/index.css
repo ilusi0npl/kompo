@@ -344,10 +344,12 @@ body {
 /* High Contrast Mode */
 body.high-contrast {
   filter: contrast(1.5) grayscale(1);
-  transition: filter 0.3s ease;
 }
 
-/* Exclude contrast toggle from high contrast filter - reverse the grayscale and add extra contrast */
+/* Contrast toggle icon - needs to stay yellow, reverse the grayscale */
 body.high-contrast .contrast-toggle-btn {
+  /* Create new stacking context to apply own filter */
+  position: relative;
+  isolation: isolate;
   filter: grayscale(0) contrast(2);
 }
