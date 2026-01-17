@@ -47,7 +47,7 @@ export default function MediaGaleria() {
           color: '#131313',
         }}
       >
-        Ładowanie albumu...
+        {t('common.loading.album')}
       </div>
     );
   }

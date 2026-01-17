@@ -79,7 +79,7 @@ export default function DesktopSpecjalne() {
         }}
       >
         <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '20px' }}>
-          Ładowanie projektów specjalnych...
+          {t('common.loading.special')}
         </p>
       </section>
     );

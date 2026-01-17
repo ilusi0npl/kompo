@@ -105,7 +105,7 @@ export default function DesktopBio({ setCurrentColors }) {
             color: '#131313',
           }}
         >
-          Ładowanie profili...
+          {t('common.loading.profiles')}
         </div>
       </section>
     );

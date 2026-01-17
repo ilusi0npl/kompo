@@ -91,7 +91,7 @@ export default function MobileRepertuar() {
         }}
       >
         <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px' }}>
-          Ładowanie repertuaru...
+          {t('common.loading.repertoire')}
         </p>
       </section>
     );

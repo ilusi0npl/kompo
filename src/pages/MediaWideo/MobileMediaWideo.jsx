@@ -47,7 +47,7 @@ export default function MobileMediaWideo() {
         }}
       >
         <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px' }}>
-          Ładowanie filmów...
+          {t('common.loading.videos')}
         </p>
       </section>
     );

@@ -91,7 +91,7 @@ export default function MobileSpecjalne() {
         }}
       >
         <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px' }}>
-          Ładowanie projektów specjalnych...
+          {t('common.loading.special')}
         </p>
       </section>
     );

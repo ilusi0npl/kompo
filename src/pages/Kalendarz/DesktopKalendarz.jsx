@@ -75,7 +75,7 @@ export default function DesktopKalendarz() {
         }}
       >
         <div style={{fontSize: '18px', fontFamily: "'IBM Plex Mono', monospace"}}>
-          Ładowanie wydarzeń...
+          {t('common.loading.events')}
         </div>
       </div>
     );
@@ -95,7 +95,7 @@ export default function DesktopKalendarz() {
         }}
       >
         <div style={{fontSize: '18px', fontFamily: "'IBM Plex Mono', monospace", color: '#FF0000'}}>
-          Błąd ładowania wydarzeń. Spróbuj ponownie później.
+          {t('common.error.loadEvents')}
         </div>
       </div>
     );

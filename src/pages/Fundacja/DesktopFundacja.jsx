@@ -94,7 +94,7 @@ export default function DesktopFundacja() {
             color: '#131313',
           }}
         >
-          Ładowanie strony fundacji...
+          {t('common.loading.foundation')}
         </div>
       </section>
     );

@@ -78,7 +78,7 @@ export default function DesktopHomepage() {
             color: '#131313',
           }}
         >
-          Ładowanie slajdów...
+          {t('common.loading.slides')}
         </div>
       </section>
     );

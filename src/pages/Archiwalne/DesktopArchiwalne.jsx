@@ -68,7 +68,7 @@ export default function DesktopArchiwalne() {
             color: '#131313',
           }}
         >
-          Ładowanie wydarzeń...
+          {t('common.loading.events')}
         </div>
       </section>
     );
@@ -96,7 +96,7 @@ export default function DesktopArchiwalne() {
             color: '#FF0000',
           }}
         >
-          Błąd ładowania wydarzeń. Spróbuj ponownie później.
+          {t('common.error.loadEvents')}
         </div>
       </section>
     );

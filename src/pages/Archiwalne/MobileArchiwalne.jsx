@@ -63,7 +63,7 @@ export default function MobileArchiwalne() {
             color: TEXT_COLOR,
           }}
         >
-          Ładowanie wydarzeń...
+          {t('common.loading.events')}
         </div>
       </section>
     );
@@ -91,7 +91,7 @@ export default function MobileArchiwalne() {
             color: '#FF0000',
           }}
         >
-          Błąd ładowania wydarzeń. Spróbuj ponownie później.
+          {t('common.error.loadEvents')}
         </div>
       </section>
     );

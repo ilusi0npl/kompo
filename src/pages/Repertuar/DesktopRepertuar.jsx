@@ -80,7 +80,7 @@ export default function DesktopRepertuar() {
         }}
       >
         <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '20px' }}>
-          Ładowanie repertuaru...
+          {t('common.loading.repertoire')}
         </p>
       </section>
     );

@@ -75,7 +75,7 @@ export default function DesktopMedia() {
             color: '#131313',
           }}
         >
-          Ładowanie albumów...
+          {t('common.loading.albums')}
         </div>
       </section>
     );
@@ -103,7 +103,7 @@ export default function DesktopMedia() {
             color: '#FF0000',
           }}
         >
-          Błąd ładowania albumów. Spróbuj ponownie później.
+          {t('common.error.loadAlbums')}
         </div>
       </section>
     );

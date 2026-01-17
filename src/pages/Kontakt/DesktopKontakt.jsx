@@ -44,7 +44,7 @@ export default function DesktopKontakt() {
             color: '#131313',
           }}
         >
-          Ładowanie strony kontakt...
+          {t('common.loading.contact')}
         </div>
       </section>
     );

@@ -31,6 +31,22 @@ export const pl = {
     buy: 'KUP',
     freeEntry: 'wstęp wolny',
   },
+  loading: {
+    events: 'Ładowanie wydarzeń...',
+    profiles: 'Ładowanie profili...',
+    albums: 'Ładowanie albumów...',
+    album: 'Ładowanie albumu...',
+    slides: 'Ładowanie slajdów...',
+    videos: 'Ładowanie filmów...',
+    special: 'Ładowanie projektów specjalnych...',
+    contact: 'Ładowanie strony kontakt...',
+    foundation: 'Ładowanie strony fundacji...',
+    repertoire: 'Ładowanie repertuaru...',
+  },
+  error: {
+    loadEvents: 'Błąd ładowania wydarzeń. Spróbuj ponownie później.',
+    loadAlbums: 'Błąd ładowania albumów. Spróbuj ponownie później.',
+  },
 };
 
 export const en = {
@@ -62,5 +78,21 @@ export const en = {
     tickets: 'tickets:',
     buy: 'BUY',
     freeEntry: 'free entry',
+  },
+  loading: {
+    events: 'Loading events...',
+    profiles: 'Loading profiles...',
+    albums: 'Loading albums...',
+    album: 'Loading album...',
+    slides: 'Loading slides...',
+    videos: 'Loading videos...',
+    special: 'Loading special projects...',
+    contact: 'Loading contact page...',
+    foundation: 'Loading foundation page...',
+    repertoire: 'Loading repertoire...',
+  },
+  error: {
+    loadEvents: 'Error loading events. Please try again later.',
+    loadAlbums: 'Error loading albums. Please try again later.',
   },
 };
