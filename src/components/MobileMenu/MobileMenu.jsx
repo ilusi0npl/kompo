@@ -117,7 +117,7 @@ export default function MobileMenu({ isOpen, onClose }) {
               fontFamily: "'IBM Plex Mono', monospace",
               fontWeight: 700,
               fontSize: `${scaledFontSize}px`,
-              lineHeight: 'normal',
+              lineHeight: 1.48,
               color: '#131313',
             }}
           >
@@ -128,13 +128,14 @@ export default function MobileMenu({ isOpen, onClose }) {
         {/* Language Text - toggles language */}
         <LanguageText
           textColor="#131313"
-          scale={scaledFontSize / 20} // 18px scaled / 20px base
+          fontSize={`${scaledFontSize}px`}
+          asMenuItem={true}
         />
 
-        {/* Contrast Toggle - eye icon (not implemented yet) */}
+        {/* Contrast Toggle - eye icon */}
         <ContrastToggle
           iconColor="#131313"
-          scale={1}
+          scale={scale}
         />
       </nav>
     </div>
