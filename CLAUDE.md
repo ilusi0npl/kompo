@@ -1,16 +1,16 @@
-# CLAUDE.md
+# CLAUDE.md - React + Figma Development Guide
 
 ## Project Overview
 
-DO NOT COMMIT ANYTHING WITHOUT EXPLICIT ASKED!
-DO NOT DEPLOY TO VERCEL WITHOUT EXPLICIT ASKED!
+DO NOT COMMIT ANYTHING WITHOUT EXPLICIT REQUEST!
+DO NOT DEPLOY TO VERCEL WITHOUT EXPLICIT REQUEST!
 
-**Cel**: Pixel-perfect implementacja stron React z designów Figma.
+**Goal**: Pixel-perfect React implementation from Figma designs.
 
-**Filozofia**:
-- Design (Figma) jest źródłem prawdy
-- Każda implementacja musi przejść weryfikację wizualną
-- Iteracyjny proces: generuj → weryfikuj → napraw → powtórz
+**Philosophy**:
+- Design (Figma) is the source of truth
+- Every implementation must pass visual verification
+- Iterative process: generate → verify → fix → repeat
 
 ---
 
@@ -20,31 +20,32 @@ DO NOT DEPLOY TO VERCEL WITHOUT EXPLICIT ASKED!
 - **React Router v7** - Routing
 - **Vite** - Build tool and dev server
 - **Tailwind CSS 4.x** - Utility-first styling
+- **Sanity CMS v3** - Headless CMS (optional, feature-flagged)
 
 ---
 
 ## Verification Tools
 
-Mamy 2 narzędzia do weryfikacji wizualnej:
+Two tools for visual verification:
 
 ### 1. Sections Verification (Figma → Crop → Compare)
 
-**Najlepsze do porównywania sekcji strony z Figma.**
+**Best for comparing page sections with Figma.**
 
 ```bash
-# Wszystkie sekcje
+# All sections
 make verify-sections SECTIONS_CONFIG=scripts_project/sections-config.json
 
-# Pojedyncza sekcja
+# Single section
 make verify-section SECTION=hero SECTIONS_CONFIG=scripts_project/sections-config.json
 ```
 
-**Co robi:**
-1. Pobiera pełny screenshot strony z Figma API
-2. Tnie go na sekcje według bounds w configu
-3. Robi screenshot każdej sekcji z implementacji (Playwright)
-4. Porównuje każdą parę (pixelmatch)
-5. Generuje HTML report
+**How it works:**
+1. Fetches full page screenshot from Figma API
+2. Crops into sections based on config bounds
+3. Screenshots each section from implementation (Playwright)
+4. Compares each pair (pixelmatch)
+5. Generates HTML report
 
 **Config:** `scripts_project/sections-config.json`
 ```json
@@ -61,22 +62,19 @@ make verify-section SECTION=hero SECTIONS_CONFIG=scripts_project/sections-config
 
 **Output:** `tmp/figma-sections/[timestamp]/report.html`
 
-**WAŻNE:** Po każdym uruchomieniu `make verify-section` ZAWSZE podawaj użytkownikowi link do raportu HTML, np.:
-```
-file:///home/ilusi0n/repo/kompo/tmp/figma-sections/2025-12-05T18-59-06/report.html
-```
+**IMPORTANT:** After each `make verify-section`, ALWAYS provide the user with the HTML report link.
 
-**Skrypt:** `scripts/verify-figma-sections.cjs`
+**Script:** `scripts/verify-figma-sections.cjs`
 
 ### 2. UIMatch (Single Node Comparison)
 
-**Do porównywania pojedynczych elementów (awatary, logo, komponenty).**
+**For comparing individual elements (avatars, logos, components).**
 
 ```bash
-# Lista dostępnych nodes
+# List available nodes
 make verify-list CONFIG=scripts_project/uimatch-config.json
 
-# Weryfikacja node'a
+# Verify node
 make verify NODE=title CONFIG=scripts_project/uimatch-config.json
 make verify NODE=avatar CONFIG=scripts_project/uimatch-config.json
 ```
@@ -99,20 +97,20 @@ make verify NODE=avatar CONFIG=scripts_project/uimatch-config.json
 **UIMatch Profiles:**
 | Profile | pixelDiffRatio | Use Case |
 |---------|---------------|----------|
-| `component/strict` | ≤1% | Komponenty bez tekstu (obrazy, ikony) |
-| `component/dev` | ≤8% | **Domyślny** - full-page z tekstem |
+| `component/strict` | ≤1% | Components without text (images, icons) |
+| `component/dev` | ≤8% | **Default** - full-page with text |
 
 **Output:** `tmp/uimatch-reports/`
 
-**Skrypt:** `scripts/verify-uimatch.cjs`
+**Script:** `scripts/verify-uimatch.cjs`
 
-### Kiedy użyć którego narzędzia?
+### Which tool to use?
 
-| Scenariusz | Narzędzie |
-|------------|-----------|
-| Porównanie sekcji (hero, footer, about) | `verify-sections` |
-| Porównanie pojedynczego elementu | `verify` (UIMatch) |
-| Porównanie awatara/logo | `verify` z `component/strict` |
+| Scenario | Tool |
+|----------|------|
+| Compare sections (hero, footer, about) | `verify-sections` |
+| Compare single element | `verify` (UIMatch) |
+| Compare avatar/logo | `verify` with `component/strict` |
 
 ---
 
@@ -157,50 +155,86 @@ make clean                     # Clean tmp files
 ```
 scripts/                          # Generic verification scripts
 ├── verify-figma-sections.cjs    # Sections verification
-└── verify-uimatch.cjs           # UIMatch single node
+├── verify-uimatch.cjs           # UIMatch single node
+└── migrate-*.js                 # CMS migration scripts
 
-scripts_project/                  # Project-specific configs (create this!)
+scripts_project/                  # Project-specific configs
 ├── sections-config.json         # Sections bounds for verify-sections
 └── uimatch-config.json          # UIMatch nodes config
 
 src/                              # React application
 ├── components/                   # Shared components
+│   ├── ResponsiveWrapper/       # Scale transform wrapper
+│   ├── BackgroundLines/         # Decorative lines
+│   ├── Footer/                  # Footer component
+│   ├── LanguageToggle/          # Language switcher
+│   └── ...
 ├── pages/                        # Page components
+│   └── [PageName]/
+│       ├── index.jsx            # Uses ResponsiveWrapper
+│       ├── Desktop[PageName].jsx # Desktop layout
+│       └── Mobile[PageName].jsx  # Mobile layout
+├── hooks/                        # Custom React hooks
+│   ├── useSanity*.js            # Sanity CMS data fetching
+│   ├── useTranslation.js        # i18n hook
+│   └── useLanguage.js           # Language context
+├── context/                      # React contexts
+│   └── LanguageContext.jsx      # Language state management
+├── lib/                          # Utilities
+│   └── sanity/
+│       ├── client.js            # Sanity client config
+│       └── queries.js           # GROQ queries
+├── translations/                 # i18n translation files
+│   ├── index.js                 # Export all translations
+│   ├── common.js                # Shared UI texts
+│   └── [page].js                # Page-specific texts
 └── App.jsx                       # Routes
+
+sanity-studio/                    # Sanity CMS Studio
+├── schemaTypes/                  # Content schemas
+│   ├── event.ts
+│   ├── bioProfile.ts
+│   ├── homepageSlide.ts
+│   ├── composer.ts
+│   ├── photoAlbum.ts
+│   ├── media.ts
+│   └── ...
+└── sanity.config.ts             # Studio configuration
 
 tmp/                              # Temporary files (gitignored)
 ├── figma-sections/              # verify-sections output
 └── uimatch-reports/             # verify output
 
 public/assets/                    # Static assets
+└── [feature]/                   # Organized by feature
 ```
 
 ---
 
-## Assets - Pobieranie i Weryfikacja
+## Assets - Download and Verification
 
-### Problem: Błędne rozszerzenia plików
+### Problem: Incorrect File Extensions
 
-Figma czasem eksportuje pliki z błędnym rozszerzeniem (np. SVG jako `.png`). Powoduje to błąd API:
+Figma sometimes exports files with wrong extensions (e.g., SVG as `.png`). This causes API errors:
 ```
 API Error: 400 "media_type: Input should be 'image/jpeg', 'image/png', 'image/gif' or 'image/webp'"
 ```
 
-### PRZED odczytaniem obrazu - ZAWSZE sprawdź typ pliku
+### ALWAYS check file type before reading
 
 ```bash
-file public/assets/nazwa-pliku.png
+file public/assets/filename.png
 ```
 
-Jeśli wynik to `SVG Scalable Vector Graphics image` - plik ma błędne rozszerzenie.
+If output is `SVG Scalable Vector Graphics image` - file has wrong extension.
 
-### Naprawa błędnych rozszerzeń
+### Fix incorrect extensions
 
 ```bash
-# Zmień rozszerzenie na prawidłowe
-mv public/assets/plik.png public/assets/plik.svg
+# Change to correct extension
+mv public/assets/file.png public/assets/file.svg
 
-# Lub sprawdź wszystkie naraz
+# Check all at once
 for f in public/assets/*.png; do
   type=$(file -b "$f" | head -c 3)
   if [ "$type" = "SVG" ]; then
@@ -209,82 +243,82 @@ for f in public/assets/*.png; do
 done
 ```
 
-### Pobieranie assetów z Figma
+### Download assets from Figma
 
-1. **Użyj `get_design_context`** - zwraca URL-e do pobrania assetów
-2. **Pobierz przez curl/wget** z prawidłowym rozszerzeniem
-3. **Zweryfikuj typ** przed użyciem: `file nazwa-pliku.ext`
+1. **Use `get_design_context`** - returns asset download URLs
+2. **Download via curl/wget** with correct extension
+3. **Verify type** before use: `file filename.ext`
 
-### Czytanie plików graficznych
+### Reading image files
 
-| Typ pliku | Jak czytać |
-|-----------|-----------|
-| PNG/JPG/GIF/WebP (prawdziwe) | `Read` tool - działa |
-| SVG | `Read` tool jako tekst - działa |
-| PNG/JPG (ale faktycznie SVG) | **NIE DZIAŁA** - napraw rozszerzenie |
+| File Type | How to Read |
+|-----------|------------|
+| PNG/JPG/GIF/WebP (real) | `Read` tool - works |
+| SVG | `Read` tool as text - works |
+| PNG/JPG (but actually SVG) | **DOESN'T WORK** - fix extension |
 
-### Workflow dla nowych assetów
+### Workflow for new assets
 
-1. Pobierz asset z Figma
-2. `file public/assets/nowy-asset.png` - sprawdź prawdziwy typ
-3. Jeśli typ nie zgadza się z rozszerzeniem → zmień rozszerzenie
-4. Dopiero wtedy używaj w kodzie
+1. Download asset from Figma
+2. `file public/assets/new-asset.png` - check real type
+3. If type doesn't match extension → change extension
+4. Then use in code
 
 ---
 
 ## Best Practices
 
-### Komponenty muszą mieć `data-section`
+### Components must have `data-section`
 ```jsx
 <div data-section="hero" className="...">
   <HeroSection />
 </div>
 ```
 
-### Workflow weryfikacji
-1. Uruchom `verify-sections` dla wszystkich sekcji
-2. Sprawdź HTML report dla każdej sekcji
-3. Napraw różnice i powtórz
-4. Dla elementów (logo, awatary) użyj `verify` z UIMatch
+### Verification workflow
+1. Run `verify-sections` for all sections
+2. Check HTML report for each section
+3. Fix differences and repeat
+4. For elements (logos, avatars) use `verify` with UIMatch
 
 ---
 
-## Responsywność - Scale Transform Approach
+## Responsive Design - Scale Transform Approach
 
 ### Problem
 
-Strony mają stałą szerokość (np. 1728px dla desktop), przez co pojawiają się paski po bokach na mniejszych ekranach.
+Pages have fixed width (e.g., 1440px for desktop), causing side margins on smaller screens.
 
-### Rozwiązanie: Scale Transform
+### Solution: Scale Transform
 
-Zamiast pełnej responsywności (przepisywanie layoutu), używamy skalowania CSS transform:
+Instead of full responsiveness (rewriting layout), use CSS transform scaling:
 
-- **Desktop**: bazowa szerokość 1728px, skaluj: `viewportWidth / 1728`
-- **Mobile**: bazowa szerokość 390px, skaluj: `viewportWidth / 390`
-- **Breakpoint**: 768px - poniżej przełącz na mobile
+- **Desktop**: base width 1440px, scale: `viewportWidth / 1440`
+- **Mobile**: base width 390px, scale: `viewportWidth / 390`
+- **Breakpoint**: 768px - switch to mobile below this
 
-### Struktura plików
+### File structure
 
 ```
 src/
 ├── components/
 │   └── ResponsiveWrapper/
-│       └── ResponsiveWrapper.jsx    # Wrapper skalujący
+│       └── ResponsiveWrapper.jsx    # Scaling wrapper
 ├── pages/
-│   └── Homepage/
-│       ├── index.jsx                # Główny - używa ResponsiveWrapper
-│       ├── DesktopHomepage.jsx      # Layout desktop (1728px)
-│       └── MobileHomepage.jsx       # Layout mobile (390px)
+│   └── [PageName]/
+│       ├── index.jsx                # Main - uses ResponsiveWrapper
+│       ├── Desktop[PageName].jsx    # Desktop layout
+│       └── Mobile[PageName].jsx     # Mobile layout
 ```
 
-### ResponsiveWrapper - implementacja
+### ResponsiveWrapper - implementation
 
 ```jsx
 // src/components/ResponsiveWrapper/ResponsiveWrapper.jsx
 import { useState, useEffect } from 'react';
 
-const DESKTOP_WIDTH = 1728;
-const MOBILE_WIDTH = 390;
+const DESKTOP_WIDTH = 1440;  // Adjust per project
+const MOBILE_WIDTH = 390;    // Adjust per project
 const BREAKPOINT = 768;
 
 export default function ResponsiveWrapper({
@@ -317,25 +351,25 @@ export default function ResponsiveWrapper({
 }
 ```
 
-### Użycie w stronie
+### Usage in page
 
 ```jsx
-// src/pages/Homepage/index.jsx
+// src/pages/[PageName]/index.jsx
 import ResponsiveWrapper from '../../components/ResponsiveWrapper/ResponsiveWrapper';
-import DesktopHomepage from './DesktopHomepage';
-import MobileHomepage from './MobileHomepage';
+import Desktop[PageName] from './Desktop[PageName]';
+import Mobile[PageName] from './Mobile[PageName]';
 
-export default function Homepage() {
+export default function [PageName]() {
   return (
     <ResponsiveWrapper
-      desktopContent={<DesktopHomepage />}
-      mobileContent={<MobileHomepage />}
+      desktopContent={<Desktop[PageName] />}
+      mobileContent={<Mobile[PageName] />}
     />
   );
 }
 ```
 
-### CSS fix (wymagane)
+### Required CSS fix
 
 ```css
 /* src/index.css */
@@ -345,266 +379,194 @@ html, body {
 }
 ```
 
-### Workflow implementacji
+### Implementation workflow
 
-1. **Przenieś obecny kod** do `DesktopHomepage.jsx`
-2. **Stwórz `MobileHomepage.jsx`** bazując na Figma mobile design
-3. **Pobierz assety mobilne** do `public/assets/mobile/`
-4. **Zaimplementuj `ResponsiveWrapper`**
-5. **Połącz w `index.jsx`**
-6. **Przetestuj** na viewportach: 1920px, 1280px, 768px, 390px
+1. **Move current code** to `Desktop[PageName].jsx`
+2. **Create `Mobile[PageName].jsx`** based on Figma mobile design
+3. **Download mobile assets** to `public/assets/mobile/`
+4. **Implement `ResponsiveWrapper`**
+5. **Connect in `index.jsx`**
+6. **Test** on viewports: 1920px, 1280px, 768px, 390px
 
 ### Figma mobile design
 
-Zawsze podawaj link do Figma z mobile designem w prompcie:
+Always provide Figma link with mobile design in prompt:
 ```
 Mobile design: https://www.figma.com/design/[fileKey]/[fileName]?node-id=[nodeId]
 ```
 
-### Testowanie viewportów
+### Testing viewports
 
 ```bash
-# DevTools → Responsive Mode → wybierz szerokość:
-# - 1920px (duży desktop)
+# DevTools → Responsive Mode → select width:
+# - 1920px (large desktop)
 # - 1280px (laptop)
-# - 768px (tuż przed breakpointem)
+# - 768px (just before breakpoint)
 # - 390px (iPhone 14)
 ```
 
-### Kiedy używać Scale Transform vs Full Responsive?
+### When to use Scale Transform vs Full Responsive?
 
-| Podejście | Kiedy |
-|-----------|-------|
-| **Scale Transform** | Pixel-perfect z Figma, szybka implementacja |
-| **Full Responsive** | SEO-critical, accessibility-first, złożone interakcje |
+| Approach | When |
+|----------|------|
+| **Scale Transform** | Pixel-perfect from Figma, quick implementation |
+| **Full Responsive** | SEO-critical, accessibility-first, complex interactions |
 
-**Domyślnie używamy Scale Transform** - zachowuje pixel-perfect zgodność z designem.
-
----
-
-## Kompopolex - Implementacja Homepage
-
-### Figma Design
-
-| Wersja | Link | Wymiary |
-|--------|------|---------|
-| Desktop | [node 9-301](https://www.figma.com/design/16wGmQvLEJ5vSIrSzL8muo/Kompopolex-www-MATYLDA?node-id=9-301) | 1440 x 700 px |
-| Mobile | [node 71-470](https://www.figma.com/design/16wGmQvLEJ5vSIrSzL8muo/Kompopolex-www-MATYLDA?node-id=71-470) | 390 x 683 px |
-
-### Struktura plików
-
-```
-src/
-├── components/
-│   └── ResponsiveWrapper/
-│       └── ResponsiveWrapper.jsx    # Skaluje layout do viewportu
-├── pages/
-│   └── Homepage/
-│       ├── index.jsx                # Główny - używa ResponsiveWrapper
-│       ├── DesktopHomepage.jsx      # Layout desktop (1440px)
-│       └── MobileHomepage.jsx       # Layout mobile (390px)
-
-public/
-├── favicon.svg                      # Favicon (logo Kompopolex)
-└── assets/
-    ├── logo.svg                     # Logo desktop
-    ├── hero-photo.jpg               # Zdjęcie hero desktop (295KB)
-    └── mobile/
-        ├── logo.svg                 # Logo mobile
-        ├── hero-photo.jpg           # Zdjęcie hero mobile (90KB)
-        └── trio.svg                 # SVG "Trio" mobile
-```
-
-### Konfiguracja responsywności
-
-```jsx
-// src/components/ResponsiveWrapper/ResponsiveWrapper.jsx
-const DESKTOP_WIDTH = 1440;  // Z Figma desktop
-const MOBILE_WIDTH = 390;    // Z Figma mobile
-const BREAKPOINT = 768;      // Przełączenie desktop/mobile
-```
-
-### Kolory z designu
-
-| Nazwa | Hex | Użycie |
-|-------|-----|--------|
-| Background | #FDFDFD | Tło strony |
-| Text | #131313 | Tekst |
-| Lines | #A0E38A | Pionowe linie dekoracyjne |
-
-### Pionowe linie dekoracyjne
-
-**Desktop (1440px):** x = 155, 375, 595, 815, 1035, 1255
-**Mobile (390px):** x = 97, 195, 292
-
-### Weryfikacja sekcji
-
-```bash
-# Weryfikuj hero desktop
-make verify-section SECTION=hero SECTIONS_CONFIG=scripts_project/sections-config.json
-```
-
-**Ostatni wynik:** 1.59% diff (PASSED, próg ≤8%)
-
-### Fonty
-
-- **IBM Plex Mono** - wszystkie teksty
-- Pliki: `public/fonts/ibm-plex-mono/*.woff2`
-- Definicje: `src/index.css` (@font-face)
+**Default: Scale Transform** - maintains pixel-perfect design consistency.
 
 ---
 
-## Kompopolex - Implementacja Bio
+## Internationalization (i18n)
 
-### Figma Design
+### Language System
 
-| Wersja | Link | Wymiary |
-|--------|------|---------|
-| Desktop Bio1 (Ensemble) | [node 9-449](https://www.figma.com/design/16wGmQvLEJ5vSIrSzL8muo/Kompopolex-www-MATYLDA?node-id=9-449) | 1440 x 700 px |
-| Desktop Bio2 (Aleksandra) | [node 10-903](https://www.figma.com/design/16wGmQvLEJ5vSIrSzL8muo/Kompopolex-www-MATYLDA?node-id=10-903) | 1440 x 700 px |
-| Desktop Bio3 (Rafał) | [node 10-611](https://www.figma.com/design/16wGmQvLEJ5vSIrSzL8muo/Kompopolex-www-MATYLDA?node-id=10-611) | 1440 x 700 px |
-| Desktop Bio4 (Jacek) | [node 10-642](https://www.figma.com/design/16wGmQvLEJ5vSIrSzL8muo/Kompopolex-www-MATYLDA?node-id=10-642) | 1440 x 700 px |
+This project supports **bilingual content (Polish/English)** with two separate strategies:
 
-### Struktura plików
+#### 1. UI Texts - Translation Files
 
+Static UI elements (navigation, buttons, labels) use translation files:
+
+**Structure:**
 ```
-src/pages/Bio/
-├── index.jsx           # Główny - używa ResponsiveWrapper
-├── DesktopBio.jsx      # Layout desktop (1440px)
-├── MobileBio.jsx       # Layout mobile (390px)
-├── bio-config.js       # Konfiguracja slajdów Bio
-
-public/assets/bio/
-├── bio1-ensemble.jpg   # Zdjęcie Ensemble
-├── bio2-aleksandra.jpg # Zdjęcie Aleksandra
-├── bio3-rafal.jpg      # Zdjęcie Rafał
-├── bio4-jacek.jpg      # Zdjęcie Jacek
-└── bio-text.svg        # SVG "Bio." (49x107px)
+src/translations/
+├── index.js          # Export all translations
+├── common.js         # Shared: nav, footer, labels, loading, errors
+├── [page].js         # Page-specific texts
 ```
 
-### Kolory slajdów Bio
+**Pattern:**
+```javascript
+// src/translations/common.js
+export const pl = {
+  nav: {
+    bio: 'Bio',
+    media: 'Media',
+    // ...
+  },
+  loading: {
+    events: 'Ładowanie wydarzeń...',
+  },
+};
 
-| Slajd | Background | Line Color | Text |
-|-------|-----------|------------|------|
-| Bio1 (Ensemble) | #FDFDFD | #A0E38A | #131313 |
-| Bio2 (Aleksandra) | #FF734C | #FFBD19 | #131313 |
-| Bio3 (Rafał) | #34B898 | #01936F | #131313 |
-| Bio4 (Jacek) | #73A1FE | #3478FF | #131313 |
+export const en = {
+  nav: {
+    bio: 'Bio',
+    media: 'Media',
+    // ...
+  },
+  loading: {
+    events: 'Loading events...',
+  },
+};
+```
 
-### Pozycjonowanie obrazów (z Figma CSS)
+**Usage in components:**
+```javascript
+import { useTranslation } from '../../hooks/useTranslation';
 
-Każdy slajd Bio ma inne pozycjonowanie obrazu w kontenerze 300x460px:
+function Component() {
+  const t = useTranslation();
+  return <div>{t.nav.bio}</div>;
+}
+```
+
+#### 2. Dynamic Content - Sanity CMS Bilingual Fields
+
+Content from CMS uses separate fields for each language:
+
+**Pattern:** `fieldPl` / `fieldEn` in the same document
+
+**Examples:**
+- `titlePl` / `titleEn`
+- `descriptionPl` / `descriptionEn`
+- `performersPl` / `performersEn`
+
+**GROQ queries include both:**
+```javascript
+export const eventsQuery = `
+  *[_type == "event" && defined(publishedAt)] {
+    _id,
+    titlePl,
+    titleEn,
+    descriptionPl,
+    descriptionEn,
+    // ...
+  }
+`
+```
+
+**Hooks transform based on language:**
+```javascript
+import { useLanguage } from '../context/LanguageContext';
+
+function useSanityEvents() {
+  const { language } = useLanguage();
+
+  // Fetch data with both languages
+  const data = await client.fetch(eventsQuery);
+
+  // Transform based on current language
+  return data.map(event => ({
+    title: language === 'pl' ? event.titlePl : event.titleEn,
+    description: language === 'pl' ? event.descriptionPl : event.descriptionEn,
+    // ...
+  }));
+}
+```
+
+### Language Context
+
+Global language state managed by React Context:
 
 ```javascript
-// Bio1 - object-cover centered
-imageStyle: { width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 50%' }
+// src/context/LanguageContext.jsx
+import { createContext, useContext, useState, useEffect } from 'react';
 
-// Bio2 - Aleksandra
-imageStyle: { width: '342.5%', height: '159.57%', left: '0.75%', top: '-28.91%' }
+const LanguageContext = createContext();
 
-// Bio3 - Rafał
-imageStyle: { width: '330.37%', height: '153.91%', left: '-101.18%', top: '-13.7%' }
+export function LanguageProvider({ children }) {
+  const [language, setLanguage] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('language') || 'pl';
+    }
+    return 'pl';
+  });
 
-// Bio4 - Jacek
-imageStyle: { width: '301.44%', height: '140.43%', left: '-198.05%', top: '-0.22%' }
+  useEffect(() => {
+    localStorage.setItem('language', language);
+  }, [language]);
+
+  const toggleLanguage = () => {
+    setLanguage(prev => prev === 'pl' ? 'en' : 'pl');
+  };
+
+  return (
+    <LanguageContext.Provider value={{ language, setLanguage, toggleLanguage }}>
+      {children}
+    </LanguageContext.Provider>
+  );
+}
+
+export function useLanguage() {
+  const context = useContext(LanguageContext);
+  if (!context) {
+    throw new Error('useLanguage must be used within a LanguageProvider');
+  }
+  return context;
+}
 ```
 
-### Weryfikacja sekcji
+### Special Cases
 
-```bash
-make verify-section SECTION=bio1-ensemble SECTIONS_CONFIG=scripts_project/sections-config.json
-make verify-section SECTION=bio2-aleksandra SECTIONS_CONFIG=scripts_project/sections-config.json
-make verify-section SECTION=bio3-rafal SECTIONS_CONFIG=scripts_project/sections-config.json
-make verify-section SECTION=bio4-jacek SECTIONS_CONFIG=scripts_project/sections-config.json
-```
+**Content that is NOT translated:**
+- Composer names (remain in original)
+- Musical piece names (remain in original)
+- Proper names and locations (may remain in original)
 
-### Ostatnie wyniki weryfikacji
-
-| Sekcja | Diff | Status |
-|--------|------|--------|
-| bio1-ensemble | 3.77% | ✅ PASSED |
-| bio2-aleksandra | 2.86% | ✅ PASSED |
-| bio3-rafal | 3.55% | ✅ PASSED |
-| bio4-jacek | 5.76% | ✅ PASSED |
-
-### Kluczowe elementy
-
-- **Bio text SVG**: 49x107px, używa `fill={currentData.textColor}` dla dynamicznego koloru
-- **Stopka**: tylko na Bio4 (Jacek), pozycja `left: 185px, top: 652px`
-- **Nawigacja**: Bio w menu Homepage linkuje do `/bio` przez React Router
-
----
-
-## Kompopolex - Implementacja Kalendarz
-
-### Figma Design
-
-| Wersja | Link | Wymiary |
-|--------|------|---------|
-| Desktop | [node 19-49](https://www.figma.com/design/16wGmQvLEJ5vSIrSzL8muo/Kompopolex-www-MATYLDA?node-id=19-49) | 1440 x 2047 px |
-
-### Struktura plików
-
-```
-src/pages/Kalendarz/
-├── index.jsx              # Główny - używa ResponsiveWrapper
-├── DesktopKalendarz.jsx   # Layout desktop (1440px)
-├── kalendarz-config.js    # Konfiguracja wydarzeń
-
-public/assets/kalendarz/
-├── event1.jpg             # Zdjęcie Ensemble Kompopolex
-├── event2.jpg             # Zdjęcie Społeczne Komponowanie
-├── event3.jpg             # Zdjęcie Mixtur Festival
-└── place-icon.svg         # Ikona lokalizacji
-```
-
-### Elementy strony
-
-1. **Pionowe linie dekoracyjne** - x = 155, 375, 595, 815, 1035, 1255 (te same co Homepage)
-2. **Logo** - `/assets/logo.svg`, pozycja: left: 185px, top: 60px
-3. **"Kalendarz" tekst** - rotacja -90°, pozycja: left: 94px, top: 275px
-4. **Nawigacja** - "Nadchodzące" / "Archiwalne" - left: 185px, top: 190px
-5. **3 eventy** - każdy z obrazem (330x462px), datą, tytułem, wykonawcami/programem, opisem, lokalizacją
-6. **Stopka** - email + social links, wycentrowana na dole
-7. **Menu nawigacyjne** - prawa strona, pozycja: left: 1265px, top: 60px
-
-### Wydarzenia
-
-| Event | Tytuł | Data | Lokalizacja |
-|-------|-------|------|-------------|
-| 1 | ENSEMBLE KOMPOPOLEX | 13.12.25 18:00 | ASP WROCŁAW |
-| 2 | SPOŁECZNE KOMPONOWANIE 2025 | 20.12.25 18:00 | Akademia Muzyczna |
-| 3 | MIXTUR FESTIVAL | 16.01.26 20:00 | NAU BOSTIK, BARCELONA |
-
-### Weryfikacja sekcji
-
-```bash
-make verify-section SECTION=kalendarz SECTIONS_CONFIG=scripts_project/sections-config.json
-```
-
-### Ostatnie wyniki weryfikacji
-
-| Sekcja | Diff | Status |
-|--------|------|--------|
-| kalendarz | 2.82% | ✅ PASSED |
-
----
-
-## Quick Start for New Project
-
-1. **Create project config folder:**
-   ```bash
-   mkdir scripts_project
-   ```
-
-2. **Create sections-config.json** with your Figma file details
-
-3. **Create uimatch-config.json** with your nodes
-
-4. **Run verification:**
-   ```bash
-   make verify-sections SECTIONS_CONFIG=scripts_project/sections-config.json
-   ```
+**Migration to bilingual:**
+- See `scripts/migrate-*-i18n.js` scripts
+- All have duplicate detection - safe to run multiple times
+- Use OpenAI API for automatic translation
 
 ---
 
@@ -612,7 +574,7 @@ make verify-section SECTION=kalendarz SECTIONS_CONFIG=scripts_project/sections-c
 
 ### Overview
 
-Kompopolex uses **Sanity CMS v3** for content management with a feature flag system for gradual rollout.
+**Sanity CMS v3** for content management with feature flag system for gradual rollout.
 
 **Feature Flag**: `VITE_USE_SANITY` (default: `false`)
 - When `true`: Content fetched from Sanity CMS
@@ -623,10 +585,14 @@ Kompopolex uses **Sanity CMS v3** for content management with a feature flag sys
 Required in `.env`:
 
 ```bash
-# Sanity Configuration
-VITE_SANITY_PROJECT_ID=cy9ddq1w
+# Figma Design Tokens
+FIGMA_ACCESS_TOKEN=your-figma-token-here
+
+# Sanity CMS Configuration
+VITE_SANITY_PROJECT_ID=your-project-id-here
 VITE_SANITY_DATASET=production
-SANITY_AUTH_TOKEN=<your-token-here>
+SANITY_STUDIO_URL=your-studio-url-here
+SANITY_AUTH_TOKEN=your-sanity-auth-token-here
 
 # Feature Flag
 VITE_USE_SANITY=false  # Set to 'true' to enable Sanity CMS
@@ -644,112 +610,160 @@ npm run dev
 
 Studio runs at: `http://localhost:3333`
 
-### Content Schemas
+### Content Schema Pattern
 
-| Schema | Type | Content |
-|--------|------|---------|
-| `event` | document | Upcoming and archived events |
-| `bioProfile` | document | Bio page profiles (4 profiles) |
-| `homepageSlide` | document | Homepage hero slides (4 slides) |
-| `kontaktPage` | singleton | Contact page data |
-| `fundacjaPage` | singleton | Foundation page data |
-| `photoAlbum` | document | Photo galleries |
-| `mediaItem` | document | Individual media items |
+**Document schemas** (multiple instances):
+```typescript
+// sanity-studio/schemaTypes/event.ts
+import { defineType } from 'sanity';
 
-### Bilingual Support (Polish/English)
-
-All content in Sanity CMS supports **two languages: Polish (PL) and English (EN)**.
-
-**Pattern**: Separate fields (`titlePl`, `titleEn`) in the same document.
-
-**Bilingual Schemas**:
-- `event` - title, performers, description, location
-- `bioProfile` - name, paragraphs
-- `homepageSlide` - word, tagline
-- `fundacjaPage` - projects (text, linkText)
-- `photoAlbum` - title
-- `mediaItem` - title, description
-
-**Special Cases**:
-- Repertoire/Specialne: Composer and piece names are **NOT translated** (stay in Polish)
-- UI texts: Remain in translation files (`/src/translations/`)
-
-**Language Transformation**:
-- All hooks use `useLanguage()` from `LanguageContext`
-- Data is transformed based on current language when fetched
-- Example: `title: language === 'pl' ? event.titlePl : event.titleEn`
-
-**Migration**:
-- ✅ Existing data migrated with Polish content in `*Pl` fields
-- ✅ All content automatically translated to English
-- Editors can review and improve translations in Sanity Studio
-
-**Migration Scripts**:
-```bash
-node scripts/migrate-events-i18n.js
-node scripts/migrate-bio-profiles-i18n.js
-node scripts/migrate-homepage-slides-i18n.js
-node scripts/migrate-fundacja-page-i18n.js
-node scripts/migrate-photo-albums-i18n.js
-node scripts/migrate-media-items-i18n.js
+export default defineType({
+  name: 'event',
+  type: 'document',
+  title: 'Event',
+  fields: [
+    {
+      name: 'titlePl',
+      type: 'string',
+      title: 'Title (Polish)',
+      validation: (rule) => rule.required(),
+    },
+    {
+      name: 'titleEn',
+      type: 'string',
+      title: 'Title (English)',
+    },
+    {
+      name: 'publishedAt',
+      type: 'datetime',
+      title: 'Published At',
+    },
+    // ...
+  ],
+});
 ```
 
-All scripts have duplicate detection and are safe to run multiple times.
-
-### Migration Scripts
-
-All content migrated from local configs to Sanity CMS:
-
-```bash
-# Run individual migrations
-node scripts/migrate-homepage-slides.js
-node scripts/migrate-archived-events.js
-node scripts/migrate-kontakt-page.js
-node scripts/migrate-fundacja-page.js
-node scripts/migrate-photo-albums.js
+**Singleton schemas** (single instance):
+```typescript
+// sanity-studio/schemaTypes/kontaktPage.ts
+export default defineType({
+  name: 'kontaktPage',
+  type: 'document',
+  title: 'Kontakt Page',
+  fields: [
+    {
+      name: 'email',
+      type: 'string',
+      title: 'Email',
+    },
+    // ...
+  ],
+});
 ```
-
-**Note**: Migrations have duplicate detection - safe to run multiple times.
 
 ### GROQ Queries
 
 All queries centralized in `src/lib/sanity/queries.js`:
 
 ```javascript
-// Example query
-export const upcomingEventsQuery = `
+/**
+ * GROQ Syntax Guide:
+ * - *[filter] - Query documents with filter
+ * - defined(field) - Field exists and is not null
+ * - order(field asc/desc) - Sort results
+ * - "alias": field.nested->ref - Dereference and alias
+ * - [0] - Get first element
+ * - $param - Query parameter
+ */
+
+// Example: Query with bilingual fields
+export const eventsQuery = `
   *[_type == "event" && status == "upcoming" && defined(publishedAt)] | order(date asc) {
     _id,
-    title,
+    titlePl,
+    titleEn,
     date,
-    performers,
-    program,
-    description,
-    location,
+    performersPl,
+    performersEn,
+    descriptionPl,
+    descriptionEn,
+    locationPl,
+    locationEn,
     "imageUrl": image.asset->url,
-    imageStyle
+    ticketUrl,
+    showTicketButton
+  }
+`
+
+// Example: Singleton query (first element)
+export const kontaktPageQuery = `
+  *[_type == "kontaktPage"][0] {
+    email,
+    backgroundColor,
+    lineColor,
+    "teamImageUrl": teamImage.asset->url
   }
 `
 ```
 
-### React Hooks
+### React Hooks Pattern
 
-Custom hooks provide data fetching:
+Custom hooks provide data fetching with language transformation:
 
 ```javascript
-// Example usage
-import { useSanityEvents } from '../../hooks/useSanityEvents'
+// src/hooks/useSanityEvents.js
+import { useState, useEffect } from 'react';
+import { client } from '../lib/sanity/client';
+import { eventsQuery } from '../lib/sanity/queries';
+import { useLanguage } from '../context/LanguageContext';
 
-const { events, loading, error } = useSanityEvents()
+export function useSanityEvents() {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const { language } = useLanguage();
+
+  useEffect(() => {
+    async function fetchEvents() {
+      try {
+        setLoading(true);
+        const data = await client.fetch(eventsQuery);
+
+        // Transform based on current language
+        const transformed = data.map(event => ({
+          _id: event._id,
+          title: language === 'pl' ? event.titlePl : event.titleEn,
+          description: language === 'pl' ? event.descriptionPl : event.descriptionEn,
+          performers: language === 'pl' ? event.performersPl : event.performersEn,
+          location: language === 'pl' ? event.locationPl : event.locationEn,
+          date: event.date,
+          imageUrl: event.imageUrl,
+          // ...
+        }));
+
+        setEvents(transformed);
+      } catch (err) {
+        console.error('Error fetching events:', err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchEvents();
+  }, [language]); // Re-fetch when language changes
+
+  return { events, loading, error };
+}
 ```
 
-Available hooks:
-- `useSanityEvents()` - Upcoming events
-- `useSanityBioProfiles()` - Bio profiles
-- `useSanityHomepageSlides()` - Homepage slides
-- `useSanityKontaktPage()` - Contact page
-- `useSanityFundacjaPage()` - Foundation page
-- `useSanityPhotoAlbums()` - Photo albums
+**Null Safety:** All hooks include comprehensive null/undefined checks:
+```javascript
+const transformed = data?.map(event => ({
+  title: language === 'pl' ? (event.titlePl || '') : (event.titleEn || ''),
+  // ...
+})) || [];
+```
 
 ### Component Integration Pattern
 
@@ -780,6 +794,60 @@ if (USE_SANITY && error) {
 return <Component content={content} />;
 ```
 
+### Migration Scripts
+
+Pattern for migrating local config to Sanity:
+
+```javascript
+// scripts/migrate-[content]-[i18n].js
+import { createClient } from '@sanity/client';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const client = createClient({
+  projectId: process.env.VITE_SANITY_PROJECT_ID,
+  dataset: process.env.VITE_SANITY_DATASET,
+  token: process.env.SANITY_AUTH_TOKEN,
+  apiVersion: '2024-01-01',
+  useCdn: false,
+});
+
+async function migrate() {
+  // 1. Fetch existing to avoid duplicates
+  const existing = await client.fetch(`*[_type == "typeName"]`);
+
+  // 2. Import local config
+  const localData = [...];
+
+  // 3. Create documents
+  for (const item of localData) {
+    // Check if exists
+    const exists = existing.find(e => e.someUniqueField === item.someUniqueField);
+    if (exists) {
+      console.log(`Skipping duplicate: ${item.name}`);
+      continue;
+    }
+
+    // Create document
+    await client.create({
+      _type: 'typeName',
+      fieldPl: item.field,
+      fieldEn: await translate(item.field), // Optional: auto-translate
+      publishedAt: new Date().toISOString(),
+      // ...
+    });
+  }
+}
+
+migrate();
+```
+
+All migration scripts have:
+- **Duplicate detection** - safe to run multiple times
+- **Optional translation** - uses OpenAI API for auto-translation
+- **Sanity asset upload** - uploads images to Sanity CDN
+
 ### Publishing Workflow
 
 1. **Edit content** in Sanity Studio (http://localhost:3333)
@@ -805,10 +873,6 @@ All images uploaded to **Sanity CDN**:
 - Image transformations available
 - No need to commit images to git
 
-### Documentation
-
-Full migration details: `docs/SANITY_MIGRATION_SUMMARY.md`
-
 ### Troubleshooting
 
 **Issue**: Content not loading
@@ -822,5 +886,61 @@ Full migration details: `docs/SANITY_MIGRATION_SUMMARY.md`
 - Clear browser cache
 
 **Issue**: Build errors
-- Run `npm run build` to check for TypeScript errors
+- Run `npm run build` to check for errors
 - Verify all hooks imported correctly
+
+---
+
+## Quick Start for New Project
+
+1. **Clone and install:**
+   ```bash
+   git clone [repo]
+   npm install
+   ```
+
+2. **Create project config folder:**
+   ```bash
+   mkdir scripts_project
+   ```
+
+3. **Setup environment:**
+   ```bash
+   cp .env.example .env
+   # Fill in FIGMA_ACCESS_TOKEN and other values
+   ```
+
+4. **Create verification configs:**
+   - `scripts_project/sections-config.json` - Figma file and section bounds
+   - `scripts_project/uimatch-config.json` - Individual node configs
+
+5. **Start development:**
+   ```bash
+   npm run dev
+   ```
+
+6. **Run verification:**
+   ```bash
+   make verify-sections SECTIONS_CONFIG=scripts_project/sections-config.json
+   ```
+
+7. **Optional - Setup Sanity CMS:**
+   ```bash
+   cd sanity-studio
+   npm install
+   npm run dev
+   ```
+
+---
+
+## Project-Specific Details
+
+> **Note:** This section contains project-specific implementation details for Kompopolex.
+> For generic patterns, refer to sections above.
+
+See [KOMPOPOLEX.md](./KOMPOPOLEX.md) for:
+- Specific Figma design links
+- Color schemes and design tokens
+- Page-by-page implementation details
+- Verification results
+- Asset locations
