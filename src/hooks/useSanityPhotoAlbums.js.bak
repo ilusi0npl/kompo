@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
 import { client } from '../lib/sanity/client'
-import { homepageSlidesQuery } from '../lib/sanity/queries'
+import { photoAlbumsQuery } from '../lib/sanity/queries'
 import { useLanguage } from '../context/LanguageContext'
 
 /**
- * Hook to fetch homepage slides from Sanity CMS with bilingual support
- * @returns {object} - { slides, loading, error }
+ * Hook to fetch photo albums from Sanity CMS with bilingual support
+ * @returns {object} - { albums, loading, error }
  */
-export function useSanityHomepageSlides() {
-  const [slides, setSlides] = useState([])
+export function useSanityPhotoAlbums() {
+  const [albums, setAlbums] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const { language } = useLanguage()
@@ -17,34 +17,30 @@ export function useSanityHomepageSlides() {
     // Skip if client not configured
     if (!client) {
       setLoading(false)
-      return
-    }
-
     client
-      .fetch(homepageSlidesQuery)
+      .fetch(photoAlbumsQuery)
       .then(data => {
         // Handle null/undefined data
         if (!data || !Array.isArray(data)) {
-          setSlides([])
+          setAlbums([])
           setLoading(false)
           return
         }
 
         // Transform data based on current language
-        const transformedSlides = data.map(slide => ({
-          ...slide,
-          word: language === 'pl' ? slide.wordPl : slide.wordEn,
-          tagline: language === 'pl' ? slide.taglinePl : slide.taglineEn,
+        const transformedAlbums = data.map(album => ({
+          ...album,
+          title: language === 'pl' ? album.titlePl : album.titleEn,
         }))
-        setSlides(transformedSlides)
+        setAlbums(transformedAlbums)
         setLoading(false)
       })
       .catch(err => {
-        console.error('Failed to fetch homepage slides:', err)
+        console.error('Failed to fetch photo albums:', err)
         setError(err)
         setLoading(false)
       })
   }, [language])
 
-  return { slides, loading, error }
+  return { albums, loading, error }
 }

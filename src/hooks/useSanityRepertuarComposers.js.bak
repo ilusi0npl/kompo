@@ -15,9 +15,6 @@ export function useSanityRepertuarComposers() {
     // Skip if client not configured
     if (!client) {
       setLoading(false)
-      return
-    }
-
     client
       .fetch(repertuarComposersQuery)
       .then(data => {

@@ -12,6 +12,12 @@ export function useSanitySpecjalneComposers() {
   const [error, setError] = useState(null)
 
   useEffect(() => {
+    // Skip if client not configured
+    if (!client) {
+      setLoading(false)
+      return
+    }
+
     client
       .fetch(specialneComposersQuery)
       .then(data => {
