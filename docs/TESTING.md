@@ -8,12 +8,38 @@ Kompopolex uses a two-tier testing strategy:
 
 ## Running Tests
 
-### All Tests
+### Using Make (Recommended)
+```bash
+# All tests (unit + E2E)
+make test-all
+
+# Unit tests (watch mode)
+make test
+
+# Unit tests (once)
+make test-unit
+
+# E2E tests
+make test-e2e
+
+# Coverage report
+make test-coverage
+
+# Full comprehensive report
+make test-report
+
+# See all available commands
+make help
+```
+
+### Using NPM Directly
+
+#### All Tests
 ```bash
 npm run test:all
 ```
 
-### Unit Tests Only
+#### Unit Tests Only
 ```bash
 # Run in watch mode
 npm test
@@ -28,7 +54,7 @@ npm run test:coverage
 npm run test:ui
 ```
 
-### E2E Tests Only
+#### E2E Tests Only
 ```bash
 # Run all E2E tests
 npm run test:e2e
@@ -40,7 +66,7 @@ npm run test:e2e:ui
 npx playwright test tests/e2e/homepage.spec.js
 ```
 
-### Generate Full Test Report
+#### Generate Full Test Report
 ```bash
 npm run test:report
 ```

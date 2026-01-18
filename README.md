@@ -23,7 +23,25 @@ npm run lint     # Check code quality
 
 Kompopolex has comprehensive test coverage with unit and E2E tests.
 
-### Quick Start
+### Quick Start (Make)
+```bash
+# Run all tests
+make test-all
+
+# Unit tests (watch mode)
+make test
+
+# E2E tests
+make test-e2e
+
+# Coverage report
+make test-coverage
+
+# Full report
+make test-report
+```
+
+### Quick Start (NPM)
 ```bash
 # Run all tests
 npm run test:all

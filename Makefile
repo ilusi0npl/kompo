@@ -1,7 +1,7 @@
 # UIMatch Visual Verification - Generic Makefile
 # Works with any Figma-to-React project
 
-.PHONY: help verify verify-list verify-sections verify-section screenshot install-uimatch clean
+.PHONY: help verify verify-list verify-sections verify-section screenshot install-uimatch clean test test-unit test-e2e test-coverage test-report test-all
 
 # Configuration (MUST be provided or set via environment)
 CONFIG ?= uimatch-config.json
@@ -24,6 +24,15 @@ help:
 	@echo "║  make screenshot                 - Take screenshot           ║"
 	@echo "║  make install-uimatch            - Install dependencies      ║"
 	@echo "║  make clean                      - Clean temporary files     ║"
+	@echo "╠══════════════════════════════════════════════════════════════╣"
+	@echo "║                    Testing Commands                          ║"
+	@echo "╠══════════════════════════════════════════════════════════════╣"
+	@echo "║  make test                       - Run unit tests (watch)    ║"
+	@echo "║  make test-unit                  - Run unit tests (once)     ║"
+	@echo "║  make test-e2e                   - Run E2E tests             ║"
+	@echo "║  make test-coverage              - Run tests with coverage   ║"
+	@echo "║  make test-report                - Generate full report      ║"
+	@echo "║  make test-all                   - Run all tests             ║"
 	@echo "╚══════════════════════════════════════════════════════════════╝"
 	@echo ""
 	@echo "UIMatch (single node comparison):"
@@ -33,6 +42,13 @@ help:
 	@echo "Sections (full page → crop → compare):"
 	@echo "  make verify-sections SECTIONS_CONFIG=scripts_gadki/sections-config.json"
 	@echo "  make verify-section SECTION=hero SECTIONS_CONFIG=scripts_gadki/sections-config.json"
+	@echo ""
+	@echo "Testing:"
+	@echo "  make test              # Unit tests in watch mode"
+	@echo "  make test-unit         # Unit tests once"
+	@echo "  make test-e2e          # E2E tests"
+	@echo "  make test-all          # All tests"
+	@echo "  make test-coverage     # Coverage report"
 	@echo ""
 
 # List all available nodes from config
@@ -104,4 +120,51 @@ clean:
 	@echo "🧹 Cleaning temporary files..."
 	rm -rf tmp/uimatch-reports/*
 	rm -f tmp/screenshot-*.png
+	rm -rf coverage/
+	rm -rf tmp/playwright-report/
 	@echo "✅ Cleaned!"
+
+# ============================================================================
+# Testing Targets
+# ============================================================================
+
+# Run unit tests in watch mode (interactive development)
+test:
+	@echo "🧪 Running unit tests in watch mode..."
+	npm test
+
+# Run unit tests once (CI/CD)
+test-unit:
+	@echo "🧪 Running unit tests..."
+	npm run test:run
+
+# Run E2E tests
+test-e2e:
+	@echo "🌐 Running E2E tests..."
+	npm run test:e2e
+
+# Run tests with coverage report
+test-coverage:
+	@echo "📊 Running tests with coverage..."
+	npm run test:coverage
+	@echo ""
+	@echo "📈 Coverage report generated:"
+	@echo "   file://$(PWD)/coverage/index.html"
+	@echo ""
+
+# Generate comprehensive test report (unit + E2E)
+test-report:
+	@echo "📋 Generating comprehensive test report..."
+	npm run test:report
+
+# Run all tests (unit + E2E)
+test-all:
+	@echo "🚀 Running all tests..."
+	npm run test:all
+	@echo ""
+	@echo "✅ All tests completed!"
+	@echo ""
+	@echo "📊 Reports available at:"
+	@echo "   Coverage:  file://$(PWD)/coverage/index.html"
+	@echo "   E2E:       file://$(PWD)/tmp/playwright-report/index.html"
+	@echo ""
