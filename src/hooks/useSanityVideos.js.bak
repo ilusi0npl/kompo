@@ -1,14 +1,14 @@
 import { useState, useEffect } from 'react'
 import { client } from '../lib/sanity/client'
-import { homepageSlidesQuery } from '../lib/sanity/queries'
+import { videoItemsQuery } from '../lib/sanity/queries'
 import { useLanguage } from '../context/LanguageContext'
 
 /**
- * Hook to fetch homepage slides from Sanity CMS with bilingual support
- * @returns {object} - { slides, loading, error }
+ * Hook to fetch video items from Sanity CMS with bilingual support
+ * @returns {object} - { videos, loading, error }
  */
-export function useSanityHomepageSlides() {
-  const [slides, setSlides] = useState([])
+export function useSanityVideos() {
+  const [videos, setVideos] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const { language } = useLanguage()
@@ -17,34 +17,31 @@ export function useSanityHomepageSlides() {
     // Skip if client not configured
     if (!client) {
       setLoading(false)
-      return
-    }
-
     client
-      .fetch(homepageSlidesQuery)
+      .fetch(videoItemsQuery)
       .then(data => {
         // Handle null/undefined data
         if (!data || !Array.isArray(data)) {
-          setSlides([])
+          setVideos([])
           setLoading(false)
           return
         }
 
         // Transform data based on current language
-        const transformedSlides = data.map(slide => ({
-          ...slide,
-          word: language === 'pl' ? slide.wordPl : slide.wordEn,
-          tagline: language === 'pl' ? slide.taglinePl : slide.taglineEn,
+        const transformedVideos = data.map(video => ({
+          ...video,
+          title: language === 'pl' ? video.titlePl : video.titleEn,
+          description: language === 'pl' ? video.descriptionPl : video.descriptionEn,
         }))
-        setSlides(transformedSlides)
+        setVideos(transformedVideos)
         setLoading(false)
       })
       .catch(err => {
-        console.error('Failed to fetch homepage slides:', err)
+        console.error('Failed to fetch videos:', err)
         setError(err)
         setLoading(false)
       })
   }, [language])
 
-  return { slides, loading, error }
+  return { videos, loading, error }
 }

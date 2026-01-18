@@ -8,7 +8,7 @@ const DESKTOP_WIDTH = 1440;
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
 const LINE_COLOR = '#FFBD19';
 const BACKGROUND_COLOR = '#FF734C';
-const TEXT_COLOR = '#131313';
+const TEXT_COLOR = 'var(--contrast-text)';
 
 export default function KontaktFixedLayer({ scale = 1, viewportHeight = 700 }) {
   const [documentHeight, setDocumentHeight] = useState(0);

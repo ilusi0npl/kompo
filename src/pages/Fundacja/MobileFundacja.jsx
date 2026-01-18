@@ -14,7 +14,7 @@ import {
 
 const MOBILE_WIDTH = 390;
 const mobileLinePositions = [97, 195, 292];
-const LINE_COLOR = '#01936F';
+const LINE_COLOR = 'var(--contrast-line-alt)';
 const HEADER_HEIGHT = 257;
 
 export default function MobileFundacja() {
@@ -82,7 +82,7 @@ export default function MobileFundacja() {
             objectFit: 'cover',
             objectPosition: '50% 50%',
           }}
-          placeholderColor="#e5e5e5"
+          placeholderColor="var(--contrast-placeholder)"
         />
       </div>
 

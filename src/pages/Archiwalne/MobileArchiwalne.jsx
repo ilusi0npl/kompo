@@ -10,9 +10,9 @@ const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
 const MOBILE_WIDTH = 390;
 const mobileLinePositions = [97, 195, 292];
-const BACKGROUND_COLOR = '#FDFDFD';
-const LINE_COLOR = '#A0E38A';
-const TEXT_COLOR = '#131313';
+const BACKGROUND_COLOR = 'var(--contrast-bg)';
+const LINE_COLOR = 'var(--contrast-line)';
+const TEXT_COLOR = 'var(--contrast-text)';
 
 // Transform Sanity archived events to match config structure
 function transformSanityEvents(sanityEvents) {
@@ -88,7 +88,7 @@ export default function MobileArchiwalne() {
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontSize: '16px',
-            color: '#FF0000',
+            color: 'var(--contrast-error)',
           }}
         >
           {t('common.error.loadEvents')}
@@ -173,7 +173,7 @@ export default function MobileArchiwalne() {
                   objectFit: 'cover',
                   objectPosition: '50% 50%',
                 }}
-                placeholderColor="#e5e5e5"
+                placeholderColor="var(--contrast-placeholder)"
               />
             </Link>
 

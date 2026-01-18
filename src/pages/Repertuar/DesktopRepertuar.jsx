@@ -19,7 +19,7 @@ const ComposerEntry = ({ composer }) => {
             fontFamily: "'IBM Plex Mono', monospace",
             fontWeight: 700,
             fontSize: '16px',
-            color: '#131313',
+            color: 'var(--contrast-text)',
           }}
         >
           {composer.name}{' '}
@@ -29,7 +29,7 @@ const ComposerEntry = ({ composer }) => {
             fontFamily: "'IBM Plex Mono', monospace",
             fontWeight: 500,
             fontSize: '16px',
-            color: '#131313',
+            color: 'var(--contrast-text)',
           }}
         >
           {composer.year}
@@ -42,7 +42,7 @@ const ComposerEntry = ({ composer }) => {
             fontFamily: "'IBM Plex Mono', monospace",
             fontWeight: 500,
             fontSize: '16px',
-            color: '#131313',
+            color: 'var(--contrast-text)',
             lineHeight: 1.48,
             margin: 0,
             marginTop: idx === 0 ? '0' : '0',
@@ -50,7 +50,7 @@ const ComposerEntry = ({ composer }) => {
         >
           {work.title}
           {work.isSpecial && (
-            <span style={{ color: '#761FE0' }}>*</span>
+            <span style={{ color: 'var(--contrast-accent)' }}>*</span>
           )}
         </p>
       ))}
@@ -99,7 +99,7 @@ export default function DesktopRepertuar() {
           backgroundColor: 'transparent',
         }}
       >
-        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '20px', color: '#ff0000' }}>
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '20px', color: 'var(--contrast-error)' }}>
           Błąd ładowania repertuaru
         </p>
       </section>
@@ -163,7 +163,7 @@ export default function DesktopRepertuar() {
             fontWeight: 500,
             fontSize: '16px',
             lineHeight: 1.48,
-            color: '#761FE0',
+            color: 'var(--contrast-accent)',
             margin: 0,
             marginTop: '50px',
           }}
@@ -180,7 +180,7 @@ export default function DesktopRepertuar() {
           bottom: '40px',
           width: '520px',
         }}
-        textColor="#131313"
+        textColor="var(--contrast-text)"
       />
     </section>
   );

@@ -12,7 +12,7 @@ import { useMemo } from 'react';
 export function HorizontalFlash({
   isActive = false,
   progress = 0,
-  color = '#FDFDFD',
+  color = 'var(--contrast-bg)',
   width = 1440,
   height = 700,
   barCount = 8,

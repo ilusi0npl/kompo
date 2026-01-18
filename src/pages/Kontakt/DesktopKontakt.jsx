@@ -41,7 +41,7 @@ export default function DesktopKontakt() {
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontSize: '16px',
-            color: '#131313',
+            color: 'var(--contrast-text)',
           }}
         >
           {t('common.loading.contact')}
@@ -69,7 +69,7 @@ export default function DesktopKontakt() {
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontSize: '16px',
-            color: '#FF0000',
+            color: 'var(--contrast-error)',
           }}
         >
           Błąd ładowania strony kontakt. Spróbuj ponownie później.
@@ -108,7 +108,7 @@ export default function DesktopKontakt() {
           objectFit: 'cover',
           objectPosition: '50% 50%',
         }}
-        placeholderColor="#e5e5e5"
+        placeholderColor="var(--contrast-placeholder)"
       />
 
       {/* Email - główny element kontaktowy */}
@@ -123,7 +123,7 @@ export default function DesktopKontakt() {
           fontWeight: 600,
           fontSize: '40px',
           lineHeight: 1.35,
-          color: '#131313',
+          color: 'var(--contrast-text)',
           textDecoration: 'underline',
           textUnderlinePosition: 'from-font',
           textTransform: 'uppercase',

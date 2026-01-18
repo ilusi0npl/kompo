@@ -10,7 +10,7 @@ export default function SmoothSlideshow({
   className = '',
   containerStyle = {},
   imageStyle = {},
-  placeholderColor = '#e5e5e5',
+  placeholderColor = 'var(--contrast-placeholder)',
   transitionDuration = '1s',
   transitionEasing = 'cubic-bezier(0.4, 0, 0.2, 1)',
   getImageSrc = (slide) => slide.image,

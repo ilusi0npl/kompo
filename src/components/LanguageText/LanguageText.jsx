@@ -1,7 +1,7 @@
 import { useLanguage } from '../../context/LanguageContext';
 
 export default function LanguageText({
-  textColor = '#131313',
+  textColor = 'var(--contrast-text)',
   style = {},
   transition = null,
   scale = 1,

@@ -8,9 +8,9 @@ import { useSanityPhotoAlbums } from '../../hooks/useSanityPhotoAlbums';
 
 const MOBILE_WIDTH = 390;
 const mobileLinePositions = [97, 195, 292];
-const BACKGROUND_COLOR = '#34B898';
-const LINE_COLOR = '#01936F';
-const TEXT_COLOR = '#131313';
+const BACKGROUND_COLOR = 'var(--contrast-line)';
+const LINE_COLOR = 'var(--contrast-line-alt)';
+const TEXT_COLOR = 'var(--contrast-text)';
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
@@ -73,7 +73,7 @@ export default function MobileMedia() {
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontSize: '16px',
-            color: '#ff0000',
+            color: 'var(--contrast-error)',
           }}
         >
           Błąd ładowania galerii
@@ -159,7 +159,7 @@ export default function MobileMedia() {
                 objectFit: 'cover',
                 objectPosition: '50% 50%',
               }}
-              placeholderColor="#e5e5e5"
+              placeholderColor="var(--contrast-placeholder)"
             />
 
             {/* Tytuł */}

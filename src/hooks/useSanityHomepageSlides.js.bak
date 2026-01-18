@@ -17,9 +17,6 @@ export function useSanityHomepageSlides() {
     // Skip if client not configured
     if (!client) {
       setLoading(false)
-      return
-    }
-
     client
       .fetch(homepageSlidesQuery)
       .then(data => {

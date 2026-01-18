@@ -8,13 +8,13 @@ export const DESKTOP_HEIGHT = 1080;
 export const desktopLinePositions = [155, 375, 595, 815, 1035, 1255];
 
 // Line color for Media page (darker green)
-export const LINE_COLOR = '#01936F';
+export const LINE_COLOR = 'var(--contrast-line-alt)';
 
 // Background color
-export const BACKGROUND_COLOR = '#34B898';
+export const BACKGROUND_COLOR = 'var(--contrast-line)';
 
 // Active tab color (purple)
-export const ACTIVE_TAB_COLOR = '#761FE0';
+export const ACTIVE_TAB_COLOR = 'var(--contrast-accent)';
 
 // Photos grid configuration
 // Row 1: photo1 (taniec), photo3 (rozmowa przy stole), photo5 (perkusja)

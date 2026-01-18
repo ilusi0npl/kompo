@@ -10,6 +10,63 @@
   --font-family-mono: 'IBM Plex Mono', monospace;
 }
 
+/* ============================================
+   High Contrast Mode - WCAG AA Compliant
+   ============================================ */
+
+:root {
+  /* Normal mode - original design colors */
+  --contrast-bg: #FDFDFD;
+  --contrast-text: #131313;
+  --contrast-text-muted: #5b5b5b;
+  --contrast-accent: #761FE0;
+  --contrast-link: #761FE0;
+  --contrast-line: #A0E38A;
+  --contrast-line-alt: #01936F;
+  --contrast-error: #ff0000;
+  --contrast-button-primary: #4F93FF;
+  --contrast-button-primary-hover: #3478ff;
+  --contrast-button-disabled: #5b5b5b;
+  --contrast-border: #131313;
+  --contrast-placeholder: #e5e5e5;
+}
+
+/* High contrast mode - enhanced colors for accessibility */
+:root[data-contrast="high"] {
+  --contrast-bg: #FFFFFF;
+  --contrast-text: #000000;
+  --contrast-text-muted: #2b2b2b;
+  --contrast-accent: #5a00c7;
+  --contrast-link: #5a00c7;
+  --contrast-line: #008000;
+  --contrast-line-alt: #006400;
+  --contrast-error: #cc0000;
+  --contrast-button-primary: #0056b3;
+  --contrast-button-primary-hover: #003d82;
+  --contrast-button-disabled: #666666;
+  --contrast-border: #000000;
+  --contrast-placeholder: #cccccc;
+}
+
+/* Respect system preferences */
+@media (prefers-contrast: more) {
+  :root:not([data-contrast]) {
+    --contrast-bg: #FFFFFF;
+    --contrast-text: #000000;
+    --contrast-text-muted: #2b2b2b;
+    --contrast-accent: #5a00c7;
+    --contrast-link: #5a00c7;
+    --contrast-line: #008000;
+    --contrast-line-alt: #006400;
+    --contrast-error: #cc0000;
+    --contrast-button-primary: #0056b3;
+    --contrast-button-primary-hover: #003d82;
+    --contrast-button-disabled: #666666;
+    --contrast-border: #000000;
+    --contrast-placeholder: #cccccc;
+  }
+}
+
 /* IBM Plex Mono */
 @font-face {
   font-family: 'IBM Plex Mono';
@@ -143,8 +200,8 @@ html, body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  background-color: var(--page-bg, #FDFDFD);
-  transition: background-color 1s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: var(--page-bg, var(--contrast-bg));
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 body {
@@ -341,15 +398,5 @@ body {
   pointer-events: none;
 }
 
-/* High Contrast Mode */
-body.high-contrast {
-  filter: contrast(1.5) grayscale(1);
-}
-
-/* Contrast toggle icon - needs to stay yellow, reverse the grayscale */
-body.high-contrast .contrast-toggle-btn {
-  /* Create new stacking context to apply own filter */
-  position: relative;
-  isolation: isolate;
-  filter: grayscale(0) contrast(2);
-}
+/* High Contrast Mode - removed old CSS filter approach */
+/* Now using CSS custom properties (see :root[data-contrast="high"] above) */

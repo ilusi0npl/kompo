@@ -5,7 +5,7 @@
 export default function Footer({
   style = {},
   className = '',
-  textColor = '#131313',
+  textColor = 'var(--contrast-text)',
 }) {
   const baseStyles = {
     fontFamily: "'IBM Plex Mono', monospace",

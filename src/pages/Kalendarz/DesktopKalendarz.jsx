@@ -43,7 +43,7 @@ const EventTitle = ({ event, t, useSanity }) => {
         fontWeight: 600,
         fontSize: '32px',
         lineHeight: 1.4,
-        color: '#131313',
+        color: 'var(--contrast-text)',
         textTransform: 'uppercase',
       }}
     >
@@ -94,7 +94,7 @@ export default function DesktopKalendarz() {
           justifyContent: 'center'
         }}
       >
-        <div style={{fontSize: '18px', fontFamily: "'IBM Plex Mono', monospace", color: '#FF0000'}}>
+        <div style={{fontSize: '18px', fontFamily: "'IBM Plex Mono', monospace", color: 'var(--contrast-error)'}}>
           {t('common.error.loadEvents')}
         </div>
       </div>
@@ -137,26 +137,26 @@ export default function DesktopKalendarz() {
             width: '100%',
             height: '100%',
           }}
-          placeholderColor="#e5e5e5"
+          placeholderColor="var(--contrast-placeholder)"
         />
       </Link>
       <div className="absolute flex flex-col" style={{ left: '625px', top: '275px', width: '519px', gap: '20px' }}>
-        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: '#131313' }}>
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: 'var(--contrast-text)' }}>
           {formatEventDate(events[0].date)}
         </p>
         <div className="flex flex-col" style={{ gap: '32px' }}>
           <div className="flex flex-col" style={{ gap: '16px' }}>
             <EventTitle event={events[0]} t={t} useSanity={USE_SANITY} />
-            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
+            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '16px', lineHeight: 1.48, color: 'var(--contrast-text)' }}>
               {events[0].performers}
             </p>
           </div>
-          <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
+          <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: 'var(--contrast-text)' }}>
             {events[0].description}
           </p>
           <div className="flex items-center" style={{ gap: '10px' }}>
             <img src="/assets/kalendarz/place-icon.svg" alt="Location" style={{ width: '30px', height: '30px' }} />
-            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '20px', lineHeight: 1.44, color: '#131313', textTransform: 'uppercase' }}>
+            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '20px', lineHeight: 1.44, color: 'var(--contrast-text)', textTransform: 'uppercase' }}>
               {events[0].location}
             </p>
           </div>
@@ -182,26 +182,26 @@ export default function DesktopKalendarz() {
             height: '462px',
           }}
           style={events[1].imageStyle}
-          placeholderColor="#e5e5e5"
+          placeholderColor="var(--contrast-placeholder)"
         />
       </Link>
       <div className="absolute flex flex-col" style={{ left: '625px', top: '807px', width: '519px', gap: '20px' }}>
-        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: '#131313' }}>
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: 'var(--contrast-text)' }}>
           {formatEventDate(events[1].date)}
         </p>
         <div className="flex flex-col" style={{ gap: '32px' }}>
           <div className="flex flex-col" style={{ gap: '16px' }}>
             <EventTitle event={events[1]} t={t} useSanity={USE_SANITY} />
-            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
+            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '16px', lineHeight: 1.48, color: 'var(--contrast-text)' }}>
               {events[1].performers}
             </p>
           </div>
-          <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
+          <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: 'var(--contrast-text)' }}>
             {events[1].description}
           </p>
           <div className="flex items-start" style={{ gap: '10px' }}>
             <img src="/assets/kalendarz/place-icon.svg" alt="Location" style={{ width: '30px', height: '30px' }} />
-            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '20px', lineHeight: 1.44, color: '#131313', textTransform: 'uppercase', width: '479px', whiteSpace: 'pre-wrap' }}>
+            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '20px', lineHeight: 1.44, color: 'var(--contrast-text)', textTransform: 'uppercase', width: '479px', whiteSpace: 'pre-wrap' }}>
               {events[1].location}
             </p>
           </div>
@@ -233,18 +233,18 @@ export default function DesktopKalendarz() {
             width: '100%',
             height: '100%',
           }}
-          placeholderColor="#e5e5e5"
+          placeholderColor="var(--contrast-placeholder)"
         />
       </Link>
       <div className="absolute flex flex-col" style={{ left: '625px', top: '1339px', width: '519px', gap: '20px' }}>
-        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: '#131313' }}>
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: 'var(--contrast-text)' }}>
           {formatEventDate(events[2].date)}
         </p>
         <div className="flex flex-col" style={{ gap: '32px' }}>
           <div className="flex flex-col">
             <EventTitle event={events[2]} t={t} useSanity={USE_SANITY} />
           </div>
-          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px', lineHeight: 1.48, color: '#131313', width: '519px' }}>
+          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px', lineHeight: 1.48, color: 'var(--contrast-text)', width: '519px' }}>
             {events[2].program && events[2].program.map((item, idx) => (
               <p key={item._key || idx} style={{ marginBottom: idx < events[2].program.length - 1 ? '8px' : '0' }}>
                 <span style={{ fontWeight: 700 }}>• {item.composer}</span>
@@ -254,7 +254,7 @@ export default function DesktopKalendarz() {
           </div>
           <div className="flex items-start" style={{ gap: '10px' }}>
             <img src="/assets/kalendarz/place-icon.svg" alt="Location" style={{ width: '30px', height: '30px' }} />
-            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '20px', lineHeight: 1.44, color: '#131313', textTransform: 'uppercase', width: '479px' }}>
+            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '20px', lineHeight: 1.44, color: 'var(--contrast-text)', textTransform: 'uppercase', width: '479px' }}>
               {events[2].location}
             </p>
           </div>

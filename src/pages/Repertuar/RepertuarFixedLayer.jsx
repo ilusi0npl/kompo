@@ -6,10 +6,10 @@ import ContrastToggle from '../../components/ContrastToggle/ContrastToggle';
 
 const DESKTOP_WIDTH = 1440;
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
-const LINE_COLOR = '#A0E38A';
-const BACKGROUND_COLOR = '#FDFDFD';
-const TEXT_COLOR = '#131313';
-const ACTIVE_COLOR = '#761FE0';
+const LINE_COLOR = 'var(--contrast-line)';
+const BACKGROUND_COLOR = 'var(--contrast-bg)';
+const TEXT_COLOR = 'var(--contrast-text)';
+const ACTIVE_COLOR = 'var(--contrast-accent)';
 
 export default function RepertuarFixedLayer({ scale = 1, viewportHeight = 700 }) {
   const [documentHeight, setDocumentHeight] = useState(0);

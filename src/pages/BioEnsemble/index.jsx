@@ -11,7 +11,7 @@ const BREAKPOINT = 768;
 const COLORS = {
   backgroundColor: '#FFBD19',
   lineColor: '#FF734C',
-  textColor: '#131313',
+  textColor: 'var(--contrast-text)',
   logoSrc: '/assets/logo.svg',
 };
 

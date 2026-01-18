@@ -39,8 +39,8 @@ export default function Fundacja() {
         mobileContent={<MobileFundacja />}
         desktopHeight="auto"
         mobileHeight="auto"
-        backgroundColor="#34B898"
-        lineColor="#01936F"
+        backgroundColor="var(--contrast-line)"
+        lineColor="var(--contrast-line-alt)"
         hideLines={!isMobile}
       />
     </>

@@ -10,8 +10,8 @@ export default function Wydarzenie2() {
       mobileContent={<MobileWydarzenie2 />}
       desktopHeight={DESKTOP_HEIGHT}
       mobileHeight={2500}
-      backgroundColor="#FDFDFD"
-      lineColor="#A0E38A"
+      backgroundColor="var(--contrast-bg)"
+      lineColor="var(--contrast-line)"
       hideLines={true}
     />
   );

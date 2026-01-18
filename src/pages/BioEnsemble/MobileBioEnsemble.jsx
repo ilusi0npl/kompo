@@ -13,8 +13,8 @@ const HEADER_HEIGHT = 218;
 const COLORS = {
   backgroundColor: '#FFBD19',
   lineColor: '#FF734C',
-  textColor: '#131313',
-  linkColor: '#761FE0',
+  textColor: 'var(--contrast-text)',
+  linkColor: 'var(--contrast-accent)',
 };
 
 // Mobile line positions

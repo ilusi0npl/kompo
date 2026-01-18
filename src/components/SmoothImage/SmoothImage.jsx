@@ -10,7 +10,7 @@ export default function SmoothImage({
   className = '',
   style = {},
   containerStyle = {},
-  placeholderColor = '#e5e5e5',
+  placeholderColor = 'var(--contrast-placeholder)',
   transitionDuration = '0.5s',
   ...props
 }) {

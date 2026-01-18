@@ -14,6 +14,12 @@ export function useSanityBioProfiles() {
   const { language } = useLanguage()
 
   useEffect(() => {
+    // Skip if client not configured
+    if (!client) {
+      setLoading(false)
+      return
+    }
+
     client
       .fetch(bioProfilesQuery)
       .then(data => {

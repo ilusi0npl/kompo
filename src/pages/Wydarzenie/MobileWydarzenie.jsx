@@ -13,9 +13,9 @@ const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
 const MOBILE_WIDTH = 390;
 const mobileLinePositions = [97, 195, 292];
-const BACKGROUND_COLOR = '#FDFDFD';
-const LINE_COLOR = '#A0E38A';
-const TEXT_COLOR = '#131313';
+const BACKGROUND_COLOR = 'var(--contrast-bg)';
+const LINE_COLOR = 'var(--contrast-line)';
+const TEXT_COLOR = 'var(--contrast-text)';
 const HEADER_HEIGHT = 240;
 
 export default function MobileWydarzenie() {
@@ -204,7 +204,7 @@ export default function MobileWydarzenie() {
           fontWeight: 600,
           fontSize: '32px',
           lineHeight: 1.4,
-          color: '#761FE0',
+          color: 'var(--contrast-accent)',
           textDecoration: 'underline',
           textTransform: 'uppercase',
           whiteSpace: 'pre-wrap',
@@ -236,7 +236,7 @@ export default function MobileWydarzenie() {
             objectFit: 'cover',
             objectPosition: '50% 50%',
           }}
-          placeholderColor="#e5e5e5"
+          placeholderColor="var(--contrast-placeholder)"
         />
       </div>
 
@@ -309,7 +309,7 @@ export default function MobileWydarzenie() {
               position: 'relative',
               zIndex: 10,
               width: '100%',
-              backgroundColor: '#761FE0',
+              backgroundColor: 'var(--contrast-accent)',
               paddingLeft: '24px',
               paddingRight: '22px',
               paddingTop: '14px',
@@ -325,7 +325,7 @@ export default function MobileWydarzenie() {
                 fontWeight: 700,
                 fontSize: '20px',
                 lineHeight: 1.44,
-                color: '#FDFDFD',
+                color: 'var(--contrast-bg)',
                 textTransform: 'uppercase',
               }}
             >

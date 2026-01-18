@@ -67,7 +67,7 @@ export default function DesktopMediaWideo() {
           backgroundColor: 'transparent',
         }}
       >
-        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '20px', color: '#ff0000' }}>
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '20px', color: 'var(--contrast-error)' }}>
           Błąd ładowania filmów
         </p>
       </section>
@@ -149,7 +149,7 @@ export default function DesktopMediaWideo() {
                 objectFit: 'cover',
                 objectPosition: '50% 50%',
               }}
-              placeholderColor="#e5e5e5"
+              placeholderColor="var(--contrast-placeholder)"
             />
             {/* Play Icon */}
             <div
@@ -177,7 +177,7 @@ export default function DesktopMediaWideo() {
               fontWeight: 700,
               fontSize: '20px',
               lineHeight: 1.44,
-              color: '#131313',
+              color: 'var(--contrast-text)',
               textTransform: 'uppercase',
             }}
           >

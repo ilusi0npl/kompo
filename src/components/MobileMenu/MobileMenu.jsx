@@ -69,7 +69,7 @@ export default function MobileMenu({ isOpen, onClose }) {
         top: 0,
         width: `${scaledMenuWidth}px`,
         height: `${scaledMenuHeight}px`,
-        backgroundColor: '#FDFDFD',
+        backgroundColor: 'var(--contrast-bg)',
         borderLeft: '1px solid #131313',
         borderBottom: '1px solid #131313',
         zIndex: 9999,
@@ -118,7 +118,7 @@ export default function MobileMenu({ isOpen, onClose }) {
               fontWeight: 700,
               fontSize: `${scaledFontSize}px`,
               lineHeight: 1.48,
-              color: '#131313',
+              color: 'var(--contrast-text)',
             }}
           >
             {t(item.labelKey)}
@@ -127,14 +127,14 @@ export default function MobileMenu({ isOpen, onClose }) {
 
         {/* Language Text - toggles language */}
         <LanguageText
-          textColor="#131313"
+          textColor="var(--contrast-text)"
           fontSize={`${scaledFontSize}px`}
           asMenuItem={true}
         />
 
         {/* Contrast Toggle - eye icon */}
         <ContrastToggle
-          iconColor="#131313"
+          iconColor="var(--contrast-text)"
           scale={scale}
         />
       </nav>

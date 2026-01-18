@@ -85,7 +85,7 @@ export default function DesktopWydarzenie() {
             fontWeight: 600,
             fontSize: '40px',
             lineHeight: 1.35,
-            color: '#761FE0',
+            color: 'var(--contrast-accent)',
             textDecoration: 'underline',
             textTransform: 'uppercase',
           }}
@@ -113,7 +113,7 @@ export default function DesktopWydarzenie() {
           objectFit: 'cover',
           objectPosition: '50% 50%',
         }}
-        placeholderColor="#e5e5e5"
+        placeholderColor="var(--contrast-placeholder)"
       />
 
       {/* Data i godzina frame - centered at 297px (1440/2 - 847/2 ≈ 297) */}
@@ -136,7 +136,7 @@ export default function DesktopWydarzenie() {
               fontWeight: 600,
               fontSize: '32px',
               lineHeight: 1.48,
-              color: '#131313',
+              color: 'var(--contrast-text)',
             }}
           >
             {event.date}| {event.time}
@@ -161,7 +161,7 @@ export default function DesktopWydarzenie() {
               fontWeight: 600,
               fontSize: '32px',
               lineHeight: 1.48,
-              color: '#131313',
+              color: 'var(--contrast-text)',
             }}
           >
             {event.location}
@@ -179,7 +179,7 @@ export default function DesktopWydarzenie() {
           style={{
             left: '624px',
             top: '990px',
-            backgroundColor: '#761FE0',
+            backgroundColor: 'var(--contrast-accent)',
             paddingLeft: '24px',
             paddingRight: '22px',
             paddingTop: '14px',
@@ -195,7 +195,7 @@ export default function DesktopWydarzenie() {
               fontWeight: 700,
               fontSize: '20px',
               lineHeight: 1.44,
-              color: '#FDFDFD',
+              color: 'var(--contrast-bg)',
               textTransform: 'uppercase',
             }}
           >
@@ -227,7 +227,7 @@ export default function DesktopWydarzenie() {
             fontWeight: 500,
             fontSize: '16px',
             lineHeight: 1.48,
-            color: '#131313',
+            color: 'var(--contrast-text)',
             whiteSpace: 'pre-wrap',
           }}
         >
@@ -248,7 +248,7 @@ export default function DesktopWydarzenie() {
               fontWeight: 600,
               fontSize: '24px',
               lineHeight: 1.45,
-              color: '#131313',
+              color: 'var(--contrast-text)',
               textDecoration: 'underline',
               textTransform: 'uppercase',
             }}
@@ -262,7 +262,7 @@ export default function DesktopWydarzenie() {
               fontWeight: 700,
               fontSize: '16px',
               lineHeight: 1.48,
-              color: '#131313',
+              color: 'var(--contrast-text)',
             }}
           >
             {event.artists}
@@ -282,7 +282,7 @@ export default function DesktopWydarzenie() {
               fontWeight: 600,
               fontSize: '24px',
               lineHeight: 1.45,
-              color: '#131313',
+              color: 'var(--contrast-text)',
               textDecoration: 'underline',
               textTransform: 'uppercase',
             }}
@@ -294,7 +294,7 @@ export default function DesktopWydarzenie() {
               fontFamily: "'IBM Plex Mono', monospace",
               fontSize: '16px',
               lineHeight: 1.48,
-              color: '#131313',
+              color: 'var(--contrast-text)',
               width: '519px',
               listStyleType: 'disc',
               paddingLeft: '24px',
@@ -323,7 +323,7 @@ export default function DesktopWydarzenie() {
               fontWeight: 600,
               fontSize: '24px',
               lineHeight: 1.45,
-              color: '#131313',
+              color: 'var(--contrast-text)',
               textDecoration: 'underline',
               textTransform: 'uppercase',
             }}

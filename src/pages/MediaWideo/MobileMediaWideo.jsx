@@ -8,8 +8,8 @@ import { videos as configVideos, ACTIVE_TAB_COLOR } from './media-wideo-config';
 const MOBILE_WIDTH = 390;
 const mobileLinePositions = [97, 195, 292];
 const BACKGROUND_COLOR = '#73A1FE';
-const LINE_COLOR = '#3478FF';
-const TEXT_COLOR = '#131313';
+const LINE_COLOR = 'var(--contrast-button-primary-hover)';
+const TEXT_COLOR = 'var(--contrast-text)';
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
@@ -70,7 +70,7 @@ export default function MobileMediaWideo() {
           backgroundColor: BACKGROUND_COLOR,
         }}
       >
-        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px', color: '#ff0000' }}>
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px', color: 'var(--contrast-error)' }}>
           Błąd ładowania filmów
         </p>
       </section>
@@ -154,7 +154,7 @@ export default function MobileMediaWideo() {
                   objectFit: 'cover',
                   objectPosition: '50% 50%',
                 }}
-                placeholderColor="#e5e5e5"
+                placeholderColor="var(--contrast-placeholder)"
               />
               {/* Play Icon */}
               <div

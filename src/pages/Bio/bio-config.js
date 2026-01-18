@@ -4,10 +4,10 @@
 export const desktopBioSlides = [
   {
     id: 'bio1',
-    backgroundColor: '#FDFDFD',
+    backgroundColor: 'var(--contrast-bg)',
     name: 'Ensemble KOMPOPOLEX',
-    lineColor: '#A0E38A',
-    textColor: '#131313',
+    lineColor: 'var(--contrast-line)',
+    textColor: 'var(--contrast-text)',
     image: '/assets/bio/bio1-ensemble.webp',
     // Bio1 uses object-cover centered (different base image)
     imageStyle: {
@@ -29,7 +29,7 @@ export const desktopBioSlides = [
     backgroundColor: '#FF734C',
     name: 'Aleksandra Gołaj',
     lineColor: '#FFBD19',
-    textColor: '#131313',
+    textColor: 'var(--contrast-text)',
     image: '/assets/bio/bio2-aleksandra.webp',
     // From Figma: h-[159.57%] left-[0.75%] top-[-28.91%] w-[342.5%]
     imageStyle: {
@@ -50,10 +50,10 @@ export const desktopBioSlides = [
   },
   {
     id: 'bio3',
-    backgroundColor: '#34B898',
+    backgroundColor: 'var(--contrast-line)',
     name: 'Rafał Łuc',
-    lineColor: '#01936F',
-    textColor: '#131313',
+    lineColor: 'var(--contrast-line-alt)',
+    textColor: 'var(--contrast-text)',
     image: '/assets/bio/bio3-rafal.webp',
     // From Figma: h-[153.91%] left-[-101.18%] top-[-13.7%] w-[330.37%]
     imageStyle: {
@@ -77,8 +77,8 @@ export const desktopBioSlides = [
     id: 'bio4',
     backgroundColor: '#73A1FE',
     name: 'Jacek Sotomski',
-    lineColor: '#3478FF',
-    textColor: '#131313',
+    lineColor: 'var(--contrast-button-primary-hover)',
+    textColor: 'var(--contrast-text)',
     image: '/assets/bio/bio4-jacek.webp',
     // From Figma: h-[140.43%] left-[-198.05%] top-[-0.22%] w-[301.44%]
     imageStyle: {
@@ -103,10 +103,10 @@ export const desktopBioSlides = [
 export const mobileBioSlides = [
   {
     id: 1,
-    backgroundColor: '#FDFDFD',
+    backgroundColor: 'var(--contrast-bg)',
     name: 'Ensemble KOMPOPOLEX',
-    lineColor: '#A0E38A',
-    textColor: '#131313',
+    lineColor: 'var(--contrast-line)',
+    textColor: 'var(--contrast-text)',
     image: '/assets/bio/bio1-ensemble.webp',
     logoSrc: '/assets/logo.svg',
     paragraphs: [
@@ -120,7 +120,7 @@ export const mobileBioSlides = [
     backgroundColor: '#FF734C',
     name: 'Aleksandra Gołaj',
     lineColor: '#FFBD19',
-    textColor: '#131313',
+    textColor: 'var(--contrast-text)',
     image: '/assets/bio/bio2-aleksandra.webp',
     logoSrc: '/assets/logo.svg',
     paragraphs: [
@@ -131,10 +131,10 @@ export const mobileBioSlides = [
   },
   {
     id: 3,
-    backgroundColor: '#34B898',
+    backgroundColor: 'var(--contrast-line)',
     name: 'Rafał Łuc',
-    lineColor: '#01936F',
-    textColor: '#131313',
+    lineColor: 'var(--contrast-line-alt)',
+    textColor: 'var(--contrast-text)',
     image: '/assets/bio/bio3-rafal.webp',
     logoSrc: '/assets/logo.svg',
     paragraphs: [
@@ -148,8 +148,8 @@ export const mobileBioSlides = [
     id: 4,
     backgroundColor: '#73A1FE',
     name: 'Jacek Sotomski',
-    lineColor: '#3478FF',
-    textColor: '#131313',
+    lineColor: 'var(--contrast-button-primary-hover)',
+    textColor: 'var(--contrast-text)',
     image: '/assets/bio/bio4-jacek.webp',
     logoSrc: '/assets/logo.svg',
     paragraphs: [

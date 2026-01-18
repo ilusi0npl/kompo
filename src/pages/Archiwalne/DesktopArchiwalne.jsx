@@ -65,7 +65,7 @@ export default function DesktopArchiwalne() {
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontSize: '16px',
-            color: '#131313',
+            color: 'var(--contrast-text)',
           }}
         >
           {t('common.loading.events')}
@@ -93,7 +93,7 @@ export default function DesktopArchiwalne() {
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontSize: '16px',
-            color: '#FF0000',
+            color: 'var(--contrast-error)',
           }}
         >
           {t('common.error.loadEvents')}
@@ -150,7 +150,7 @@ export default function DesktopArchiwalne() {
                 objectFit: 'cover',
                 objectPosition: '50% 50%',
               }}
-              placeholderColor="#e5e5e5"
+              placeholderColor="var(--contrast-placeholder)"
             />
           </Link>
 
@@ -163,7 +163,7 @@ export default function DesktopArchiwalne() {
                 fontWeight: 700,
                 fontSize: '16px',
                 lineHeight: 1.48,
-                color: '#131313',
+                color: 'var(--contrast-text)',
               }}
             >
               {event.date}
@@ -179,7 +179,7 @@ export default function DesktopArchiwalne() {
                   fontWeight: 600,
                   fontSize: '24px',
                   lineHeight: 1.45,
-                  color: '#131313',
+                  color: 'var(--contrast-text)',
                   textTransform: 'uppercase',
                 }}
               >
@@ -191,7 +191,7 @@ export default function DesktopArchiwalne() {
                   fontWeight: 500,
                   fontSize: '16px',
                   lineHeight: 1.48,
-                  color: '#131313',
+                  color: 'var(--contrast-text)',
                 }}
               >
                 {event.performers}

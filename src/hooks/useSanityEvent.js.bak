@@ -23,9 +23,6 @@ export function useSanityEvent(id) {
       return
     }
 
-      return
-    }
-
     client
       .fetch(eventByIdQuery, { id })
       .then((eventData) => {
