@@ -1,6 +1,15 @@
-export default function BackgroundLines() {
-  // Pozycje pionowych linii z Figma (dla 1440px szerokości)
-  const linePositions = [155, 375, 595, 815, 1035, 1255];
+export default function BackgroundLines({
+  isMobile = false,
+  lineColor = '#A0E38A',
+  scale = 1
+}) {
+  // Pozycje pionowych linii z Figma
+  // Desktop (1440px): 6 linii
+  // Mobile (390px): 3 linie
+  const desktopPositions = [155, 375, 595, 815, 1035, 1255];
+  const mobilePositions = [97, 195, 292];
+
+  const linePositions = isMobile ? mobilePositions : desktopPositions;
 
   return (
     <div
@@ -12,9 +21,9 @@ export default function BackgroundLines() {
           key={index}
           className="absolute top-0 h-full"
           style={{
-            left: `${left}px`,
+            left: `${left * scale}px`,
             width: '1px',
-            backgroundColor: '#A0E38A'
+            backgroundColor: lineColor
           }}
         />
       ))}

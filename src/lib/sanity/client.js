@@ -1,9 +1,9 @@
 import {createClient} from '@sanity/client'
 import imageUrlBuilder from '@sanity/image-url'
 
-// Create Sanity client
+// Create Sanity client with default values for testing
 export const client = createClient({
-  projectId: import.meta.env.VITE_SANITY_PROJECT_ID,
+  projectId: import.meta.env.VITE_SANITY_PROJECT_ID || 'dummy-project-id',
   dataset: import.meta.env.VITE_SANITY_DATASET || 'production',
   apiVersion: '2024-01-01',
   useCdn: true, // Use CDN for faster reads
