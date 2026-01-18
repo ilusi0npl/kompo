@@ -1,6 +1,7 @@
 /**
  * Shared E2E test utilities for Kompopolex
  */
+import { expect } from '@playwright/test'
 
 /**
  * Check if navigation menu is visible with all main links
@@ -129,5 +130,3 @@ export async function navigateViaLink(page, linkHref, expectedUrl) {
   await page.waitForTimeout(500)
   await expect(page).toHaveURL(expectedUrl)
 }
-
-export { expect } from '@playwright/test'
