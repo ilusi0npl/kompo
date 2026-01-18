@@ -12,7 +12,7 @@ import {
 
 // Pozycje linii pionowych z Figma
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
-const LINE_COLOR = '#A0E38A';
+const LINE_COLOR = 'var(--contrast-line)';
 
 export default function DesktopWydarzenie2() {
   const { t } = useTranslation();
@@ -24,7 +24,7 @@ export default function DesktopWydarzenie2() {
       style={{
         width: `${DESKTOP_WIDTH}px`,
         height: `${DESKTOP_HEIGHT}px`,
-        backgroundColor: '#FDFDFD',
+        backgroundColor: 'var(--contrast-bg)',
       }}
     >
       {/* Pionowe linie dekoracyjne */}
@@ -72,7 +72,7 @@ export default function DesktopWydarzenie2() {
             fontWeight: 600,
             fontSize: '64px',
             lineHeight: 1.1,
-            color: '#131313',
+            color: 'var(--contrast-text)',
             transform: 'rotate(90deg)',
             whiteSpace: 'nowrap',
           }}
@@ -96,7 +96,7 @@ export default function DesktopWydarzenie2() {
             fontWeight: 600,
             fontSize: '40px',
             lineHeight: 1.35,
-            color: '#761FE0',
+            color: 'var(--contrast-accent)',
             textDecoration: 'underline',
             textTransform: 'uppercase',
           }}
@@ -124,7 +124,7 @@ export default function DesktopWydarzenie2() {
           objectFit: 'cover',
           objectPosition: '50% 50%',
         }}
-        placeholderColor="#e5e5e5"
+        placeholderColor="var(--contrast-placeholder)"
       />
 
       {/* Data i godzina frame - centered at 297px (1440/2 - 847/2 ≈ 297) */}
@@ -147,7 +147,7 @@ export default function DesktopWydarzenie2() {
               fontWeight: 600,
               fontSize: '32px',
               lineHeight: 1.48,
-              color: '#131313',
+              color: 'var(--contrast-text)',
             }}
           >
             {eventData.date}| {eventData.time}
@@ -172,7 +172,7 @@ export default function DesktopWydarzenie2() {
               fontWeight: 600,
               fontSize: '32px',
               lineHeight: 1.48,
-              color: '#131313',
+              color: 'var(--contrast-text)',
             }}
           >
             {eventData.location}
@@ -189,7 +189,7 @@ export default function DesktopWydarzenie2() {
         style={{
           left: '624px',
           top: '990px',
-          backgroundColor: '#761FE0',
+          backgroundColor: 'var(--contrast-accent)',
           paddingLeft: '24px',
           paddingRight: '22px',
           paddingTop: '14px',
@@ -206,7 +206,7 @@ export default function DesktopWydarzenie2() {
             fontWeight: 700,
             fontSize: '20px',
             lineHeight: 1.44,
-            color: '#FDFDFD',
+            color: 'var(--contrast-bg)',
             textTransform: 'uppercase',
           }}
         >
@@ -237,7 +237,7 @@ export default function DesktopWydarzenie2() {
             fontWeight: 500,
             fontSize: '16px',
             lineHeight: 1.48,
-            color: '#131313',
+            color: 'var(--contrast-text)',
             whiteSpace: 'pre-wrap',
           }}
         >
@@ -258,7 +258,7 @@ export default function DesktopWydarzenie2() {
               fontWeight: 600,
               fontSize: '24px',
               lineHeight: 1.45,
-              color: '#131313',
+              color: 'var(--contrast-text)',
               textDecoration: 'underline',
               textTransform: 'uppercase',
             }}
@@ -272,7 +272,7 @@ export default function DesktopWydarzenie2() {
               fontWeight: 700,
               fontSize: '16px',
               lineHeight: 1.48,
-              color: '#131313',
+              color: 'var(--contrast-text)',
             }}
           >
             {eventData.artists}
@@ -292,7 +292,7 @@ export default function DesktopWydarzenie2() {
               fontWeight: 600,
               fontSize: '24px',
               lineHeight: 1.45,
-              color: '#131313',
+              color: 'var(--contrast-text)',
               textDecoration: 'underline',
               textTransform: 'uppercase',
             }}
@@ -304,7 +304,7 @@ export default function DesktopWydarzenie2() {
               fontFamily: "'IBM Plex Mono', monospace",
               fontSize: '16px',
               lineHeight: 1.48,
-              color: '#131313',
+              color: 'var(--contrast-text)',
               width: '519px',
               listStyleType: 'disc',
               paddingLeft: '24px',
@@ -333,7 +333,7 @@ export default function DesktopWydarzenie2() {
               fontWeight: 600,
               fontSize: '24px',
               lineHeight: 1.45,
-              color: '#131313',
+              color: 'var(--contrast-text)',
               textDecoration: 'underline',
               textTransform: 'uppercase',
             }}
@@ -499,7 +499,7 @@ export default function DesktopWydarzenie2() {
                   fontWeight: 700,
                   fontSize: '18px',
                   lineHeight: 1.48,
-                  color: '#131313',
+                  color: 'var(--contrast-text)',
                 }}
               >
                 {t(`common.nav.${item.key}`)}
@@ -518,7 +518,7 @@ export default function DesktopWydarzenie2() {
                   fontWeight: 700,
                   fontSize: '18px',
                   lineHeight: 1.48,
-                  color: '#131313',
+                  color: 'var(--contrast-text)',
                 }}
               >
                 {t(`common.nav.${item.key}`)}

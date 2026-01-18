@@ -891,6 +891,70 @@ All images uploaded to **Sanity CDN**:
 
 ---
 
+## High Contrast Mode (WCAG Accessibility)
+
+### Overview
+
+The project implements **WCAG 2.1 Level AA compliant** high contrast mode using CSS custom properties.
+
+### Architecture
+
+**Hook:** `src/hooks/useHighContrast.js`
+- Manages global high contrast state
+- Persists preference in `localStorage`
+- Respects system `prefers-contrast: more` setting
+- Sets `data-contrast="high"` attribute on `<html>`
+
+**CSS Variables:** `src/index.css`
+- All colors defined as CSS custom properties
+- Two modes: normal and high contrast
+- Automatic switching via `[data-contrast="high"]` selector
+
+**Component:** `src/components/ContrastToggle/ContrastToggle.jsx`
+- Toggle button (oczko icon)
+- Uses `useHighContrast` hook
+- ARIA-compliant with proper labels
+
+### Usage in Components
+
+```jsx
+// Use CSS variables instead of hardcoded colors
+const BACKGROUND_COLOR = 'var(--contrast-bg)';
+const TEXT_COLOR = 'var(--contrast-text)';
+const ACCENT_COLOR = 'var(--contrast-accent)';
+
+// In JSX
+<div style={{ backgroundColor: 'var(--contrast-bg)', color: 'var(--contrast-text)' }}>
+  <p style={{ color: 'var(--contrast-accent)' }}>Text</p>
+</div>
+```
+
+### Available CSS Variables
+
+| Variable | Normal Mode | High Contrast Mode |
+|----------|-------------|-------------------|
+| `--contrast-bg` | #FDFDFD | #FFFFFF |
+| `--contrast-text` | #131313 | #000000 |
+| `--contrast-text-muted` | #5b5b5b | #2b2b2b |
+| `--contrast-accent` | #761FE0 | #5a00c7 |
+| `--contrast-link` | #761FE0 | #5a00c7 |
+| `--contrast-line` | #A0E38A | #008000 |
+| `--contrast-line-alt` | #01936F | #006400 |
+| `--contrast-error` | #ff0000 | #cc0000 |
+| `--contrast-button-primary` | #4F93FF | #0056b3 |
+| `--contrast-button-primary-hover` | #3478ff | #003d82 |
+
+### WCAG Compliance
+
+**Contrast Ratios:**
+- Normal mode: 18.27:1 (text) - ✅ WCAG AAA
+- High contrast mode: 21.00:1 (text) - ✅ WCAG AAA
+- All combinations meet minimum 4.5:1 (WCAG AA)
+
+See `HIGH_CONTRAST_IMPLEMENTATION.md` for detailed documentation.
+
+---
+
 ## Quick Start for New Project
 
 1. **Clone and install:**

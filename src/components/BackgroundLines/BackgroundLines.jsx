@@ -14,7 +14,7 @@ export default function BackgroundLines() {
           style={{
             left: `${left}px`,
             width: '1px',
-            backgroundColor: '#A0E38A'
+            backgroundColor: 'var(--contrast-line)'
           }}
         />
       ))}

@@ -91,7 +91,7 @@ export default function DesktopFundacja() {
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontSize: '16px',
-            color: '#131313',
+            color: 'var(--contrast-text)',
           }}
         >
           {t('common.loading.foundation')}
@@ -119,7 +119,7 @@ export default function DesktopFundacja() {
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontSize: '16px',
-            color: '#FF0000',
+            color: 'var(--contrast-error)',
           }}
         >
           Błąd ładowania strony fundacji. Spróbuj ponownie później.
@@ -164,7 +164,7 @@ export default function DesktopFundacja() {
             height: '948px',
             objectFit: 'cover',
           }}
-          placeholderColor="#e5e5e5"
+          placeholderColor="var(--contrast-placeholder)"
         />
       </div>
 

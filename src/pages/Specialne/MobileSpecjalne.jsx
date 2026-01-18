@@ -14,9 +14,9 @@ import {
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
-const BACKGROUND_COLOR = '#FDFDFD';
-const LINE_COLOR = '#A0E38A';
-const TEXT_COLOR = '#131313';
+const BACKGROUND_COLOR = 'var(--contrast-bg)';
+const LINE_COLOR = 'var(--contrast-line)';
+const TEXT_COLOR = 'var(--contrast-text)';
 const HEADER_HEIGHT = 355;
 
 // Helper component to render a single composer entry
@@ -59,7 +59,7 @@ const ComposerEntry = ({ composer }) => {
         >
           {work.title}
           {work.isSpecial && (
-            <span style={{ color: '#761FE0' }}>*</span>
+            <span style={{ color: 'var(--contrast-accent)' }}>*</span>
           )}
         </p>
       ))}
@@ -110,7 +110,7 @@ export default function MobileSpecjalne() {
           backgroundColor: BACKGROUND_COLOR,
         }}
       >
-        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px', color: '#ff0000' }}>
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px', color: 'var(--contrast-error)' }}>
           Błąd ładowania projektów specjalnych
         </p>
       </section>
@@ -251,7 +251,7 @@ export default function MobileSpecjalne() {
                 fontWeight: 600,
                 fontSize: '20px',
                 lineHeight: 1.44,
-                color: '#761FE0',
+                color: 'var(--contrast-accent)',
                 textDecoration: 'underline',
               }}
             >
@@ -309,7 +309,7 @@ export default function MobileSpecjalne() {
           fontWeight: 500,
           fontSize: '16px',
           lineHeight: 1.48,
-          color: '#761FE0',
+          color: 'var(--contrast-accent)',
           margin: 0,
           marginLeft: '20px',
           marginTop: '40px',

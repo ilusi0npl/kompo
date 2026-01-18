@@ -6,10 +6,10 @@ import ContrastToggle from '../../components/ContrastToggle/ContrastToggle';
 
 const DESKTOP_WIDTH = 1440;
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
-const LINE_COLOR = '#3478FF';
+const LINE_COLOR = 'var(--contrast-button-primary-hover)';
 const BACKGROUND_COLOR = '#73A1FE';
-const TEXT_COLOR = '#131313';
-const ACTIVE_COLOR = '#761FE0';
+const TEXT_COLOR = 'var(--contrast-text)';
+const ACTIVE_COLOR = 'var(--contrast-accent)';
 
 export default function MediaWideoFixedLayer({ scale = 1, viewportHeight = 700 }) {
   const [documentHeight, setDocumentHeight] = useState(0);

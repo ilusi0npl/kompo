@@ -8,9 +8,9 @@ import { useTranslation } from '../../hooks/useTranslation';
 import ArrowRight from '../../components/ArrowRight/ArrowRight';
 
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
-const LINE_COLOR = '#01936F';
-const BACKGROUND_COLOR = '#34B898';
-const TEXT_COLOR = '#131313';
+const LINE_COLOR = 'var(--contrast-line-alt)';
+const BACKGROUND_COLOR = 'var(--contrast-line)';
+const TEXT_COLOR = 'var(--contrast-text)';
 
 export default function DesktopMediaGaleria({ album }) {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -152,7 +152,7 @@ export default function DesktopMediaGaleria({ album }) {
             height: '100%',
             objectFit: 'cover',
           }}
-          placeholderColor="#e5e5e5"
+          placeholderColor="var(--contrast-placeholder)"
         />
       </div>
 

@@ -12,7 +12,7 @@ const HEADER_HEIGHT = 218;
 const mobileLinePositions = [97, 195, 292];
 const BACKGROUND_COLOR = '#FF734C';
 const LINE_COLOR = '#FFBD19';
-const TEXT_COLOR = '#131313';
+const TEXT_COLOR = 'var(--contrast-text)';
 
 export default function MobileKontakt() {
   const { t } = useTranslation();
@@ -173,7 +173,7 @@ export default function MobileKontakt() {
             objectFit: 'cover',
             objectPosition: '50% 50%',
           }}
-          placeholderColor="#e5e5e5"
+          placeholderColor="var(--contrast-placeholder)"
         />
       </div>
 

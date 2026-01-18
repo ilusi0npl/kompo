@@ -8,13 +8,13 @@ export const DESKTOP_HEIGHT = 1175;
 export const desktopLinePositions = [155, 375, 595, 815, 1035, 1255];
 
 // Line color for Media Wideo page (darker blue)
-export const LINE_COLOR = '#3478FF';
+export const LINE_COLOR = 'var(--contrast-button-primary-hover)';
 
 // Background color (light blue)
 export const BACKGROUND_COLOR = '#73A1FE';
 
 // Active tab color (purple)
-export const ACTIVE_TAB_COLOR = '#761FE0';
+export const ACTIVE_TAB_COLOR = 'var(--contrast-accent)';
 
 // Videos configuration
 export const videos = [

@@ -39,8 +39,8 @@ export default function Repertuar() {
         mobileContent={<MobileRepertuar />}
         desktopHeight="auto"
         mobileHeight="auto"
-        backgroundColor="#FDFDFD"
-        lineColor="#A0E38A"
+        backgroundColor="var(--contrast-bg)"
+        lineColor="var(--contrast-line)"
         hideLines={!isMobile}
       />
     </>

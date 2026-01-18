@@ -4,7 +4,7 @@
 export const desktopSlides = [
   {
     id: 1,
-    backgroundColor: '#FDFDFD',
+    backgroundColor: 'var(--contrast-bg)',
     word: 'Trio',
     wordSvg: '/assets/slides/word-trio.svg',
     wordY: 446,
@@ -13,13 +13,13 @@ export const desktopSlides = [
     tagline: 'specjalizujemy się w muzyce najnowszej',
     taglineX: 514,
     image: '/assets/slides/hero-1.webp',
-    textColor: '#131313',
-    lineColor: '#A0E38A',
+    textColor: 'var(--contrast-text)',
+    lineColor: 'var(--contrast-line)',
     logoSrc: '/assets/logo.svg'
   },
   {
     id: 2,
-    backgroundColor: '#761FE0',
+    backgroundColor: 'var(--contrast-accent)',
     word: 'Kompo',
     wordSvg: '/assets/slides/word-kompo.svg',
     wordY: 408,
@@ -28,13 +28,13 @@ export const desktopSlides = [
     tagline: 'gramy wszystko i na wszystkim',
     taglineX: 612,
     image: '/assets/slides/hero-2.webp',
-    textColor: '#FDFDFD',
-    lineColor: '#A0E38A',
+    textColor: 'var(--contrast-bg)',
+    lineColor: 'var(--contrast-line)',
     logoSrc: '/assets/logo-white.svg'
   },
   {
     id: 3,
-    backgroundColor: '#34B898',
+    backgroundColor: 'var(--contrast-line)',
     word: 'Polex',
     wordSvg: '/assets/slides/word-polex.svg',
     wordY: 408,
@@ -43,8 +43,8 @@ export const desktopSlides = [
     tagline: 'jesteśmy z Polski',
     taglineX: 741,
     image: '/assets/slides/hero-3.webp',
-    textColor: '#131313',
-    lineColor: '#01936F',
+    textColor: 'var(--contrast-text)',
+    lineColor: 'var(--contrast-line-alt)',
     logoSrc: '/assets/logo.svg'
   },
   {
@@ -58,8 +58,8 @@ export const desktopSlides = [
     tagline: 'komponuje dla nas cały świat',
     taglineX: 622,
     image: '/assets/slides/hero-4.webp',
-    textColor: '#131313',
-    lineColor: '#5B5B5B',
+    textColor: 'var(--contrast-text)',
+    lineColor: 'var(--contrast-text-muted)',
     logoSrc: '/assets/logo.svg'
   }
 ];
@@ -67,41 +67,41 @@ export const desktopSlides = [
 export const mobileSlides = [
   {
     id: 1,
-    backgroundColor: '#FDFDFD',
+    backgroundColor: 'var(--contrast-bg)',
     word: 'Trio',
     wordSvg: '/assets/mobile/trio-text.svg',
     wordWidth: 49,
     wordHeight: 149,
     tagline: 'specjalizujące się w muzyce najnowszej',
     image: '/assets/slides/hero-1.webp',
-    textColor: '#131313',
-    lineColor: '#A0E38A',
+    textColor: 'var(--contrast-text)',
+    lineColor: 'var(--contrast-line)',
     logoSrc: '/assets/logo.svg'
   },
   {
     id: 2,
-    backgroundColor: '#761FE0',
+    backgroundColor: 'var(--contrast-accent)',
     word: 'Kompo',
     wordSvg: '/assets/slides/word-kompo.svg',
     wordWidth: 58,
     wordHeight: 185,
     tagline: 'gramy wszystko i na wszystkim',
     image: '/assets/slides/hero-2.webp',
-    textColor: '#FDFDFD',
-    lineColor: '#A0E38A',
+    textColor: 'var(--contrast-bg)',
+    lineColor: 'var(--contrast-line)',
     logoSrc: '/assets/logo-white.svg'
   },
   {
     id: 3,
-    backgroundColor: '#34B898',
+    backgroundColor: 'var(--contrast-line)',
     word: 'Polex',
     wordSvg: '/assets/slides/word-polex.svg',
     wordWidth: 49,
     wordHeight: 185,
     tagline: 'jesteśmy z Polski',
     image: '/assets/slides/hero-3.webp',
-    textColor: '#131313',
-    lineColor: '#01936F',
+    textColor: 'var(--contrast-text)',
+    lineColor: 'var(--contrast-line-alt)',
     logoSrc: '/assets/logo.svg'
   },
   {
@@ -113,8 +113,8 @@ export const mobileSlides = [
     wordHeight: 215,
     tagline: 'komponuje dla nas cały świat',
     image: '/assets/slides/hero-4.webp',
-    textColor: '#131313',
-    lineColor: '#5B5B5B',
+    textColor: 'var(--contrast-text)',
+    lineColor: 'var(--contrast-text-muted)',
     logoSrc: '/assets/logo.svg'
   }
 ];

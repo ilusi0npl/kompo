@@ -46,7 +46,7 @@ export default function MediaGaleria() {
           justifyContent: 'center',
           fontFamily: "'IBM Plex Mono', monospace",
           fontSize: '16px',
-          color: '#131313',
+          color: 'var(--contrast-text)',
         }}
       >
         {t('common.loading.album')}
@@ -66,7 +66,7 @@ export default function MediaGaleria() {
           justifyContent: 'center',
           fontFamily: "'IBM Plex Mono', monospace",
           fontSize: '16px',
-          color: '#FF0000',
+          color: 'var(--contrast-error)',
         }}
       >
         Błąd ładowania albumu. Spróbuj ponownie później.
@@ -85,8 +85,8 @@ export default function MediaGaleria() {
       mobileContent={<MobileMediaGaleria album={album} />}
       desktopHeight="auto"
       mobileHeight="auto"
-      backgroundColor="#34B898"
-      lineColor="#01936F"
+      backgroundColor="var(--contrast-line)"
+      lineColor="var(--contrast-line-alt)"
       hideLines={true}
     />
   );

@@ -102,7 +102,7 @@ export default function DesktopBio({ setCurrentColors }) {
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontSize: '16px',
-            color: '#131313',
+            color: 'var(--contrast-text)',
           }}
         >
           {t('common.loading.profiles')}
@@ -129,7 +129,7 @@ export default function DesktopBio({ setCurrentColors }) {
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontSize: '16px',
-            color: '#ff0000',
+            color: 'var(--contrast-error)',
           }}
         >
           Błąd ładowania profili
@@ -250,7 +250,7 @@ export default function DesktopBio({ setCurrentColors }) {
                   fontWeight: 600,
                   fontSize: '16px',
                   lineHeight: 1.48,
-                  color: '#761FE0',
+                  color: 'var(--contrast-accent)',
                   textDecoration: 'underline',
                   textTransform: 'uppercase',
                   zIndex: 60,

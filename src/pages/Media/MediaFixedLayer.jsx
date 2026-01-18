@@ -6,10 +6,10 @@ import ContrastToggle from '../../components/ContrastToggle/ContrastToggle';
 
 const DESKTOP_WIDTH = 1440;
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
-const LINE_COLOR = '#01936F';
-const BACKGROUND_COLOR = '#34B898';
-const TEXT_COLOR = '#131313';
-const ACTIVE_COLOR = '#761FE0';
+const LINE_COLOR = 'var(--contrast-line-alt)';
+const BACKGROUND_COLOR = 'var(--contrast-line)';
+const TEXT_COLOR = 'var(--contrast-text)';
+const ACTIVE_COLOR = 'var(--contrast-accent)';
 
 export default function MediaFixedLayer({ scale = 1, viewportHeight = 700, isPhotosActive = true }) {
   const [documentHeight, setDocumentHeight] = useState(0);

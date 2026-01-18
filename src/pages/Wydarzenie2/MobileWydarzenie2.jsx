@@ -10,9 +10,9 @@ import { eventData } from './wydarzenie-config';
 
 const MOBILE_WIDTH = 390;
 const mobileLinePositions = [97, 195, 292];
-const BACKGROUND_COLOR = '#FDFDFD';
-const LINE_COLOR = '#A0E38A';
-const TEXT_COLOR = '#131313';
+const BACKGROUND_COLOR = 'var(--contrast-bg)';
+const LINE_COLOR = 'var(--contrast-line)';
+const TEXT_COLOR = 'var(--contrast-text)';
 const HEADER_HEIGHT = 257;
 
 export default function MobileWydarzenie2() {
@@ -170,7 +170,7 @@ export default function MobileWydarzenie2() {
               objectFit: 'cover',
               objectPosition: '50% 50%',
             }}
-            placeholderColor="#e5e5e5"
+            placeholderColor="var(--contrast-placeholder)"
           />
         </div>
 
@@ -218,7 +218,7 @@ export default function MobileWydarzenie2() {
                   fontWeight: 600,
                   fontSize: '32px',
                   lineHeight: 1.4,
-                  color: '#761FE0',
+                  color: 'var(--contrast-accent)',
                   textDecoration: 'underline',
                   textTransform: 'uppercase',
                 }}
@@ -293,7 +293,7 @@ export default function MobileWydarzenie2() {
           className="flex items-center justify-center ticket-btn"
           style={{
             width: '100%',
-            backgroundColor: '#761FE0',
+            backgroundColor: 'var(--contrast-accent)',
             paddingLeft: '24px',
             paddingRight: '22px',
             paddingTop: '14px',
@@ -310,7 +310,7 @@ export default function MobileWydarzenie2() {
               fontWeight: 700,
               fontSize: '20px',
               lineHeight: 1.44,
-              color: '#FDFDFD',
+              color: 'var(--contrast-bg)',
               textTransform: 'uppercase',
             }}
           >

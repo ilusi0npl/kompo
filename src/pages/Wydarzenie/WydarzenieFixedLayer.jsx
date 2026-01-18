@@ -5,9 +5,9 @@ import ContrastToggle from '../../components/ContrastToggle/ContrastToggle';
 
 // Pozycje linii pionowych z Figma
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
-const LINE_COLOR = '#A0E38A';
-const BACKGROUND_COLOR = '#FDFDFD';
-const TEXT_COLOR = '#131313';
+const LINE_COLOR = 'var(--contrast-line)';
+const BACKGROUND_COLOR = 'var(--contrast-bg)';
+const TEXT_COLOR = 'var(--contrast-text)';
 
 export default function WydarzenieFixedLayer({ scale = 1, pageHeight = 1941 }) {
   const { t } = useTranslation();

@@ -26,10 +26,10 @@ const DEFAULT_LINE_POSITIONS = [97, 195, 292];
  */
 export default function MobileHeader({
   title,
-  textColor = '#131313',
+  textColor = 'var(--contrast-text)',
   backgroundColor = 'transparent',
   navLinks = null,
-  activeColor = '#761FE0',
+  activeColor = 'var(--contrast-accent)',
   isFixed = false,
   headerHeight = DEFAULT_HEADER_HEIGHT,
   lineColor = null,

@@ -292,7 +292,7 @@ export default function MobileBio({ setCurrentColors }) {
                       fontWeight: 600,
                       fontSize: '16px',
                       lineHeight: 1.48,
-                      color: '#761FE0',
+                      color: 'var(--contrast-accent)',
                       textDecoration: 'underline',
                       textTransform: 'uppercase',
                     }}

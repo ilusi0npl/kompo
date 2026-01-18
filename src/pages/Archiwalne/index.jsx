@@ -39,8 +39,8 @@ export default function Archiwalne() {
         mobileContent={<MobileArchiwalne />}
         desktopHeight="auto"
         mobileHeight="auto"
-        backgroundColor="#FDFDFD"
-        lineColor="#A0E38A"
+        backgroundColor="var(--contrast-bg)"
+        lineColor="var(--contrast-line)"
         hideLines={!isMobile}
       />
     </>

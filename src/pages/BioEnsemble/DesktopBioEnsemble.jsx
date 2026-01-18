@@ -12,8 +12,8 @@ const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 const COLORS = {
   backgroundColor: '#FFBD19',
   lineColor: '#FFBD19',
-  textColor: '#131313',
-  linkColor: '#761FE0',
+  textColor: 'var(--contrast-text)',
+  linkColor: 'var(--contrast-accent)',
 };
 
 export default function DesktopBioEnsemble() {

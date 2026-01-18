@@ -65,7 +65,7 @@ export default function DesktopHomepage() {
         style={{
           width: `${DESKTOP_WIDTH}px`,
           height: `${DESKTOP_HEIGHT}px`,
-          backgroundColor: '#FDFDFD',
+          backgroundColor: 'var(--contrast-bg)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -75,7 +75,7 @@ export default function DesktopHomepage() {
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontSize: '16px',
-            color: '#131313',
+            color: 'var(--contrast-text)',
           }}
         >
           {t('common.loading.slides')}
@@ -93,7 +93,7 @@ export default function DesktopHomepage() {
         style={{
           width: `${DESKTOP_WIDTH}px`,
           height: `${DESKTOP_HEIGHT}px`,
-          backgroundColor: '#FDFDFD',
+          backgroundColor: 'var(--contrast-bg)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -103,7 +103,7 @@ export default function DesktopHomepage() {
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontSize: '16px',
-            color: '#FF0000',
+            color: 'var(--contrast-error)',
           }}
         >
           Błąd ładowania slajdów. Spróbuj ponownie później.

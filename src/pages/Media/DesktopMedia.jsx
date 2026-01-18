@@ -72,7 +72,7 @@ export default function DesktopMedia() {
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontSize: '16px',
-            color: '#131313',
+            color: 'var(--contrast-text)',
           }}
         >
           {t('common.loading.albums')}
@@ -100,7 +100,7 @@ export default function DesktopMedia() {
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontSize: '16px',
-            color: '#FF0000',
+            color: 'var(--contrast-error)',
           }}
         >
           {t('common.error.loadAlbums')}
@@ -153,7 +153,7 @@ export default function DesktopMedia() {
               objectFit: 'cover',
               objectPosition: '50% 50%',
             }}
-            placeholderColor="#e5e5e5"
+            placeholderColor="var(--contrast-placeholder)"
           />
 
           {/* Photo info */}
@@ -164,7 +164,7 @@ export default function DesktopMedia() {
                 fontWeight: 600,
                 fontSize: '24px',
                 lineHeight: 1.45,
-                color: '#131313',
+                color: 'var(--contrast-text)',
                 textDecoration: 'underline',
                 textTransform: 'uppercase',
               }}
@@ -177,7 +177,7 @@ export default function DesktopMedia() {
                 fontWeight: 500,
                 fontSize: '16px',
                 lineHeight: 1.48,
-                color: '#131313',
+                color: 'var(--contrast-text)',
               }}
             >
               fot. {photo.photographer}

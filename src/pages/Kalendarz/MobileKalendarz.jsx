@@ -10,9 +10,9 @@ const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
 const MOBILE_WIDTH = 390;
 const mobileLinePositions = [97, 195, 292];
-const BACKGROUND_COLOR = '#FDFDFD';
-const LINE_COLOR = '#A0E38A';
-const TEXT_COLOR = '#131313';
+const BACKGROUND_COLOR = 'var(--contrast-bg)';
+const LINE_COLOR = 'var(--contrast-line)';
+const TEXT_COLOR = 'var(--contrast-text)';
 
 // Format date for display (handle both config string and Sanity datetime)
 const formatEventDate = (dateValue) => {
@@ -72,7 +72,7 @@ export default function MobileKalendarz() {
           justifyContent: 'center'
         }}
       >
-        <div style={{fontSize: '16px', fontFamily: "'IBM Plex Mono', monospace", color: '#FF0000'}}>
+        <div style={{fontSize: '16px', fontFamily: "'IBM Plex Mono', monospace", color: 'var(--contrast-error)'}}>
           Błąd ładowania wydarzeń
         </div>
       </div>
@@ -154,7 +154,7 @@ export default function MobileKalendarz() {
                   objectFit: 'cover',
                   objectPosition: '50% 50%',
                 }}
-                placeholderColor="#e5e5e5"
+                placeholderColor="var(--contrast-placeholder)"
               />
             </Link>
 

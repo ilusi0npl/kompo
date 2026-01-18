@@ -11,9 +11,9 @@ import ArrowRight from '../../components/ArrowRight/ArrowRight';
 
 const MOBILE_WIDTH = 390;
 const mobileLinePositions = [97, 195, 292];
-const BACKGROUND_COLOR = '#34B898';
-const LINE_COLOR = '#01936F';
-const TEXT_COLOR = '#131313';
+const BACKGROUND_COLOR = 'var(--contrast-line)';
+const LINE_COLOR = 'var(--contrast-line-alt)';
+const TEXT_COLOR = 'var(--contrast-text)';
 const HEADER_HEIGHT = 240;
 
 export default function MobileMediaGaleria({ album }) {
@@ -255,7 +255,7 @@ export default function MobileMediaGaleria({ album }) {
               height: '100%',
               objectFit: 'cover',
             }}
-            placeholderColor="#e5e5e5"
+            placeholderColor="var(--contrast-placeholder)"
           />
         </div>
       </div>

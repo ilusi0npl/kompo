@@ -7,7 +7,7 @@ import { DESKTOP_HEIGHT } from './wydarzenie-config';
 
 const DESKTOP_WIDTH = 1440;
 const BREAKPOINT = 768;
-const BACKGROUND_COLOR = '#FDFDFD';
+const BACKGROUND_COLOR = 'var(--contrast-bg)';
 
 export default function Wydarzenie() {
   const [viewportWidth, setViewportWidth] = useState(
@@ -50,8 +50,8 @@ export default function Wydarzenie() {
         mobileContent={<MobileWydarzenie />}
         desktopHeight={DESKTOP_HEIGHT}
         mobileHeight="auto"
-        backgroundColor="#FDFDFD"
-        lineColor="#A0E38A"
+        backgroundColor="var(--contrast-bg)"
+        lineColor="var(--contrast-line)"
         hideLines={true}
       />
     </>

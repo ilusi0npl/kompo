@@ -8,14 +8,14 @@ export const DESKTOP_HEIGHT = 1379; // Collapsed state height
 export const desktopLinePositions = [155, 375, 595, 815, 1035, 1255];
 
 // Line color for Fundacja page (dark green)
-export const LINE_COLOR = '#01936F';
+export const LINE_COLOR = 'var(--contrast-line-alt)';
 
 // Background color (light green)
-export const BACKGROUND_COLOR = '#34B898';
+export const BACKGROUND_COLOR = 'var(--contrast-line)';
 
 // Text colors
-export const TEXT_COLOR = '#131313';
-export const LINK_COLOR = '#761FE0';
+export const TEXT_COLOR = 'var(--contrast-text)';
+export const LINK_COLOR = 'var(--contrast-accent)';
 
 // Foundation data
 export const fundacjaData = {

@@ -40,7 +40,7 @@ export default function MediaWideo() {
         desktopHeight="auto"
         mobileHeight="auto"
         backgroundColor="#73A1FE"
-        lineColor="#3478FF"
+        lineColor="var(--contrast-button-primary-hover)"
         hideLines={!isMobile}
       />
     </>
