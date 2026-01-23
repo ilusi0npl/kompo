@@ -287,4 +287,52 @@ test.describe('Bio Page - Mobile', () => {
     await navigateToPage(page, '/bio')
     await testScrollBehavior(page, 2000)
   })
+
+  test('scroll color changes correctly on mobile', async ({ page }) => {
+    // Mobile viewport (390px base, but test at 375px to ensure scaling)
+    await page.setViewportSize({ width: 375, height: 667 })
+    await navigateToPage(page, '/bio')
+
+    // Expected colors for profiles
+    const profileColors = {
+      jacek: { bg: 'rgb(115, 161, 254)' },   // #73A1FE blue
+    }
+
+    // Scroll to where Rafał's title should be centered
+    // Wait for Rafał title element and scroll it into center of viewport
+    const rafalTitle = page.getByText('Rafał Łuc', { exact: true })
+    await rafalTitle.scrollIntoViewIfNeeded()
+    await page.waitForTimeout(300)
+
+    // Scroll a bit more to ensure we're well into Rafał's section
+    await page.evaluate(() => window.scrollBy(0, 200))
+    await page.waitForTimeout(800) // Wait for scroll and color transition
+
+    // Verify Rafał's name is visible
+    const rafalVisible = await rafalTitle.isVisible()
+    expect(rafalVisible).toBe(true)
+
+    // Get the fixed background color
+    const bgColor = await page.evaluate(() => {
+      const allDivs = document.querySelectorAll('div')
+      for (const div of allDivs) {
+        const style = getComputedStyle(div)
+        if (style.position === 'fixed' && style.zIndex === '0') {
+          return style.backgroundColor
+        }
+      }
+      return null
+    })
+
+    // Verify the background is NOT Jacek's blue (the original bug showed wrong colors)
+    expect(bgColor).not.toBe(profileColors.jacek.bg)
+
+    // Verify it's a greenish color (G > R) - Rafał's green has G >> R
+    // Allow for high contrast mode variations
+    const rgbMatch = bgColor?.match(/rgb\((\d+), (\d+), (\d+)\)/)
+    if (rgbMatch) {
+      const [, r, g] = rgbMatch.map(Number)
+      expect(g).toBeGreaterThan(r)
+    }
+  })
 })

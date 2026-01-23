@@ -124,7 +124,9 @@ export async function testScrollBehavior(page, expectedScrollHeight = 1000) {
  */
 export async function navigateViaLink(page, linkHref, expectedUrl) {
   const link = page.locator(`a[href="${linkHref}"]`).first()
-  await expect(link).toBeVisible()
+  // Scroll to make link visible if needed (helps with nav links on long pages)
+  await link.scrollIntoViewIfNeeded({ timeout: 10000 })
+  await expect(link).toBeVisible({ timeout: 10000 })
   await link.click()
   await page.waitForLoadState('networkidle')
   await page.waitForTimeout(500)

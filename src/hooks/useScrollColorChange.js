@@ -3,14 +3,18 @@
 import { useState, useEffect } from 'react';
 
 const DESKTOP_WIDTH = 1440;
+const MOBILE_WIDTH = 390;
+const BREAKPOINT = 768;
 
 export function useScrollColorChange(sectionsRef, sectionData) {
   const [currentColors, setCurrentColors] = useState(sectionData[0]);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Calculate scale factor (ResponsiveWrapper uses viewportWidth / DESKTOP_WIDTH)
-      const scale = window.innerWidth / DESKTOP_WIDTH;
+      // Calculate scale factor based on viewport (ResponsiveWrapper logic)
+      const isMobile = window.innerWidth <= BREAKPOINT;
+      const baseWidth = isMobile ? MOBILE_WIDTH : DESKTOP_WIDTH;
+      const scale = window.innerWidth / baseWidth;
 
       // Color change point: middle of viewport, converted to unscaled coordinates
       // window.scrollY is in scaled document space, but section.offsetTop is unscaled
