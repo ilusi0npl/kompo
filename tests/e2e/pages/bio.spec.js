@@ -48,8 +48,9 @@ test.describe('Bio Page - Desktop', () => {
     const slideContainer = page.locator('[data-section="bio"]').first()
     await expect(slideContainer).toBeVisible()
 
-    // Should have bio images
-    const bioImages = page.locator('img[src*="bio"]')
+    // Should have bio images - either from local assets (/assets/bio/) or Sanity CDN
+    // Check for images with "bio" in src (local) or with alt text containing profile names (Sanity)
+    const bioImages = page.locator('img[src*="bio"], img[alt*="Ensemble"], img[alt*="Aleksandra"], img[alt*="Rafał"], img[alt*="Jacek"]')
     await expect(bioImages.first()).toBeVisible()
   })
 
