@@ -192,73 +192,72 @@ export default function DesktopBio({ setCurrentColors }) {
               />
             </div>
 
-            {/* Tytuł (imię) */}
-            <p
+            {/* Kontener tekstu - tytuł i paragrafy */}
+            <div
               className="absolute"
               style={{
                 left: '625px',
                 top: '180px',
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontWeight: 600,
-                fontSize: '40px',
-                lineHeight: 1.35,
-                color: slide.textColor,
+                width: '520px',
                 zIndex: 60,
               }}
             >
-              {USE_SANITY
-                ? slide.name
-                : t(`bio.slides.${slideTranslationKeys[index]}.name`)}
-            </p>
+              {/* Tytuł (imię) */}
+              <p
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontWeight: 600,
+                  fontSize: '40px',
+                  lineHeight: 1.35,
+                  color: slide.textColor,
+                  marginBottom: '26px',
+                }}
+              >
+                {USE_SANITY
+                  ? slide.name
+                  : t(`bio.slides.${slideTranslationKeys[index]}.name`)}
+              </p>
 
-            {/* Paragrafy tekstu */}
-            <div>
+              {/* Paragrafy tekstu */}
               {(USE_SANITY
                 ? slide.paragraphs
                 : t(`bio.slides.${slideTranslationKeys[index]}.paragraphs`)
               ).map((text, pIndex) => (
                 <p
                   key={pIndex}
-                  className="absolute"
                   style={{
-                    left: '625px',
-                    top: `${slide.paragraphTops[pIndex]}px`,
-                    width: '520px',
                     fontFamily: "'IBM Plex Mono', monospace",
                     fontWeight: 500,
                     fontSize: '16px',
                     lineHeight: 1.48,
                     color: slide.textColor,
                     whiteSpace: 'pre-wrap',
-                    zIndex: 60,
+                    marginBottom: '24px',
                   }}
                 >
                   {text}
                 </p>
               ))}
-            </div>
 
-            {/* Link "WIĘCEJ" (tylko dla bio1 - ensemble) */}
-            {slide.id === 'bio1' && (
-              <Link
-                to="/bio/ensemble"
-                className="absolute"
-                style={{
-                  left: '625px',
-                  top: '624px',
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontWeight: 600,
-                  fontSize: '16px',
-                  lineHeight: 1.48,
-                  color: '#761FE0',
-                  textDecoration: 'underline',
-                  textTransform: 'uppercase',
-                  zIndex: 60,
-                }}
-              >
-                {t('bio.ensemble.more')}
-              </Link>
-            )}
+              {/* Link "WIĘCEJ" (tylko dla bio1 - ensemble) */}
+              {slide.id === 'bio1' && (
+                <Link
+                  to="/bio/ensemble"
+                  style={{
+                    display: 'inline-block',
+                    fontFamily: "'IBM Plex Mono', monospace",
+                    fontWeight: 600,
+                    fontSize: '16px',
+                    lineHeight: 1.48,
+                    color: '#761FE0',
+                    textDecoration: 'underline',
+                    textTransform: 'uppercase',
+                  }}
+                >
+                  {t('bio.ensemble.more')}
+                </Link>
+              )}
+            </div>
 
             {/* Stopka (tylko dla slide 4 - bio4) */}
             {slide.hasFooter && (

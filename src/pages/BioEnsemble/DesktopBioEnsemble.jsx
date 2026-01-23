@@ -94,7 +94,7 @@ export default function DesktopBioEnsemble() {
         />
       </div>
 
-      {/* Treść - 5 paragrafów */}
+      {/* Treść - 5 paragrafów + link */}
       <div
         className="absolute flex flex-col"
         style={{
@@ -121,30 +121,29 @@ export default function DesktopBioEnsemble() {
               {text}
             </p>
           ))}
-      </div>
 
-      {/* Link "NAJBLIŻSZE WYDARZENIA" */}
-      <Link
-        to="/kalendarz"
-        className="absolute text-link-btn"
-        style={{
-          left: '295px',
-          top: '1367px',
-          fontFamily: "'IBM Plex Mono', monospace",
-          fontWeight: 600,
-          fontSize: '16px',
-          lineHeight: 1.48,
-          color: COLORS.linkColor,
-          textTransform: 'uppercase',
-          zIndex: 60,
-        }}
-      >
-        {t('bio.ensemble.upcomingEvents')}
-        <ArrowRight
-          className="text-link-btn__arrow"
-          style={{ width: '24px', height: '24px' }}
-        />
-      </Link>
+        {/* Link "NAJBLIŻSZE WYDARZENIA" */}
+        <Link
+          to="/kalendarz"
+          className="text-link-btn"
+          style={{
+            display: 'inline-flex',
+            marginTop: '20px',
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 600,
+            fontSize: '16px',
+            lineHeight: 1.48,
+            color: COLORS.linkColor,
+            textTransform: 'uppercase',
+          }}
+        >
+          {t('bio.ensemble.upcomingEvents')}
+          <ArrowRight
+            className="text-link-btn__arrow"
+            style={{ width: '24px', height: '24px' }}
+          />
+        </Link>
+      </div>
 
       {/* Stopka */}
       <Footer
