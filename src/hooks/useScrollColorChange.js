@@ -2,13 +2,19 @@
 // Detects which section is in viewport center and returns its color data
 import { useState, useEffect } from 'react';
 
+const DESKTOP_WIDTH = 1440;
+
 export function useScrollColorChange(sectionsRef, sectionData) {
   const [currentColors, setCurrentColors] = useState(sectionData[0]);
 
   useEffect(() => {
     const handleScroll = () => {
-      // Color change point: middle of viewport
-      const scrollPoint = window.scrollY + window.innerHeight / 2;
+      // Calculate scale factor (ResponsiveWrapper uses viewportWidth / DESKTOP_WIDTH)
+      const scale = window.innerWidth / DESKTOP_WIDTH;
+
+      // Color change point: middle of viewport, converted to unscaled coordinates
+      // window.scrollY is in scaled document space, but section.offsetTop is unscaled
+      const scrollPoint = (window.scrollY + window.innerHeight / 2) / scale;
 
       // Find which section is at scroll point
       const sections = sectionsRef.current;

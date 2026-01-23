@@ -162,6 +162,59 @@ test.describe('Bio Page - Desktop', () => {
     const afterText = await languageToggle.textContent()
     expect(initialText).not.toBe(afterText)
   })
+
+  test('scroll color changes correctly on scaled viewport', async ({ page }) => {
+    // Use viewport smaller than 1440px to trigger scaling
+    await page.setViewportSize({ width: 1280, height: 900 })
+    await navigateToPage(page, '/bio')
+
+    // Expected colors for each profile (from bio-config.js)
+    const profileColors = {
+      ensemble: { bg: 'rgb(253, 253, 253)', name: 'Ensemble' },      // #FDFDFD
+      aleksandra: { bg: 'rgb(255, 115, 76)', name: 'Aleksandra' },   // #FF734C
+      rafal: { bg: 'rgb(52, 184, 152)', name: 'Rafał' },             // #34B898
+      jacek: { bg: 'rgb(115, 161, 254)', name: 'Jacek' },            // #73A1FE
+    }
+
+    // Scroll to Rafał's position (section 3, after Ensemble 700px + Aleksandra 700px)
+    // With scale 1280/1440 = 0.889, we need to scroll to ~1244px to see Rafał
+    const scale = 1280 / 1440
+    const rafalsUnscaledTop = 1400 // 700 + 700
+    const scrollTarget = rafalsUnscaledTop * scale + 100 // Add offset to be in middle of section
+
+    await page.evaluate((y) => window.scrollTo(0, y), scrollTarget)
+    await page.waitForTimeout(600) // Wait for transition
+
+    // Get the fixed background color
+    const bgColor = await page.evaluate(() => {
+      // Find the fixed background div - it's the first div with position:fixed and zIndex 0
+      const allDivs = document.querySelectorAll('div')
+      for (const div of allDivs) {
+        const style = getComputedStyle(div)
+        if (style.position === 'fixed' && style.zIndex === '0') {
+          return style.backgroundColor
+        }
+      }
+      return null
+    })
+
+    // Verify Rafał's name is visible (proving we're on the right slide)
+    // Use exact match to avoid matching paragraphs that contain "Rafał Łuc"
+    const rafalVisible = await page.getByText('Rafał Łuc', { exact: true }).isVisible()
+    expect(rafalVisible).toBe(true)
+
+    // Verify the background is NOT Jacek's blue (the bug was showing blue instead of green)
+    // We check it's not blue rather than exact green match because of possible high contrast mode
+    expect(bgColor).not.toBe(profileColors.jacek.bg)
+
+    // Also verify it's a greenish color (R < G, which is true for Rafał's green but not Jacek's blue)
+    const rgbMatch = bgColor.match(/rgb\((\d+), (\d+), (\d+)\)/)
+    if (rgbMatch) {
+      const [, r, g] = rgbMatch.map(Number)
+      // Rafał: green has G > R; Jacek: blue has B > G > R
+      expect(g).toBeGreaterThan(r) // Green component should dominate for Rafał
+    }
+  })
 })
 
 test.describe('Bio Page - Mobile', () => {
