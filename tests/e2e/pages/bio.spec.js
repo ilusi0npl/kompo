@@ -66,6 +66,44 @@ test.describe('Bio Page - Desktop', () => {
     expect(text).toMatch(/Ensemble|KOMPOPOLEX|Aleksandra|Rafał|Jacek/i)
   })
 
+  test('displays paragraphs for all bio profiles', async ({ page }) => {
+    await navigateToPage(page, '/bio')
+
+    // Profile names to verify (titles displayed on each slide)
+    const profileNames = ['Ensemble KOMPOPOLEX', 'Aleksandra Gołaj', 'Rafał Łuc', 'Jacek Sotomski']
+
+    for (const profileName of profileNames) {
+      // Scroll until we find the profile title
+      let found = false
+      for (let scrollAttempt = 0; scrollAttempt < 10 && !found; scrollAttempt++) {
+        const profileTitle = page.locator(`p:has-text("${profileName}")`)
+        if (await profileTitle.count() > 0 && await profileTitle.first().isVisible()) {
+          found = true
+
+          // Find the container with this profile's content
+          // Get all paragraphs currently visible on the page
+          const visibleParagraphs = page.locator('p:visible')
+          const paragraphCount = await visibleParagraphs.count()
+
+          // Should have at least 2 paragraphs (title + bio text)
+          expect(paragraphCount).toBeGreaterThanOrEqual(2)
+
+          // Verify paragraphs have actual content (not empty)
+          for (let i = 0; i < Math.min(paragraphCount, 3); i++) {
+            const paragraphText = await visibleParagraphs.nth(i).textContent()
+            expect(paragraphText.trim().length).toBeGreaterThan(0)
+          }
+        } else {
+          // Scroll down to find the next profile
+          await page.evaluate(() => window.scrollBy(0, 600))
+          await page.waitForTimeout(300)
+        }
+      }
+
+      expect(found).toBe(true)
+    }
+  })
+
   test('has working language toggle', async ({ page }) => {
     await navigateToPage(page, '/bio')
     await assertLanguageToggleWorks(page)
