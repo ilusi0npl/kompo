@@ -111,7 +111,8 @@ const venues = [
   'Opera Wrocławska, ul. Świdnicka 35',
 ];
 
-const eventTitles = [
+// Event titles with i18n support
+const eventTitlesPl = [
   'Koncert Muzyki Współczesnej',
   'Wieczór z Muzyką Nową',
   'Dźwięki XXI wieku',
@@ -120,6 +121,28 @@ const eventTitles = [
   'Spotkanie z Kompozytorem',
   'Prawykonanie Światowe',
   'Festiwal Nowej Muzyki',
+];
+
+const eventTitlesEn = [
+  'Contemporary Music Concert',
+  'Evening with New Music',
+  'Sounds of the 21st Century',
+  'New Sound Horizons',
+  'Electronic Music Live',
+  'Meeting with the Composer',
+  'World Premiere',
+  'New Music Festival',
+];
+
+const venuesEn = [
+  'Wrocław Philharmonic, Piłsudskiego 19 St.',
+  'National Forum of Music, Wolności 1 Sq.',
+  'Academy of Fine Arts Wrocław, Polski 3/4 Sq.',
+  'BWA Wrocław, Ruska 46 St.',
+  'Impart Art Center, Mazowiecka 17 St.',
+  'White Stork Synagogue',
+  'Firlej Club, Grabiszyńska 56 St.',
+  'Wrocław Opera, Świdnicka 35 St.',
 ];
 
 export function generateEvents(count = 50, type = 'upcoming') {
@@ -138,12 +161,12 @@ export function generateEvents(count = 50, type = 'upcoming') {
     const month = (date.getMonth() + 1).toString().padStart(2, '0');
     const year = date.getFullYear().toString().slice(-2);
 
+    // Use numeric IDs (1, 2, 3...) to match translation keys for first 3 events
     events.push({
-      id: `event-${type}-${i + 1}`,
+      id: i + 1,
       date: `${day}.${month}.${year}`,
-      title: `${eventTitles[i % eventTitles.length]} #${i + 1}`,
       performers: 'Aleksandra Gołaj, Rafał Łuc, Jacek Sotomski' + (i % 3 === 0 ? ', goście specjalni' : ''),
-      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.${i % 2 === 0 ? ' Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.' : ''}`,
+      description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.${i % 2 === 0 ? ' Duis aute irure dolor in reprehenderit.' : ''}`,
       location: venues[i % venues.length],
       image: '/assets/kalendarz/wydarzenie-placeholder.jpg',
       program: i % 3 === 0 ? [
@@ -178,10 +201,10 @@ export function generateArchivedEvents(count = 100) {
     const column = i % 3;
     const row = Math.floor(i / 3);
 
+    // Use numeric IDs to match translation keys
     events.push({
-      id: `archive-${i + 1}`,
+      id: i + 1,
       date: `${day.toString().padStart(2, '0')}.${month.toString().padStart(2, '0')}.${year}`,
-      title: `${eventTitles[i % eventTitles.length]} - Archiwum`,
       performers: 'Ensemble Kompopolex',
       image: '/assets/archiwalne/archive-placeholder.jpg',
       position: {
@@ -218,7 +241,7 @@ export function generatePhotoAlbums(count = 30) {
     albums.push({
       id: `album-${i + 1}`,
       thumbnail: '/assets/media/album-placeholder.jpg',
-      title: `Galeria z koncertu #${i + 1}: ${eventTitles[i % eventTitles.length]}`,
+      title: `Galeria z koncertu #${i + 1}: ${eventTitlesPl[i % eventTitlesPl.length]}`,
       photographer: photographers[i % photographers.length],
       images,
     });
@@ -238,10 +261,10 @@ export function generateVideos(count = 50) {
     videos.push({
       id: `video-${i + 1}`,
       thumbnail: '/assets/media-wideo/video-placeholder.jpg',
-      title: `Nagranie z koncertu #${i + 1}: ${eventTitles[i % eventTitles.length]}`,
+      title: `Nagranie z koncertu #${i + 1}: ${eventTitlesPl[i % eventTitlesPl.length]}`,
       youtubeUrl: `https://www.youtube.com/watch?v=dQw4w9WgXcQ`, // Placeholder
       year: 2020 + (i % 5),
-      description: `Rejestracja koncertu z cyklu "${eventTitles[i % eventTitles.length]}" w ${venues[i % venues.length].split(',')[0]}.`,
+      description: `Rejestracja koncertu z cyklu "${eventTitlesPl[i % eventTitlesPl.length]}" w ${venues[i % venues.length].split(',')[0]}.`,
     });
   }
 
@@ -253,7 +276,7 @@ export function generateVideos(count = 50) {
 // ============================================================================
 
 const bioNames = [
-  'Aleksandra Gołaj', 'Rafał Łuc', 'Jacek Sotomski',
+  'Ensemble KOMPOPOLEX', 'Aleksandra Gołaj', 'Rafał Łuc', 'Jacek Sotomski',
   'Maria Kowalska', 'Jan Nowak', 'Katarzyna Wiśniewska',
   'Piotr Zieliński', 'Anna Wójcik', 'Tomasz Kamiński',
   'Ewa Lewandowska'
@@ -323,9 +346,11 @@ export function generateBioProfiles(count = 10) {
     const contentHeight = CONTENT_START + TITLE_HEIGHT + (paragraphCount * paragraphHeight) + bottomPadding;
     const requiredHeight = Math.max(BASE_HEIGHT, contentHeight) + (isLast ? FOOTER_EXTRA : 0);
 
+    const baseName = i < bioNames.length ? bioNames[i] : `Muzyk Testowy ${i + 1}`;
+
     profiles.push({
       id: `bio${i + 1}`,
-      name: i < bioNames.length ? bioNames[i] : `Muzyk Testowy ${i + 1}`,
+      name: baseName,
       image: realImages[i % realImages.length],
       // Use simple cover style for all generated profiles
       imageStyle: {
@@ -419,7 +444,7 @@ export function generateAccessibilityDeclaration(paragraphsCount = 15) {
 export function generateHomepageSlides(count = 8) {
   const slides = [];
 
-  // Use real slide data as templates, cycling through them
+  // Use real slide data as templates (translations handled by translation files)
   const templates = [
     {
       backgroundColor: '#FDFDFD',
@@ -481,11 +506,12 @@ export function generateHomepageSlides(count = 8) {
 
   for (let i = 0; i < count; i++) {
     const template = templates[i % templates.length];
+    const suffix = i >= templates.length ? ` (${Math.floor(i / templates.length) + 1})` : '';
     slides.push({
       id: i + 1,
       ...template,
-      // Modify tagline slightly for each repeated slide
-      tagline: i < templates.length ? template.tagline : `${template.tagline} (${Math.floor(i / templates.length) + 1})`,
+      // Add suffix for repeated slides
+      tagline: template.tagline + suffix,
     });
   }
 
