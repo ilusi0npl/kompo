@@ -1,7 +1,9 @@
 // Konfiguracja strony Archiwalne
 // Dane bazowane na designie Figma node 19-127
 
-export const archivedEvents = [
+import { isLargeTestMode, generateArchivedEvents } from '../../test-data/large-data-generator';
+
+const realArchivedEvents = [
   // Row 1
   {
     id: 1,
@@ -66,3 +68,6 @@ export const desktopLinePositions = [155, 375, 595, 815, 1035, 1255];
 // Wymiary
 export const DESKTOP_WIDTH = 1440;
 export const DESKTOP_HEIGHT = 1792; // Full page height from Figma
+
+// Export - use large test data when VITE_LARGE_TEST_DATA=true
+export const archivedEvents = isLargeTestMode ? generateArchivedEvents(100) : realArchivedEvents;

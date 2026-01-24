@@ -1,7 +1,9 @@
 // Konfiguracja strony Wydarzenie (Event Details)
 // Dane bazowane na designie Figma node 29-1501
 
-export const eventData = {
+import { isLargeTestMode, generateEventDetail } from '../../test-data/large-data-generator';
+
+const realEventData = {
   title: 'ENSEMBLE KOMPOPOLEX',
   date: '13.12.25 ',
   time: '18:00 ',
@@ -31,3 +33,6 @@ export const desktopLinePositions = [155, 375, 595, 815, 1035, 1255];
 // Wymiary
 export const DESKTOP_WIDTH = 1440;
 export const DESKTOP_HEIGHT = 1941;
+
+// Export - use large test data when VITE_LARGE_TEST_DATA=true
+export const eventData = isLargeTestMode ? generateEventDetail(30) : realEventData;

@@ -1,6 +1,8 @@
 // Media Wideo page configuration
 // Based on Figma design: node 71-370
 
+import { isLargeTestMode, generateVideos } from '../../test-data/large-data-generator';
+
 export const DESKTOP_WIDTH = 1440;
 export const DESKTOP_HEIGHT = 1175;
 
@@ -17,7 +19,7 @@ export const BACKGROUND_COLOR = '#73A1FE';
 export const ACTIVE_TAB_COLOR = '#761FE0';
 
 // Videos configuration
-export const videos = [
+const realVideos = [
   {
     id: 1,
     thumbnail: '/assets/media-wideo/video1.jpg',
@@ -43,3 +45,6 @@ export const videos = [
     youtubeUrl: 'https://www.youtube.com/watch?v=ayGAJlgoxP4',
   },
 ];
+
+// Export - use large test data when VITE_LARGE_TEST_DATA=true
+export const videos = isLargeTestMode ? generateVideos(50) : realVideos;

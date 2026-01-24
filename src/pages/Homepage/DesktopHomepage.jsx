@@ -11,6 +11,7 @@ import {
   DESKTOP_HEIGHT,
 } from './slides-config';
 import { useSanityHomepageSlides } from '../../hooks/useSanityHomepageSlides';
+import { isLargeTestMode } from '../../test-data/large-data-generator';
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
@@ -193,7 +194,7 @@ export default function DesktopHomepage() {
             pointerEvents: index === currentSlide ? 'auto' : 'none',
           }}
         >
-          {USE_SANITY
+          {USE_SANITY || isLargeTestMode
             ? slide.tagline
             : t(`homepage.slides.${slideTranslationKeys[index]}.tagline`)}
         </p>

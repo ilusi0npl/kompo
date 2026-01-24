@@ -1,6 +1,8 @@
 // Fundacja page configuration
 // Based on Figma designs: node 172-423 (collapsed), node 182-77 (expanded)
 
+import { isLargeTestMode, generateFundacjaProjects, generateAccessibilityDeclaration } from '../../test-data/large-data-generator';
+
 export const DESKTOP_WIDTH = 1440;
 export const DESKTOP_HEIGHT = 1379; // Collapsed state height
 
@@ -27,7 +29,7 @@ export const fundacjaData = {
 };
 
 // Projects data
-export const projectsData = [
+const realProjectsData = [
   {
     text: 'wydanie płyty z akordeonową muzyką kameralną Cezarego Duchnowskiego',
     linkText: 'CROSSFADE, WYD. REQUIEM RECORDS',
@@ -45,8 +47,11 @@ export const projectsData = [
   },
 ];
 
+// Export - use large test data when VITE_LARGE_TEST_DATA=true
+export const projectsData = isLargeTestMode ? generateFundacjaProjects(20) : realProjectsData;
+
 // Accessibility declaration texts (3 paragraphs)
-export const accessibilityDeclaration = {
+const realAccessibilityDeclaration = {
   pl: [
     'Fundacja Kompopolex zobowiązuje się zapewnić dostępność swojej strony internetowej zgodnie z przepisami ustawy z dnia 4 kwietnia 2019 r. o dostępności cyfrowej stron internetowych i aplikacji mobilnych podmiotów publicznych. Oświadczenie w sprawie dostępności ma zastosowanie do strony internetowej Strony Domowej Fundacji Kompopolex.',
     'Morem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.',
@@ -58,3 +63,8 @@ export const accessibilityDeclaration = {
     'Morem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero et velit interdum, ac aliquet odio mattis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Curabitur tempus urna at turpis condimentum lobortis.',
   ],
 };
+
+// Export - use large test data when VITE_LARGE_TEST_DATA=true
+export const accessibilityDeclaration = isLargeTestMode
+  ? { pl: generateAccessibilityDeclaration(15), en: generateAccessibilityDeclaration(15) }
+  : realAccessibilityDeclaration;

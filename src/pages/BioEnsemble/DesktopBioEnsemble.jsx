@@ -3,9 +3,16 @@ import { Link } from 'react-router';
 import { useTranslation } from '../../hooks/useTranslation';
 import Footer from '../../components/Footer/Footer';
 import ArrowRight from '../../components/ArrowRight/ArrowRight';
+import { isLargeTestMode, generateBioEnsembleData } from '../../test-data/large-data-generator';
+import { calculateBioFontSize } from '../../hooks/useResponsiveFontSize';
 
 const DESKTOP_WIDTH = 1440;
-const DESKTOP_HEIGHT = 1599;
+const BASE_HEIGHT = 1599;
+
+// Height calculation constants
+const CONTENT_START = 750; // Top position of paragraphs
+const GAP_HEIGHT = 20; // Gap between paragraphs
+const FOOTER_HEIGHT = 150; // Footer + bottom padding (40px bottom + 24px footer + margins)
 const TRANSITION_DURATION = '1s';
 const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 
@@ -16,9 +23,51 @@ const COLORS = {
   linkColor: '#761FE0',
 };
 
+// Calculate dynamic page height based on content
+function calculatePageHeight(paragraphs, fontSize) {
+  if (!paragraphs || !Array.isArray(paragraphs)) return BASE_HEIGHT;
+
+  const paragraphCount = paragraphs.length;
+  const totalChars = paragraphs.reduce((sum, p) => sum + (p?.length || 0), 0);
+
+  // Line height is font size * 1.48
+  const lineHeight = fontSize * 1.48;
+  // Characters per line at 850px width (approx)
+  const charsPerLine = Math.floor(850 / (fontSize * 0.6)); // ~0.6 char width ratio for monospace
+  // Total lines needed for all paragraphs
+  const totalLines = Math.ceil(totalChars / charsPerLine);
+  // Total paragraph content height
+  const paragraphsHeight = totalLines * lineHeight;
+  // Add gaps between paragraphs
+  const gapsHeight = (paragraphCount - 1) * GAP_HEIGHT;
+  // Link button height (~60px with margin)
+  const linkHeight = 60;
+
+  const totalContentHeight = CONTENT_START + paragraphsHeight + gapsHeight + linkHeight + FOOTER_HEIGHT;
+
+  return Math.max(BASE_HEIGHT, totalContentHeight);
+}
+
 export default function DesktopBioEnsemble() {
   const { t } = useTranslation();
   const [imageLoaded, setImageLoaded] = useState(false);
+
+  // Get content based on mode
+  const largeData = isLargeTestMode ? generateBioEnsembleData(10) : null;
+  const title = isLargeTestMode ? largeData.title : t('bio.ensemble.title');
+  const paragraphs = isLargeTestMode ? largeData.extendedParagraphs : t('bio.ensemble.extendedParagraphs');
+  const upcomingEventsText = isLargeTestMode ? largeData.upcomingEvents : t('bio.ensemble.upcomingEvents');
+
+  // Calculate responsive font size
+  const paragraphFontSize = calculateBioFontSize(paragraphs, {
+    baseFontSize: 16,
+    minFontSize: 12,
+    maxParagraphs: 5,
+    maxCharsPerParagraph: 500,
+  });
+
+  // Calculate dynamic height
+  const pageHeight = calculatePageHeight(paragraphs, paragraphFontSize);
 
   // Preload image
   useEffect(() => {
@@ -44,24 +93,27 @@ export default function DesktopBioEnsemble() {
       className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
-        minHeight: `${DESKTOP_HEIGHT}px`,
+        minHeight: `${pageHeight}px`,
       }}
     >
       {/* Tytuł */}
       <p
         className="absolute"
         style={{
-          left: 'calc(50% - 228px)',
-          top: '179px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          top: '120px',
+          width: '850px',
           fontFamily: "'IBM Plex Mono', monospace",
           fontWeight: 600,
           fontSize: '40px',
           lineHeight: 1.35,
           color: COLORS.textColor,
           zIndex: 60,
+          textAlign: 'center',
         }}
       >
-        {t('bio.ensemble.title')}
+        {title}
       </p>
 
       {/* Zdjęcie - 850x406px, wycentrowane */}
@@ -70,7 +122,7 @@ export default function DesktopBioEnsemble() {
         style={{
           left: '50%',
           transform: 'translateX(-50%)',
-          top: '273px',
+          top: '300px',
           width: '850px',
           height: '406px',
           overflow: 'hidden',
@@ -94,25 +146,25 @@ export default function DesktopBioEnsemble() {
         />
       </div>
 
-      {/* Treść - 5 paragrafów + link */}
+      {/* Treść - paragraphs + link */}
       <div
         className="absolute flex flex-col"
         style={{
           left: '295px',
-          top: '719px',
+          top: '750px',
           width: '850px',
           gap: '20px',
           zIndex: 60,
         }}
       >
-        {Array.isArray(t('bio.ensemble.extendedParagraphs')) &&
-          t('bio.ensemble.extendedParagraphs').map((text, index) => (
+        {Array.isArray(paragraphs) &&
+          paragraphs.map((text, index) => (
             <p
               key={index}
               style={{
                 fontFamily: "'IBM Plex Mono', monospace",
                 fontWeight: 500,
-                fontSize: '16px',
+                fontSize: `${paragraphFontSize}px`,
                 lineHeight: 1.48,
                 color: COLORS.textColor,
                 whiteSpace: 'pre-wrap',
@@ -137,7 +189,7 @@ export default function DesktopBioEnsemble() {
             textTransform: 'uppercase',
           }}
         >
-          {t('bio.ensemble.upcomingEvents')}
+          {upcomingEventsText}
           <ArrowRight
             className="text-link-btn__arrow"
             style={{ width: '24px', height: '24px' }}

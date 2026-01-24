@@ -1,7 +1,9 @@
 // Konfiguracja strony Kalendarz
 // Dane bazowane na designie Figma node 19-49
 
-export const events = [
+import { isLargeTestMode, generateEvents } from '../../test-data/large-data-generator';
+
+const realEvents = [
   {
     id: 1,
     date: '13.12.25 | 18:00',
@@ -60,3 +62,6 @@ export const desktopLinePositions = [155, 375, 595, 815, 1035, 1255];
 // Wymiary
 export const DESKTOP_WIDTH = 1440;
 export const DESKTOP_HEIGHT = 2008; // Full page height from Figma
+
+// Export - use large test data when VITE_LARGE_TEST_DATA=true
+export const events = isLargeTestMode ? generateEvents(50, 'upcoming') : realEvents;

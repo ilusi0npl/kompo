@@ -9,6 +9,8 @@ import {
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useSanityBioProfiles } from '../../hooks/useSanityBioProfiles';
+import { isLargeTestMode } from '../../test-data/large-data-generator';
+import { calculateBioFontSize, calculateTitleFontSize } from '../../hooks/useResponsiveFontSize';
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
@@ -193,71 +195,91 @@ export default function DesktopBio({ setCurrentColors }) {
             </div>
 
             {/* Kontener tekstu - tytuł i paragrafy */}
-            <div
-              className="absolute"
-              style={{
-                left: '625px',
-                top: '180px',
-                width: '520px',
-                zIndex: 60,
-              }}
-            >
-              {/* Tytuł (imię) */}
-              <p
-                style={{
-                  fontFamily: "'IBM Plex Mono', monospace",
-                  fontWeight: 600,
-                  fontSize: '40px',
-                  lineHeight: 1.35,
-                  color: slide.textColor,
-                  marginBottom: '26px',
-                }}
-              >
-                {USE_SANITY
-                  ? slide.name
-                  : t(`bio.slides.${slideTranslationKeys[index]}.name`)}
-              </p>
-
-              {/* Paragrafy tekstu */}
-              {(USE_SANITY
+            {(() => {
+              // Get content for this slide
+              const slideName = USE_SANITY || isLargeTestMode
+                ? slide.name
+                : t(`bio.slides.${slideTranslationKeys[index]}.name`);
+              const slideParagraphs = USE_SANITY || isLargeTestMode
                 ? slide.paragraphs
-                : t(`bio.slides.${slideTranslationKeys[index]}.paragraphs`)
-              ).map((text, pIndex) => (
-                <p
-                  key={pIndex}
-                  style={{
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontWeight: 500,
-                    fontSize: '16px',
-                    lineHeight: 1.48,
-                    color: slide.textColor,
-                    whiteSpace: 'pre-wrap',
-                    marginBottom: '24px',
-                  }}
-                >
-                  {text}
-                </p>
-              ))}
+                : t(`bio.slides.${slideTranslationKeys[index]}.paragraphs`);
 
-              {/* Link "WIĘCEJ" (tylko dla bio1 - ensemble) */}
-              {slide.id === 'bio1' && (
-                <Link
-                  to="/bio/ensemble"
+              // Calculate responsive font sizes (only reduces when content exceeds limits)
+              const titleFontSize = calculateTitleFontSize(slideName, {
+                baseFontSize: 40,
+                minFontSize: 28,
+                maxChars: 25,
+              });
+              const paragraphFontSize = calculateBioFontSize(slideParagraphs, {
+                baseFontSize: 16,
+                minFontSize: 12,
+                maxParagraphs: 2,
+                maxCharsPerParagraph: 400,
+              });
+
+              return (
+                <div
+                  className="absolute"
                   style={{
-                    display: 'inline-block',
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontWeight: 600,
-                    fontSize: '16px',
-                    lineHeight: 1.48,
-                    color: '#761FE0',
-                    textDecoration: 'underline',
-                    textTransform: 'uppercase',
+                    left: '625px',
+                    top: '180px',
+                    width: '520px',
+                    zIndex: 60,
                   }}
                 >
-                  {t('bio.ensemble.more')}
-                </Link>
-              )}
-            </div>
+                  {/* Tytuł (imię) */}
+                  <p
+                    style={{
+                      fontFamily: "'IBM Plex Mono', monospace",
+                      fontWeight: 600,
+                      fontSize: `${titleFontSize}px`,
+                      lineHeight: 1.35,
+                      color: slide.textColor,
+                      marginBottom: '26px',
+                    }}
+                  >
+                    {slideName}
+                  </p>
+
+                  {/* Paragrafy tekstu */}
+                  {slideParagraphs.map((text, pIndex) => (
+                    <p
+                      key={pIndex}
+                      style={{
+                        fontFamily: "'IBM Plex Mono', monospace",
+                        fontWeight: 500,
+                        fontSize: `${paragraphFontSize}px`,
+                        lineHeight: 1.48,
+                        color: slide.textColor,
+                        whiteSpace: 'pre-wrap',
+                        marginBottom: '24px',
+                      }}
+                    >
+                      {text}
+                    </p>
+                  ))}
+
+                  {/* Link "WIĘCEJ" (tylko dla bio1 - ensemble) */}
+                  {slide.id === 'bio1' && (
+                    <Link
+                      to="/bio/ensemble"
+                      style={{
+                        display: 'inline-block',
+                        fontFamily: "'IBM Plex Mono', monospace",
+                        fontWeight: 600,
+                        fontSize: '16px',
+                        lineHeight: 1.48,
+                        color: '#761FE0',
+                        textDecoration: 'underline',
+                        textTransform: 'uppercase',
+                      }}
+                    >
+                      {t('bio.ensemble.more')}
+                    </Link>
+                  )}
+                </div>
+              );
+            })()}
 
             {/* Stopka (tylko dla slide 4 - bio4) */}
             {slide.hasFooter && (

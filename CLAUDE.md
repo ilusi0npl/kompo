@@ -6,6 +6,9 @@ DO NOT CHANGE ANYTHING IN SANITY WITHOUT EXPLICIT REQUEST!
 DO NOT COMMIT ANYTHING WITHOUT EXPLICIT REQUEST!
 DO NOT DEPLOY TO VERCEL WITHOUT EXPLICIT REQUEST!
 
+Remember that you always have to make sure that both DESKTOP and MOBILE version of the project/website are working file.
+Save all figma links which i give you - for later us. Create a data base of it inside this file.
+
 **Goal**: Pixel-perfect React implementation from Figma designs.
 
 **Philosophy**:

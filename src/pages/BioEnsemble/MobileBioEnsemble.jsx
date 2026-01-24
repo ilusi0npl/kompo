@@ -6,9 +6,18 @@ import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useFixedMobileHeader } from '../../hooks/useFixedMobileHeader';
 import ArrowRight from '../../components/ArrowRight/ArrowRight';
+import { isLargeTestMode, generateBioEnsembleData } from '../../test-data/large-data-generator';
+import { calculateBioFontSize } from '../../hooks/useResponsiveFontSize';
 
 const MOBILE_WIDTH = 390;
 const HEADER_HEIGHT = 218;
+
+// Height calculation constants for mobile
+const MOBILE_IMAGE_HEIGHT = 350;
+const MOBILE_TITLE_HEIGHT = 120;
+const MOBILE_GAP_HEIGHT = 12;
+const MOBILE_FOOTER_HEIGHT = 150;
+const MOBILE_LINK_HEIGHT = 60;
 
 const COLORS = {
   backgroundColor: '#FFBD19',
@@ -20,11 +29,52 @@ const COLORS = {
 // Mobile line positions
 const LINE_POSITIONS = [97, 195, 292];
 
+// Calculate dynamic page height based on content for mobile
+function calculateMobilePageHeight(paragraphs, fontSize) {
+  if (!paragraphs || !Array.isArray(paragraphs)) return 1200;
+
+  const paragraphCount = paragraphs.length;
+  const totalChars = paragraphs.reduce((sum, p) => sum + (p?.length || 0), 0);
+
+  // Line height is font size * 1.48
+  const lineHeight = fontSize * 1.48;
+  // Characters per line at 350px width (mobile)
+  const charsPerLine = Math.floor(350 / (fontSize * 0.6));
+  // Total lines needed for all paragraphs
+  const totalLines = Math.ceil(totalChars / charsPerLine);
+  // Total paragraph content height
+  const paragraphsHeight = totalLines * lineHeight;
+  // Add gaps between paragraphs
+  const gapsHeight = (paragraphCount - 1) * MOBILE_GAP_HEIGHT;
+
+  const totalContentHeight = HEADER_HEIGHT + MOBILE_IMAGE_HEIGHT + MOBILE_TITLE_HEIGHT +
+    paragraphsHeight + gapsHeight + MOBILE_LINK_HEIGHT + MOBILE_FOOTER_HEIGHT;
+
+  return Math.max(1200, totalContentHeight);
+}
+
 export default function MobileBioEnsemble() {
   const { t } = useTranslation();
   const [imageLoaded, setImageLoaded] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { scale } = useFixedMobileHeader();
+
+  // Get content based on mode
+  const largeData = isLargeTestMode ? generateBioEnsembleData(10) : null;
+  const title = isLargeTestMode ? largeData.title : t('bio.ensemble.title');
+  const paragraphs = isLargeTestMode ? largeData.extendedParagraphs : t('bio.ensemble.extendedParagraphs');
+  const upcomingEventsText = isLargeTestMode ? largeData.upcomingEvents : t('bio.ensemble.upcomingEvents');
+
+  // Calculate responsive font size
+  const paragraphFontSize = calculateBioFontSize(paragraphs, {
+    baseFontSize: 16,
+    minFontSize: 12,
+    maxParagraphs: 5,
+    maxCharsPerParagraph: 400,
+  });
+
+  // Calculate dynamic height
+  const pageHeight = calculateMobilePageHeight(paragraphs, paragraphFontSize);
 
   // Preload image
   useEffect(() => {
@@ -45,7 +95,7 @@ export default function MobileBioEnsemble() {
       style={{
         backgroundColor: COLORS.backgroundColor,
         width: `${MOBILE_WIDTH}px`,
-        minHeight: '100vh',
+        minHeight: `${pageHeight}px`,
       }}
     >
       {/* Pionowe linie */}
@@ -183,7 +233,7 @@ export default function MobileBioEnsemble() {
         style={{
           marginTop: '40px',
           marginLeft: '20px',
-          width: '258px',
+          width: '350px',
           fontFamily: "'IBM Plex Mono', monospace",
           fontWeight: 600,
           fontSize: '40px',
@@ -194,10 +244,10 @@ export default function MobileBioEnsemble() {
           zIndex: 1,
         }}
       >
-        {t('bio.ensemble.title')}
+        {title}
       </p>
 
-      {/* Treść - 5 paragrafów z gap 12px */}
+      {/* Treść - paragraphs z gap 12px */}
       <div
         style={{
           marginTop: '20px',
@@ -210,14 +260,14 @@ export default function MobileBioEnsemble() {
           zIndex: 1,
         }}
       >
-        {Array.isArray(t('bio.ensemble.extendedParagraphs')) &&
-          t('bio.ensemble.extendedParagraphs').map((text, index) => (
+        {Array.isArray(paragraphs) &&
+          paragraphs.map((text, index) => (
             <p
               key={index}
               style={{
                 fontFamily: "'IBM Plex Mono', monospace",
                 fontWeight: 500,
-                fontSize: '16px',
+                fontSize: `${paragraphFontSize}px`,
                 lineHeight: 1.48,
                 color: COLORS.textColor,
                 whiteSpace: 'pre-wrap',
@@ -244,7 +294,7 @@ export default function MobileBioEnsemble() {
           textTransform: 'uppercase',
         }}
       >
-        {t('bio.ensemble.upcomingEvents')}
+        {upcomingEventsText}
         <ArrowRight
           className="text-link-btn__arrow"
           style={{ width: '24px', height: '24px' }}

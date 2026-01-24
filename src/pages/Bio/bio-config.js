@@ -1,7 +1,9 @@
 // Konfiguracja slajdów Bio
 // Dane bazowane na designie Figma
 
-export const desktopBioSlides = [
+import { isLargeTestMode, generateBioProfiles } from '../../test-data/large-data-generator';
+
+const realDesktopBioSlides = [
   {
     id: 'bio1',
     backgroundColor: '#FDFDFD',
@@ -100,7 +102,7 @@ export const desktopBioSlides = [
   }
 ];
 
-export const mobileBioSlides = [
+const realMobileBioSlides = [
   {
     id: 1,
     backgroundColor: '#FDFDFD',
@@ -169,3 +171,8 @@ export const DESKTOP_WIDTH = 1440;
 export const DESKTOP_HEIGHT = 700;
 export const MOBILE_WIDTH = 390;
 export const MOBILE_HEIGHT = 1418;
+
+// Export - use large test data when VITE_LARGE_TEST_DATA=true
+const largeTestBioSlides = generateBioProfiles(10);
+export const desktopBioSlides = isLargeTestMode ? largeTestBioSlides : realDesktopBioSlides;
+export const mobileBioSlides = isLargeTestMode ? largeTestBioSlides : realMobileBioSlides;

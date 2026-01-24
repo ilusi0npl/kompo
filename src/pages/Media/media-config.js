@@ -1,6 +1,8 @@
 // Media page configuration
 // Based on Figma design: node 21-242
 
+import { isLargeTestMode, generatePhotoAlbums } from '../../test-data/large-data-generator';
+
 export const DESKTOP_WIDTH = 1440;
 export const DESKTOP_HEIGHT = 1080;
 
@@ -19,7 +21,7 @@ export const ACTIVE_TAB_COLOR = '#761FE0';
 // Photos grid configuration
 // Row 1: photo1 (taniec), photo3 (rozmowa przy stole), photo5 (perkusja)
 // Row 2: photo2 (laptop/klawisze), photo4 (kartki REINDEER), photo6 (akordeon)
-export const photos = [
+const realPhotos = [
   {
     id: 1,
     image: '/assets/media/photo1.jpg',
@@ -88,7 +90,10 @@ export const photos = [
   },
 ];
 
+// Export - use large test data when VITE_LARGE_TEST_DATA=true
+export const photos = isLargeTestMode ? generatePhotoAlbums(30) : realPhotos;
+
 // Helper to get album by ID
 export const getAlbumById = (id) => {
-  return photos.find(photo => photo.id === parseInt(id));
+  return photos.find(photo => photo.id === parseInt(id) || photo.id === `album-${id}`);
 };

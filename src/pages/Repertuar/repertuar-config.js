@@ -1,6 +1,8 @@
 // Konfiguracja strony Repertuar
 // Dane bazowane na designie Figma node 171-189 (desktop) i 189-1365 (mobile)
 
+import { isLargeTestMode, generateComposers } from '../../test-data/large-data-generator';
+
 export const DESKTOP_WIDTH = 1440;
 export const DESKTOP_HEIGHT = 1285; // From Figma node 171-189
 export const MOBILE_WIDTH = 390;
@@ -12,7 +14,7 @@ export const mobileLinePositions = [97, 195, 292];
 
 // Lista wszystkich kompozytorów i ich utworów
 // Utwory z isSpecial: true zostały napisane specjalnie dla Ensemble Kompopolex
-export const composers = [
+const realComposers = [
   {
     name: 'Carola Bauckholt',
     year: '(1959)',
@@ -152,3 +154,6 @@ export const composers = [
     ],
   },
 ];
+
+// Export - use large test data when VITE_LARGE_TEST_DATA=true
+export const composers = isLargeTestMode ? generateComposers(100) : realComposers;

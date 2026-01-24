@@ -10,6 +10,8 @@ import {
   mobileLinePositions,
   MOBILE_WIDTH,
 } from './bio-config';
+import { isLargeTestMode } from '../../test-data/large-data-generator';
+import { calculateBioFontSize, calculateTitleFontSize } from '../../hooks/useResponsiveFontSize';
 
 // Mapowanie indeksu slajdu na klucz tłumaczenia
 const slideTranslationKeys = ['ensemble', 'aleksandra', 'rafal', 'jacek'];
@@ -31,8 +33,53 @@ const mobileImageStyles = [
   { position: 'absolute', width: '301.44%', height: '140.43%', left: '-198.05%', top: '-0.22%', maxWidth: 'none' },
 ];
 
-// Heights for each mobile slide section
+// Default image style for large test mode (beyond 4 slides)
+const defaultImageStyle = { width: '100%', height: '100%', objectFit: 'cover', objectPosition: '50% 50%' };
+
+// Heights for each mobile slide section (for real data with 2 paragraphs)
 const MOBILE_SLIDE_HEIGHTS = [950, 850, 750, 950];
+
+// Mobile height calculation constants
+const MOBILE_HEADER_HEIGHT = 281;
+const MOBILE_IMAGE_HEIGHT = 460;
+const MOBILE_TITLE_HEIGHT = 80;
+const MOBILE_BOTTOM_PADDING = 100;
+const MOBILE_FOOTER_EXTRA = 150;
+const MOBILE_BASE_PARAGRAPH_HEIGHT = 160; // at 16px font
+
+// Calculate dynamic height for a mobile slide based on content
+function calculateMobileSlideHeight(paragraphs, isFirst, hasFooter) {
+  if (!paragraphs || !Array.isArray(paragraphs)) {
+    return 850; // default
+  }
+
+  // Calculate font size (same logic as useResponsiveFontSize)
+  const paragraphCount = paragraphs.length;
+  const maxParagraphs = 2;
+  const baseFontSize = 16;
+  const minFontSize = 12;
+
+  const paragraphOverflow = paragraphCount / maxParagraphs;
+  const fontScale = paragraphOverflow <= 1 ? 1 : 1 / Math.pow(paragraphOverflow, 0.4);
+  const actualFontSize = Math.max(minFontSize, Math.round(baseFontSize * fontScale));
+
+  // Paragraph height scales with font size
+  const paragraphHeight = Math.round(MOBILE_BASE_PARAGRAPH_HEIGHT * (actualFontSize / baseFontSize));
+
+  // Calculate total height
+  let height = 0;
+  if (isFirst) height += MOBILE_HEADER_HEIGHT; // spacer for fixed header
+  height += 60; // marginTop for image (or 0 for first)
+  height += MOBILE_IMAGE_HEIGHT;
+  height += 40; // marginTop for title
+  height += MOBILE_TITLE_HEIGHT;
+  height += 20; // marginTop for paragraphs
+  height += paragraphCount * paragraphHeight;
+  height += MOBILE_BOTTOM_PADDING;
+  if (hasFooter) height += MOBILE_FOOTER_EXTRA;
+
+  return Math.max(700, height); // minimum 700px
+}
 
 export default function MobileBio({ setCurrentColors }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -96,8 +143,22 @@ export default function MobileBio({ setCurrentColors }) {
     window.scrollTo(0, 0);
   }, []);
 
-  // Total height: sum of all section heights
-  const totalHeight = MOBILE_SLIDE_HEIGHTS.reduce((sum, h) => sum + h, 0);
+  // Total height: sum of all section heights (dynamic for large test mode)
+  const totalHeight = mobileBioSlides.reduce((sum, slide, index) => {
+    let height;
+    if (isLargeTestMode) {
+      // Dynamic height based on content
+      height = calculateMobileSlideHeight(
+        slide.paragraphs,
+        index === 0,
+        slide.hasFooter
+      );
+    } else {
+      // Use predefined heights for real data
+      height = MOBILE_SLIDE_HEIGHTS[index] || 850;
+    }
+    return sum + height;
+  }, 0);
 
   return (
     <section
@@ -206,7 +267,32 @@ export default function MobileBio({ setCurrentColors }) {
       <div style={{ position: 'relative' }}>
         {mobileBioSlides.map((slide, index) => {
           const translationKey = slideTranslationKeys[index];
-          const paragraphs = t(`bio.slides.${translationKey}.paragraphs`);
+          // In large test mode, use slide data directly; otherwise use translations
+          const paragraphs = isLargeTestMode
+            ? slide.paragraphs
+            : t(`bio.slides.${translationKey}.paragraphs`);
+          const slideName = isLargeTestMode
+            ? slide.name
+            : t(`bio.slides.${translationKey}.name`);
+          const imageStyle = mobileImageStyles[index] || defaultImageStyle;
+
+          // Calculate responsive font sizes (only reduces when content exceeds limits)
+          const titleFontSize = calculateTitleFontSize(slideName, {
+            baseFontSize: 40,
+            minFontSize: 28,
+            maxChars: 20, // mobile has less width
+          });
+          const paragraphFontSize = calculateBioFontSize(paragraphs, {
+            baseFontSize: 16,
+            minFontSize: 12,
+            maxParagraphs: 2,
+            maxCharsPerParagraph: 400,
+          });
+
+          // Calculate dynamic height for this slide
+          const slideHeight = isLargeTestMode
+            ? calculateMobileSlideHeight(paragraphs, index === 0, slide.hasFooter)
+            : (MOBILE_SLIDE_HEIGHTS[index] || 850);
 
           return (
             <section
@@ -214,7 +300,7 @@ export default function MobileBio({ setCurrentColors }) {
               ref={(el) => (sectionsRef.current[index] = el)}
               data-color={slide.id}
               style={{
-                minHeight: `${MOBILE_SLIDE_HEIGHTS[index]}px`,
+                minHeight: `${slideHeight}px`,
                 position: 'relative',
                 width: `${MOBILE_WIDTH}px`,
               }}
@@ -236,7 +322,7 @@ export default function MobileBio({ setCurrentColors }) {
                   src={slide.image}
                   alt={slide.name}
                   style={{
-                    ...mobileImageStyles[index],
+                    ...imageStyle,
                     opacity: loadedImages.has(index) ? 1 : 0,
                     transition: 'opacity 0.5s ease-in-out',
                   }}
@@ -251,12 +337,12 @@ export default function MobileBio({ setCurrentColors }) {
                   width: '350px',
                   fontFamily: "'IBM Plex Mono', monospace",
                   fontWeight: 600,
-                  fontSize: '40px',
+                  fontSize: `${titleFontSize}px`,
                   lineHeight: 1.2,
                   color: slide.textColor,
                 }}
               >
-                {t(`bio.slides.${translationKey}.name`)}
+                {slideName}
               </p>
 
               {/* Paragrafy tekstu */}
@@ -271,7 +357,7 @@ export default function MobileBio({ setCurrentColors }) {
                       width: '350px',
                       fontFamily: "'IBM Plex Mono', monospace",
                       fontWeight: 500,
-                      fontSize: '16px',
+                      fontSize: `${paragraphFontSize}px`,
                       lineHeight: 1.48,
                       color: slide.textColor,
                     }}

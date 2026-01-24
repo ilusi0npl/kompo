@@ -1,6 +1,8 @@
 // Konfiguracja strony Projekty Specjalne
 // Dane bazowane na designie Figma node 171-329 (desktop) i 189-1534 (mobile)
 
+import { isLargeTestMode, generateSpecialProjects } from '../../test-data/large-data-generator';
+
 export const DESKTOP_WIDTH = 1440;
 export const DESKTOP_HEIGHT = 827; // From Figma node 171-329
 export const MOBILE_WIDTH = 390;
@@ -12,7 +14,7 @@ export const mobileLinePositions = [97, 195, 292];
 
 // Lista kompozytorów dla projektów specjalnych
 // Utwory wykonywane z zaproszonymi osobami gościnnymi
-export const composers = [
+const realComposers = [
   {
     name: 'Michael Beil',
     year: '(1963)',
@@ -49,3 +51,6 @@ export const composers = [
     works: [{ title: 'Assemblages dla konkretnych wykonawców (1975-79)', isSpecial: false }],
   },
 ];
+
+// Export - use large test data when VITE_LARGE_TEST_DATA=true
+export const composers = isLargeTestMode ? generateSpecialProjects(50) : realComposers;

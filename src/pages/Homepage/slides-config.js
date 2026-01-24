@@ -1,7 +1,9 @@
 // Konfiguracja slajdów Homepage
 // Dane bazowane na designie Figma
 
-export const desktopSlides = [
+import { isLargeTestMode, generateHomepageSlides } from '../../test-data/large-data-generator';
+
+const realDesktopSlides = [
   {
     id: 1,
     backgroundColor: '#FDFDFD',
@@ -64,7 +66,7 @@ export const desktopSlides = [
   }
 ];
 
-export const mobileSlides = [
+const realMobileSlides = [
   {
     id: 1,
     backgroundColor: '#FDFDFD',
@@ -128,3 +130,8 @@ export const DESKTOP_WIDTH = 1440;
 export const DESKTOP_HEIGHT = 700;
 export const MOBILE_WIDTH = 390;
 export const MOBILE_HEIGHT = 683;
+
+// Export - use large test data when VITE_LARGE_TEST_DATA=true
+const largeTestSlides = generateHomepageSlides(8);
+export const desktopSlides = isLargeTestMode ? largeTestSlides : realDesktopSlides;
+export const mobileSlides = isLargeTestMode ? largeTestSlides : realMobileSlides;

@@ -10,6 +10,7 @@ import {
   MOBILE_WIDTH,
   MOBILE_HEIGHT,
 } from './slides-config';
+import { isLargeTestMode } from '../../test-data/large-data-generator';
 
 const TRANSITION_DURATION = '1s';
 const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
@@ -165,7 +166,9 @@ export default function MobileHomepage() {
             pointerEvents: index === currentSlide ? 'auto' : 'none',
           }}
         >
-          {t(`homepage.slides.${slide.word.toLowerCase()}.tagline`)}
+          {isLargeTestMode
+            ? slide.tagline
+            : t(`homepage.slides.${slide.word.toLowerCase()}.tagline`)}
         </p>
       ))}
     </section>

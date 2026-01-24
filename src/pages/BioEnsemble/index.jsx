@@ -5,7 +5,6 @@ import MobileBioEnsemble from './MobileBioEnsemble';
 import BioFixedLayer from '../Bio/BioFixedLayer';
 
 const DESKTOP_WIDTH = 1440;
-const DESKTOP_HEIGHT = 1599;
 const BREAKPOINT = 768;
 
 const COLORS = {
@@ -53,12 +52,12 @@ export default function BioEnsemble() {
       )}
 
       {/* Fixed layer - lines and UI */}
-      {!isMobile && <BioFixedLayer currentColors={currentColors} scale={scale} height={DESKTOP_HEIGHT} />}
+      {!isMobile && <BioFixedLayer currentColors={currentColors} scale={scale} />}
 
       <ResponsiveWrapper
         desktopContent={<DesktopBioEnsemble />}
         mobileContent={<MobileBioEnsemble />}
-        desktopHeight={DESKTOP_HEIGHT}
+        desktopHeight="auto"
         mobileHeight="auto"
         hideLines={true}
         backgroundColor="transparent"
