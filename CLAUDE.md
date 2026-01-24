@@ -78,6 +78,53 @@ Tests in `tests/e2e/content-overlap/` verify that large content doesn't cause la
 - Footer visibility
 - Dynamic height calculation
 
+### Lessons Learned / Gotchas
+
+#### i18n Architecture - Config vs Sanity Data Flow
+
+**Problem:** Generator initially created i18n fields (`titlePl`/`titleEn`, `locationPl`/`locationEn`) but tests failed because components couldn't access the correct language version.
+
+**Root cause:** Different data flows for config vs Sanity:
+
+| Data Source | Flow | i18n Handling |
+|-------------|------|---------------|
+| **Config/Generator** | Config → Component | NO transformation, fields used directly |
+| **Sanity CMS** | Sanity → Hook → Component | Hook transforms based on `useLanguage()` context |
+
+**Solution:** Generator should output **direct fields** (`title`, `location`, `name`, `paragraphs`) matching original config format. i18n for config data is handled by translation files via `t()` function, not by field suffixes.
+
+```javascript
+// ❌ WRONG - Generator with i18n fields (components can't transform)
+{ titlePl: 'Koncert', titleEn: 'Concert', locationPl: 'Wrocław', locationEn: 'Wroclaw' }
+
+// ✅ CORRECT - Generator with direct fields (matches config format)
+{ id: 1, location: 'Filharmonia Wrocławska', performers: '...' }
+// Component uses: t(`kalendarz.events.event${event.id}.title`) for title
+```
+
+#### Translation Key Matching
+
+**Problem:** Events with IDs like `event-upcoming-1` caused translation keys `kalendarz.events.eventevent-upcoming-1.title` which don't exist.
+
+**Solution:** Use simple numeric IDs (1, 2, 3) that match existing translation keys (`event1`, `event2`, `event3`).
+
+#### Footer Positioning with Dynamic Content
+
+**Problem:** Footer with `position: absolute; bottom: 40px` created large gaps when content height varied.
+
+**Solution:** Place footer inside content flow with margins:
+```javascript
+// ❌ WRONG - Absolute positioning
+<Footer style={{ position: 'absolute', bottom: '40px' }} />
+
+// ✅ CORRECT - Content flow with margins
+<Footer style={{ marginTop: '80px', marginBottom: '40px' }} />
+```
+
+#### Large Test Mode Purpose
+
+Large test data mode is for **stress testing layout/performance**, not for testing i18n functionality. Keep generator output simple - direct fields without i18n complexity. Translation testing should use normal mode with proper translation files.
+
 ---
 
 ## Verification Tools
