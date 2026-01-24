@@ -208,7 +208,92 @@ tmp/                              # Temporary files (gitignored)
 
 public/assets/                    # Static assets
 └── [feature]/                   # Organized by feature
+
+tests/                            # Test suites
+├── e2e/                         # Playwright E2E tests
+│   ├── helpers/test-helpers.js  # Shared E2E utilities
+│   └── pages/                   # Page-specific tests
+└── unit/                        # Vitest unit tests
 ```
+
+---
+
+## Shared Components Reference
+
+### ContrastToggle
+**File**: `src/components/ContrastToggle/ContrastToggle.jsx`
+- Toggle accessibility high-contrast mode
+- Props: `iconColor`, `style`, `transition`, `scale`, `onClick`
+- Toggles `.high-contrast` class on `document.body`
+- Persists to `localStorage('highContrast')`
+- Active indicator color: `#FFBD19` (yellow)
+
+### LanguageText
+**File**: `src/components/LanguageText/LanguageText.jsx`
+- Language toggle as text button or menu item
+- Props: `textColor`, `scale`, `fontSize`, `asMenuItem`
+- Two modes: button (default) vs menu item (`asMenuItem=true`)
+
+### MobileHeader
+**File**: `src/components/MobileHeader/MobileHeader.jsx`
+- Generic mobile header with logo, MENU button, optional nav, title
+- Props: `title`, `textColor`, `backgroundColor`, `navLinks`, `isFixed`, `headerHeight`, `lineColor`, `linePositions`
+- Portal-based rendering when `isFixed=true` (renders to `#mobile-header-root`)
+- Exports: `MobileHeader`, `MobileHeaderSpacer`
+
+### MobileMenu
+**File**: `src/components/MobileMenu/MobileMenu.jsx`
+- Mobile overlay menu with navigation
+- Props: `isOpen`, `onClose`
+- Portal renders to `#mobile-menu-root`
+- Includes: LanguageText, ContrastToggle
+
+### SmoothImage
+**File**: `src/components/SmoothImage/SmoothImage.jsx`
+- Lazy-loaded image with fade-in animation
+- Props: `src`, `alt`, `placeholderColor`, `transitionDuration`
+- Uses IntersectionObserver with 2000px rootMargin for early loading
+
+### SmoothSlideshow
+**File**: `src/components/SmoothSlideshow/SmoothSlideshow.jsx`
+- Lazy-loaded slideshow with crossfade transitions
+- Props: `images`, `interval`, `transitionDuration`, `placeholderColor`
+- Variant of SmoothImage for multiple images
+
+### ArrowRight
+**File**: `src/components/ArrowRight/ArrowRight.jsx`
+- SVG arrow icon using `currentColor`
+- Used with `.external-link-btn`, `.text-link-btn` classes
+
+---
+
+## Custom Hooks Reference
+
+### useScrollColorChange
+**File**: `src/hooks/useScrollColorChange.js`
+- Detects which section is at viewport center, returns color data
+- **Critical**: Scale-aware calculation for ResponsiveWrapper
+- Usage:
+  ```javascript
+  const sectionsRef = useRef([]);
+  const sectionData = [
+    { backgroundColor: '#FFF', lineColor: '#000', textColor: '#000' },
+    { backgroundColor: '#000', lineColor: '#FFF', textColor: '#FFF' },
+  ];
+  const currentColors = useScrollColorChange(sectionsRef, sectionData);
+  // Returns: { backgroundColor, lineColor, textColor }
+  ```
+- Key formula: `scrollPoint = (window.scrollY + window.innerHeight / 2) / scale`
+
+### useFixedMobileHeader
+**File**: `src/hooks/useFixedMobileHeader.js`
+- Calculates scale factor for fixed positioned elements on mobile
+- Returns: `{ scale, MOBILE_WIDTH (390), BREAKPOINT (768) }`
+- Usage:
+  ```javascript
+  const { scale } = useFixedMobileHeader();
+  // Use scale to transform fixed elements to match ResponsiveWrapper
+  ```
 
 ---
 
@@ -281,6 +366,27 @@ done
 2. Check HTML report for each section
 3. Fix differences and repeat
 4. For elements (logos, avatars) use `verify` with UIMatch
+
+### High Contrast Mode (Accessibility)
+
+Accessibility feature toggled via ContrastToggle component:
+
+```css
+/* Applied when high contrast is enabled */
+body.high-contrast {
+  filter: contrast(1.5) grayscale(1);
+}
+
+/* Exception for toggle icon - keeps color visible */
+body.high-contrast .contrast-toggle-btn {
+  filter: grayscale(0) contrast(2);
+}
+```
+
+- Toggled via `ContrastToggle` component
+- Persisted in `localStorage('highContrast')`
+- Active indicator: `#FFBD19` (yellow)
+- Improves readability for visually impaired users
 
 ---
 
@@ -414,6 +520,123 @@ Mobile design: https://www.figma.com/design/[fileKey]/[fileName]?node-id=[nodeId
 | **Full Responsive** | SEO-critical, accessibility-first, complex interactions |
 
 **Default: Scale Transform** - maintains pixel-perfect design consistency.
+
+### Fixed Positioning with Scale Transform
+
+Pages with fixed elements (headers, decorative lines) use the `[Page]FixedLayer` pattern:
+
+**File structure:**
+```
+src/pages/[PageName]/
+├── index.jsx                # Main, manages fixed layer colors
+├── Desktop[PageName].jsx    # Scrollable content
+├── Mobile[PageName].jsx     # Mobile scrollable content
+└── [PageName]FixedLayer.jsx # Fixed elements (OUTSIDE ResponsiveWrapper)
+```
+
+**Key points:**
+- Fixed layers render OUTSIDE ResponsiveWrapper (`position: fixed` works correctly)
+- Fixed layers receive `scale` prop to match ResponsiveWrapper scaling
+- Use `setCurrentColors` callback to sync colors with scroll position
+- Example:
+  ```jsx
+  // In index.jsx
+  const [currentColors, setCurrentColors] = useState(defaultColors);
+
+  return (
+    <>
+      <BioFixedLayer currentColors={currentColors} scale={desktopScale} />
+      <ResponsiveWrapper
+        desktopContent={
+          <DesktopBio setCurrentColors={setCurrentColors} />
+        }
+        // ...
+      />
+    </>
+  );
+  ```
+
+**Portal-based rendering:**
+- MobileHeader uses portal to `#mobile-header-root`
+- MobileMenu uses portal to `#mobile-menu-root`
+- Portals ensure fixed elements escape ResponsiveWrapper's transform
+
+---
+
+## Testing
+
+### Test Structure
+```
+tests/
+├── e2e/
+│   ├── helpers/test-helpers.js    # Shared E2E utilities
+│   ├── pages/                      # Page-specific tests
+│   │   ├── bio.spec.js
+│   │   ├── media.spec.js
+│   │   └── ...
+│   ├── navigation.spec.js
+│   ├── homepage.spec.js
+│   └── language-switching.spec.js
+├── unit/
+│   ├── components/
+│   ├── hooks/
+│   └── context/
+└── __mocks__/sanity-client.js
+```
+
+### E2E Test Helpers (`tests/e2e/helpers/test-helpers.js`)
+
+| Function | Purpose |
+|----------|---------|
+| `navigateToPage(page, path)` | Go to page + wait networkidle |
+| `navigateViaLink(page, href, url)` | Click link + verify navigation |
+| `assertLogoVisible(page)` | Check Kompopolex logo visible |
+| `assertNavigationVisible(page)` | Check nav with main links |
+| `assertFooterVisible(page)` | Check footer with mailto link |
+| `assertLanguageToggleWorks(page)` | Test PL ↔ EN toggle |
+| `assertMobileViewport(page)` | Set 390x844, check no h-scroll |
+| `assertDesktopViewport(page)` | Set 1440x900 |
+| `testScrollBehavior(page, height)` | Test scroll down/up |
+
+### Running Tests
+```bash
+npm test              # Unit tests (watch mode)
+npm run test:run      # Unit tests (single run)
+npm run test:e2e      # E2E tests (Playwright)
+npm run test:all      # All tests
+npm run test:coverage # Coverage report
+```
+
+### Test Patterns
+
+**Unit tests (Vitest):**
+```javascript
+import { describe, it, expect, vi } from 'vitest';
+import { render, screen } from '@testing-library/react';
+
+describe('ComponentName', () => {
+  it('renders correctly', () => {
+    render(<ComponentName />);
+    expect(screen.getByText('Expected text')).toBeInTheDocument();
+  });
+});
+```
+
+**E2E tests (Playwright):**
+```javascript
+import { test, expect } from '@playwright/test';
+import { navigateToPage, assertLogoVisible } from './helpers/test-helpers.js';
+
+test.describe('PageName', () => {
+  test.beforeEach(async ({ page }) => {
+    await navigateToPage(page, '/page-path');
+  });
+
+  test('displays logo', async ({ page }) => {
+    await assertLogoVisible(page);
+  });
+});
+```
 
 ---
 
@@ -766,6 +989,23 @@ const transformed = data?.map(event => ({
 })) || [];
 ```
 
+### Sanity Hooks Reference
+
+All hooks in `src/hooks/`:
+
+| Hook | Purpose | Bilingual |
+|------|---------|-----------|
+| `useSanityBioProfiles` | Bio page profiles | ✓ |
+| `useSanityEvent` | Single event by ID | ✓ |
+| `useSanityEvents` | Events list (upcoming/archived) | ✓ |
+| `useSanityFundacjaPage` | Fundacja page singleton | ✓ |
+| `useSanityHomepageSlides` | Homepage slideshow | ✓ |
+| `useSanityKontaktPage` | Kontakt page singleton | - |
+| `useSanityPhotoAlbums` | Photo gallery albums | ✓ |
+| `useSanityRepertuarComposers` | Repertuar composers list | - |
+| `useSanitySpecjalneComposers` | Specjalne composers list | - |
+| `useSanityVideos` | Video gallery | ✓ |
+
 ### Component Integration Pattern
 
 All components follow this pattern:
@@ -889,6 +1129,57 @@ All images uploaded to **Sanity CDN**:
 **Issue**: Build errors
 - Run `npm run build` to check for errors
 - Verify all hooks imported correctly
+
+---
+
+## Scripts Reference
+
+### Verification Scripts
+| Script | Purpose |
+|--------|---------|
+| `verify-figma-sections.cjs` | Section comparison with Figma |
+| `verify-uimatch.cjs` | Single node UIMatch comparison |
+| `verify-sanity-integration.js` | CMS integration testing |
+
+### Migration Scripts
+
+Pattern: `migrate-[content].js` and `migrate-[content]-i18n.js`
+
+| Script | Purpose |
+|--------|---------|
+| `migrate-events.js` | Migrate events to Sanity |
+| `migrate-events-i18n.js` | Add English translations to events |
+| `migrate-bio-profiles.js` | Migrate bio profiles |
+| `migrate-bio-profiles-i18n.js` | Add English translations to bio |
+| `migrate-homepage-slides.js` | Migrate homepage slideshow |
+| `migrate-homepage-slides-i18n.js` | Add translations to slides |
+| `migrate-photo-albums.js` | Migrate photo albums |
+| `migrate-photo-albums-i18n.js` | Add translations to albums |
+| `migrate-fundacja-page.js` | Migrate Fundacja page |
+| `migrate-fundacja-page-i18n.js` | Add translations to Fundacja |
+| `migrate-kontakt-page.js` | Migrate Kontakt page |
+| `migrate-videos.js` | Migrate video gallery |
+| `migrate-composers.js` | Migrate composer data |
+| `migrate-archived-events.js` | Migrate archived events |
+
+All migration scripts have:
+- **Duplicate detection** - safe to run multiple times
+- **OpenAI translation** - auto-translate via API (optional)
+- **Asset upload** - uploads images to Sanity CDN
+
+### Translation Scripts
+| Script | Purpose |
+|--------|---------|
+| `translate-content-to-english.js` | Auto-translate content via OpenAI |
+| `check-translations.js` | Validate i18n coverage |
+| `update-bio-translations.js` | Update bio translations |
+
+### Utility Scripts
+| Script | Purpose |
+|--------|---------|
+| `test-all-pages.js` | Cross-page testing (Sanity ON/OFF) |
+| `test-report.js` | Generate comprehensive test report |
+| `fix-*-keys.js` | Add ID keys to Sanity documents |
 
 ---
 
