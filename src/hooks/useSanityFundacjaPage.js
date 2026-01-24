@@ -23,17 +23,21 @@ export function useSanityFundacjaPage() {
           return
         }
 
-        // Transform projects array based on current language
+        // Transform projects array based on current language with fallback
         const transformedData = {
           ...pageData,
           projects: pageData.projects?.map(project => ({
-            text: language === 'pl' ? project.textPl : project.textEn,
-            linkText: language === 'pl' ? project.linkTextPl : project.linkTextEn,
-            linkUrl: project.linkUrl,
+            text: language === 'pl'
+              ? (project.textPl || project.textEn || '')
+              : (project.textEn || project.textPl || ''),
+            linkText: language === 'pl'
+              ? (project.linkTextPl || project.linkTextEn || '')
+              : (project.linkTextEn || project.linkTextPl || ''),
+            linkUrl: project.linkUrl || '',
           })) || [],
           accessibilityDeclaration: language === 'pl'
-            ? pageData.accessibilityDeclarationPl
-            : pageData.accessibilityDeclarationEn,
+            ? (pageData.accessibilityDeclarationPl || pageData.accessibilityDeclarationEn || [])
+            : (pageData.accessibilityDeclarationEn || pageData.accessibilityDeclarationPl || []),
         }
 
         setData(transformedData)

@@ -24,10 +24,12 @@ export function useSanityPhotoAlbums() {
           return
         }
 
-        // Transform data based on current language
+        // Transform data based on current language with fallback
         const transformedAlbums = data.map(album => ({
           ...album,
-          title: language === 'pl' ? album.titlePl : album.titleEn,
+          title: language === 'pl'
+            ? (album.titlePl || album.titleEn || '')
+            : (album.titleEn || album.titlePl || ''),
         }))
         setAlbums(transformedAlbums)
         setLoading(false)

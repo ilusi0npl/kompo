@@ -24,11 +24,15 @@ export function useSanityBioProfiles() {
           return
         }
 
-        // Transform data based on current language
+        // Transform data based on current language with fallback
         const transformedProfiles = data.map(profile => ({
           ...profile,
-          name: language === 'pl' ? profile.namePl : profile.nameEn,
-          paragraphs: language === 'pl' ? profile.paragraphsPl : profile.paragraphsEn,
+          name: language === 'pl'
+            ? (profile.namePl || profile.nameEn || '')
+            : (profile.nameEn || profile.namePl || ''),
+          paragraphs: language === 'pl'
+            ? (profile.paragraphsPl || profile.paragraphsEn || [])
+            : (profile.paragraphsEn || profile.paragraphsPl || []),
         }))
         setProfiles(transformedProfiles)
         setLoading(false)

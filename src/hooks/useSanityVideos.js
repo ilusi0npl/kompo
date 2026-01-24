@@ -24,11 +24,15 @@ export function useSanityVideos() {
           return
         }
 
-        // Transform data based on current language
+        // Transform data based on current language with fallback
         const transformedVideos = data.map(video => ({
           ...video,
-          title: language === 'pl' ? video.titlePl : video.titleEn,
-          description: language === 'pl' ? video.descriptionPl : video.descriptionEn,
+          title: language === 'pl'
+            ? (video.titlePl || video.titleEn || '')
+            : (video.titleEn || video.titlePl || ''),
+          description: language === 'pl'
+            ? (video.descriptionPl || video.descriptionEn || '')
+            : (video.descriptionEn || video.descriptionPl || ''),
         }))
         setVideos(transformedVideos)
         setLoading(false)

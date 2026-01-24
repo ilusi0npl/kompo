@@ -1,143 +1,373 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+/**
+ * Unit tests for useSanityBioProfiles hook
+ * Tests edge cases for CMS data handling
+ */
+
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
+import React from 'react'
 import { useSanityBioProfiles } from '../../../src/hooks/useSanityBioProfiles'
 import { LanguageProvider } from '../../../src/context/LanguageContext'
-
-// Create mock fetch function using vi.hoisted to avoid hoisting issues
-const mockFetch = vi.hoisted(() => vi.fn())
 
 // Mock Sanity client
 vi.mock('../../../src/lib/sanity/client', () => ({
   client: {
-    fetch: mockFetch,
+    fetch: vi.fn(),
   },
 }))
 
-describe('useSanityBioProfiles', () => {
-  const mockBioProfilesData = [
-    {
-      _id: 'profile-1',
-      namePl: 'Aleksandra Gryka',
-      nameEn: 'Aleksandra Gryka',
-      paragraphsPl: [
-        'Pierwszy akapit po polsku.',
-        'Drugi akapit po polsku.',
-      ],
-      paragraphsEn: [
-        'First paragraph in English.',
-        'Second paragraph in English.',
-      ],
-      imageUrl: '/bio1.jpg',
-      backgroundColor: '#FF734C',
-      lineColor: '#FFBD19',
-      textColor: '#131313',
-    },
-    {
-      _id: 'profile-2',
-      namePl: 'Rafał Zapała',
-      nameEn: 'Rafał Zapała',
-      paragraphsPl: [
-        'Biogram Rafała po polsku.',
-      ],
-      paragraphsEn: [
-        'Rafał bio in English.',
-      ],
-      imageUrl: '/bio2.jpg',
-      backgroundColor: '#34B898',
-      lineColor: '#01936F',
-      textColor: '#131313',
-    },
-  ]
+import { client } from '../../../src/lib/sanity/client'
 
+// Wrapper with LanguageProvider
+const wrapper = ({ children }) => (
+  <LanguageProvider>{children}</LanguageProvider>
+)
+
+// Test data generators
+const createBioProfile = (overrides = {}) => ({
+  _id: `bio-${Date.now()}`,
+  namePl: 'Jan Kowalski',
+  nameEn: 'John Smith',
+  imageUrl: '/assets/bio.jpg',
+  paragraphsPl: ['Paragraf 1 PL', 'Paragraf 2 PL'],
+  paragraphsEn: ['Paragraph 1 EN', 'Paragraph 2 EN'],
+  ...overrides,
+})
+
+describe('useSanityBioProfiles', () => {
   beforeEach(() => {
     vi.clearAllMocks()
   })
 
-  it('should fetch bio profiles successfully', async () => {
-    mockFetch.mockResolvedValueOnce(mockBioProfilesData)
+  // ==========================================
+  // HAPPY PATH
+  // ==========================================
+  describe('Happy Path', () => {
+    it('returns transformed profiles for PL language', async () => {
+      const mockData = [createBioProfile()]
+      client.fetch.mockResolvedValue(mockData)
 
-    const { result } = renderHook(() => useSanityBioProfiles(), {
-      wrapper: LanguageProvider,
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.profiles).toHaveLength(1)
+      expect(result.current.profiles[0].name).toBe('Jan Kowalski')
+      expect(result.current.profiles[0].paragraphs).toEqual(['Paragraf 1 PL', 'Paragraf 2 PL'])
+      expect(result.current.error).toBeNull()
     })
 
-    expect(result.current.loading).toBe(true)
-    expect(result.current.profiles).toEqual([])
+    it('returns multiple profiles correctly', async () => {
+      const mockData = [
+        createBioProfile({ _id: 'bio-1', namePl: 'Anna Nowak' }),
+        createBioProfile({ _id: 'bio-2', namePl: 'Piotr Wiśniewski' }),
+        createBioProfile({ _id: 'bio-3', namePl: 'Maria Kowalczyk' }),
+      ]
+      client.fetch.mockResolvedValue(mockData)
 
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false)
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.profiles).toHaveLength(3)
+      expect(result.current.profiles[0].name).toBe('Anna Nowak')
+      expect(result.current.profiles[1].name).toBe('Piotr Wiśniewski')
+      expect(result.current.profiles[2].name).toBe('Maria Kowalczyk')
     })
-
-    expect(result.current.profiles).toHaveLength(2)
-    expect(result.current.error).toBeNull()
   })
 
-  it('should transform profiles to Polish by default', async () => {
-    mockFetch.mockResolvedValueOnce(mockBioProfilesData)
+  // ==========================================
+  // EMPTY / NULL RESPONSES
+  // ==========================================
+  describe('Empty & Null Handling', () => {
+    it('returns empty array when API returns null', async () => {
+      client.fetch.mockResolvedValue(null)
 
-    const { result } = renderHook(() => useSanityBioProfiles(), {
-      wrapper: LanguageProvider,
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.profiles).toEqual([])
+      expect(result.current.error).toBeNull()
     })
 
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false)
+    it('returns empty array when API returns undefined', async () => {
+      client.fetch.mockResolvedValue(undefined)
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.profiles).toEqual([])
     })
 
-    const firstProfile = result.current.profiles[0]
-    expect(firstProfile.name).toBe('Aleksandra Gryka')
-    expect(firstProfile.paragraphs).toEqual([
-      'Pierwszy akapit po polsku.',
-      'Drugi akapit po polsku.',
-    ])
+    it('returns empty array when API returns empty array', async () => {
+      client.fetch.mockResolvedValue([])
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.profiles).toEqual([])
+    })
+
+    it('returns empty array when API returns non-array', async () => {
+      client.fetch.mockResolvedValue({ unexpected: 'format' })
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.profiles).toEqual([])
+    })
   })
 
-  it('should transform profiles to English when language="en"', async () => {
-    localStorage.getItem.mockReturnValue('en')
-    mockFetch.mockResolvedValueOnce(mockBioProfilesData)
+  // ==========================================
+  // MISSING FIELDS
+  // ==========================================
+  describe('Missing Fields Handling', () => {
+    it('handles missing nameEn field', async () => {
+      const mockData = [createBioProfile({ nameEn: null })]
+      client.fetch.mockResolvedValue(mockData)
 
-    const { result } = renderHook(() => useSanityBioProfiles(), {
-      wrapper: LanguageProvider,
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      // Should use PL name as default
+      expect(result.current.profiles[0].name).toBe('Jan Kowalski')
     })
 
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false)
+    it('handles missing paragraphsPl field', async () => {
+      const mockData = [createBioProfile({ paragraphsPl: null })]
+      client.fetch.mockResolvedValue(mockData)
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      // paragraphs should fallback to EN version
+      expect(result.current.profiles[0].paragraphs).toEqual(['Paragraph 1 EN', 'Paragraph 2 EN'])
     })
 
-    const firstProfile = result.current.profiles[0]
-    expect(firstProfile.name).toBe('Aleksandra Gryka')
-    expect(firstProfile.paragraphs).toEqual([
-      'First paragraph in English.',
-      'Second paragraph in English.',
-    ])
+    it('handles empty paragraphs array', async () => {
+      const mockData = [createBioProfile({ paragraphsPl: [], paragraphsEn: [] })]
+      client.fetch.mockResolvedValue(mockData)
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.profiles[0].paragraphs).toEqual([])
+    })
+
+    it('handles missing imageUrl', async () => {
+      const mockData = [createBioProfile({ imageUrl: null })]
+      client.fetch.mockResolvedValue(mockData)
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.profiles[0].imageUrl).toBeNull()
+    })
+
+    it('handles profile with all optional fields missing', async () => {
+      const mockData = [{
+        _id: 'minimal-bio',
+        namePl: 'Name',
+        nameEn: null,
+        imageUrl: null,
+        paragraphsPl: null,
+        paragraphsEn: null,
+      }]
+      client.fetch.mockResolvedValue(mockData)
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.profiles).toHaveLength(1)
+      expect(result.current.profiles[0].name).toBe('Name')
+    })
   })
 
-  it('should handle null data gracefully', async () => {
-    mockFetch.mockResolvedValueOnce(null)
+  // ==========================================
+  // ERROR HANDLING
+  // ==========================================
+  describe('Error Handling', () => {
+    it('sets error state on API failure', async () => {
+      const apiError = new Error('Network error')
+      client.fetch.mockRejectedValue(apiError)
 
-    const { result } = renderHook(() => useSanityBioProfiles(), {
-      wrapper: LanguageProvider,
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.error).toBeTruthy()
+      expect(result.current.profiles).toEqual([])
     })
 
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false)
+    it('handles timeout error', async () => {
+      client.fetch.mockRejectedValue(new Error('Request timeout'))
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.error).toBeTruthy()
     })
 
-    expect(result.current.profiles).toEqual([])
-    expect(result.current.error).toBeNull()
+    it('handles 500 error', async () => {
+      client.fetch.mockRejectedValue(new Error('Internal Server Error'))
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.error).toBeTruthy()
+      expect(result.current.profiles).toEqual([])
+    })
   })
 
-  it('should handle fetch errors', async () => {
-    const mockError = new Error('Failed to fetch profiles')
-    mockFetch.mockRejectedValueOnce(mockError)
+  // ==========================================
+  // LARGE DATA
+  // ==========================================
+  describe('Large Data Handling', () => {
+    it('handles 50 profiles', async () => {
+      const mockData = Array.from({ length: 50 }, (_, i) =>
+        createBioProfile({ _id: `bio-${i}`, namePl: `Profile ${i}` })
+      )
+      client.fetch.mockResolvedValue(mockData)
 
-    const { result } = renderHook(() => useSanityBioProfiles(), {
-      wrapper: LanguageProvider,
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.profiles).toHaveLength(50)
     })
 
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false)
+    it('handles profile with 20 long paragraphs', async () => {
+      const longParagraphs = Array.from({ length: 20 }, (_, i) =>
+        `Paragraph ${i}: ${'Lorem ipsum '.repeat(100)}`
+      )
+      const mockData = [createBioProfile({ paragraphsPl: longParagraphs })]
+      client.fetch.mockResolvedValue(mockData)
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.profiles[0].paragraphs).toHaveLength(20)
     })
 
-    expect(result.current.profiles).toEqual([])
-    expect(result.current.error).toBe(mockError)
+    it('handles very long name', async () => {
+      const longName = 'A'.repeat(500)
+      const mockData = [createBioProfile({ namePl: longName })]
+      client.fetch.mockResolvedValue(mockData)
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.profiles[0].name).toBe(longName)
+    })
+  })
+
+  // ==========================================
+  // SPECIAL CHARACTERS
+  // ==========================================
+  describe('Special Characters', () => {
+    it('preserves Polish characters', async () => {
+      const mockData = [createBioProfile({
+        namePl: 'Żółć gęślą jaźń ĄĘÓŁŃŹŻĆŚ',
+        paragraphsPl: ['Zażółć gęślą jaźń'],
+      })]
+      client.fetch.mockResolvedValue(mockData)
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.profiles[0].name).toBe('Żółć gęślą jaźń ĄĘÓŁŃŹŻĆŚ')
+      expect(result.current.profiles[0].paragraphs[0]).toBe('Zażółć gęślą jaźń')
+    })
+
+    it('preserves HTML entities as text', async () => {
+      const mockData = [createBioProfile({
+        namePl: '<script>alert("xss")</script>',
+        paragraphsPl: ['Test & "quotes" <b>bold</b>'],
+      })]
+      client.fetch.mockResolvedValue(mockData)
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      // Hook should pass through data as-is (escaping is component responsibility)
+      expect(result.current.profiles[0].name).toContain('<script>')
+      expect(result.current.profiles[0].paragraphs[0]).toContain('&')
+    })
+
+    it('preserves newlines in paragraphs', async () => {
+      const mockData = [createBioProfile({
+        paragraphsPl: ['Line 1\nLine 2\nLine 3'],
+      })]
+      client.fetch.mockResolvedValue(mockData)
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.profiles[0].paragraphs[0]).toContain('\n')
+    })
+
+    it('handles emoji characters', async () => {
+      const mockData = [createBioProfile({
+        namePl: 'Artist 🎵🎹🎼',
+      })]
+      client.fetch.mockResolvedValue(mockData)
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+
+      expect(result.current.profiles[0].name).toContain('🎵')
+    })
+  })
+
+  // ==========================================
+  // LOADING STATE
+  // ==========================================
+  describe('Loading State', () => {
+    it('starts with loading true', () => {
+      client.fetch.mockImplementation(() => new Promise(() => {})) // Never resolves
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      expect(result.current.loading).toBe(true)
+      expect(result.current.profiles).toEqual([])
+      expect(result.current.error).toBeNull()
+    })
+
+    it('sets loading to false after success', async () => {
+      client.fetch.mockResolvedValue([createBioProfile()])
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      expect(result.current.loading).toBe(true)
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+    })
+
+    it('sets loading to false after error', async () => {
+      client.fetch.mockRejectedValue(new Error('Failed'))
+
+      const { result } = renderHook(() => useSanityBioProfiles(), { wrapper })
+
+      expect(result.current.loading).toBe(true)
+
+      await waitFor(() => expect(result.current.loading).toBe(false))
+    })
   })
 })

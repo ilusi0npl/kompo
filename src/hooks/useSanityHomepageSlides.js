@@ -24,11 +24,15 @@ export function useSanityHomepageSlides() {
           return
         }
 
-        // Transform data based on current language
+        // Transform data based on current language with fallback
         const transformedSlides = data.map(slide => ({
           ...slide,
-          word: language === 'pl' ? slide.wordPl : slide.wordEn,
-          tagline: language === 'pl' ? slide.taglinePl : slide.taglineEn,
+          word: language === 'pl'
+            ? (slide.wordPl || slide.wordEn || '')
+            : (slide.wordEn || slide.wordPl || ''),
+          tagline: language === 'pl'
+            ? (slide.taglinePl || slide.taglineEn || '')
+            : (slide.taglineEn || slide.taglinePl || ''),
         }))
         setSlides(transformedSlides)
         setLoading(false)

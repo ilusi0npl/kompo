@@ -27,13 +27,21 @@ export function useSanityEvents(status = 'upcoming') {
           return
         }
 
-        // Transform data based on current language
+        // Transform data based on current language with fallback
         const transformedEvents = data.map(event => ({
           ...event,
-          title: language === 'pl' ? event.titlePl : event.titleEn,
-          performers: language === 'pl' ? event.performersPl : event.performersEn,
-          description: language === 'pl' ? event.descriptionPl : event.descriptionEn,
-          location: language === 'pl' ? event.locationPl : event.locationEn,
+          title: language === 'pl'
+            ? (event.titlePl || event.titleEn || '')
+            : (event.titleEn || event.titlePl || ''),
+          performers: language === 'pl'
+            ? (event.performersPl || event.performersEn || '')
+            : (event.performersEn || event.performersPl || ''),
+          description: language === 'pl'
+            ? (event.descriptionPl || event.descriptionEn || '')
+            : (event.descriptionEn || event.descriptionPl || ''),
+          location: language === 'pl'
+            ? (event.locationPl || event.locationEn || '')
+            : (event.locationEn || event.locationPl || ''),
         }))
         setEvents(transformedEvents)
         setLoading(false)

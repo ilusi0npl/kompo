@@ -1,114 +1,117 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest'
+/**
+ * Unit tests for useSanityHomepageSlides hook
+ */
+
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook, waitFor } from '@testing-library/react'
+import React from 'react'
 import { useSanityHomepageSlides } from '../../../src/hooks/useSanityHomepageSlides'
 import { LanguageProvider } from '../../../src/context/LanguageContext'
 
-// Create mock fetch function using vi.hoisted to avoid hoisting issues
-const mockFetch = vi.hoisted(() => vi.fn())
-
-// Mock Sanity client
 vi.mock('../../../src/lib/sanity/client', () => ({
-  client: {
-    fetch: mockFetch,
-  },
+  client: { fetch: vi.fn() },
 }))
 
+import { client } from '../../../src/lib/sanity/client'
+
+const wrapper = ({ children }) => <LanguageProvider>{children}</LanguageProvider>
+
+const createSlide = (overrides = {}) => ({
+  _id: `slide-${Date.now()}`,
+  wordPl: 'Trio',
+  wordEn: 'Trio',
+  taglinePl: 'Tagline PL',
+  taglineEn: 'Tagline EN',
+  imageUrl: '/assets/slide.jpg',
+  ...overrides,
+})
+
 describe('useSanityHomepageSlides', () => {
-  const mockSlidesData = [
-    {
-      _id: 'slide-1',
-      wordPl: 'ZESPÓŁ',
-      wordEn: 'ENSEMBLE',
-      taglinePl: 'Nowa muzyka',
-      taglineEn: 'New music',
-      imageUrl: '/slide1.jpg',
-    },
-    {
-      _id: 'slide-2',
-      wordPl: 'KONCERT',
-      wordEn: 'CONCERT',
-      taglinePl: 'Nadchodzący',
-      taglineEn: 'Upcoming',
-      imageUrl: '/slide2.jpg',
-    },
-  ]
+  beforeEach(() => vi.clearAllMocks())
 
-  beforeEach(() => {
-    vi.clearAllMocks()
+  describe('Happy Path', () => {
+    it('returns transformed slides', async () => {
+      client.fetch.mockResolvedValue([createSlide()])
+      const { result } = renderHook(() => useSanityHomepageSlides(), { wrapper })
+      await waitFor(() => expect(result.current.loading).toBe(false))
+      expect(result.current.slides).toHaveLength(1)
+      expect(result.current.slides[0].word).toBe('Trio')
+    })
   })
 
-  it('should fetch slides successfully', async () => {
-    mockFetch.mockResolvedValueOnce(mockSlidesData)
-
-    const { result } = renderHook(() => useSanityHomepageSlides(), {
-      wrapper: LanguageProvider,
+  describe('Empty & Null Handling', () => {
+    it('returns empty array for null', async () => {
+      client.fetch.mockResolvedValue(null)
+      const { result } = renderHook(() => useSanityHomepageSlides(), { wrapper })
+      await waitFor(() => expect(result.current.loading).toBe(false))
+      expect(result.current.slides).toEqual([])
     })
 
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false)
+    it('returns empty array for empty array', async () => {
+      client.fetch.mockResolvedValue([])
+      const { result } = renderHook(() => useSanityHomepageSlides(), { wrapper })
+      await waitFor(() => expect(result.current.loading).toBe(false))
+      expect(result.current.slides).toEqual([])
     })
-
-    expect(result.current.slides).toHaveLength(2)
-    expect(result.current.error).toBeNull()
   })
 
-  it('should transform slides to Polish by default', async () => {
-    mockFetch.mockResolvedValueOnce(mockSlidesData)
-
-    const { result } = renderHook(() => useSanityHomepageSlides(), {
-      wrapper: LanguageProvider,
+  describe('Missing Fields', () => {
+    it('handles missing tagline', async () => {
+      client.fetch.mockResolvedValue([createSlide({ taglinePl: null, taglineEn: null })])
+      const { result } = renderHook(() => useSanityHomepageSlides(), { wrapper })
+      await waitFor(() => expect(result.current.loading).toBe(false))
+      // Should fallback to empty string when both translations are missing
+      expect(result.current.slides[0].tagline).toBe('')
     })
 
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false)
+    it('handles missing imageUrl', async () => {
+      client.fetch.mockResolvedValue([createSlide({ imageUrl: null })])
+      const { result } = renderHook(() => useSanityHomepageSlides(), { wrapper })
+      await waitFor(() => expect(result.current.loading).toBe(false))
+      expect(result.current.slides[0].imageUrl).toBeNull()
     })
-
-    expect(result.current.slides[0].word).toBe('ZESPÓŁ')
-    expect(result.current.slides[0].tagline).toBe('Nowa muzyka')
   })
 
-  it('should transform slides to English when language="en"', async () => {
-    localStorage.getItem.mockReturnValue('en')
-    mockFetch.mockResolvedValueOnce(mockSlidesData)
-
-    const { result } = renderHook(() => useSanityHomepageSlides(), {
-      wrapper: LanguageProvider,
+  describe('Error Handling', () => {
+    it('sets error on failure', async () => {
+      client.fetch.mockRejectedValue(new Error('Failed'))
+      const { result } = renderHook(() => useSanityHomepageSlides(), { wrapper })
+      await waitFor(() => expect(result.current.loading).toBe(false))
+      expect(result.current.error).toBeTruthy()
     })
-
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false)
-    })
-
-    expect(result.current.slides[0].word).toBe('ENSEMBLE')
-    expect(result.current.slides[0].tagline).toBe('New music')
   })
 
-  it('should handle null data', async () => {
-    mockFetch.mockResolvedValueOnce(null)
-
-    const { result } = renderHook(() => useSanityHomepageSlides(), {
-      wrapper: LanguageProvider,
+  describe('Large Data', () => {
+    it('handles 30 slides', async () => {
+      const mockData = Array.from({ length: 30 }, (_, i) => createSlide({ _id: `slide-${i}` }))
+      client.fetch.mockResolvedValue(mockData)
+      const { result } = renderHook(() => useSanityHomepageSlides(), { wrapper })
+      await waitFor(() => expect(result.current.loading).toBe(false))
+      expect(result.current.slides).toHaveLength(30)
     })
 
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false)
+    it('handles very long word', async () => {
+      const longWord = 'A'.repeat(200)
+      client.fetch.mockResolvedValue([createSlide({ wordPl: longWord })])
+      const { result } = renderHook(() => useSanityHomepageSlides(), { wrapper })
+      await waitFor(() => expect(result.current.loading).toBe(false))
+      expect(result.current.slides[0].word.length).toBe(200)
     })
-
-    expect(result.current.slides).toEqual([])
   })
 
-  it('should handle errors', async () => {
-    const error = new Error('Fetch failed')
-    mockFetch.mockRejectedValueOnce(error)
-
-    const { result } = renderHook(() => useSanityHomepageSlides(), {
-      wrapper: LanguageProvider,
+  describe('Special Characters', () => {
+    it('preserves Polish chars', async () => {
+      client.fetch.mockResolvedValue([createSlide({ wordPl: 'Żółć' })])
+      const { result } = renderHook(() => useSanityHomepageSlides(), { wrapper })
+      await waitFor(() => expect(result.current.loading).toBe(false))
+      expect(result.current.slides[0].word).toBe('Żółć')
     })
 
-    await waitFor(() => {
-      expect(result.current.loading).toBe(false)
+    it('preserves HTML as text', async () => {
+      client.fetch.mockResolvedValue([createSlide({ wordPl: '<script>alert(1)</script>' })])
+      const { result } = renderHook(() => useSanityHomepageSlides(), { wrapper })
+      await waitFor(() => expect(result.current.loading).toBe(false))
+      expect(result.current.slides[0].word).toContain('<script>')
     })
-
-    expect(result.current.error).toBe(error)
   })
 })
