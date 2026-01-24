@@ -8,6 +8,7 @@ import {
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
 } from './wydarzenie-config';
+import { events as kalendarzEvents } from '../Kalendarz/kalendarz-config';
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
@@ -59,23 +60,48 @@ export default function DesktopWydarzenie() {
   };
 
   // Transform Sanity data to match config structure
-  const event = USE_SANITY && sanityEvent
-    ? {
-        ...sanityEvent,
-        date: formatDate(sanityEvent.date),
-        time: formatTime(sanityEvent.date),
-        image: sanityEvent.imageUrl,
-        artists: sanityEvent.performers || '',
-        program: sanityEvent.program || [],
-        // Transform partners from Sanity format to UI format
-        partners: sanityEvent.partners && sanityEvent.partners.length > 0
-          ? sanityEvent.partners.map(p => ({
-              name: p.name,
-              logo: p.logoUrl,
-            }))
-          : eventData.partners, // Fallback to hardcoded if no partners in CMS
-      }
-    : eventData;
+  // Or look up event from kalendarz events when not using Sanity
+  let event;
+  if (USE_SANITY && sanityEvent) {
+    event = {
+      ...sanityEvent,
+      date: formatDate(sanityEvent.date),
+      time: formatTime(sanityEvent.date),
+      image: sanityEvent.imageUrl,
+      artists: sanityEvent.performers || '',
+      program: sanityEvent.program || [],
+      // Transform partners from Sanity format to UI format
+      partners: sanityEvent.partners && sanityEvent.partners.length > 0
+        ? sanityEvent.partners.map(p => ({
+            name: p.name,
+            logo: p.logoUrl,
+          }))
+        : eventData.partners, // Fallback to hardcoded if no partners in CMS
+    };
+  } else {
+    // Look up event by ID from kalendarz events
+    const kalendarzEvent = id
+      ? kalendarzEvents.find(e => String(e.id) === String(id) || e._id === id)
+      : null;
+
+    if (kalendarzEvent) {
+      // Merge kalendarz event data with static eventData (for partners, etc.)
+      event = {
+        ...eventData,
+        title: kalendarzEvent.title || 'ENSEMBLE KOMPOPOLEX',
+        date: kalendarzEvent.date || eventData.date,
+        time: kalendarzEvent.time || '18:00 ',
+        location: kalendarzEvent.location || eventData.location,
+        image: kalendarzEvent.image || eventData.image,
+        description: kalendarzEvent.description || eventData.description,
+        artists: kalendarzEvent.performers || eventData.artists,
+        program: kalendarzEvent.program || eventData.program,
+      };
+    } else {
+      // Fallback to static event data
+      event = eventData;
+    }
+  }
 
   // Calculate dynamic height based on program length
   const hasTicketButton = event.showTicketButton && event.ticketUrl;
@@ -291,45 +317,47 @@ export default function DesktopWydarzenie() {
           </p>
         </div>
 
-        {/* Program frame */}
-        <div
-          className="flex flex-col items-start w-full"
-          style={{
-            gap: '20px',
-          }}
-        >
-          <p
+        {/* Program frame - only show if event has program */}
+        {event.program && event.program.length > 0 && (
+          <div
+            className="flex flex-col items-start w-full"
             style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 600,
-              fontSize: '24px',
-              lineHeight: 1.45,
-              color: '#131313',
-              textDecoration: 'underline',
-              textTransform: 'uppercase',
+              gap: '20px',
             }}
           >
-            {t('common.labels.program')}
-          </p>
-          <ul
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontSize: '16px',
-              lineHeight: 1.48,
-              color: '#131313',
-              width: '519px',
-              listStyleType: 'disc',
-              paddingLeft: '24px',
-            }}
-          >
-            {event.program.map((item, idx) => (
-              <li key={idx} style={{ marginBottom: idx < event.program.length - 1 ? '8px' : '0' }}>
-                <span style={{ fontWeight: 700 }}>{item.composer}</span>
-                <span style={{ fontWeight: 500 }}>- {item.piece}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+            <p
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontWeight: 600,
+                fontSize: '24px',
+                lineHeight: 1.45,
+                color: '#131313',
+                textDecoration: 'underline',
+                textTransform: 'uppercase',
+              }}
+            >
+              {t('common.labels.program')}
+            </p>
+            <ul
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontSize: '16px',
+                lineHeight: 1.48,
+                color: '#131313',
+                width: '519px',
+                listStyleType: 'disc',
+                paddingLeft: '24px',
+              }}
+            >
+              {event.program.map((item, idx) => (
+                <li key={idx} style={{ marginBottom: idx < event.program.length - 1 ? '8px' : '0' }}>
+                  <span style={{ fontWeight: 700 }}>{item.composer}</span>
+                  <span style={{ fontWeight: 500 }}>- {item.piece}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Partnerzy frame */}
         <div

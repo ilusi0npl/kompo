@@ -145,6 +145,13 @@ const venuesEn = [
   'Wrocław Opera, Świdnicka 35 St.',
 ];
 
+// Real event images available in /assets/kalendarz/
+const realKalendarzImages = [
+  '/assets/kalendarz/event1.webp',
+  '/assets/kalendarz/event2.webp',
+  '/assets/kalendarz/event3.webp',
+];
+
 export function generateEvents(count = 50, type = 'upcoming') {
   const events = [];
   const baseDate = new Date();
@@ -168,7 +175,7 @@ export function generateEvents(count = 50, type = 'upcoming') {
       performers: 'Aleksandra Gołaj, Rafał Łuc, Jacek Sotomski' + (i % 3 === 0 ? ', goście specjalni' : ''),
       description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.${i % 2 === 0 ? ' Duis aute irure dolor in reprehenderit.' : ''}`,
       location: venues[i % venues.length],
-      image: '/assets/kalendarz/wydarzenie-placeholder.jpg',
+      image: realKalendarzImages[i % realKalendarzImages.length],
       program: i % 3 === 0 ? [
         { composer: composerNames[i % composerNames.length], piece: `Utwór nr ${i + 1}` },
         { composer: composerNames[(i + 1) % composerNames.length], piece: 'Koncert na ensemble' },
@@ -189,6 +196,16 @@ const ARCHIVE_COLUMNS = [185, 515, 845]; // X positions for 3 columns
 const ARCHIVE_ROW_START = 275; // First row Y position
 const ARCHIVE_ROW_HEIGHT = 674; // Height per row (card 420px + text ~254px)
 
+// Real archived event images available in /assets/archiwalne/
+const realArchiwalneImages = [
+  '/assets/archiwalne/event1.jpg',
+  '/assets/archiwalne/event2.jpg',
+  '/assets/archiwalne/event3.jpg',
+  '/assets/archiwalne/event4.jpg',
+  '/assets/archiwalne/event5.jpg',
+  '/assets/archiwalne/event6.jpg',
+];
+
 export function generateArchivedEvents(count = 100) {
   const events = [];
 
@@ -206,7 +223,7 @@ export function generateArchivedEvents(count = 100) {
       id: i + 1,
       date: `${day.toString().padStart(2, '0')}.${month.toString().padStart(2, '0')}.${year}`,
       performers: 'Ensemble Kompopolex',
-      image: '/assets/archiwalne/archive-placeholder.jpg',
+      image: realArchiwalneImages[i % realArchiwalneImages.length],
       position: {
         left: ARCHIVE_COLUMNS[column],
         top: ARCHIVE_ROW_START + (row * ARCHIVE_ROW_HEIGHT),

@@ -94,6 +94,11 @@ const realPhotos = [
 export const photos = isLargeTestMode ? generatePhotoAlbums(30) : realPhotos;
 
 // Helper to get album by ID
+// Supports both numeric IDs (1, 2, 3) and string IDs (album-1, album-2)
 export const getAlbumById = (id) => {
-  return photos.find(photo => photo.id === parseInt(id) || photo.id === `album-${id}`);
+  return photos.find(photo =>
+    photo.id === parseInt(id) || // numeric ID match
+    photo.id === id ||           // exact string match (e.g., 'album-1')
+    photo.id === `album-${id}`   // legacy format
+  );
 };

@@ -13,6 +13,7 @@ import {
 // Pozycje linii pionowych z Figma
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
 const LINE_COLOR = '#A0E38A';
+const TEXT_COLOR = '#131313';
 
 export default function DesktopWydarzenie2() {
   const { t } = useTranslation();
