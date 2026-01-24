@@ -74,7 +74,7 @@ export default function DesktopSpecjalne() {
         className="relative flex items-center justify-center"
         style={{
           width: `${DESKTOP_WIDTH}px`,
-          height: `${DESKTOP_HEIGHT}px`,
+          minHeight: `${DESKTOP_HEIGHT}px`,
           backgroundColor: 'transparent',
         }}
       >
@@ -94,7 +94,7 @@ export default function DesktopSpecjalne() {
         className="relative flex items-center justify-center"
         style={{
           width: `${DESKTOP_WIDTH}px`,
-          height: `${DESKTOP_HEIGHT}px`,
+          minHeight: `${DESKTOP_HEIGHT}px`,
           backgroundColor: 'transparent',
         }}
       >
@@ -111,13 +111,25 @@ export default function DesktopSpecjalne() {
     columns[index % 3].push(composer);
   });
 
+  // Calculate dynamic height based on content
+  // Find the tallest column - each composer has name (may wrap) + 2 works + gap
+  const maxComposersInColumn = Math.max(...columns.map(col => col.length));
+  // Each composer: ~48px name (can wrap) + ~72px for 2 works (can wrap) + 30px gap = ~150px
+  const composerHeight = 150;
+  const contentTop = 352;
+  const composersHeight = maxComposersInColumn * composerHeight;
+  const footnoteHeight = 50 + 24; // margin + text
+  const footerSpace = 40 + 64; // bottom margin (40px) + footer height
+  const contentHeight = contentTop + composersHeight + footnoteHeight + footerSpace;
+  const pageHeight = Math.max(DESKTOP_HEIGHT, contentHeight);
+
   return (
     <section
       data-section="specialne"
       className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
-        height: `${DESKTOP_HEIGHT}px`,
+        minHeight: `${pageHeight}px`,
         backgroundColor: 'transparent',
         zIndex: 60,
       }}
@@ -189,18 +201,17 @@ export default function DesktopSpecjalne() {
         >
           {t('repertuar.footnote')}
         </p>
-      </div>
 
-      {/* Footer */}
-      <Footer
-        style={{
-          position: 'absolute',
-          left: '185px',
-          bottom: '40px',
-          width: '520px',
-        }}
-        textColor="#131313"
-      />
+        {/* Footer - flows after footnote */}
+        <Footer
+          style={{
+            marginTop: '80px',
+            marginBottom: '40px',
+            width: '520px',
+          }}
+          textColor="#131313"
+        />
+      </div>
     </section>
   );
 }

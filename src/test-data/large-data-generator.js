@@ -51,7 +51,7 @@ export function generateComposers(count = 100) {
       const workType = workTypes[(i + j) % workTypes.length];
       const workNumber = (j % 3) + 1;
       works.push({
-        name: `${workType} ${workNumber}`,
+        title: `${workType} ${workNumber}`,
         isSpecial: j === 0 && i % 5 === 0, // Every 5th composer has a special work
       });
     }
@@ -82,11 +82,11 @@ export function generateSpecialProjects(count = 50) {
       year,
       works: [
         {
-          name: `Utwór zamówiony nr ${i + 1} na ensemble i elektronikę`,
+          title: `Utwór zamówiony nr ${i + 1} na ensemble i elektronikę`,
           isSpecial: true,
         },
         {
-          name: `Prawykonanie światowe - Festiwal ${2015 + (i % 10)}`,
+          title: `Prawykonanie światowe - Festiwal ${2015 + (i % 10)}`,
           isSpecial: true,
         },
       ],

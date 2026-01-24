@@ -11,6 +11,24 @@ import {
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
+// Calculate dynamic page height based on program items
+function calculatePageHeight(programLength, hasTicketButton) {
+  const BASE_HEIGHT = DESKTOP_HEIGHT; // 1941
+  const CONTENT_START = hasTicketButton ? 1087 : 990;
+  const DESCRIPTION_HEIGHT = 150; // Approximate
+  const ARTISTS_HEIGHT = 100;
+  const PROGRAM_HEADER_HEIGHT = 50;
+  const PROGRAM_ITEM_HEIGHT = 32; // Per item
+  const PARTNERS_HEIGHT = 150;
+  const FOOTER_HEIGHT = 64;
+  const FOOTER_MARGIN = 80;
+
+  const programHeight = PROGRAM_HEADER_HEIGHT + (programLength * PROGRAM_ITEM_HEIGHT);
+  const contentHeight = CONTENT_START + DESCRIPTION_HEIGHT + ARTISTS_HEIGHT + programHeight + PARTNERS_HEIGHT + FOOTER_HEIGHT + FOOTER_MARGIN;
+
+  return Math.max(BASE_HEIGHT, contentHeight);
+}
+
 export default function DesktopWydarzenie() {
   const { t } = useTranslation();
   const { id } = useParams();
@@ -59,13 +77,17 @@ export default function DesktopWydarzenie() {
       }
     : eventData;
 
+  // Calculate dynamic height based on program length
+  const hasTicketButton = event.showTicketButton && event.ticketUrl;
+  const pageHeight = calculatePageHeight(event.program?.length || 0, hasTicketButton);
+
   return (
     <section
       data-section="wydarzenie"
       className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
-        height: `${DESKTOP_HEIGHT}px`,
+        minHeight: `${pageHeight}px`,
         backgroundColor: 'transparent',
         zIndex: 60,
       }}
@@ -431,17 +453,16 @@ export default function DesktopWydarzenie() {
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Stopka - at y=1877 (DESKTOP_HEIGHT - 40 - 24 = 1877) */}
-      <Footer
-        className="absolute"
-        style={{
-          left: '185px',
-          top: '1877px',
-          width: '520px',
-        }}
-      />
+        {/* Stopka - flows after partners */}
+        <Footer
+          style={{
+            marginTop: '30px',
+            marginBottom: '40px',
+            width: '520px',
+          }}
+        />
+      </div>
     </section>
   );
 }

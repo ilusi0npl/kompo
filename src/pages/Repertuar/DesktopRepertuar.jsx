@@ -75,7 +75,7 @@ export default function DesktopRepertuar() {
         className="relative flex items-center justify-center"
         style={{
           width: `${DESKTOP_WIDTH}px`,
-          height: `${DESKTOP_HEIGHT}px`,
+          minHeight: `${DESKTOP_HEIGHT}px`,
           backgroundColor: 'transparent',
         }}
       >
@@ -95,7 +95,7 @@ export default function DesktopRepertuar() {
         className="relative flex items-center justify-center"
         style={{
           width: `${DESKTOP_WIDTH}px`,
-          height: `${DESKTOP_HEIGHT}px`,
+          minHeight: `${DESKTOP_HEIGHT}px`,
           backgroundColor: 'transparent',
         }}
       >
@@ -112,13 +112,24 @@ export default function DesktopRepertuar() {
     rows.push(composers.slice(i, i + 3));
   }
 
+  // Calculate dynamic height based on content
+  // Each row: ~48px name (can wrap) + ~72px for works (avg 3, can wrap) + 30px gap = ~150px per row
+  const rowHeight = 150;
+  const numRows = Math.ceil(composers.length / 3);
+  const contentTop = 285;
+  const rowsHeight = numRows * rowHeight;
+  const footnoteHeight = 50 + 24; // margin + text
+  const footerSpace = 40 + 64; // bottom margin (40px) + footer height
+  const contentHeight = contentTop + rowsHeight + footnoteHeight + footerSpace;
+  const pageHeight = Math.max(DESKTOP_HEIGHT, contentHeight);
+
   return (
     <section
       data-section="repertuar"
       className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
-        height: `${DESKTOP_HEIGHT}px`,
+        minHeight: `${pageHeight}px`,
         backgroundColor: 'transparent',
         zIndex: 60,
       }}
@@ -170,18 +181,17 @@ export default function DesktopRepertuar() {
         >
           {t('repertuar.footnote')}
         </p>
-      </div>
 
-      {/* Footer */}
-      <Footer
-        style={{
-          position: 'absolute',
-          left: '185px',
-          bottom: '40px',
-          width: '520px',
-        }}
-        textColor="#131313"
-      />
+        {/* Footer - flows after footnote */}
+        <Footer
+          style={{
+            marginTop: '80px',
+            marginBottom: '40px',
+            width: '520px',
+          }}
+          textColor="#131313"
+        />
+      </div>
     </section>
   );
 }

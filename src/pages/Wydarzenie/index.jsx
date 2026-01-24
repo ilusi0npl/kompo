@@ -3,7 +3,6 @@ import ResponsiveWrapper from '../../components/ResponsiveWrapper/ResponsiveWrap
 import DesktopWydarzenie from './DesktopWydarzenie';
 import MobileWydarzenie from './MobileWydarzenie';
 import WydarzenieFixedLayer from './WydarzenieFixedLayer';
-import { DESKTOP_HEIGHT } from './wydarzenie-config';
 
 const DESKTOP_WIDTH = 1440;
 const BREAKPOINT = 768;
@@ -43,12 +42,12 @@ export default function Wydarzenie() {
       )}
 
       {/* Fixed layer - lines and UI */}
-      {!isMobile && <WydarzenieFixedLayer scale={scale} pageHeight={DESKTOP_HEIGHT} />}
+      {!isMobile && <WydarzenieFixedLayer scale={scale} />}
 
       <ResponsiveWrapper
         desktopContent={<DesktopWydarzenie />}
         mobileContent={<MobileWydarzenie />}
-        desktopHeight={DESKTOP_HEIGHT}
+        desktopHeight="auto"
         mobileHeight="auto"
         backgroundColor="#FDFDFD"
         lineColor="#A0E38A"
