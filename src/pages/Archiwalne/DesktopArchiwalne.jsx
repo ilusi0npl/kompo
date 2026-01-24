@@ -5,11 +5,18 @@ import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import {
   archivedEvents as configEvents,
   DESKTOP_WIDTH,
-  DESKTOP_HEIGHT,
 } from './archiwalne-config';
 import { useSanityEvents } from '../../hooks/useSanityEvents';
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
+
+// Grid layout constants
+const CARD_HEIGHT = 420; // Image height
+const TEXT_HEIGHT = 150; // Text content height
+const ROW_GAP = 104; // Gap between rows
+const ROW_HEIGHT = CARD_HEIGHT + TEXT_HEIGHT + ROW_GAP; // ~674px
+const FOOTER_HEIGHT = 64;
+const FOOTER_MARGIN = 40;
 
 // Grid layout positions (3 columns x 1 row for CMS data)
 const GRID_LAYOUT = [
@@ -17,6 +24,16 @@ const GRID_LAYOUT = [
   { left: 515, top: 275, hasBorder: false },  // Column 2
   { left: 845, top: 275, hasBorder: false },  // Column 3
 ];
+
+// Calculate dynamic page height based on number of events
+function calculatePageHeight(eventCount) {
+  const BASE_HEIGHT = 1792; // Minimum height for 6 events (2 rows)
+  if (eventCount <= 6) return BASE_HEIGHT;
+
+  const rows = Math.ceil(eventCount / 3);
+  const contentHeight = 275 + (rows * ROW_HEIGHT); // Start position + rows
+  return contentHeight + FOOTER_HEIGHT + FOOTER_MARGIN;
+}
 
 // Transform Sanity archived events to match config structure with grid layout
 function transformSanityEvents(sanityEvents) {
@@ -46,6 +63,9 @@ export default function DesktopArchiwalne() {
     ? transformSanityEvents(sanityEvents)
     : configEvents;
 
+  // Calculate dynamic height based on event count
+  const pageHeight = calculatePageHeight(archivedEvents.length);
+
   // Show loading state only when using Sanity
   if (USE_SANITY && loading) {
     return (
@@ -54,7 +74,7 @@ export default function DesktopArchiwalne() {
         className="relative"
         style={{
           width: `${DESKTOP_WIDTH}px`,
-          height: `${DESKTOP_HEIGHT}px`,
+          minHeight: `${pageHeight}px`,
           backgroundColor: 'transparent',
           display: 'flex',
           alignItems: 'center',
@@ -82,7 +102,7 @@ export default function DesktopArchiwalne() {
         className="relative"
         style={{
           width: `${DESKTOP_WIDTH}px`,
-          height: `${DESKTOP_HEIGHT}px`,
+          minHeight: `${pageHeight}px`,
           backgroundColor: 'transparent',
           display: 'flex',
           alignItems: 'center',
@@ -108,7 +128,7 @@ export default function DesktopArchiwalne() {
       className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
-        height: `${DESKTOP_HEIGHT}px`,
+        minHeight: `${pageHeight}px`,
         backgroundColor: 'transparent',
         zIndex: 60,
       }}
@@ -206,7 +226,7 @@ export default function DesktopArchiwalne() {
         className="absolute"
         style={{
           left: '185px',
-          top: '1728px',
+          top: `${pageHeight - FOOTER_HEIGHT - FOOTER_MARGIN}px`,
           width: '520px',
         }}
       />

@@ -28,6 +28,58 @@ Save all figma links which i give you - for later us. Create a data base of it i
 
 ---
 
+## Large Test Data Mode
+
+For stress testing pages with large amounts of content, use the `VITE_LARGE_TEST_DATA` flag.
+
+### Usage
+
+```bash
+# Start dev server with large test data
+VITE_LARGE_TEST_DATA=true npm run dev
+
+# Run tests with large test data
+VITE_LARGE_TEST_DATA=true npx playwright test
+```
+
+### What it does
+
+When enabled, pages load generated test data instead of real content:
+
+| Page | Normal | Large Test Data |
+|------|--------|-----------------|
+| Bio | 4 profiles | 10 profiles with long paragraphs |
+| BioEnsemble | 3 paragraphs | 10 extended paragraphs |
+| Homepage | 4 slides | 8 slides |
+| Archiwalne | 6 events | 100 events in grid |
+| Kalendarz | ~5 events | 50 events |
+| Repertuar | ~20 composers | 100 composers |
+| Specjalne | ~10 projects | 50 projects |
+| Media | ~5 albums | 30 albums |
+| MediaWideo | ~10 videos | 50 videos |
+| Fundacja | ~5 projects | 20 projects |
+
+### Generator file
+
+`src/test-data/large-data-generator.js` contains all generators:
+
+```javascript
+import { isLargeTestMode, generateComposers } from '../../test-data/large-data-generator';
+
+// In config file:
+export const composers = isLargeTestMode ? generateComposers(100) : realComposers;
+```
+
+### Content overlap tests
+
+Tests in `tests/e2e/content-overlap/` verify that large content doesn't cause layout issues:
+- Text overlapping
+- Content overflowing containers
+- Footer visibility
+- Dynamic height calculation
+
+---
+
 ## Verification Tools
 
 Two tools for visual verification:

@@ -161,14 +161,22 @@ export function generateEvents(count = 50, type = 'upcoming') {
 // ARCHIWALNE - Archived events
 // ============================================================================
 
+// Grid layout constants (matching DesktopArchiwalne)
+const ARCHIVE_COLUMNS = [185, 515, 845]; // X positions for 3 columns
+const ARCHIVE_ROW_START = 275; // First row Y position
+const ARCHIVE_ROW_HEIGHT = 674; // Height per row (card 420px + text ~254px)
+
 export function generateArchivedEvents(count = 100) {
   const events = [];
-  const positions = ['left', 'center', 'right'];
 
   for (let i = 0; i < count; i++) {
     const year = 2020 + Math.floor(i / 20);
     const month = (i % 12) + 1;
     const day = (i % 28) + 1;
+
+    // Calculate grid position
+    const column = i % 3;
+    const row = Math.floor(i / 3);
 
     events.push({
       id: `archive-${i + 1}`,
@@ -176,7 +184,10 @@ export function generateArchivedEvents(count = 100) {
       title: `${eventTitles[i % eventTitles.length]} - Archiwum`,
       performers: 'Ensemble Kompopolex',
       image: '/assets/archiwalne/archive-placeholder.jpg',
-      position: positions[i % 3],
+      position: {
+        left: ARCHIVE_COLUMNS[column],
+        top: ARCHIVE_ROW_START + (row * ARCHIVE_ROW_HEIGHT),
+      },
       hasBorder: i % 4 === 0,
     });
   }
