@@ -98,7 +98,7 @@ export default function ResponsiveWrapper({
         width: '100%',
         minHeight: `${Math.max(scaledHeight, viewportHeight)}px`,
         height: isAuto ? 'auto' : `${Math.max(scaledHeight, viewportHeight)}px`,
-        background: hideLines ? bgColor : `${lineGradients}, ${bgColor}`,
+        background: hideLines ? 'transparent' : `${lineGradients}, ${bgColor}`,
         transition: 'background-color 1s cubic-bezier(0.4, 0, 0.2, 1)',
         position: 'relative',
         overflow: isAuto ? 'visible' : 'hidden',

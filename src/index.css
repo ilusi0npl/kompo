@@ -341,15 +341,73 @@ body {
   pointer-events: none;
 }
 
-/* High Contrast Mode */
-body.high-contrast {
+/* High Contrast Mode - applied to #root and #lines-root, not body, to preserve fixed positioning */
+body.high-contrast #root {
   filter: contrast(1.5) grayscale(1);
 }
 
-/* Contrast toggle icon - needs to stay yellow, reverse the grayscale */
-body.high-contrast .contrast-toggle-btn {
-  /* Create new stacking context to apply own filter */
+/* Apply filter to all elements inside #lines-root */
+body.high-contrast #lines-root,
+body.high-contrast #lines-root *,
+body.high-contrast #lines-root > div,
+body.high-contrast #lines-root > div > div {
+  filter: contrast(1.5) grayscale(1) !important;
+}
+
+/* Apply filter to all elements inside #fixed-root (fixed header, etc.) */
+/* The container itself stays unfiltered to preserve position: fixed */
+body.high-contrast #fixed-root > *,
+body.high-contrast #fixed-root > * * {
+  filter: contrast(1.5) grayscale(1);
+}
+
+/* Force white backgrounds in high contrast mode for full-page backgrounds */
+/* This prevents colored backgrounds from becoming medium gray */
+body.high-contrast #lines-root > div[style*="background-color"],
+body.high-contrast #fixed-root > div[style*="background-color"] {
+  background-color: #FDFDFD !important;
+}
+
+/* Lines root for full-page decorative elements (below content) */
+#lines-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  z-index: 1;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Root needs z-index to stack above #lines-root */
+#root {
   position: relative;
-  isolation: isolate;
-  filter: grayscale(0) contrast(2);
+  z-index: 2;
+}
+
+/* Fixed root stays unfiltered so position: fixed works correctly */
+/* Container is click-through; individual fixed elements manage their own pointer-events */
+#fixed-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  z-index: 9999;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Contrast toggle container - exclude from grayscale filter so icon stays visible */
+/* The container and all its children need filter: none to prevent parent filter inheritance */
+body.high-contrast #fixed-root .controls-container,
+body.high-contrast #fixed-root .controls-container * {
+  filter: none !important;
+}
+
+/* Contrast toggle icon - needs to stay yellow with enhanced contrast */
+body.high-contrast .contrast-toggle-btn,
+body.high-contrast .contrast-toggle-btn * {
+  filter: contrast(1.5) !important;
 }

@@ -18,6 +18,60 @@ Save all figma links which i give you - for later us. Create a data base of it i
 
 ---
 
+## Bug Fixing Workflow - Test First
+
+**CRITICAL: For every bug or problem encountered, ALWAYS create a test FIRST that detects the issue, THEN fix it.**
+
+### Why Test First?
+
+1. **Proves the bug exists** - Test fails, confirming the problem
+2. **Prevents regressions** - Test ensures bug never returns
+3. **Documents the issue** - Test serves as documentation
+4. **Verifies the fix** - Test passes after fix is applied
+
+### Workflow
+
+```
+1. Bug reported/discovered
+   ↓
+2. Create E2E test that reproduces the bug
+   ↓
+3. Run test → should FAIL (proves bug exists)
+   ↓
+4. Fix the bug
+   ↓
+5. Run test → should PASS (proves fix works)
+   ↓
+6. Run all tests → should PASS (no regressions)
+```
+
+### Example
+
+**Problem:** High contrast mode not affecting header on Media page
+
+```javascript
+// tests/e2e/content-overlap/media-contrast-issue.spec.js
+test('Media: fixed header should have contrast filter applied', async ({ page }) => {
+  await page.goto('/media');
+  await page.click('.contrast-toggle-btn');
+
+  const fixedRootChild = await page.$('#fixed-root > *');
+  const filter = await fixedRootChild.evaluate(el =>
+    getComputedStyle(el).filter
+  );
+
+  // This test FAILS before fix, PASSES after
+  expect(filter).toContain('contrast');
+});
+```
+
+### Test Location
+
+- Bug-specific tests: `tests/e2e/content-overlap/` or `tests/e2e/pages/`
+- Name pattern: `[feature]-[issue].spec.js`
+
+---
+
 ## Tech Stack
 
 - **React 18+** - UI framework
@@ -124,6 +178,63 @@ Tests in `tests/e2e/content-overlap/` verify that large content doesn't cause la
 #### Large Test Mode Purpose
 
 Large test data mode is for **stress testing layout/performance**, not for testing i18n functionality. Keep generator output simple - direct fields without i18n complexity. Translation testing should use normal mode with proper translation files.
+
+#### High Contrast Mode and Fixed Positioning
+
+**Problem:** In high contrast mode, fixed elements (menu, decorative lines, logo) stayed at top of page instead of scrolling properly. This happened because CSS `filter` property creates a new containing block, breaking `position: fixed` behavior.
+
+**Root cause:** Original CSS:
+```css
+body.high-contrast {
+  filter: contrast(1.5) grayscale(1);
+}
+```
+When `filter` is applied to a parent element, `position: fixed` children become relative to that parent instead of viewport.
+
+**Solution:** Use React Portals to render fixed elements outside the filtered content:
+
+1. **Separate content from fixed elements:**
+   - Apply filter only to `#root` (main content): `body.high-contrast #root { filter: ... }`
+   - Add separate portal container `#fixed-root` in index.html
+   - Fixed elements render to `#fixed-root` via portal, staying unfiltered
+
+2. **FixedPortal component** (`src/components/FixedPortal/FixedPortal.jsx`):
+   ```jsx
+   import { createPortal } from 'react-dom';
+
+   export default function FixedPortal({ children }) {
+     const fixedRoot = document.getElementById('fixed-root');
+     if (!fixedRoot) return children;
+     return createPortal(children, fixedRoot);
+   }
+   ```
+
+3. **CSS for portal container:**
+   ```css
+   #fixed-root {
+     position: fixed;
+     top: 0;
+     left: 0;
+     width: 0;
+     height: 0;
+     z-index: 9999;
+     pointer-events: none;
+     overflow: visible;
+   }
+   ```
+   Note: `width: 0; height: 0; overflow: visible` makes container invisible but allows children to position correctly.
+
+4. **All FixedLayer components** must wrap content with `<FixedPortal>`:
+   - `ArchiwalneFixedLayer.jsx`
+   - `BioFixedLayer.jsx`
+   - `FundacjaFixedLayer.jsx`
+   - `KalendarzFixedLayer.jsx`
+   - `KontaktFixedLayer.jsx`
+   - `MediaFixedLayer.jsx`
+   - `MediaWideoFixedLayer.jsx`
+   - `RepertuarFixedLayer.jsx`
+   - `SpecjalneFixedLayer.jsx`
+   - `WydarzenieFixedLayer.jsx`
 
 ---
 

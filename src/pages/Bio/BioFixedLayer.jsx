@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router';
 import { useTranslation } from '../../hooks/useTranslation';
 import LanguageText from '../../components/LanguageText/LanguageText';
 import ContrastToggle from '../../components/ContrastToggle/ContrastToggle';
+import FixedPortal from '../../components/FixedPortal/FixedPortal';
+import LinesPortal from '../../components/LinesPortal/LinesPortal';
 
 const TRANSITION_DURATION = '1s';
 const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
@@ -12,53 +13,31 @@ const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
 
 export default function BioFixedLayer({ currentColors, scale = 1, height = 700 }) {
   const { t } = useTranslation();
-  const [documentHeight, setDocumentHeight] = useState(0);
-
-  useEffect(() => {
-    const updateHeight = () => {
-      setDocumentHeight(Math.max(document.documentElement.scrollHeight, window.innerHeight));
-    };
-    updateHeight();
-    window.addEventListener('resize', updateHeight);
-    // Update on content changes
-    const observer = new MutationObserver(updateHeight);
-    observer.observe(document.body, { childList: true, subtree: true });
-    return () => {
-      window.removeEventListener('resize', updateHeight);
-      observer.disconnect();
-    };
-  }, []);
 
   return (
     <>
-      {/* Pionowe linie dekoracyjne - fixed */}
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: `${documentHeight}px`,
-          pointerEvents: 'none',
-          zIndex: 50,
-        }}
-      >
+      {/* Full-page decorative lines - BELOW content */}
+      <LinesPortal>
         {LINE_POSITIONS.map((x) => (
           <div
             key={x}
-            className="absolute top-0"
             style={{
+              position: 'fixed',
+              top: 0,
               left: `${x * scale}px`,
-              width: `${1 * scale}px`,
-              height: '100%',
+              width: '1px',
+              height: '100vh',
               backgroundColor: currentColors.lineColor,
               transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+              pointerEvents: 'none',
+              zIndex: 50,
             }}
           />
         ))}
-      </div>
+      </LinesPortal>
 
-      {/* FIXED LAYER - Logo, Menu, Bio text */}
+      {/* FIXED LAYER - Logo, Menu, Bio text - ABOVE content */}
+      <FixedPortal>
       <div
         style={{
           position: 'fixed',
@@ -116,6 +95,7 @@ export default function BioFixedLayer({ currentColors, scale = 1, height = 700 }
 
         {/* Language & Contrast Controls - top right */}
         <div
+          className="controls-container"
           style={{
             position: 'absolute',
             left: `${1265 * scale}px`,
@@ -193,6 +173,7 @@ export default function BioFixedLayer({ currentColors, scale = 1, height = 700 }
             )}
         </nav>
       </div>
+      </FixedPortal>
     </>
   );
 }

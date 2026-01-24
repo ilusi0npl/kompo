@@ -227,20 +227,31 @@ const photographers = [
   'Tomasz Zieliński', 'Katarzyna Szymańska', 'Michał Wójcik', 'Ewa Kaźmierczak'
 ];
 
+// Real photo assets available in /assets/media/
+const realPhotos = [
+  '/assets/media/photo1.jpg',
+  '/assets/media/photo2.jpg',
+  '/assets/media/photo3.jpg',
+  '/assets/media/photo4.jpg',
+  '/assets/media/photo5.jpg',
+  '/assets/media/photo6.jpg',
+];
+
 export function generatePhotoAlbums(count = 30) {
   const albums = [];
 
   for (let i = 0; i < count; i++) {
-    const photosCount = 10 + (i % 15); // 10-24 photos per album
+    const photosCount = 6; // Use all 6 real photos per album
     const images = [];
 
     for (let j = 0; j < photosCount; j++) {
-      images.push(`/assets/media/album-${i + 1}/photo-${j + 1}.jpg`);
+      // Cycle through real photos
+      images.push(realPhotos[j % realPhotos.length]);
     }
 
     albums.push({
       id: `album-${i + 1}`,
-      thumbnail: '/assets/media/album-placeholder.jpg',
+      image: realPhotos[i % realPhotos.length], // Use real photos as thumbnails (matches config structure)
       title: `Galeria z koncertu #${i + 1}: ${eventTitlesPl[i % eventTitlesPl.length]}`,
       photographer: photographers[i % photographers.length],
       images,
@@ -254,13 +265,21 @@ export function generatePhotoAlbums(count = 30) {
 // MEDIA WIDEO - Videos
 // ============================================================================
 
+// Real video thumbnails available in /assets/media-wideo/
+const realVideoThumbnails = [
+  '/assets/media-wideo/video1.jpg',
+  '/assets/media-wideo/video2.jpg',
+  '/assets/media-wideo/video3.jpg',
+  '/assets/media-wideo/video4.jpg',
+];
+
 export function generateVideos(count = 50) {
   const videos = [];
 
   for (let i = 0; i < count; i++) {
     videos.push({
       id: `video-${i + 1}`,
-      thumbnail: '/assets/media-wideo/video-placeholder.jpg',
+      thumbnail: realVideoThumbnails[i % realVideoThumbnails.length], // Cycle through real thumbnails
       title: `Nagranie z koncertu #${i + 1}: ${eventTitlesPl[i % eventTitlesPl.length]}`,
       youtubeUrl: `https://www.youtube.com/watch?v=dQw4w9WgXcQ`, // Placeholder
       year: 2020 + (i % 5),
@@ -393,16 +412,15 @@ export function generateEventDetail(programItemsCount = 30) {
     date: '15.06.25',
     time: '19:00',
     location: 'Filharmonia Wrocławska, ul. Piłsudskiego 19, Wrocław',
-    image: '/assets/wydarzenie/event-placeholder.jpg',
+    image: '/assets/wydarzenie/poster.jpg',
     description: `${bioParagraph} ${bioParagraph}`,
     artists: 'Aleksandra Gołaj, Rafał Łuc, Jacek Sotomski oraz 15 muzyków gościnnych z całej Europy',
     program,
     partners: [
-      { name: 'Partner 1', logo: '/assets/partners/partner-placeholder.png' },
-      { name: 'Partner 2', logo: '/assets/partners/partner-placeholder.png' },
-      { name: 'Partner 3', logo: '/assets/partners/partner-placeholder.png' },
-      { name: 'Partner 4', logo: '/assets/partners/partner-placeholder.png' },
-      { name: 'Partner 5', logo: '/assets/partners/partner-placeholder.png' },
+      { name: 'Wrocław', logo: '/assets/wydarzenie/partner-wroclaw.png', width: 323, height: 42 },
+      { name: 'ZAIKS', logo: '/assets/wydarzenie/partner-zaiks.png', width: 93, height: 42 },
+      { name: 'Recepcja', logo: '/assets/wydarzenie/partner-recepcja.png', width: 122, height: 42 },
+      { name: 'Polmic', logo: '/assets/wydarzenie/partner-polmic.png', width: 129, height: 42 },
     ],
   };
 }

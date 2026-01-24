@@ -4,6 +4,7 @@ import DesktopBio from './DesktopBio';
 import MobileBio from './MobileBio';
 import { DESKTOP_HEIGHT, desktopBioSlides, mobileBioSlides, mobileLinePositions, MOBILE_WIDTH } from './bio-config';
 import BioFixedLayer from './BioFixedLayer';
+import LinesPortal from '../../components/LinesPortal/LinesPortal';
 
 const DESKTOP_WIDTH = 1440;
 const BREAKPOINT = 768;
@@ -38,54 +39,57 @@ export default function Bio() {
 
   return (
     <>
-      {/* Fixed background - behind lines */}
-      {!isMobile && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100vh',
-            backgroundColor: currentColors.backgroundColor,
-            transition: 'background-color 1s cubic-bezier(0.4, 0, 0.2, 1)',
-            zIndex: 0,
-          }}
-        />
-      )}
+      {/* Fixed backgrounds and lines - in LinesPortal for high-contrast support */}
+      <LinesPortal>
+        {/* Desktop fixed background - behind lines */}
+        {!isMobile && (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100vh',
+              backgroundColor: currentColors.backgroundColor,
+              transition: 'background-color 1s cubic-bezier(0.4, 0, 0.2, 1)',
+              zIndex: 0,
+            }}
+          />
+        )}
 
-      {/* Mobile fixed background with transition */}
-      {isMobile && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100vh',
-            backgroundColor: mobileColors.backgroundColor,
-            transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-            zIndex: 0,
-          }}
-        />
-      )}
+        {/* Mobile fixed background with transition */}
+        {isMobile && (
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100vh',
+              backgroundColor: mobileColors.backgroundColor,
+              transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+              zIndex: 0,
+            }}
+          />
+        )}
 
-      {/* Mobile fixed vertical lines */}
-      {isMobile && mobileLinePositions.map((left, index) => (
-        <div
-          key={`mobile-line-${index}`}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: `${left * mobileScale}px`,
-            width: '1px',
-            height: '100vh',
-            backgroundColor: mobileColors.lineColor,
-            transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-            zIndex: 1,
-          }}
-        />
-      ))}
+        {/* Mobile fixed vertical lines */}
+        {isMobile && mobileLinePositions.map((left, index) => (
+          <div
+            key={`mobile-line-${index}`}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: `${left * mobileScale}px`,
+              width: '1px',
+              height: '100vh',
+              backgroundColor: mobileColors.lineColor,
+              transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+              zIndex: 1,
+            }}
+          />
+        ))}
+      </LinesPortal>
 
       {/* Fixed layer - lines and UI - outside ResponsiveWrapper so position:fixed works */}
       {!isMobile && <BioFixedLayer currentColors={currentColors} scale={desktopScale} />}

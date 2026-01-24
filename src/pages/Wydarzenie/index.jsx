@@ -3,6 +3,7 @@ import ResponsiveWrapper from '../../components/ResponsiveWrapper/ResponsiveWrap
 import DesktopWydarzenie from './DesktopWydarzenie';
 import MobileWydarzenie from './MobileWydarzenie';
 import WydarzenieFixedLayer from './WydarzenieFixedLayer';
+import LinesPortal from '../../components/LinesPortal/LinesPortal';
 
 const DESKTOP_WIDTH = 1440;
 const BREAKPOINT = 768;
@@ -26,19 +27,21 @@ export default function Wydarzenie() {
 
   return (
     <>
-      {/* Fixed background */}
+      {/* Fixed background - in LinesPortal for high-contrast support */}
       {!isMobile && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100vh',
-            backgroundColor: BACKGROUND_COLOR,
-            zIndex: 0,
-          }}
-        />
+        <LinesPortal>
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100vh',
+              backgroundColor: BACKGROUND_COLOR,
+              zIndex: 0,
+            }}
+          />
+        </LinesPortal>
       )}
 
       {/* Fixed layer - lines and UI */}

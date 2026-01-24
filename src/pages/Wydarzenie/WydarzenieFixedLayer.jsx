@@ -2,6 +2,8 @@ import { Link } from 'react-router';
 import { useTranslation } from '../../hooks/useTranslation';
 import LanguageText from '../../components/LanguageText/LanguageText';
 import ContrastToggle from '../../components/ContrastToggle/ContrastToggle';
+import FixedPortal from '../../components/FixedPortal/FixedPortal';
+import LinesPortal from '../../components/LinesPortal/LinesPortal';
 
 // Pozycje linii pionowych z Figma
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
@@ -14,34 +16,37 @@ export default function WydarzenieFixedLayer({ scale = 1, pageHeight = 1941 }) {
 
   return (
     <>
-      {/* Pionowe linie dekoracyjne - full page height */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: `${pageHeight * scale}px`,
-          pointerEvents: 'none',
-          zIndex: 50,
-        }}
-      >
-        {LINE_POSITIONS.map((x) => (
-          <div
-            key={x}
-            style={{
-              position: 'absolute',
-              left: `${x * scale}px`,
-              top: 0,
-              width: `${1 * scale}px`,
-              height: '100%',
-              backgroundColor: LINE_COLOR,
-            }}
-          />
-        ))}
-      </div>
+      {/* Full-page decorative lines - BELOW content */}
+      <LinesPortal>
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: `${pageHeight * scale}px`,
+            pointerEvents: 'none',
+            zIndex: 50,
+          }}
+        >
+          {LINE_POSITIONS.map((x) => (
+            <div
+              key={x}
+              style={{
+                position: 'absolute',
+                left: `${x * scale}px`,
+                top: 0,
+                width: '1px',
+                height: '100%',
+                backgroundColor: LINE_COLOR,
+              }}
+            />
+          ))}
+        </div>
+      </LinesPortal>
 
-      {/* FIXED LAYER - Logo, Side Title, Menu */}
+      {/* FIXED LAYER - Logo, Side Title, Menu - ABOVE content */}
+      <FixedPortal>
       <div
         style={{
           position: 'fixed',
@@ -106,6 +111,7 @@ export default function WydarzenieFixedLayer({ scale = 1, pageHeight = 1941 }) {
 
         {/* Language & Contrast Controls - top right */}
         <div
+          className="controls-container"
           style={{
             position: 'absolute',
             left: `${1265 * scale}px`,
@@ -159,6 +165,7 @@ export default function WydarzenieFixedLayer({ scale = 1, pageHeight = 1941 }) {
           ))}
         </nav>
       </div>
+      </FixedPortal>
     </>
   );
 }

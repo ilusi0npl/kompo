@@ -3,6 +3,8 @@ import { Link } from 'react-router';
 import { useTranslation } from '../../hooks/useTranslation';
 import LanguageText from '../../components/LanguageText/LanguageText';
 import ContrastToggle from '../../components/ContrastToggle/ContrastToggle';
+import FixedPortal from '../../components/FixedPortal/FixedPortal';
+import LinesPortal from '../../components/LinesPortal/LinesPortal';
 
 const DESKTOP_WIDTH = 1440;
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
@@ -33,47 +35,51 @@ export default function ArchiwalneFixedLayer({ scale = 1, viewportHeight = 700 }
 
   return (
     <>
-      {/* Fixed background */}
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: `${documentHeight}px`,
-          backgroundColor: BACKGROUND_COLOR,
-          zIndex: 0,
-        }}
-      />
+      {/* Full-page decorative elements - BELOW content */}
+      <LinesPortal>
+        {/* Full-page background */}
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100vh',
+            backgroundColor: BACKGROUND_COLOR,
+            zIndex: 0,
+          }}
+        />
 
-      {/* Pionowe linie dekoracyjne - scrollable full height */}
-      <div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          width: '100%',
-          height: `${documentHeight}px`,
-          pointerEvents: 'none',
-          zIndex: 50,
-        }}
-      >
-        {LINE_POSITIONS.map((x) => (
-          <div
-            key={x}
-            style={{
-              position: 'absolute',
-              left: `${x * scale}px`,
-              top: 0,
-              width: `${1 * scale}px`,
-              height: '100%',
-              backgroundColor: LINE_COLOR,
-            }}
-          />
-        ))}
-      </div>
+        {/* Full-page vertical lines */}
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100vh',
+            pointerEvents: 'none',
+            zIndex: 50,
+          }}
+        >
+          {LINE_POSITIONS.map((x) => (
+            <div
+              key={x}
+              style={{
+                position: 'absolute',
+                left: `${x * scale}px`,
+                top: 0,
+                width: '1px',
+                height: '100%',
+                backgroundColor: LINE_COLOR,
+              }}
+            />
+          ))}
+        </div>
+      </LinesPortal>
 
-      {/* FIXED LAYER - Logo, Side Title, Tabs, Menu */}
+      {/* FIXED LAYER - Logo, Side Title, Tabs, Menu - ABOVE content */}
+      <FixedPortal>
       <div
         style={{
           position: 'fixed',
@@ -94,7 +100,7 @@ export default function ArchiwalneFixedLayer({ scale = 1, viewportHeight = 700 }
               position: 'absolute',
               left: `${x * scale}px`,
               top: 0,
-              width: `${1 * scale}px`,
+              width: '1px',
               height: '100%',
               backgroundColor: LINE_COLOR,
               zIndex: 101,
@@ -191,6 +197,7 @@ export default function ArchiwalneFixedLayer({ scale = 1, viewportHeight = 700 }
 
         {/* Language & Contrast Controls - top right */}
         <div
+          className="controls-container"
           style={{
             position: 'absolute',
             left: `${1265 * scale}px`,
@@ -244,6 +251,7 @@ export default function ArchiwalneFixedLayer({ scale = 1, viewportHeight = 700 }
           ))}
         </nav>
       </div>
+      </FixedPortal>
     </>
   );
 }

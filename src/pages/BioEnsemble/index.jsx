@@ -3,6 +3,7 @@ import ResponsiveWrapper from '../../components/ResponsiveWrapper/ResponsiveWrap
 import DesktopBioEnsemble from './DesktopBioEnsemble';
 import MobileBioEnsemble from './MobileBioEnsemble';
 import BioFixedLayer from '../Bio/BioFixedLayer';
+import LinesPortal from '../../components/LinesPortal/LinesPortal';
 
 const DESKTOP_WIDTH = 1440;
 const BREAKPOINT = 768;
@@ -35,20 +36,22 @@ export default function BioEnsemble() {
 
   return (
     <>
-      {/* Fixed background - behind lines */}
+      {/* Fixed background - behind lines, in LinesPortal for high-contrast support */}
       {!isMobile && (
-        <div
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100vh',
-            backgroundColor: currentColors.backgroundColor,
-            transition: 'background-color 1s cubic-bezier(0.4, 0, 0.2, 1)',
-            zIndex: 0,
-          }}
-        />
+        <LinesPortal>
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100vh',
+              backgroundColor: currentColors.backgroundColor,
+              transition: 'background-color 1s cubic-bezier(0.4, 0, 0.2, 1)',
+              zIndex: 0,
+            }}
+          />
+        </LinesPortal>
       )}
 
       {/* Fixed layer - lines and UI */}
