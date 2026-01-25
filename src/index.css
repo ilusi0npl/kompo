@@ -361,6 +361,12 @@ body.high-contrast #fixed-root > * * {
   filter: contrast(1.5) grayscale(1);
 }
 
+/* Apply filter to mobile menu portal (dynamically created) */
+body.high-contrast #mobile-menu-root,
+body.high-contrast #mobile-menu-root * {
+  filter: contrast(1.5) grayscale(1);
+}
+
 /* Force white backgrounds in high contrast mode for full-page backgrounds */
 /* This prevents colored backgrounds from becoming medium gray */
 body.high-contrast #lines-root > div[style*="background-color"],
@@ -410,4 +416,68 @@ body.high-contrast #fixed-root .controls-container * {
 body.high-contrast .contrast-toggle-btn,
 body.high-contrast .contrast-toggle-btn * {
   filter: contrast(1.5) !important;
+}
+
+/* ============================================
+   WCAG 2.4.7 Focus Indicators
+   ============================================ */
+
+/* ContrastToggle focus indicator */
+.contrast-toggle-btn:focus-visible {
+  outline: 2px solid #761FE0;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ContrastToggle focus in high contrast mode - yellow outline */
+body.high-contrast .contrast-toggle-btn:focus-visible {
+  outline-color: #FFBD19;
+}
+
+/* LanguageText focus indicator */
+.language-toggle:focus-visible {
+  outline: 2px solid #761FE0;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* LanguageText focus in high contrast mode - yellow outline */
+body.high-contrast .language-toggle:focus-visible {
+  outline-color: #FFBD19;
+}
+
+/* MobileMenu close button focus indicator */
+.mobile-menu-close:focus-visible {
+  outline: 2px solid #761FE0;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+body.high-contrast .mobile-menu-close:focus-visible {
+  outline-color: #FFBD19;
+}
+
+/* MobileHeader MENU button focus indicator */
+.mobile-menu-btn:focus-visible {
+  outline: 2px solid #761FE0;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+body.high-contrast .mobile-menu-btn:focus-visible {
+  outline-color: #FFBD19;
+}
+
+/* ============================================
+   Skip Link (WCAG 2.4.1)
+   ============================================ */
+.skip-link:focus {
+  top: 20px;
+  outline: 2px solid #761FE0;
+  outline-offset: 2px;
+}
+
+body.high-contrast .skip-link:focus {
+  outline-color: #FFBD19;
+  background-color: #000000;
 }

@@ -1,5 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router';
 import { LanguageProvider } from './context/LanguageContext';
+import { AriaLiveProvider } from './components/AriaLiveAnnouncer/AriaLiveAnnouncer';
+import SkipLink from './components/SkipLink/SkipLink';
 import Homepage from './pages/Homepage';
 import Bio from './pages/Bio';
 import BioEnsemble from './pages/BioEnsemble';
@@ -18,8 +20,11 @@ import Fundacja from './pages/Fundacja';
 function App() {
   return (
     <LanguageProvider>
-      <BrowserRouter>
-        <Routes>
+      <AriaLiveProvider>
+        <BrowserRouter>
+          <SkipLink />
+        <main id="main-content">
+          <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/bio" element={<Bio />} />
           <Route path="/bio/ensemble" element={<BioEnsemble />} />
@@ -34,8 +39,10 @@ function App() {
           <Route path="/specialne" element={<Specialne />} />
           <Route path="/fundacja" element={<Fundacja />} />
           <Route path="/kontakt" element={<Kontakt />} />
-        </Routes>
-      </BrowserRouter>
+          </Routes>
+          </main>
+        </BrowserRouter>
+      </AriaLiveProvider>
     </LanguageProvider>
   );
 }

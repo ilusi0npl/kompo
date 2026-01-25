@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useAnnounce } from '../AriaLiveAnnouncer/AriaLiveAnnouncer';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function ContrastToggle({
   iconColor = '#131313',
@@ -8,6 +10,8 @@ export default function ContrastToggle({
   onClick = null,
 }) {
   const [isHighContrast, setIsHighContrast] = useState(false);
+  const announce = useAnnounce();
+  const { language } = useLanguage();
 
   // Restore high contrast state from localStorage on mount
   useEffect(() => {
@@ -27,8 +31,11 @@ export default function ContrastToggle({
 
       if (newValue) {
         document.body.classList.add('high-contrast');
+        // Announce to screen readers
+        announce(language === 'pl' ? 'Tryb wysokiego kontrastu włączony' : 'High contrast mode enabled');
       } else {
         document.body.classList.remove('high-contrast');
+        announce(language === 'pl' ? 'Tryb wysokiego kontrastu wyłączony' : 'High contrast mode disabled');
       }
 
       localStorage.setItem('highContrast', newValue);
@@ -52,7 +59,11 @@ export default function ContrastToggle({
         height: `${28 * scale}px`,
         ...style,
       }}
-      aria-label={isHighContrast ? 'Disable high contrast' : 'Enable high contrast'}
+      aria-label={
+        isHighContrast
+          ? (language === 'pl' ? 'Wyłącz tryb wysokiego kontrastu' : 'Disable high contrast mode')
+          : (language === 'pl' ? 'Włącz tryb wysokiego kontrastu' : 'Enable high contrast mode')
+      }
       aria-pressed={isHighContrast}
     >
       <svg

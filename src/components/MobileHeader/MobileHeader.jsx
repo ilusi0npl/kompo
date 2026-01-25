@@ -87,7 +87,10 @@ export default function MobileHeader({
       {/* MENU button */}
       <button
         onClick={() => setIsMenuOpen(true)}
-        className="absolute"
+        className="absolute mobile-menu-btn"
+        aria-expanded={isMenuOpen}
+        aria-haspopup="dialog"
+        aria-label="Otwórz menu nawigacyjne"
         style={{
           left: '312px',
           top: '43px',

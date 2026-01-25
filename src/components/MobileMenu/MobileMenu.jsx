@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router';
 import { createPortal } from 'react-dom';
+import FocusTrap from 'focus-trap-react';
 import { useTranslation } from '../../hooks/useTranslation';
 import LanguageText from '../LanguageText/LanguageText';
 import ContrastToggle from '../ContrastToggle/ContrastToggle';
@@ -36,6 +37,23 @@ export default function MobileMenu({ isOpen, onClose }) {
     return () => window.removeEventListener('resize', updateScale);
   }, []);
 
+  // Handle Escape key to close menu
+  const handleKeyDown = useCallback(
+    (event) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    },
+    [onClose]
+  );
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isOpen, handleKeyDown]);
+
   if (!isOpen || !portalRoot) return null;
 
   const menuItems = [
@@ -62,83 +80,97 @@ export default function MobileMenu({ isOpen, onClose }) {
 
   // Use portal to render menu outside of scaled wrapper
   const menuContent = (
-    <div
-      className="fixed overflow-hidden"
-      style={{
-        right: 0,
-        top: 0,
-        width: `${scaledMenuWidth}px`,
-        height: `${scaledMenuHeight}px`,
-        backgroundColor: '#FDFDFD',
-        borderLeft: '1px solid #131313',
-        borderBottom: '1px solid #131313',
-        zIndex: 9999,
+    <FocusTrap
+      focusTrapOptions={{
+        initialFocus: '.mobile-menu-close',
+        allowOutsideClick: true,
+        returnFocusOnDeactivate: true,
       }}
     >
-      {/* Close icon - position from Figma: left-[calc(50%+40.5px)] top-[44px] */}
-      <button
-        onClick={onClose}
-        className="absolute"
+      <div
+        className="fixed overflow-hidden"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu nawigacyjne"
         style={{
-          left: `${scaledCloseLeft}px`,
-          top: `${scaledCloseTop}px`,
-          width: `${scaledCloseSize}px`,
-          height: `${scaledCloseSize}px`,
-          padding: 0,
-          border: 'none',
-          background: 'transparent',
-          cursor: 'pointer',
+          right: 0,
+          top: 0,
+          width: `${scaledMenuWidth}px`,
+          height: `${scaledMenuHeight}px`,
+          backgroundColor: '#FDFDFD',
+          borderLeft: '1px solid #131313',
+          borderBottom: '1px solid #131313',
+          zIndex: 9999,
         }}
       >
-        <img
-          src="/assets/mobile/close-icon.svg"
-          alt="Close menu"
-          style={{ width: '100%', height: '100%' }}
-        />
-      </button>
+        {/* Close icon - position from Figma: left-[calc(50%+40.5px)] top-[44px] */}
+        <button
+          onClick={onClose}
+          className="absolute mobile-menu-close"
+          aria-label="Zamknij menu"
+          style={{
+            left: `${scaledCloseLeft}px`,
+            top: `${scaledCloseTop}px`,
+            width: `${scaledCloseSize}px`,
+            height: `${scaledCloseSize}px`,
+            padding: 0,
+            border: 'none',
+            background: 'transparent',
+            cursor: 'pointer',
+          }}
+        >
+          <img
+            src="/assets/mobile/close-icon.svg"
+            alt=""
+            aria-hidden="true"
+            style={{ width: '100%', height: '100%' }}
+          />
+        </button>
 
-      {/* Menu items - centered vertically with offset */}
-      <nav
-        className="absolute flex flex-col"
-        style={{
-          left: `${scaledNavLeft}px`,
-          top: '50%',
-          transform: `translateY(calc(-50% + ${scaledNavOffset}px))`,
-          gap: `${scaledGap}px`,
-        }}
-      >
-        {menuItems.map((item) => (
-          <Link
-            key={item.labelKey}
-            to={item.to}
-            onClick={onClose}
-            className="nav-link"
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 700,
-              fontSize: `${scaledFontSize}px`,
-              lineHeight: 1.48,
-              color: '#131313',
-            }}
-          >
-            {t(item.labelKey)}
-          </Link>
-        ))}
+        {/* Menu items - centered vertically with offset */}
+        <nav
+          className="absolute flex flex-col"
+          aria-label="Nawigacja mobilna"
+          style={{
+            left: `${scaledNavLeft}px`,
+            top: '50%',
+            transform: `translateY(calc(-50% + ${scaledNavOffset}px))`,
+            gap: `${scaledGap}px`,
+          }}
+        >
+          {menuItems.map((item) => (
+            <Link
+              key={item.labelKey}
+              to={item.to}
+              onClick={onClose}
+              className="nav-link"
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontWeight: 700,
+                fontSize: `${scaledFontSize}px`,
+                lineHeight: 1.48,
+                color: '#131313',
+              }}
+            >
+              {t(item.labelKey)}
+            </Link>
+          ))}
 
-        {/* Language Text - toggles language */}
-        <LanguageText
-          textColor="#131313"
-          fontSize={`${scaledFontSize}px`}
-          asMenuItem={true}
-        />
+          {/* Language Text - toggles language */}
+          <LanguageText
+            textColor="#131313"
+            fontSize={`${scaledFontSize}px`}
+            asMenuItem={true}
+          />
 
-        {/* Contrast Toggle - eye icon */}
-        <ContrastToggle
-          iconColor="#131313"
-          scale={scale}
-        />
-      </nav>
-    </div>
+          {/* Contrast Toggle - eye icon */}
+          <ContrastToggle
+            iconColor="#131313"
+            scale={scale}
+          />
+        </nav>
+      </div>
+    </FocusTrap>
   );
 
   return createPortal(menuContent, portalRoot);
