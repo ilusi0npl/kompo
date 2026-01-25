@@ -1,1451 +1,337 @@
 # CLAUDE.md - React + Figma Development Guide
 
-## Project Overview
+## Critical Rules
 
-DO NOT CHANGE ANYTHING IN SANITY WITHOUT EXPLICIT REQUEST!
-DO NOT COMMIT ANYTHING WITHOUT EXPLICIT REQUEST!
-DO NOT DEPLOY TO VERCEL WITHOUT EXPLICIT REQUEST!
+**DO NOT** without explicit request: change Sanity, commit, deploy to Vercel.
+**ALWAYS** verify: desktop AND mobile versions work.
+**SAVE** all Figma links for later use.
 
-Remember that you always have to make sure that both DESKTOP and MOBILE version of the project/website are working file.
-Save all figma links which i give you - for later us. Create a data base of it inside this file.
-
-**Goal**: Pixel-perfect React implementation from Figma designs.
-
-**Philosophy**:
-- Design (Figma) is the source of truth
-- Every implementation must pass visual verification
-- Iterative process: generate → verify → fix → repeat
-
----
-
-## Bug Fixing Workflow - Test First
-
-**CRITICAL: For every bug or problem encountered, ALWAYS create a test FIRST that detects the issue, THEN fix it.**
-
-### Why Test First?
-
-1. **Proves the bug exists** - Test fails, confirming the problem
-2. **Prevents regressions** - Test ensures bug never returns
-3. **Documents the issue** - Test serves as documentation
-4. **Verifies the fix** - Test passes after fix is applied
-
-### Workflow
-
-```
-1. Bug reported/discovered
-   ↓
-2. Create E2E test that reproduces the bug
-   ↓
-3. Run test → should FAIL (proves bug exists)
-   ↓
-4. Fix the bug
-   ↓
-5. Run test → should PASS (proves fix works)
-   ↓
-6. Run all tests → should PASS (no regressions)
-```
-
-### Example
-
-**Problem:** High contrast mode not affecting header on Media page
-
-```javascript
-// tests/e2e/content-overlap/media-contrast-issue.spec.js
-test('Media: fixed header should have contrast filter applied', async ({ page }) => {
-  await page.goto('/media');
-  await page.click('.contrast-toggle-btn');
-
-  const fixedRootChild = await page.$('#fixed-root > *');
-  const filter = await fixedRootChild.evaluate(el =>
-    getComputedStyle(el).filter
-  );
-
-  // This test FAILS before fix, PASSES after
-  expect(filter).toContain('contrast');
-});
-```
-
-### Test Location
-
-- Bug-specific tests: `tests/e2e/content-overlap/` or `tests/e2e/pages/`
-- Name pattern: `[feature]-[issue].spec.js`
+**Goal**: Pixel-perfect React from Figma. Design = source of truth.
+**Process**: generate → verify → fix → repeat
 
 ---
 
 ## Tech Stack
 
-- **React 18+** - UI framework
-- **React Router v7** - Routing
-- **Vite** - Build tool and dev server
-- **Tailwind CSS 4.x** - Utility-first styling
-- **Sanity CMS v3** - Headless CMS (optional, feature-flagged)
+React 18+, React Router v7, Vite, Tailwind CSS 4.x, Sanity CMS v3 (feature-flagged)
 
 ---
 
-## Large Test Data Mode
+## Bug Fixing - Test First
 
-For stress testing pages with large amounts of content, use the `VITE_LARGE_TEST_DATA` flag.
+**Workflow**: Bug → E2E test (must FAIL) → Fix → Test PASS → All tests PASS
 
-### Usage
+**Test location**: `tests/e2e/content-overlap/` or `tests/e2e/pages/`
+**Pattern**: `[feature]-[issue].spec.js`
+
+```javascript
+// Example: tests/e2e/content-overlap/media-contrast-issue.spec.js
+test('Media: fixed header contrast filter', async ({ page }) => {
+  await page.goto('/media');
+  await page.click('.contrast-toggle-btn');
+  const filter = await page.$eval('#fixed-root > *', el => getComputedStyle(el).filter);
+  expect(filter).toContain('contrast');
+});
+```
+
+---
+
+## Commands
 
 ```bash
-# Start dev server with large test data
-VITE_LARGE_TEST_DATA=true npm run dev
+# Dev
+npm install && npm run dev    # http://localhost:5173/
+npm run build && npm run lint
 
-# Run tests with large test data
-VITE_LARGE_TEST_DATA=true npx playwright test
+# Make
+make help                           # All commands
+make verify NODE=X CONFIG=Y         # UIMatch single node
+make verify-sections SECTIONS_CONFIG=Z  # Figma sections
+make verify-section SECTION=hero    # Single section
 ```
-
-### What it does
-
-When enabled, pages load generated test data instead of real content:
-
-| Page | Normal | Large Test Data |
-|------|--------|-----------------|
-| Bio | 4 profiles | 10 profiles with long paragraphs |
-| BioEnsemble | 3 paragraphs | 10 extended paragraphs |
-| Homepage | 4 slides | 8 slides |
-| Archiwalne | 6 events | 100 events in grid |
-| Kalendarz | ~5 events | 50 events |
-| Repertuar | ~20 composers | 100 composers |
-| Specjalne | ~10 projects | 50 projects |
-| Media | ~5 albums | 30 albums |
-| MediaWideo | ~10 videos | 50 videos |
-| Fundacja | ~5 projects | 20 projects |
-
-### Generator file
-
-`src/test-data/large-data-generator.js` contains all generators:
-
-```javascript
-import { isLargeTestMode, generateComposers } from '../../test-data/large-data-generator';
-
-// In config file:
-export const composers = isLargeTestMode ? generateComposers(100) : realComposers;
-```
-
-### Content overlap tests
-
-Tests in `tests/e2e/content-overlap/` verify that large content doesn't cause layout issues:
-- Text overlapping
-- Content overflowing containers
-- Footer visibility
-- Dynamic height calculation
-
-### Lessons Learned / Gotchas
-
-#### i18n Architecture - Config vs Sanity Data Flow
-
-**Problem:** Generator initially created i18n fields (`titlePl`/`titleEn`, `locationPl`/`locationEn`) but tests failed because components couldn't access the correct language version.
-
-**Root cause:** Different data flows for config vs Sanity:
-
-| Data Source | Flow | i18n Handling |
-|-------------|------|---------------|
-| **Config/Generator** | Config → Component | NO transformation, fields used directly |
-| **Sanity CMS** | Sanity → Hook → Component | Hook transforms based on `useLanguage()` context |
-
-**Solution:** Generator should output **direct fields** (`title`, `location`, `name`, `paragraphs`) matching original config format. i18n for config data is handled by translation files via `t()` function, not by field suffixes.
-
-```javascript
-// ❌ WRONG - Generator with i18n fields (components can't transform)
-{ titlePl: 'Koncert', titleEn: 'Concert', locationPl: 'Wrocław', locationEn: 'Wroclaw' }
-
-// ✅ CORRECT - Generator with direct fields (matches config format)
-{ id: 1, location: 'Filharmonia Wrocławska', performers: '...' }
-// Component uses: t(`kalendarz.events.event${event.id}.title`) for title
-```
-
-#### Translation Key Matching
-
-**Problem:** Events with IDs like `event-upcoming-1` caused translation keys `kalendarz.events.eventevent-upcoming-1.title` which don't exist.
-
-**Solution:** Use simple numeric IDs (1, 2, 3) that match existing translation keys (`event1`, `event2`, `event3`).
-
-#### Footer Positioning with Dynamic Content
-
-**Problem:** Footer with `position: absolute; bottom: 40px` created large gaps when content height varied.
-
-**Solution:** Place footer inside content flow with margins:
-```javascript
-// ❌ WRONG - Absolute positioning
-<Footer style={{ position: 'absolute', bottom: '40px' }} />
-
-// ✅ CORRECT - Content flow with margins
-<Footer style={{ marginTop: '80px', marginBottom: '40px' }} />
-```
-
-#### Large Test Mode Purpose
-
-Large test data mode is for **stress testing layout/performance**, not for testing i18n functionality. Keep generator output simple - direct fields without i18n complexity. Translation testing should use normal mode with proper translation files.
-
-#### High Contrast Mode and Fixed Positioning
-
-**Problem:** In high contrast mode, fixed elements (menu, decorative lines, logo) stayed at top of page instead of scrolling properly. This happened because CSS `filter` property creates a new containing block, breaking `position: fixed` behavior.
-
-**Root cause:** Original CSS:
-```css
-body.high-contrast {
-  filter: contrast(1.5) grayscale(1);
-}
-```
-When `filter` is applied to a parent element, `position: fixed` children become relative to that parent instead of viewport.
-
-**Solution:** Use React Portals to render fixed elements outside the filtered content:
-
-1. **Separate content from fixed elements:**
-   - Apply filter only to `#root` (main content): `body.high-contrast #root { filter: ... }`
-   - Add separate portal container `#fixed-root` in index.html
-   - Fixed elements render to `#fixed-root` via portal, staying unfiltered
-
-2. **FixedPortal component** (`src/components/FixedPortal/FixedPortal.jsx`):
-   ```jsx
-   import { createPortal } from 'react-dom';
-
-   export default function FixedPortal({ children }) {
-     const fixedRoot = document.getElementById('fixed-root');
-     if (!fixedRoot) return children;
-     return createPortal(children, fixedRoot);
-   }
-   ```
-
-3. **CSS for portal container:**
-   ```css
-   #fixed-root {
-     position: fixed;
-     top: 0;
-     left: 0;
-     width: 0;
-     height: 0;
-     z-index: 9999;
-     pointer-events: none;
-     overflow: visible;
-   }
-   ```
-   Note: `width: 0; height: 0; overflow: visible` makes container invisible but allows children to position correctly.
-
-4. **All FixedLayer components** must wrap content with `<FixedPortal>`:
-   - `ArchiwalneFixedLayer.jsx`
-   - `BioFixedLayer.jsx`
-   - `FundacjaFixedLayer.jsx`
-   - `KalendarzFixedLayer.jsx`
-   - `KontaktFixedLayer.jsx`
-   - `MediaFixedLayer.jsx`
-   - `MediaWideoFixedLayer.jsx`
-   - `RepertuarFixedLayer.jsx`
-   - `SpecjalneFixedLayer.jsx`
-   - `WydarzenieFixedLayer.jsx`
 
 ---
 
 ## Verification Tools
 
-Two tools for visual verification:
+### Sections Verification (Figma → Crop → Compare)
 
-### 1. Sections Verification (Figma → Crop → Compare)
+Compare page sections with Figma. Config: `scripts_project/sections-config.json`
 
-**Best for comparing page sections with Figma.**
-
-```bash
-# All sections
-make verify-sections SECTIONS_CONFIG=scripts_project/sections-config.json
-
-# Single section
-make verify-section SECTION=hero SECTIONS_CONFIG=scripts_project/sections-config.json
-```
-
-**How it works:**
-1. Fetches full page screenshot from Figma API
-2. Crops into sections based on config bounds
-3. Screenshots each section from implementation (Playwright)
-4. Compares each pair (pixelmatch)
-5. Generates HTML report
-
-**Config:** `scripts_project/sections-config.json`
 ```json
-{
-  "figmaFileKey": "YOUR_FILE_KEY",
-  "figmaNodeId": "NODE_ID",
-  "pageWidth": 1728,
-  "sections": {
-    "hero": { "y": 0, "height": 865, "selector": "[data-section='hero']" },
-    "about": { "y": 865, "height": 700, "selector": "[data-section='about']" }
-  }
-}
+{"figmaFileKey": "KEY", "figmaNodeId": "NODE", "pageWidth": 1728,
+ "sections": {"hero": {"y": 0, "height": 865, "selector": "[data-section='hero']"}}}
 ```
 
-**Output:** `tmp/figma-sections/[timestamp]/report.html`
+Output: `tmp/figma-sections/[timestamp]/report.html` - **ALWAYS provide to user**
 
-**IMPORTANT:** After each `make verify-section`, ALWAYS provide the user with the HTML report link.
+### UIMatch (Single Node)
 
-**Script:** `scripts/verify-figma-sections.cjs`
+Compare individual elements. Config: `scripts_project/uimatch-config.json`
 
-### 2. UIMatch (Single Node Comparison)
-
-**For comparing individual elements (avatars, logos, components).**
-
-```bash
-# List available nodes
-make verify-list CONFIG=scripts_project/uimatch-config.json
-
-# Verify node
-make verify NODE=title CONFIG=scripts_project/uimatch-config.json
-make verify NODE=avatar CONFIG=scripts_project/uimatch-config.json
-```
-
-**Config:** `scripts_project/uimatch-config.json`
-```json
-{
-  "figmaFileKey": "YOUR_FILE_KEY",
-  "defaultProfile": "component/dev",
-  "defaultUrl": "http://localhost:5173",
-  "outputDir": "tmp/uimatch-reports",
-  "nodes": {
-    "title": { "id": "50-64", "name": "Page title", "selector": "[data-node-id='50:64']" },
-    "avatar": { "id": "2007-220", "name": "Avatar", "selector": "[data-node-id='2007:220']", "profile": "component/strict" }
-  },
-  "aliases": { "av": "avatar" }
-}
-```
-
-**UIMatch Profiles:**
-| Profile | pixelDiffRatio | Use Case |
-|---------|---------------|----------|
-| `component/strict` | ≤1% | Components without text (images, icons) |
-| `component/dev` | ≤8% | **Default** - full-page with text |
-
-**Output:** `tmp/uimatch-reports/`
-
-**Script:** `scripts/verify-uimatch.cjs`
-
-### Which tool to use?
-
-| Scenario | Tool |
-|----------|------|
-| Compare sections (hero, footer, about) | `verify-sections` |
-| Compare single element | `verify` (UIMatch) |
-| Compare avatar/logo | `verify` with `component/strict` |
+| Profile | Diff | Use |
+|---------|------|-----|
+| `component/strict` | ≤1% | Images, icons |
+| `component/dev` | ≤8% | Full page (default) |
 
 ---
 
-## Development Commands
-
-```bash
-npm install      # Install dependencies
-npm run dev      # Dev server (http://localhost:5173/)
-npm run build    # Production build
-npm run lint     # Check code quality
-```
-
-### Makefile
-```bash
-make help                      # Show all commands
-make verify-list CONFIG=...    # List UIMatch nodes
-make verify NODE=... CONFIG=.. # UIMatch verification
-make verify-sections ...       # Sections verification
-make verify-section SECTION=.. # Single section
-make screenshot                # Take screenshot
-make install-uimatch           # Install dependencies
-make clean                     # Clean tmp files
-```
-
----
-
-## Figma Integration
-
-### Requirements
-- `FIGMA_ACCESS_TOKEN` in `.env` file
-- Figma desktop app running (for MCP tools)
-
-### MCP Tools
-- `mcp__figma__get_design_context` - Get design context and code
-- `mcp__figma__get_screenshot` - Get design screenshots
-- `mcp__figma__get_metadata` - Get structure overview
-
----
-
-## File Structure
-
-```
-scripts/                          # Generic verification scripts
-├── verify-figma-sections.cjs    # Sections verification
-├── verify-uimatch.cjs           # UIMatch single node
-└── migrate-*.js                 # CMS migration scripts
-
-scripts_project/                  # Project-specific configs
-├── sections-config.json         # Sections bounds for verify-sections
-└── uimatch-config.json          # UIMatch nodes config
-
-src/                              # React application
-├── components/                   # Shared components
-│   ├── ResponsiveWrapper/       # Scale transform wrapper
-│   ├── BackgroundLines/         # Decorative lines
-│   ├── Footer/                  # Footer component
-│   ├── LanguageToggle/          # Language switcher
-│   └── ...
-├── pages/                        # Page components
-│   └── [PageName]/
-│       ├── index.jsx            # Uses ResponsiveWrapper
-│       ├── Desktop[PageName].jsx # Desktop layout
-│       └── Mobile[PageName].jsx  # Mobile layout
-├── hooks/                        # Custom React hooks
-│   ├── useSanity*.js            # Sanity CMS data fetching
-│   ├── useTranslation.js        # i18n hook
-│   └── useLanguage.js           # Language context
-├── context/                      # React contexts
-│   └── LanguageContext.jsx      # Language state management
-├── lib/                          # Utilities
-│   └── sanity/
-│       ├── client.js            # Sanity client config
-│       └── queries.js           # GROQ queries
-├── translations/                 # i18n translation files
-│   ├── index.js                 # Export all translations
-│   ├── common.js                # Shared UI texts
-│   └── [page].js                # Page-specific texts
-└── App.jsx                       # Routes
-
-sanity-studio/                    # Sanity CMS Studio
-├── schemaTypes/                  # Content schemas
-│   ├── event.ts
-│   ├── bioProfile.ts
-│   ├── homepageSlide.ts
-│   ├── composer.ts
-│   ├── photoAlbum.ts
-│   ├── media.ts
-│   └── ...
-└── sanity.config.ts             # Studio configuration
-
-tmp/                              # Temporary files (gitignored)
-├── figma-sections/              # verify-sections output
-└── uimatch-reports/             # verify output
-
-public/assets/                    # Static assets
-└── [feature]/                   # Organized by feature
-
-tests/                            # Test suites
-├── e2e/                         # Playwright E2E tests
-│   ├── helpers/test-helpers.js  # Shared E2E utilities
-│   └── pages/                   # Page-specific tests
-└── unit/                        # Vitest unit tests
-```
-
----
-
-## Shared Components Reference
-
-### ContrastToggle
-**File**: `src/components/ContrastToggle/ContrastToggle.jsx`
-- Toggle accessibility high-contrast mode
-- Props: `iconColor`, `style`, `transition`, `scale`, `onClick`
-- Toggles `.high-contrast` class on `document.body`
-- Persists to `localStorage('highContrast')`
-- Active indicator color: `#FFBD19` (yellow)
-
-### LanguageText
-**File**: `src/components/LanguageText/LanguageText.jsx`
-- Language toggle as text button or menu item
-- Props: `textColor`, `scale`, `fontSize`, `asMenuItem`
-- Two modes: button (default) vs menu item (`asMenuItem=true`)
-
-### MobileHeader
-**File**: `src/components/MobileHeader/MobileHeader.jsx`
-- Generic mobile header with logo, MENU button, optional nav, title
-- Props: `title`, `textColor`, `backgroundColor`, `navLinks`, `isFixed`, `headerHeight`, `lineColor`, `linePositions`
-- Portal-based rendering when `isFixed=true` (renders to `#mobile-header-root`)
-- Exports: `MobileHeader`, `MobileHeaderSpacer`
-
-### MobileMenu
-**File**: `src/components/MobileMenu/MobileMenu.jsx`
-- Mobile overlay menu with navigation
-- Props: `isOpen`, `onClose`
-- Portal renders to `#mobile-menu-root`
-- Includes: LanguageText, ContrastToggle
-
-### SmoothImage
-**File**: `src/components/SmoothImage/SmoothImage.jsx`
-- Lazy-loaded image with fade-in animation
-- Props: `src`, `alt`, `placeholderColor`, `transitionDuration`
-- Uses IntersectionObserver with 2000px rootMargin for early loading
-
-### SmoothSlideshow
-**File**: `src/components/SmoothSlideshow/SmoothSlideshow.jsx`
-- Lazy-loaded slideshow with crossfade transitions
-- Props: `images`, `interval`, `transitionDuration`, `placeholderColor`
-- Variant of SmoothImage for multiple images
-
-### ArrowRight
-**File**: `src/components/ArrowRight/ArrowRight.jsx`
-- SVG arrow icon using `currentColor`
-- Used with `.external-link-btn`, `.text-link-btn` classes
-
----
-
-## Custom Hooks Reference
-
-### useScrollColorChange
-**File**: `src/hooks/useScrollColorChange.js`
-- Detects which section is at viewport center, returns color data
-- **Critical**: Scale-aware calculation for ResponsiveWrapper
-- Usage:
-  ```javascript
-  const sectionsRef = useRef([]);
-  const sectionData = [
-    { backgroundColor: '#FFF', lineColor: '#000', textColor: '#000' },
-    { backgroundColor: '#000', lineColor: '#FFF', textColor: '#FFF' },
-  ];
-  const currentColors = useScrollColorChange(sectionsRef, sectionData);
-  // Returns: { backgroundColor, lineColor, textColor }
-  ```
-- Key formula: `scrollPoint = (window.scrollY + window.innerHeight / 2) / scale`
-
-### useFixedMobileHeader
-**File**: `src/hooks/useFixedMobileHeader.js`
-- Calculates scale factor for fixed positioned elements on mobile
-- Returns: `{ scale, MOBILE_WIDTH (390), BREAKPOINT (768) }`
-- Usage:
-  ```javascript
-  const { scale } = useFixedMobileHeader();
-  // Use scale to transform fixed elements to match ResponsiveWrapper
-  ```
-
----
-
-## Assets - Download and Verification
-
-### Problem: Incorrect File Extensions
-
-Figma sometimes exports files with wrong extensions (e.g., SVG as `.png`). This causes API errors:
-```
-API Error: 400 "media_type: Input should be 'image/jpeg', 'image/png', 'image/gif' or 'image/webp'"
-```
-
-### ALWAYS check file type before reading
-
-```bash
-file public/assets/filename.png
-```
-
-If output is `SVG Scalable Vector Graphics image` - file has wrong extension.
-
-### Fix incorrect extensions
-
-```bash
-# Change to correct extension
-mv public/assets/file.png public/assets/file.svg
-
-# Check all at once
-for f in public/assets/*.png; do
-  type=$(file -b "$f" | head -c 3)
-  if [ "$type" = "SVG" ]; then
-    echo "FAKE PNG (actually SVG): $f"
-  fi
-done
-```
-
-### Download assets from Figma
-
-1. **Use `get_design_context`** - returns asset download URLs
-2. **Download via curl/wget** with correct extension
-3. **Verify type** before use: `file filename.ext`
-
-### Reading image files
-
-| File Type | How to Read |
-|-----------|------------|
-| PNG/JPG/GIF/WebP (real) | `Read` tool - works |
-| SVG | `Read` tool as text - works |
-| PNG/JPG (but actually SVG) | **DOESN'T WORK** - fix extension |
-
-### Workflow for new assets
-
-1. Download asset from Figma
-2. `file public/assets/new-asset.png` - check real type
-3. If type doesn't match extension → change extension
-4. Then use in code
-
----
-
-## Best Practices
-
-### Components must have `data-section`
-```jsx
-<div data-section="hero" className="...">
-  <HeroSection />
-</div>
-```
-
-### Verification workflow
-1. Run `verify-sections` for all sections
-2. Check HTML report for each section
-3. Fix differences and repeat
-4. For elements (logos, avatars) use `verify` with UIMatch
-
-### High Contrast Mode (Accessibility)
-
-Accessibility feature toggled via ContrastToggle component:
-
-```css
-/* Applied when high contrast is enabled */
-body.high-contrast {
-  filter: contrast(1.5) grayscale(1);
-}
-
-/* Exception for toggle icon - keeps color visible */
-body.high-contrast .contrast-toggle-btn {
-  filter: grayscale(0) contrast(2);
-}
-```
-
-- Toggled via `ContrastToggle` component
-- Persisted in `localStorage('highContrast')`
-- Active indicator: `#FFBD19` (yellow)
-- Improves readability for visually impaired users
-
----
-
-## Responsive Design - Scale Transform Approach
-
-### Problem
-
-Pages have fixed width (e.g., 1440px for desktop), causing side margins on smaller screens.
-
-### Solution: Scale Transform
-
-Instead of full responsiveness (rewriting layout), use CSS transform scaling:
-
-- **Desktop**: base width 1440px, scale: `viewportWidth / 1440`
-- **Mobile**: base width 390px, scale: `viewportWidth / 390`
-- **Breakpoint**: 768px - switch to mobile below this
-
-### File structure
+## File Structure (Essential)
 
 ```
 src/
-├── components/
-│   └── ResponsiveWrapper/
-│       └── ResponsiveWrapper.jsx    # Scaling wrapper
-├── pages/
-│   └── [PageName]/
-│       ├── index.jsx                # Main - uses ResponsiveWrapper
-│       ├── Desktop[PageName].jsx    # Desktop layout
-│       └── Mobile[PageName].jsx     # Mobile layout
+├── components/          # ResponsiveWrapper/, Footer/, LanguageToggle/, ContrastToggle/
+├── pages/[Name]/        # index.jsx, Desktop[Name].jsx, Mobile[Name].jsx, [Name]FixedLayer.jsx
+├── hooks/               # useSanity*.js, useTranslation.js, useScrollColorChange.js
+├── context/             # LanguageContext.jsx
+├── lib/sanity/          # client.js, queries.js
+└── translations/        # common.js, [page].js
+
+sanity-studio/schemaTypes/  # event.ts, bioProfile.ts, etc.
+scripts/                    # verify-*.cjs, migrate-*.js
+tests/e2e/                  # helpers/test-helpers.js, pages/
 ```
 
-### ResponsiveWrapper - implementation
+---
 
-```jsx
-// src/components/ResponsiveWrapper/ResponsiveWrapper.jsx
-import { useState, useEffect } from 'react';
+## Components Reference
 
-const DESKTOP_WIDTH = 1440;  // Adjust per project
-const MOBILE_WIDTH = 390;    // Adjust per project
-const BREAKPOINT = 768;
+| Component | Path | Props | Notes |
+|-----------|------|-------|-------|
+| ContrastToggle | ContrastToggle/ | iconColor, style, scale | localStorage, `#FFBD19` active |
+| LanguageText | LanguageText/ | textColor, scale, asMenuItem | Button or menu item |
+| MobileHeader | MobileHeader/ | title, textColor, navLinks, isFixed | Portal to `#mobile-header-root` |
+| MobileMenu | MobileMenu/ | isOpen, onClose | Portal to `#mobile-menu-root` |
+| SmoothImage | SmoothImage/ | src, alt, placeholderColor | IntersectionObserver, 2000px margin |
+| SmoothSlideshow | SmoothSlideshow/ | images, interval | Crossfade variant |
+| ArrowRight | ArrowRight/ | - | SVG, currentColor |
 
-export default function ResponsiveWrapper({
-  desktopContent,
-  mobileContent,
-  desktopHeight = 5000,  // Adjust per project
-  mobileHeight = 8000,   // Adjust per project
-}) {
-  const [viewport, setViewport] = useState({ width: window.innerWidth });
+---
 
-  useEffect(() => {
-    const handleResize = () => setViewport({ width: window.innerWidth });
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+## Hooks Reference
 
-  const isMobile = viewport.width < BREAKPOINT;
-  const baseWidth = isMobile ? MOBILE_WIDTH : DESKTOP_WIDTH;
-  const scale = viewport.width / baseWidth;
+| Hook | Purpose | Key Detail |
+|------|---------|------------|
+| useScrollColorChange | Section color at viewport center | Scale-aware: `scrollPoint = (scrollY + innerHeight/2) / scale` |
+| useFixedMobileHeader | Scale for fixed elements | Returns `{ scale, MOBILE_WIDTH: 390, BREAKPOINT: 768 }` |
+| useTranslation | Get translations | `const t = useTranslation(); t.nav.bio` |
+| useLanguage | Language context | `{ language, setLanguage, toggleLanguage }` |
 
-  return (
-    <div style={{
-      width: baseWidth,
-      transformOrigin: 'top left',
-      transform: `scale(${scale})`,
-    }}>
-      {isMobile ? mobileContent : desktopContent}
-    </div>
-  );
-}
+---
+
+## Responsive Design - Scale Transform
+
+**Concept**: Fixed width scaled via CSS transform (not full responsive).
+
+- Desktop: 1440px base, Mobile: 390px base, Breakpoint: 768px
+- Formula: `scale = viewportWidth / baseWidth`
+- CSS required: `html, body { overflow-x: hidden; }`
+
+**Page structure**:
+```
+pages/[Name]/
+├── index.jsx              # ResponsiveWrapper usage
+├── Desktop[Name].jsx      # 1440px layout
+├── Mobile[Name].jsx       # 390px layout
+└── [Name]FixedLayer.jsx   # Fixed elements (OUTSIDE wrapper)
 ```
 
-### Usage in page
+**Fixed layers**: Render outside ResponsiveWrapper, receive `scale` prop, use `setCurrentColors` callback.
 
-```jsx
-// src/pages/[PageName]/index.jsx
-import ResponsiveWrapper from '../../components/ResponsiveWrapper/ResponsiveWrapper';
-import Desktop[PageName] from './Desktop[PageName]';
-import Mobile[PageName] from './Mobile[PageName]';
-
-export default function [PageName]() {
-  return (
-    <ResponsiveWrapper
-      desktopContent={<Desktop[PageName] />}
-      mobileContent={<Mobile[PageName] />}
-    />
-  );
-}
-```
-
-### Required CSS fix
-
-```css
-/* src/index.css */
-html, body {
-  overflow-x: hidden;
-  background-color: #FFFFFF;
-}
-```
-
-### Implementation workflow
-
-1. **Move current code** to `Desktop[PageName].jsx`
-2. **Create `Mobile[PageName].jsx`** based on Figma mobile design
-3. **Download mobile assets** to `public/assets/mobile/`
-4. **Implement `ResponsiveWrapper`**
-5. **Connect in `index.jsx`**
-6. **Test** on viewports: 1920px, 1280px, 768px, 390px
-
-### Figma mobile design
-
-Always provide Figma link with mobile design in prompt:
-```
-Mobile design: https://www.figma.com/design/[fileKey]/[fileName]?node-id=[nodeId]
-```
-
-### Testing viewports
-
-```bash
-# DevTools → Responsive Mode → select width:
-# - 1920px (large desktop)
-# - 1280px (laptop)
-# - 768px (just before breakpoint)
-# - 390px (iPhone 14)
-```
-
-### When to use Scale Transform vs Full Responsive?
-
-| Approach | When |
-|----------|------|
-| **Scale Transform** | Pixel-perfect from Figma, quick implementation |
-| **Full Responsive** | SEO-critical, accessibility-first, complex interactions |
-
-**Default: Scale Transform** - maintains pixel-perfect design consistency.
-
-### Fixed Positioning with Scale Transform
-
-Pages with fixed elements (headers, decorative lines) use the `[Page]FixedLayer` pattern:
-
-**File structure:**
-```
-src/pages/[PageName]/
-├── index.jsx                # Main, manages fixed layer colors
-├── Desktop[PageName].jsx    # Scrollable content
-├── Mobile[PageName].jsx     # Mobile scrollable content
-└── [PageName]FixedLayer.jsx # Fixed elements (OUTSIDE ResponsiveWrapper)
-```
-
-**Key points:**
-- Fixed layers render OUTSIDE ResponsiveWrapper (`position: fixed` works correctly)
-- Fixed layers receive `scale` prop to match ResponsiveWrapper scaling
-- Use `setCurrentColors` callback to sync colors with scroll position
-- Example:
-  ```jsx
-  // In index.jsx
-  const [currentColors, setCurrentColors] = useState(defaultColors);
-
-  return (
-    <>
-      <BioFixedLayer currentColors={currentColors} scale={desktopScale} />
-      <ResponsiveWrapper
-        desktopContent={
-          <DesktopBio setCurrentColors={setCurrentColors} />
-        }
-        // ...
-      />
-    </>
-  );
-  ```
-
-**Portal-based rendering:**
-- MobileHeader uses portal to `#mobile-header-root`
-- MobileMenu uses portal to `#mobile-menu-root`
-- Portals ensure fixed elements escape ResponsiveWrapper's transform
+**Portals**: MobileHeader → `#mobile-header-root`, MobileMenu → `#mobile-menu-root`
 
 ---
 
 ## Testing
 
-### Test Structure
-```
-tests/
-├── e2e/
-│   ├── helpers/test-helpers.js    # Shared E2E utilities
-│   ├── pages/                      # Page-specific tests
-│   │   ├── bio.spec.js
-│   │   ├── media.spec.js
-│   │   └── ...
-│   ├── navigation.spec.js
-│   ├── homepage.spec.js
-│   └── language-switching.spec.js
-├── unit/
-│   ├── components/
-│   ├── hooks/
-│   └── context/
-└── __mocks__/sanity-client.js
-```
-
-### E2E Test Helpers (`tests/e2e/helpers/test-helpers.js`)
-
-| Function | Purpose |
-|----------|---------|
-| `navigateToPage(page, path)` | Go to page + wait networkidle |
-| `navigateViaLink(page, href, url)` | Click link + verify navigation |
-| `assertLogoVisible(page)` | Check Kompopolex logo visible |
-| `assertNavigationVisible(page)` | Check nav with main links |
-| `assertFooterVisible(page)` | Check footer with mailto link |
-| `assertLanguageToggleWorks(page)` | Test PL ↔ EN toggle |
-| `assertMobileViewport(page)` | Set 390x844, check no h-scroll |
-| `assertDesktopViewport(page)` | Set 1440x900 |
-| `testScrollBehavior(page, height)` | Test scroll down/up |
-
-### Running Tests
 ```bash
-npm test              # Unit tests (watch mode)
-npm run test:run      # Unit tests (single run)
-npm run test:e2e      # E2E tests (Playwright)
-npm run test:all      # All tests
-npm run test:coverage # Coverage report
+npm test              # Unit (watch)
+npm run test:e2e      # E2E (Playwright)
+npm run test:all      # All
 ```
 
-### Test Patterns
-
-**Unit tests (Vitest):**
-```javascript
-import { describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
-
-describe('ComponentName', () => {
-  it('renders correctly', () => {
-    render(<ComponentName />);
-    expect(screen.getByText('Expected text')).toBeInTheDocument();
-  });
-});
-```
-
-**E2E tests (Playwright):**
-```javascript
-import { test, expect } from '@playwright/test';
-import { navigateToPage, assertLogoVisible } from './helpers/test-helpers.js';
-
-test.describe('PageName', () => {
-  test.beforeEach(async ({ page }) => {
-    await navigateToPage(page, '/page-path');
-  });
-
-  test('displays logo', async ({ page }) => {
-    await assertLogoVisible(page);
-  });
-});
-```
+**E2E helpers** (`tests/e2e/helpers/test-helpers.js`):
+`navigateToPage`, `assertLogoVisible`, `assertFooterVisible`, `assertLanguageToggleWorks`, `assertMobileViewport`, `assertDesktopViewport`
 
 ---
 
-## Internationalization (i18n)
+## i18n System
 
-### Language System
+**Two strategies**:
 
-This project supports **bilingual content (Polish/English)** with two separate strategies:
+1. **UI texts** - translation files (`src/translations/`): `const t = useTranslation(); t.nav.bio`
+2. **CMS content** - bilingual fields: `titlePl`/`titleEn`, hooks transform via `useLanguage()`
 
-#### 1. UI Texts - Translation Files
-
-Static UI elements (navigation, buttons, labels) use translation files:
-
-**Structure:**
-```
-src/translations/
-├── index.js          # Export all translations
-├── common.js         # Shared: nav, footer, labels, loading, errors
-├── [page].js         # Page-specific texts
-```
-
-**Pattern:**
-```javascript
-// src/translations/common.js
-export const pl = {
-  nav: {
-    bio: 'Bio',
-    media: 'Media',
-    // ...
-  },
-  loading: {
-    events: 'Ładowanie wydarzeń...',
-  },
-};
-
-export const en = {
-  nav: {
-    bio: 'Bio',
-    media: 'Media',
-    // ...
-  },
-  loading: {
-    events: 'Loading events...',
-  },
-};
-```
-
-**Usage in components:**
-```javascript
-import { useTranslation } from '../../hooks/useTranslation';
-
-function Component() {
-  const t = useTranslation();
-  return <div>{t.nav.bio}</div>;
-}
-```
-
-#### 2. Dynamic Content - Sanity CMS Bilingual Fields
-
-Content from CMS uses separate fields for each language:
-
-**Pattern:** `fieldPl` / `fieldEn` in the same document
-
-**Examples:**
-- `titlePl` / `titleEn`
-- `descriptionPl` / `descriptionEn`
-- `performersPl` / `performersEn`
-
-**GROQ queries include both:**
-```javascript
-export const eventsQuery = `
-  *[_type == "event" && defined(publishedAt)] {
-    _id,
-    titlePl,
-    titleEn,
-    descriptionPl,
-    descriptionEn,
-    // ...
-  }
-`
-```
-
-**Hooks transform based on language:**
-```javascript
-import { useLanguage } from '../context/LanguageContext';
-
-function useSanityEvents() {
-  const { language } = useLanguage();
-
-  // Fetch data with both languages
-  const data = await client.fetch(eventsQuery);
-
-  // Transform based on current language
-  return data.map(event => ({
-    title: language === 'pl' ? event.titlePl : event.titleEn,
-    description: language === 'pl' ? event.descriptionPl : event.descriptionEn,
-    // ...
-  }));
-}
-```
-
-### Language Context
-
-Global language state managed by React Context:
-
-```javascript
-// src/context/LanguageContext.jsx
-import { createContext, useContext, useState, useEffect } from 'react';
-
-const LanguageContext = createContext();
-
-export function LanguageProvider({ children }) {
-  const [language, setLanguage] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('language') || 'pl';
-    }
-    return 'pl';
-  });
-
-  useEffect(() => {
-    localStorage.setItem('language', language);
-  }, [language]);
-
-  const toggleLanguage = () => {
-    setLanguage(prev => prev === 'pl' ? 'en' : 'pl');
-  };
-
-  return (
-    <LanguageContext.Provider value={{ language, setLanguage, toggleLanguage }}>
-      {children}
-    </LanguageContext.Provider>
-  );
-}
-
-export function useLanguage() {
-  const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
-  }
-  return context;
-}
-```
-
-### Special Cases
-
-**Content that is NOT translated:**
-- Composer names (remain in original)
-- Musical piece names (remain in original)
-- Proper names and locations (may remain in original)
-
-**Migration to bilingual:**
-- See `scripts/migrate-*-i18n.js` scripts
-- All have duplicate detection - safe to run multiple times
-- Use OpenAI API for automatic translation
+**Not translated**: composer names, musical pieces, proper names.
 
 ---
 
 ## Sanity CMS Integration
 
-### Overview
+**Feature flag**: `VITE_USE_SANITY` (default: false)
 
-**Sanity CMS v3** for content management with feature flag system for gradual rollout.
+**Env vars**: `VITE_SANITY_PROJECT_ID`, `VITE_SANITY_DATASET`, `SANITY_AUTH_TOKEN`
 
-**Feature Flag**: `VITE_USE_SANITY` (default: `false`)
-- When `true`: Content fetched from Sanity CMS
-- When `false`: Content from local config files (backward compatible)
+**Studio**: `cd sanity-studio && npm run dev` → http://localhost:3333
 
-### Environment Setup
-
-Required in `.env`:
-
-```bash
-# Figma Design Tokens
-FIGMA_ACCESS_TOKEN=your-figma-token-here
-
-# Sanity CMS Configuration
-VITE_SANITY_PROJECT_ID=your-project-id-here
-VITE_SANITY_DATASET=production
-SANITY_STUDIO_URL=your-studio-url-here
-SANITY_AUTH_TOKEN=your-sanity-auth-token-here
-
-# Feature Flag
-VITE_USE_SANITY=false  # Set to 'true' to enable Sanity CMS
-```
-
-### Sanity Studio
-
-Start Studio locally:
-
-```bash
-cd sanity-studio
-npm install
-npm run dev
-```
-
-Studio runs at: `http://localhost:3333`
-
-### Content Schema Pattern
-
-**Document schemas** (multiple instances):
-```typescript
-// sanity-studio/schemaTypes/event.ts
-import { defineType } from 'sanity';
-
-export default defineType({
-  name: 'event',
-  type: 'document',
-  title: 'Event',
-  fields: [
-    {
-      name: 'titlePl',
-      type: 'string',
-      title: 'Title (Polish)',
-      validation: (rule) => rule.required(),
-    },
-    {
-      name: 'titleEn',
-      type: 'string',
-      title: 'Title (English)',
-    },
-    {
-      name: 'publishedAt',
-      type: 'datetime',
-      title: 'Published At',
-    },
-    // ...
-  ],
-});
-```
-
-**Singleton schemas** (single instance):
-```typescript
-// sanity-studio/schemaTypes/kontaktPage.ts
-export default defineType({
-  name: 'kontaktPage',
-  type: 'document',
-  title: 'Kontakt Page',
-  fields: [
-    {
-      name: 'email',
-      type: 'string',
-      title: 'Email',
-    },
-    // ...
-  ],
-});
-```
-
-### GROQ Queries
-
-All queries centralized in `src/lib/sanity/queries.js`:
+### GROQ Patterns
 
 ```javascript
-/**
- * GROQ Syntax Guide:
- * - *[filter] - Query documents with filter
- * - defined(field) - Field exists and is not null
- * - order(field asc/desc) - Sort results
- * - "alias": field.nested->ref - Dereference and alias
- * - [0] - Get first element
- * - $param - Query parameter
- */
-
-// Example: Query with bilingual fields
-export const eventsQuery = `
-  *[_type == "event" && status == "upcoming" && defined(publishedAt)] | order(date asc) {
-    _id,
-    titlePl,
-    titleEn,
-    date,
-    performersPl,
-    performersEn,
-    descriptionPl,
-    descriptionEn,
-    locationPl,
-    locationEn,
-    "imageUrl": image.asset->url,
-    ticketUrl,
-    showTicketButton
-  }
-`
-
-// Example: Singleton query (first element)
-export const kontaktPageQuery = `
-  *[_type == "kontaktPage"][0] {
-    email,
-    backgroundColor,
-    lineColor,
-    "teamImageUrl": teamImage.asset->url
-  }
-`
-```
-
-### React Hooks Pattern
-
-Custom hooks provide data fetching with language transformation:
-
-```javascript
-// src/hooks/useSanityEvents.js
-import { useState, useEffect } from 'react';
-import { client } from '../lib/sanity/client';
-import { eventsQuery } from '../lib/sanity/queries';
-import { useLanguage } from '../context/LanguageContext';
-
-export function useSanityEvents() {
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const { language } = useLanguage();
-
-  useEffect(() => {
-    async function fetchEvents() {
-      try {
-        setLoading(true);
-        const data = await client.fetch(eventsQuery);
-
-        // Transform based on current language
-        const transformed = data.map(event => ({
-          _id: event._id,
-          title: language === 'pl' ? event.titlePl : event.titleEn,
-          description: language === 'pl' ? event.descriptionPl : event.descriptionEn,
-          performers: language === 'pl' ? event.performersPl : event.performersEn,
-          location: language === 'pl' ? event.locationPl : event.locationEn,
-          date: event.date,
-          imageUrl: event.imageUrl,
-          // ...
-        }));
-
-        setEvents(transformed);
-      } catch (err) {
-        console.error('Error fetching events:', err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchEvents();
-  }, [language]); // Re-fetch when language changes
-
-  return { events, loading, error };
+// List with bilingual fields
+*[_type == "event" && defined(publishedAt)] | order(date asc) {
+  _id, titlePl, titleEn, date, "imageUrl": image.asset->url
 }
+
+// Singleton
+*[_type == "kontaktPage"][0] { email, backgroundColor }
 ```
 
-**Null Safety:** All hooks include comprehensive null/undefined checks:
+### Hook Pattern
+
 ```javascript
-const transformed = data?.map(event => ({
-  title: language === 'pl' ? (event.titlePl || '') : (event.titleEn || ''),
-  // ...
-})) || [];
+const { language } = useLanguage();
+const title = language === 'pl' ? event.titlePl : event.titleEn;
 ```
 
-### Sanity Hooks Reference
+### Sanity Hooks
 
-All hooks in `src/hooks/`:
+| Hook | Purpose |
+|------|---------|
+| useSanityBioProfiles | Bio profiles |
+| useSanityEvents | Events list |
+| useSanityHomepageSlides | Homepage slideshow |
+| useSanityPhotoAlbums | Photo albums |
+| useSanityVideos | Videos |
+| useSanityKontaktPage | Kontakt singleton |
 
-| Hook | Purpose | Bilingual |
-|------|---------|-----------|
-| `useSanityBioProfiles` | Bio page profiles | ✓ |
-| `useSanityEvent` | Single event by ID | ✓ |
-| `useSanityEvents` | Events list (upcoming/archived) | ✓ |
-| `useSanityFundacjaPage` | Fundacja page singleton | ✓ |
-| `useSanityHomepageSlides` | Homepage slideshow | ✓ |
-| `useSanityKontaktPage` | Kontakt page singleton | - |
-| `useSanityPhotoAlbums` | Photo gallery albums | ✓ |
-| `useSanityRepertuarComposers` | Repertuar composers list | - |
-| `useSanitySpecjalneComposers` | Specjalne composers list | - |
-| `useSanityVideos` | Video gallery | ✓ |
-
-### Component Integration Pattern
-
-All components follow this pattern:
+### Component Pattern
 
 ```javascript
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
-
-// Fetch from Sanity
-const { data, loading, error } = useSanityHook();
-
-// Transform to match config structure
-const content = USE_SANITY && data
-  ? transformData(data)
-  : localConfigData;
-
-// Loading state (Sanity only)
-if (USE_SANITY && loading) {
-  return <LoadingState />;
-}
-
-// Error state (Sanity only)
-if (USE_SANITY && error) {
-  return <ErrorState />;
-}
-
-// Normal render
-return <Component content={content} />;
+const content = USE_SANITY && data ? transformData(data) : localConfigData;
+if (USE_SANITY && loading) return <Loading />;
 ```
 
-### Migration Scripts
+### Publishing
 
-Pattern for migrating local config to Sanity:
+Edit in Studio → set `publishedAt` → content appears when `VITE_USE_SANITY=true`
 
-```javascript
-// scripts/migrate-[content]-[i18n].js
-import { createClient } from '@sanity/client';
-import dotenv from 'dotenv';
+**Note**: Only documents with `publishedAt` are fetched.
 
-dotenv.config();
+---
 
-const client = createClient({
-  projectId: process.env.VITE_SANITY_PROJECT_ID,
-  dataset: process.env.VITE_SANITY_DATASET,
-  token: process.env.SANITY_AUTH_TOKEN,
-  apiVersion: '2024-01-01',
-  useCdn: false,
-});
+## Lessons Learned / Gotchas
 
-async function migrate() {
-  // 1. Fetch existing to avoid duplicates
-  const existing = await client.fetch(`*[_type == "typeName"]`);
+### High Contrast + Fixed Positioning
 
-  // 2. Import local config
-  const localData = [...];
+**Problem**: CSS `filter` breaks `position: fixed` (creates new containing block).
 
-  // 3. Create documents
-  for (const item of localData) {
-    // Check if exists
-    const exists = existing.find(e => e.someUniqueField === item.someUniqueField);
-    if (exists) {
-      console.log(`Skipping duplicate: ${item.name}`);
-      continue;
-    }
+**Solution**: FixedPortal renders to `#fixed-root` outside filtered `#root`.
 
-    // Create document
-    await client.create({
-      _type: 'typeName',
-      fieldPl: item.field,
-      fieldEn: await translate(item.field), // Optional: auto-translate
-      publishedAt: new Date().toISOString(),
-      // ...
-    });
-  }
+```jsx
+// src/components/FixedPortal/FixedPortal.jsx
+export default function FixedPortal({ children }) {
+  const fixedRoot = document.getElementById('fixed-root');
+  return fixedRoot ? createPortal(children, fixedRoot) : children;
 }
-
-migrate();
 ```
 
-All migration scripts have:
-- **Duplicate detection** - safe to run multiple times
-- **Optional translation** - uses OpenAI API for auto-translation
-- **Sanity asset upload** - uploads images to Sanity CDN
+```css
+#fixed-root { position: fixed; top: 0; left: 0; width: 0; height: 0; z-index: 9999; pointer-events: none; overflow: visible; }
+body.high-contrast #root { filter: contrast(1.5) grayscale(1); }
+```
 
-### Publishing Workflow
+**All FixedLayer components** must use `<FixedPortal>`: Archiwalne, Bio, Fundacja, Kalendarz, Kontakt, Media, MediaWideo, Repertuar, Specjalne, Wydarzenie.
 
-1. **Edit content** in Sanity Studio (http://localhost:3333)
-2. **Set publishedAt** date to make content live
-3. **Content appears** automatically on website (when `VITE_USE_SANITY=true`)
+### i18n - Config vs Sanity
 
-**Note**: Only documents with `publishedAt` field are fetched by queries.
+| Source | Flow | Handling |
+|--------|------|----------|
+| Config/Generator | Direct | No transformation, use `t()` |
+| Sanity | Hook transform | `titlePl`/`titleEn` → `title` |
 
-### Deployment
+**Generator**: Use direct fields (`id`, `location`), not i18n fields.
 
-**Production Checklist**:
-1. Ensure `SANITY_AUTH_TOKEN` is set in production environment
-2. Set `VITE_USE_SANITY=true` in production `.env`
-3. Deploy Sanity Studio to hosting (optional: `npx sanity deploy`)
-4. Grant Sanity Studio access to content editors
-5. Monitor API usage in Sanity dashboard
+### Footer Positioning
 
-### Asset Management
+**Wrong**: `position: absolute; bottom: 40px` (gaps with dynamic content)
+**Right**: Content flow with `marginTop: 80px, marginBottom: 40px`
 
-All images uploaded to **Sanity CDN**:
-- Automatic optimization
-- Global CDN distribution
-- Image transformations available
-- No need to commit images to git
+### Translation Keys
 
-### Troubleshooting
+Use numeric IDs (1, 2, 3) matching translation keys (`event1`, `event2`), not complex IDs.
 
-**Issue**: Content not loading
-- Check `VITE_USE_SANITY=true` in `.env`
-- Verify `SANITY_AUTH_TOKEN` is set
-- Check console for errors
+---
 
-**Issue**: Old content showing
-- Ensure documents have `publishedAt` field set
-- Check query filters in `src/lib/sanity/queries.js`
-- Clear browser cache
+## Large Test Data Mode
 
-**Issue**: Build errors
-- Run `npm run build` to check for errors
-- Verify all hooks imported correctly
+**Flag**: `VITE_LARGE_TEST_DATA=true npm run dev`
+
+**Generator**: `src/test-data/large-data-generator.js`
+
+| Page | Normal → Large |
+|------|----------------|
+| Bio | 4 → 10 profiles |
+| Homepage | 4 → 8 slides |
+| Archiwalne | 6 → 100 events |
+| Kalendarz | 5 → 50 events |
+| Media | 5 → 30 albums |
+
+**Purpose**: Stress test layout/performance, not i18n. Use direct fields in generator.
+
+**Tests**: `tests/e2e/content-overlap/` - verify no text overlap, footer visible.
+
+---
+
+## Assets Handling
+
+**Problem**: Figma exports SVG as `.png` → API errors.
+
+**Workflow**:
+1. Download from Figma via `get_design_context`
+2. Check type: `file public/assets/new-asset.png`
+3. Fix extension if mismatch: `mv file.png file.svg`
 
 ---
 
 ## Scripts Reference
 
-### Verification Scripts
 | Script | Purpose |
 |--------|---------|
-| `verify-figma-sections.cjs` | Section comparison with Figma |
-| `verify-uimatch.cjs` | Single node UIMatch comparison |
-| `verify-sanity-integration.js` | CMS integration testing |
-
-### Migration Scripts
-
-Pattern: `migrate-[content].js` and `migrate-[content]-i18n.js`
-
-| Script | Purpose |
-|--------|---------|
-| `migrate-events.js` | Migrate events to Sanity |
-| `migrate-events-i18n.js` | Add English translations to events |
-| `migrate-bio-profiles.js` | Migrate bio profiles |
-| `migrate-bio-profiles-i18n.js` | Add English translations to bio |
-| `migrate-homepage-slides.js` | Migrate homepage slideshow |
-| `migrate-homepage-slides-i18n.js` | Add translations to slides |
-| `migrate-photo-albums.js` | Migrate photo albums |
-| `migrate-photo-albums-i18n.js` | Add translations to albums |
-| `migrate-fundacja-page.js` | Migrate Fundacja page |
-| `migrate-fundacja-page-i18n.js` | Add translations to Fundacja |
-| `migrate-kontakt-page.js` | Migrate Kontakt page |
-| `migrate-videos.js` | Migrate video gallery |
-| `migrate-composers.js` | Migrate composer data |
-| `migrate-archived-events.js` | Migrate archived events |
-
-All migration scripts have:
-- **Duplicate detection** - safe to run multiple times
-- **OpenAI translation** - auto-translate via API (optional)
-- **Asset upload** - uploads images to Sanity CDN
-
-### Translation Scripts
-| Script | Purpose |
-|--------|---------|
-| `translate-content-to-english.js` | Auto-translate content via OpenAI |
-| `check-translations.js` | Validate i18n coverage |
-| `update-bio-translations.js` | Update bio translations |
-
-### Utility Scripts
-| Script | Purpose |
-|--------|---------|
-| `test-all-pages.js` | Cross-page testing (Sanity ON/OFF) |
-| `test-report.js` | Generate comprehensive test report |
-| `fix-*-keys.js` | Add ID keys to Sanity documents |
+| verify-figma-sections.cjs | Section comparison |
+| verify-uimatch.cjs | Single node comparison |
+| migrate-*.js | CMS migration (duplicate detection, OpenAI translation) |
+| translate-content-to-english.js | Auto-translate via OpenAI |
 
 ---
 
-## Quick Start for New Project
+## Figma Integration
 
-1. **Clone and install:**
-   ```bash
-   git clone [repo]
-   npm install
-   ```
+**Requirements**: `FIGMA_ACCESS_TOKEN` in `.env`, Figma desktop running.
 
-2. **Create project config folder:**
-   ```bash
-   mkdir scripts_project
-   ```
+**MCP Tools**:
+- `mcp__figma__get_design_context` - design context + code
+- `mcp__figma__get_screenshot` - screenshots
+- `mcp__figma__get_metadata` - structure overview
 
-3. **Setup environment:**
-   ```bash
-   cp .env.example .env
-   # Fill in FIGMA_ACCESS_TOKEN and other values
-   ```
-
-4. **Create verification configs:**
-   - `scripts_project/sections-config.json` - Figma file and section bounds
-   - `scripts_project/uimatch-config.json` - Individual node configs
-
-5. **Start development:**
-   ```bash
-   npm run dev
-   ```
-
-6. **Run verification:**
-   ```bash
-   make verify-sections SECTIONS_CONFIG=scripts_project/sections-config.json
-   ```
-
-7. **Optional - Setup Sanity CMS:**
-   ```bash
-   cd sanity-studio
-   npm install
-   npm run dev
-   ```
+**Components must have** `data-section="hero"` for verification.
 
 ---
 
-## Project-Specific Details
+## Quick Reference
 
-> **Note:** This section contains project-specific implementation details for Kompopolex.
-> For generic patterns, refer to sections above.
+**Verification**: `make verify-sections` → check report → fix → repeat
 
-See [KOMPOPOLEX.md](./KOMPOPOLEX.md) for:
-- Specific Figma design links
-- Color schemes and design tokens
-- Page-by-page implementation details
-- Verification results
-- Asset locations
+**High contrast**: FixedPortal + `#fixed-root` outside `#root`
+
+**Responsive**: ResponsiveWrapper scales content, FixedLayer outside with `scale` prop
+
+**i18n**: Translation files for UI, bilingual Sanity fields for content
+
+**Testing**: Test-first for bugs, E2E in `tests/e2e/`
+
+**Sanity**: Feature flag, hooks transform language, publish via Studio
+
+---
+
+See [KOMPOPOLEX.md](./KOMPOPOLEX.md) for project-specific: Figma links, colors, page details, assets.
