@@ -23,6 +23,11 @@ Thumbs.db
 tmp/
 *.log
 
+# Test artifacts
+test-results/
+playwright-report/
+tests/e2e/debug/
+
 # UIMatch reports (generated)
 tmp/uimatch-reports/
 .vercel
