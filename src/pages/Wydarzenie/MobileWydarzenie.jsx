@@ -113,7 +113,7 @@ export default function MobileWydarzenie() {
         {mobileLinePositions.map((left, index) => (
           <div
             key={index}
-            className="absolute top-0"
+            className="absolute top-0 decorative-line"
             style={{
               left: `${left}px`,
               width: '1px',
@@ -124,8 +124,8 @@ export default function MobileWydarzenie() {
         ))}
       </div>
 
-      {/* Fixed header via portal */}
-      {typeof document !== 'undefined' && createPortal(
+      {/* Fixed header via portal to #mobile-header-root for high contrast filter support */}
+      {typeof document !== 'undefined' && document.getElementById('mobile-header-root') && createPortal(
         <div
           className="fixed top-0 left-0"
           style={{
@@ -135,13 +135,14 @@ export default function MobileWydarzenie() {
             transform: `scale(${scale})`,
             transformOrigin: 'top left',
             zIndex: 100,
+            pointerEvents: 'auto',
           }}
         >
           {/* Pionowe linie w fixed headerze */}
           {mobileLinePositions.map((left, index) => (
             <div
               key={`header-line-${index}`}
-              className="absolute top-0"
+              className="absolute top-0 decorative-line"
               style={{
                 left: `${left}px`,
                 width: '1px',
@@ -212,7 +213,7 @@ export default function MobileWydarzenie() {
           {/* MobileMenu inside portal */}
           <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
         </div>,
-        document.body
+        document.getElementById('mobile-header-root')
       )}
 
       {/* Spacer for fixed header */}

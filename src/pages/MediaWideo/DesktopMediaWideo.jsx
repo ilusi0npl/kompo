@@ -10,6 +10,10 @@ import {
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
+// Pozycje linii pionowych z Figma
+const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
+const LINE_COLOR = '#3478FF';
+
 /**
  * Transform Sanity videos to match config structure
  */
@@ -109,6 +113,20 @@ export default function DesktopMediaWideo() {
         zIndex: 60,
       }}
     >
+      {/* Pionowe linie dekoracyjne */}
+      {LINE_POSITIONS.map((x) => (
+        <div
+          key={x}
+          className="absolute top-0 decorative-line"
+          style={{
+            left: `${x}px`,
+            width: '1px',
+            height: '100%',
+            backgroundColor: LINE_COLOR,
+          }}
+        />
+      ))}
+
       {/* Video Grid */}
       {videos.map((video, index) => {
         const position = calculatePosition(index);

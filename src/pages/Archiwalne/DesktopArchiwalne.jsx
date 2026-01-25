@@ -10,46 +10,61 @@ import { useSanityEvents } from '../../hooks/useSanityEvents';
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
-// Grid layout constants
+// Pozycje linii pionowych z Figma
+const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
+const LINE_COLOR = '#A0E38A';
+
+// Grid layout constants (like Media page pattern)
 const CARD_HEIGHT = 420; // Image height
-const TEXT_HEIGHT = 150; // Text content height
-const ROW_GAP = 104; // Gap between rows
-const ROW_HEIGHT = CARD_HEIGHT + TEXT_HEIGHT + ROW_GAP; // ~674px
-const FOOTER_HEIGHT = 64;
-const FOOTER_MARGIN = 40;
+const TEXT_HEIGHT = 120; // Text content below image (date + title + performers)
+const ITEM_HEIGHT = CARD_HEIGHT + 16 + TEXT_HEIGHT; // Card + gap + text
+const ROW_SPACING = 674; // Distance between row starts
+const FOOTER_SPACING = 113; // Space between last item and footer (same as Media)
+const GRID_START_TOP = 275;
+const GRID_COLUMNS = [185, 515, 845]; // Column X positions
 
-// Grid layout positions (3 columns x 1 row for CMS data)
-const GRID_LAYOUT = [
-  { left: 185, top: 275, hasBorder: true },   // Column 1
-  { left: 515, top: 275, hasBorder: false },  // Column 2
-  { left: 845, top: 275, hasBorder: false },  // Column 3
-];
+// Generate grid position for event at given index
+function getGridPosition(index) {
+  const row = Math.floor(index / 3);
+  const col = index % 3;
+  return {
+    left: GRID_COLUMNS[col],
+    top: GRID_START_TOP + (row * ROW_SPACING),
+    hasBorder: col === 0, // First column has border
+  };
+}
 
-// Calculate dynamic page height based on number of events
-function calculatePageHeight(eventCount) {
-  const BASE_HEIGHT = 1792; // Minimum height for 6 events (2 rows)
-  if (eventCount <= 6) return BASE_HEIGHT;
+// Calculate footer position and total height (like Media page)
+function calculateLayout(eventCount) {
+  if (eventCount === 0) return { footerTop: 400, totalHeight: 500 };
 
-  const rows = Math.ceil(eventCount / 3);
-  const contentHeight = 275 + (rows * ROW_HEIGHT); // Start position + rows
-  return contentHeight + FOOTER_HEIGHT + FOOTER_MARGIN;
+  const numRows = Math.ceil(eventCount / 3);
+  const lastRowTop = GRID_START_TOP + ((numRows - 1) * ROW_SPACING);
+  const lastItemBottom = lastRowTop + ITEM_HEIGHT;
+  const footerTop = lastItemBottom + FOOTER_SPACING;
+  const totalHeight = footerTop + 70; // footer + bottom margin (same as Media)
+
+  return { footerTop, totalHeight };
 }
 
 // Transform Sanity archived events to match config structure with grid layout
 function transformSanityEvents(sanityEvents) {
-  return sanityEvents.map((event, index) => ({
-    id: event._id,
-    date: new Date(event.date).toLocaleDateString('pl-PL', {
-      day: '2-digit',
-      month: '2-digit',
-      year: '2-digit',
-    }).replace(/\./g, '.').replace(/(\d{2})\.(\d{2})\.(\d{2})/, '$1.$2.$3 '),
-    title: event.title,
-    performers: event.performers,
-    image: event.imageUrl,
-    position: GRID_LAYOUT[index] || GRID_LAYOUT[0], // Fallback to first position
-    hasBorder: GRID_LAYOUT[index]?.hasBorder || false,
-  }));
+  return sanityEvents.map((event, index) => {
+    const position = getGridPosition(index);
+    return {
+      id: event._id,
+      date: new Date(event.date).toLocaleDateString('pl-PL', {
+        day: '2-digit',
+        month: '2-digit',
+        year: '2-digit',
+      }).replace(/\./g, '.').replace(/(\d{2})\.(\d{2})\.(\d{2})/, '$1.$2.$3 '),
+      title: event.title,
+      performers: event.performers,
+      image: event.imageUrl,
+      position,
+      hasBorder: position.hasBorder,
+    };
+  });
 }
 
 export default function DesktopArchiwalne() {
@@ -63,8 +78,8 @@ export default function DesktopArchiwalne() {
     ? transformSanityEvents(sanityEvents)
     : configEvents;
 
-  // Calculate dynamic height based on event count
-  const pageHeight = calculatePageHeight(archivedEvents.length);
+  // Calculate layout (footer position and total height)
+  const { footerTop, totalHeight } = calculateLayout(archivedEvents.length);
 
   // Show loading state only when using Sanity
   if (USE_SANITY && loading) {
@@ -74,7 +89,7 @@ export default function DesktopArchiwalne() {
         className="relative"
         style={{
           width: `${DESKTOP_WIDTH}px`,
-          minHeight: `${pageHeight}px`,
+          height: `${totalHeight}px`,
           backgroundColor: 'transparent',
           display: 'flex',
           alignItems: 'center',
@@ -102,7 +117,7 @@ export default function DesktopArchiwalne() {
         className="relative"
         style={{
           width: `${DESKTOP_WIDTH}px`,
-          minHeight: `${pageHeight}px`,
+          height: `${totalHeight}px`,
           backgroundColor: 'transparent',
           display: 'flex',
           alignItems: 'center',
@@ -128,11 +143,25 @@ export default function DesktopArchiwalne() {
       className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
-        minHeight: `${pageHeight}px`,
+        height: `${totalHeight}px`,
         backgroundColor: 'transparent',
         zIndex: 60,
       }}
     >
+      {/* Pionowe linie dekoracyjne */}
+      {LINE_POSITIONS.map((x) => (
+        <div
+          key={x}
+          className="absolute top-0 decorative-line"
+          style={{
+            left: `${x}px`,
+            width: '1px',
+            height: '100%',
+            backgroundColor: LINE_COLOR,
+          }}
+        />
+      ))}
+
       {/* Event cards - 3x2 grid */}
       {archivedEvents.map((event) => (
         <div
@@ -221,12 +250,12 @@ export default function DesktopArchiwalne() {
         </div>
       ))}
 
-      {/* Stopka */}
+      {/* Stopka - absolute position like Media page */}
       <Footer
         className="absolute"
         style={{
           left: '185px',
-          top: `${pageHeight - FOOTER_HEIGHT - FOOTER_MARGIN}px`,
+          top: `${footerTop}px`,
           width: '520px',
         }}
       />

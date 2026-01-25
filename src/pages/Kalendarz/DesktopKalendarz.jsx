@@ -11,6 +11,10 @@ import {
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
+// Pozycje linii pionowych z Figma
+const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
+const LINE_COLOR = '#A0E38A';
+
 // Format date for display (handle both config string and Sanity datetime)
 const formatEventDate = (dateValue) => {
   // If it's already formatted string from config (e.g., "13.12.25 | 18:00"), return as-is
@@ -112,6 +116,20 @@ export default function DesktopKalendarz() {
         zIndex: 60,
       }}
     >
+      {/* Pionowe linie dekoracyjne */}
+      {LINE_POSITIONS.map((x) => (
+        <div
+          key={x}
+          className="absolute top-0 decorative-line"
+          style={{
+            left: `${x}px`,
+            width: '1px',
+            height: '100%',
+            backgroundColor: LINE_COLOR,
+          }}
+        />
+      ))}
+
       {/* Event 1 */}
       <Link
         to={`/wydarzenie/${events[0]._id || events[0].id}`}

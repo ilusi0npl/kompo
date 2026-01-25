@@ -93,7 +93,7 @@ export default function MobileKalendarz() {
       {mobileLinePositions.map((left, index) => (
         <div
           key={index}
-          className="absolute top-0"
+          className="absolute top-0 decorative-line"
           style={{
             left: `${left}px`,
             width: '1px',

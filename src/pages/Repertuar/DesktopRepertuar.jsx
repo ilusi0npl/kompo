@@ -9,6 +9,10 @@ import {
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
+// Pozycje linii pionowych z Figma
+const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
+const LINE_COLOR = '#A0E38A';
+
 // Helper component to render a single composer entry
 const ComposerEntry = ({ composer }) => {
   return (
@@ -112,16 +116,29 @@ export default function DesktopRepertuar() {
     rows.push(composers.slice(i, i + 3));
   }
 
-  // Calculate dynamic height based on content
-  // Each row: ~48px name (can wrap) + ~72px for works (avg 3, can wrap) + 30px gap = ~150px per row
-  const rowHeight = 150;
-  const numRows = Math.ceil(composers.length / 3);
-  const contentTop = 285;
-  const rowsHeight = numRows * rowHeight;
-  const footnoteHeight = 50 + 24; // margin + text
-  const footerSpace = 40 + 64; // bottom margin (40px) + footer height
-  const contentHeight = contentTop + rowsHeight + footnoteHeight + footerSpace;
-  const pageHeight = Math.max(DESKTOP_HEIGHT, contentHeight);
+  // Calculate dynamic height based on ACTUAL content (not estimates)
+  // Font: 16px, lineHeight: 1.48 = ~24px per line
+  // Each composer: name line (24px) + works (24px each, no margins between)
+  const LINE_HEIGHT = 24; // 16px * 1.48 ≈ 24px
+  const CONTENT_TOP = 285;
+  const ROW_GAP = 30; // Gap between rows (from CSS)
+  const FOOTNOTE_SPACE = 74; // 50px margin + 24px text
+  const FOOTER_SPACING = 113; // Same as Media page
+
+  // Calculate height of each composer: name line + work lines
+  const getComposerHeight = (composer) => LINE_HEIGHT * (1 + composer.works.length);
+
+  // Calculate height of each row (max height of composers in row)
+  const rowHeights = rows.map(rowComposers =>
+    Math.max(...rowComposers.map(getComposerHeight))
+  );
+
+  // Total grid height: sum of row heights + gaps between rows
+  const gridHeight = rowHeights.reduce((sum, h) => sum + h, 0) + (rows.length - 1) * ROW_GAP;
+  const gridBottom = CONTENT_TOP + gridHeight;
+  const footnoteBottom = gridBottom + FOOTNOTE_SPACE;
+  const footerTop = footnoteBottom + FOOTER_SPACING;
+  const totalHeight = footerTop + 70; // footer + bottom margin (like Media)
 
   return (
     <section
@@ -129,11 +146,25 @@ export default function DesktopRepertuar() {
       className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
-        minHeight: `${pageHeight}px`,
+        height: `${totalHeight}px`,
         backgroundColor: 'transparent',
         zIndex: 60,
       }}
     >
+      {/* Pionowe linie dekoracyjne */}
+      {LINE_POSITIONS.map((x) => (
+        <div
+          key={x}
+          className="absolute top-0 decorative-line"
+          style={{
+            left: `${x}px`,
+            width: '1px',
+            height: '100%',
+            backgroundColor: LINE_COLOR,
+          }}
+        />
+      ))}
+
       {/* Composers Grid and Footnote - flex container for dynamic spacing */}
       <div
         className="absolute"
@@ -181,17 +212,18 @@ export default function DesktopRepertuar() {
         >
           {t('repertuar.footnote')}
         </p>
-
-        {/* Footer - flows after footnote */}
-        <Footer
-          style={{
-            marginTop: '80px',
-            marginBottom: '40px',
-            width: '520px',
-          }}
-          textColor="#131313"
-        />
       </div>
+
+      {/* Footer - absolute position like Media page */}
+      <Footer
+        className="absolute"
+        style={{
+          left: '185px',
+          top: `${footerTop}px`,
+          width: '520px',
+        }}
+        textColor="#131313"
+      />
     </section>
   );
 }

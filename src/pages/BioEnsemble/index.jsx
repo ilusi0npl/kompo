@@ -15,8 +15,41 @@ const COLORS = {
   logoSrc: '/assets/logo.svg',
 };
 
+// High contrast mode colors
+const HIGH_CONTRAST_COLORS = {
+  backgroundColor: '#FDFDFD',
+  lineColor: '#131313',
+  textColor: '#131313',
+  logoSrc: '/assets/logo.svg',
+};
+
 export default function BioEnsemble() {
-  const [currentColors] = useState(COLORS);
+  // Track high contrast mode
+  const [isHighContrast, setIsHighContrast] = useState(() =>
+    typeof document !== 'undefined' && document.body.classList.contains('high-contrast')
+  );
+
+  // Listen for high contrast mode changes
+  useEffect(() => {
+    const checkHighContrast = () => {
+      setIsHighContrast(document.body.classList.contains('high-contrast'));
+    };
+
+    checkHighContrast();
+
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.attributeName === 'class') {
+          checkHighContrast();
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const currentColors = isHighContrast ? HIGH_CONTRAST_COLORS : COLORS;
 
   // Track viewport width for scale calculation
   const [viewportWidth, setViewportWidth] = useState(

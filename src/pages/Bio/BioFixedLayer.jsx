@@ -21,6 +21,7 @@ export default function BioFixedLayer({ currentColors, scale = 1, height = 700 }
         {LINE_POSITIONS.map((x) => (
           <div
             key={x}
+            className="decorative-line"
             style={{
               position: 'fixed',
               top: 0,

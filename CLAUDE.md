@@ -4,6 +4,7 @@
 
 **DO NOT** without explicit request: change Sanity, commit, deploy to Vercel.
 **ALWAYS** verify: desktop AND mobile versions work.
+**ALWAYS** use TDD: write failing test FIRST, then implement fix.
 **SAVE** all Figma links for later use.
 
 **Goal**: Pixel-perfect React from Figma. Design = source of truth.
@@ -17,22 +18,54 @@ React 18+, React Router v7, Vite, Tailwind CSS 4.x, Sanity CMS v3 (feature-flagg
 
 ---
 
-## Bug Fixing - Test First
+## Test-Driven Development (TDD)
 
-**Workflow**: Bug → E2E test (must FAIL) → Fix → Test PASS → All tests PASS
+**MANDATORY**: All bug fixes and new features MUST follow TDD workflow.
 
-**Test location**: `tests/e2e/content-overlap/` or `tests/e2e/pages/`
-**Pattern**: `[feature]-[issue].spec.js`
+### TDD Workflow
+
+```
+1. WRITE TEST FIRST (must FAIL - Red)
+2. Implement minimal fix/feature (Green)
+3. Run ALL tests (no regressions)
+4. Refactor if needed
+```
+
+### Bug Fixes
+
+**Workflow**: Bug report → E2E test (must FAIL) → Fix → Test PASS → All tests PASS
 
 ```javascript
-// Example: tests/e2e/content-overlap/media-contrast-issue.spec.js
-test('Media: fixed header contrast filter', async ({ page }) => {
-  await page.goto('/media');
-  await page.click('.contrast-toggle-btn');
-  const filter = await page.$eval('#fixed-root > *', el => getComputedStyle(el).filter);
-  expect(filter).toContain('contrast');
+// Example: tests/e2e/mobile/mobile-high-contrast-visibility.spec.js
+test('logo should be visible in high contrast mode', async ({ page }) => {
+  await page.goto('/bio');
+  await page.evaluate(() => document.body.classList.add('high-contrast'));
+  const logo = page.locator('#mobile-header-root img[src*="logo"]');
+  const box = await logo.boundingBox();
+  expect(box.width).toBeGreaterThan(0);  // FAILS if logo invisible
 });
 ```
+
+### New Features
+
+**Workflow**: Feature spec → E2E test for expected behavior → Implement → Test PASS
+
+### Test Locations
+
+| Type | Location | Pattern |
+|------|----------|---------|
+| Page tests | `tests/e2e/pages/` | `[page].spec.js` |
+| Bug fixes | `tests/e2e/content-overlap/` | `[feature]-[issue].spec.js` |
+| Mobile-specific | `tests/e2e/mobile/` | `mobile-[feature].spec.js` |
+| Accessibility | `tests/e2e/accessibility/` | `[feature].spec.js` |
+
+### Before Committing
+
+```bash
+npm run test:e2e  # ALL tests must pass
+```
+
+**Never skip failing tests. Fix them or fix the code.**
 
 ---
 
@@ -320,6 +353,8 @@ Use numeric IDs (1, 2, 3) matching translation keys (`event1`, `event2`), not co
 
 ## Quick Reference
 
+**TDD**: Write failing test FIRST → implement → all tests pass → commit
+
 **Verification**: `make verify-sections` → check report → fix → repeat
 
 **High contrast**: FixedPortal + `#fixed-root` outside `#root`
@@ -328,7 +363,7 @@ Use numeric IDs (1, 2, 3) matching translation keys (`event1`, `event2`), not co
 
 **i18n**: Translation files for UI, bilingual Sanity fields for content
 
-**Testing**: Test-first for bugs, E2E in `tests/e2e/`
+**Testing**: TDD mandatory, E2E in `tests/e2e/`, `npm run test:e2e` before commit
 
 **Sanity**: Feature flag, hooks transform language, publish via Studio
 

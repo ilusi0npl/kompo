@@ -44,6 +44,7 @@ export default function LanguageText({
           padding: 0,
           background: 'none',
           border: 'none',
+          textAlign: 'left', // Align text left to match nav links
           ...(transition ? { transition: `color ${transition}` } : {}),
           ...style,
         }}

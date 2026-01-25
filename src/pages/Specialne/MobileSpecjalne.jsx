@@ -131,7 +131,7 @@ export default function MobileSpecjalne() {
       {mobileLinePositions.map((x) => (
         <div
           key={x}
-          className="absolute top-0"
+          className="absolute top-0 decorative-line"
           style={{
             left: `${x}px`,
             width: '1px',
@@ -141,8 +141,8 @@ export default function MobileSpecjalne() {
         />
       ))}
 
-      {/* Fixed header via portal */}
-      {typeof document !== 'undefined' && createPortal(
+      {/* Fixed header via portal to #mobile-header-root for high contrast filter support */}
+      {typeof document !== 'undefined' && document.getElementById('mobile-header-root') && createPortal(
         <div
           className="fixed top-0 left-0"
           style={{
@@ -152,13 +152,14 @@ export default function MobileSpecjalne() {
             transform: `scale(${scale})`,
             transformOrigin: 'top left',
             zIndex: 100,
+            pointerEvents: 'auto',
           }}
         >
           {/* Pionowe linie w fixed headerze */}
           {mobileLinePositions.map((x) => (
             <div
               key={`header-line-${x}`}
-              className="absolute top-0"
+              className="absolute top-0 decorative-line"
               style={{
                 left: `${x}px`,
                 width: '1px',
@@ -169,14 +170,18 @@ export default function MobileSpecjalne() {
           ))}
 
           {/* Logo */}
-          <Link to="/">
+          <Link
+            to="/"
+            className="absolute"
+            style={{
+              left: '20px',
+              top: '40px',
+            }}
+          >
             <img
               src="/assets/logo.svg"
               alt="Kompopolex"
-              className="absolute"
               style={{
-                left: '20px',
-                top: '40px',
                 width: '104px',
                 height: '42px',
               }}
@@ -262,7 +267,7 @@ export default function MobileSpecjalne() {
           {/* MobileMenu inside portal */}
           <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
         </div>,
-        document.body
+        document.getElementById('mobile-header-root')
       )}
 
       {/* Spacer for fixed header */}

@@ -16,14 +16,11 @@ export default function MobileMenu({ isOpen, onClose }) {
   const [portalRoot, setPortalRoot] = useState(null);
 
   useEffect(() => {
-    // Create or find portal root inside React tree
-    let root = document.getElementById('mobile-menu-root');
-    if (!root) {
-      root = document.createElement('div');
-      root.id = 'mobile-menu-root';
-      document.body.appendChild(root);
+    // Use pre-existing portal root from index.html (outside transformed containers)
+    const root = document.getElementById('mobile-menu-root');
+    if (root) {
+      setPortalRoot(root);
     }
-    setPortalRoot(root);
   }, []);
 
   useEffect(() => {

@@ -64,6 +64,7 @@ export default function KontaktFixedLayer({ scale = 1, viewportHeight = 700 }) {
           {LINE_POSITIONS.map((x) => (
             <div
               key={x}
+              className="decorative-line"
               style={{
                 position: 'absolute',
                 left: `${x * scale}px`,

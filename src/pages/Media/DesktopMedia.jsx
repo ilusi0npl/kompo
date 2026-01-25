@@ -11,6 +11,10 @@ import { useSanityPhotoAlbums } from '../../hooks/useSanityPhotoAlbums';
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
+// Pozycje linii pionowych z Figma
+const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
+const LINE_COLOR = '#01936F';
+
 export default function DesktopMedia() {
   const { t } = useTranslation();
 
@@ -120,6 +124,20 @@ export default function DesktopMedia() {
         zIndex: 60,
       }}
     >
+      {/* Pionowe linie dekoracyjne */}
+      {LINE_POSITIONS.map((x) => (
+        <div
+          key={x}
+          className="absolute top-0 decorative-line"
+          style={{
+            left: `${x}px`,
+            width: '1px',
+            height: '100%',
+            backgroundColor: LINE_COLOR,
+          }}
+        />
+      ))}
+
       {/* Photo Grid */}
       {transformedAlbums.map((photo, index) => {
         const position = calculatePosition(index);

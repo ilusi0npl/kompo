@@ -32,6 +32,7 @@ export default function WydarzenieFixedLayer({ scale = 1, pageHeight = 1941 }) {
           {LINE_POSITIONS.map((x) => (
             <div
               key={x}
+              className="decorative-line"
               style={{
                 position: 'absolute',
                 left: `${x * scale}px`,

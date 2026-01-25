@@ -278,20 +278,39 @@ test.describe('High Contrast Mode - All Pages', () => {
               await page.waitForTimeout(200);
             }
 
-            // Check mobile-menu-root or its children have filter
-            const menuRootFilter = await page.evaluate(() => {
+            // Check mobile-menu-root content elements have filter
+            // Note: Filter is applied to specific elements, not the container,
+            // to allow contrast toggle to keep its yellow color
+            const menuContentFilter = await page.evaluate(() => {
               const menuRoot = document.getElementById('mobile-menu-root');
               if (!menuRoot) return null;
-              // Check direct filter or computed filter on first child
-              const rootFilter = getComputedStyle(menuRoot).filter;
-              if (rootFilter && rootFilter !== 'none') return rootFilter;
-              // Check first child with actual content
-              const firstChild = menuRoot.querySelector('[role="dialog"]') || menuRoot.firstElementChild;
-              return firstChild ? getComputedStyle(firstChild).filter : null;
+
+              // Check nav links (should have filter)
+              const navLink = menuRoot.querySelector('.nav-link');
+              if (navLink) {
+                const filter = getComputedStyle(navLink).filter;
+                if (filter && filter !== 'none') return filter;
+              }
+
+              // Check close button (should have filter)
+              const closeBtn = menuRoot.querySelector('.mobile-menu-close');
+              if (closeBtn) {
+                const filter = getComputedStyle(closeBtn).filter;
+                if (filter && filter !== 'none') return filter;
+              }
+
+              // Fallback: check any element with contrast filter
+              const anyFiltered = menuRoot.querySelector('[class]');
+              if (anyFiltered) {
+                const filter = getComputedStyle(anyFiltered).filter;
+                if (filter && filter.includes('contrast')) return filter;
+              }
+
+              return null;
             });
 
-            if (menuRootFilter) {
-              expect(menuRootFilter).toContain('contrast');
+            if (menuContentFilter) {
+              expect(menuContentFilter).toContain('contrast');
             }
           }
         });

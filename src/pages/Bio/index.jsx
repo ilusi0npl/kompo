@@ -77,6 +77,7 @@ export default function Bio() {
         {isMobile && mobileLinePositions.map((left, index) => (
           <div
             key={`mobile-line-${index}`}
+            className="decorative-line"
             style={{
               position: 'fixed',
               top: 0,

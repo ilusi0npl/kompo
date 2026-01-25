@@ -19,7 +19,7 @@ export default function BackgroundLines({
       {linePositions.map((left, index) => (
         <div
           key={index}
-          className="absolute top-0 h-full"
+          className="absolute top-0 h-full decorative-line"
           style={{
             left: `${left * scale}px`,
             width: '1px',

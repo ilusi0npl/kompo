@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
 import { useScrollSlides } from './useScrollSlides';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -11,6 +11,9 @@ import {
   DESKTOP_HEIGHT,
 } from './slides-config';
 import { useSanityHomepageSlides } from '../../hooks/useSanityHomepageSlides';
+
+// High contrast line color for accessibility
+const HIGH_CONTRAST_LINE_COLOR = '#131313';
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
@@ -39,6 +42,33 @@ function transformSanitySlides(sanitySlides) {
 export default function DesktopHomepage() {
   const { t } = useTranslation();
 
+  // Track high contrast mode for line color override
+  const [isHighContrast, setIsHighContrast] = useState(() =>
+    typeof document !== 'undefined' && document.body.classList.contains('high-contrast')
+  );
+
+  // Listen for high contrast mode changes
+  useEffect(() => {
+    const checkHighContrast = () => {
+      setIsHighContrast(document.body.classList.contains('high-contrast'));
+    };
+
+    // Initial check
+    checkHighContrast();
+
+    // Watch for class changes on body
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.attributeName === 'class') {
+          checkHighContrast();
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+
+    return () => observer.disconnect();
+  }, []);
+
   // Fetch from Sanity if enabled
   const { slides: sanitySlides, loading, error } = useSanityHomepageSlides();
 
@@ -50,11 +80,14 @@ export default function DesktopHomepage() {
   const { currentSlide } = useScrollSlides(desktopSlides.length);
   const currentData = desktopSlides[currentSlide] || configSlides[0];
 
+  // Use high contrast line color when enabled, otherwise use slide color
+  const lineColor = isHighContrast ? HIGH_CONTRAST_LINE_COLOR : currentData.lineColor;
+
   // Sync background and line colors with CSS variables for ResponsiveWrapper
   useEffect(() => {
     document.documentElement.style.setProperty('--page-bg', currentData.backgroundColor);
-    document.documentElement.style.setProperty('--line-color', currentData.lineColor);
-  }, [currentData.backgroundColor, currentData.lineColor]);
+    document.documentElement.style.setProperty('--line-color', lineColor);
+  }, [currentData.backgroundColor, lineColor]);
 
   // Show loading state only when using Sanity
   if (USE_SANITY && loading) {
@@ -127,13 +160,13 @@ export default function DesktopHomepage() {
       {[155, 375, 595, 815, 1035, 1255].map((x) => (
         <div
           key={x}
-          className="absolute top-0"
+          className="absolute top-0 decorative-line"
           style={{
             left: `${x}px`,
             width: '1px',
             height: '200%',
-            backgroundColor: currentData.lineColor,
-            transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+            backgroundColor: lineColor,
+            transition: isHighContrast ? 'none' : `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
           }}
         />
       ))}

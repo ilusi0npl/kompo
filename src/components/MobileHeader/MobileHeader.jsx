@@ -59,7 +59,7 @@ export default function MobileHeader({
       {isFixed && lineColor && linePositions.map((left, index) => (
         <div
           key={`header-line-${index}`}
-          className="absolute top-0"
+          className="absolute top-0 decorative-line"
           style={{
             left: `${left}px`,
             width: '1px',
@@ -70,14 +70,18 @@ export default function MobileHeader({
       ))}
 
       {/* Logo */}
-      <Link to="/">
+      <Link
+        to="/"
+        className="absolute"
+        style={{
+          left: '20px',
+          top: '40px',
+        }}
+      >
         <img
           src="/assets/logo.svg"
           alt="Kompopolex"
-          className="absolute"
           style={{
-            left: '20px',
-            top: '40px',
             width: '104px',
             height: '42px',
           }}
@@ -181,8 +185,13 @@ export default function MobileHeader({
     </div>
   );
 
-  // When fixed, render via portal to document.body
+  // When fixed, render via portal to #mobile-header-root for proper high contrast handling
   if (isFixed && typeof document !== 'undefined') {
+    const mobileHeaderRoot = document.getElementById('mobile-header-root');
+    if (mobileHeaderRoot) {
+      return createPortal(headerContent, mobileHeaderRoot);
+    }
+    // Fallback to body if portal root doesn't exist
     return createPortal(headerContent, document.body);
   }
 

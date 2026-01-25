@@ -94,7 +94,7 @@ export default function MobileMediaGaleria({ album }) {
       {mobileLinePositions.map((x) => (
         <div
           key={x}
-          className="absolute top-0"
+          className="absolute top-0 decorative-line"
           style={{
             left: `${x}px`,
             width: '1px',
@@ -104,8 +104,8 @@ export default function MobileMediaGaleria({ album }) {
         />
       ))}
 
-      {/* Fixed header via portal */}
-      {typeof document !== 'undefined' && createPortal(
+      {/* Fixed header via portal to #mobile-header-root for high contrast filter support */}
+      {typeof document !== 'undefined' && document.getElementById('mobile-header-root') && createPortal(
         <div
           className="fixed top-0 left-0"
           style={{
@@ -115,13 +115,14 @@ export default function MobileMediaGaleria({ album }) {
             transform: `scale(${scale})`,
             transformOrigin: 'top left',
             zIndex: 100,
+            pointerEvents: 'auto',
           }}
         >
           {/* Pionowe linie w fixed headerze */}
           {mobileLinePositions.map((x) => (
             <div
               key={`header-line-${x}`}
-              className="absolute top-0"
+              className="absolute top-0 decorative-line"
               style={{
                 left: `${x}px`,
                 width: '1px',
@@ -189,7 +190,7 @@ export default function MobileMediaGaleria({ album }) {
           {/* MobileMenu inside portal */}
           <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
         </div>,
-        document.body
+        document.getElementById('mobile-header-root')
       )}
 
       {/* Spacer for fixed header */}

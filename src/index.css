@@ -153,6 +153,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* High contrast mode - force white background on html and body */
+/* This ensures pages with colored backgrounds (like BioEnsemble yellow) */
+/* don't show through outside the filtered #root area */
+html:has(body.high-contrast),
+body.high-contrast {
+  --page-bg: #FDFDFD !important;
+  background-color: #FDFDFD !important;
+}
+
 /* Navigation link styles (menu, tabs) */
 .nav-link {
   text-decoration: none;
@@ -362,17 +371,50 @@ body.high-contrast #fixed-root > * * {
 }
 
 
-/* Apply filter to mobile menu portal (dynamically created) */
-body.high-contrast #mobile-menu-root,
-body.high-contrast #mobile-menu-root * {
+/* Apply filter to mobile menu portal content - target specific elements only */
+/* Don't filter container elements (div, nav) because that would grayscale */
+/* the contrast toggle even though it has its own filter rule */
+/* CSS filters on parents affect ALL child rendering regardless of child filters */
+
+/* Close button and its icon */
+body.high-contrast #mobile-menu-root .mobile-menu-close,
+body.high-contrast #mobile-menu-root .mobile-menu-close * {
   filter: contrast(1.5) grayscale(1);
+}
+
+/* Navigation links */
+body.high-contrast #mobile-menu-root .nav-link {
+  filter: contrast(1.5) grayscale(1);
+}
+
+/* Language toggle */
+body.high-contrast #mobile-menu-root .language-toggle {
+  filter: contrast(1.5) grayscale(1);
+}
+
+/* Contrast toggle - only contrast, NO grayscale to keep yellow visible */
+body.high-contrast #mobile-menu-root .contrast-toggle-btn,
+body.high-contrast #mobile-menu-root .contrast-toggle-btn * {
+  filter: contrast(1.5);
 }
 
 /* Force white backgrounds in high contrast mode for full-page backgrounds */
 /* This prevents colored backgrounds from becoming medium gray */
-body.high-contrast #lines-root > div[style*="background-color"],
-body.high-contrast #fixed-root > div[style*="background-color"] {
+/* Exclude decorative-line elements which should stay dark */
+body.high-contrast #lines-root > div[style*="background-color"]:not(.decorative-line),
+body.high-contrast #fixed-root > div[style*="background-color"]:not(.decorative-line) {
   background-color: #FDFDFD !important;
+}
+
+/* Force decorative lines to be dark in high contrast mode */
+/* This ensures maximum contrast between lines and white background */
+/* Use high specificity to override any inline styles */
+body.high-contrast .decorative-line,
+body.high-contrast #lines-root .decorative-line,
+body.high-contrast #lines-root > .decorative-line,
+body.high-contrast #root .decorative-line,
+body.high-contrast #fixed-root .decorative-line {
+  background-color: #131313 !important;
 }
 
 /* Lines root for full-page decorative elements (below content) */
@@ -404,6 +446,46 @@ body.high-contrast #fixed-root > div[style*="background-color"] {
   z-index: 9999;
   pointer-events: none;
   overflow: visible;
+}
+
+/* Mobile header root - for fixed mobile headers (similar to fixed-root) */
+/* Unlike fixed-root, this needs pointer-events: auto because the header buttons need to be clickable */
+#mobile-header-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  z-index: 100;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* Enable pointer events on mobile header content */
+#mobile-header-root > * {
+  pointer-events: auto;
+}
+
+/* Apply high contrast filter to mobile header portal */
+body.high-contrast #mobile-header-root > *,
+body.high-contrast #mobile-header-root > * * {
+  filter: contrast(1.5) grayscale(1);
+}
+
+/* Force white backgrounds in mobile header high contrast mode */
+body.high-contrast #mobile-header-root > div[style*="background-color"] {
+  background-color: #FDFDFD !important;
+}
+
+/* Force white backgrounds on mobile scrollable sections in high contrast mode */
+body.high-contrast [data-section] {
+  background-color: #FDFDFD !important;
+}
+
+/* Force white background on ResponsiveWrapper container in high contrast mode */
+/* This prevents colored page backgrounds from showing as gray when filtered */
+body.high-contrast #root > div {
+  background: #FDFDFD !important;
 }
 
 /* Contrast toggle container - exclude from grayscale filter so icon stays visible */

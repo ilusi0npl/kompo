@@ -14,11 +14,19 @@ import {
 const TRANSITION_DURATION = '1s';
 const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 
+// High contrast line color for accessibility
+const HIGH_CONTRAST_LINE_COLOR = '#131313';
+
 export default function MobileHomepage() {
   const [searchParams] = useSearchParams();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [viewportHeight, setViewportHeight] = useState(typeof window !== 'undefined' ? window.innerHeight : 800);
   const { t } = useTranslation();
+
+  // Track high contrast mode for line color override
+  const [isHighContrast, setIsHighContrast] = useState(() =>
+    typeof document !== 'undefined' && document.body.classList.contains('high-contrast')
+  );
 
   useEffect(() => {
     const menuParam = searchParams.get('menu');
@@ -33,8 +41,33 @@ export default function MobileHomepage() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Listen for high contrast mode changes
+  useEffect(() => {
+    const checkHighContrast = () => {
+      setIsHighContrast(document.body.classList.contains('high-contrast'));
+    };
+
+    // Initial check
+    checkHighContrast();
+
+    // Watch for class changes on body
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.attributeName === 'class') {
+          checkHighContrast();
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+
+    return () => observer.disconnect();
+  }, []);
+
   const { currentSlide } = useScrollSlides(mobileSlides.length);
   const currentData = mobileSlides[currentSlide];
+
+  // Use high contrast line color when enabled, otherwise use slide color
+  const lineColor = isHighContrast ? HIGH_CONTRAST_LINE_COLOR : currentData.lineColor;
 
   // Oblicz skalę i minimalną wysokość żeby pokryć cały viewport
   const scale = typeof window !== 'undefined' ? window.innerWidth / MOBILE_WIDTH : 1;
@@ -55,12 +88,12 @@ export default function MobileHomepage() {
       {mobileLinePositions.map((left, index) => (
         <div
           key={index}
-          className="absolute top-0"
+          className="absolute top-0 decorative-line"
           style={{
             left: `${left}px`,
             width: '1px',
             height: '100%',
-            backgroundColor: currentData.lineColor,
+            backgroundColor: lineColor,
           }}
         />
       ))}

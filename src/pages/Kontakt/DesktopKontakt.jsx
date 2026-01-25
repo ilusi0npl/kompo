@@ -10,6 +10,10 @@ import { useSanityKontaktPage } from '../../hooks/useSanityKontaktPage';
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
+// Pozycje linii pionowych z Figma
+const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
+const LINE_COLOR = '#FFBD19';
+
 export default function DesktopKontakt() {
   const { t } = useTranslation();
 
@@ -89,6 +93,20 @@ export default function DesktopKontakt() {
         zIndex: 60,
       }}
     >
+      {/* Pionowe linie dekoracyjne */}
+      {LINE_POSITIONS.map((x) => (
+        <div
+          key={x}
+          className="absolute top-0 decorative-line"
+          style={{
+            left: `${x}px`,
+            width: '1px',
+            height: '100%',
+            backgroundColor: LINE_COLOR,
+          }}
+        />
+      ))}
+
       {/* Zdjęcie zespołu z smooth loading */}
       <SmoothImage
         src={teamImageSrc}

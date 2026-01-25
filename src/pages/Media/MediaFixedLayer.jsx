@@ -65,6 +65,7 @@ export default function MediaFixedLayer({ scale = 1, viewportHeight = 700, isPho
           {LINE_POSITIONS.map((x) => (
             <div
               key={x}
+              className="decorative-line"
               style={{
                 position: 'absolute',
                 left: `${x * scale}px`,
@@ -96,6 +97,7 @@ export default function MediaFixedLayer({ scale = 1, viewportHeight = 700, isPho
         {LINE_POSITIONS.map((x) => (
           <div
             key={`header-${x}`}
+            className="decorative-line"
             style={{
               position: 'absolute',
               left: `${x * scale}px`,

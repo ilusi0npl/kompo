@@ -23,6 +23,10 @@ const COLORS = {
   linkColor: '#761FE0',
 };
 
+// High contrast mode colors
+const HIGH_CONTRAST_BG = '#FDFDFD';
+const HIGH_CONTRAST_LINE_COLOR = '#131313';
+
 // Calculate dynamic page height based on content
 function calculatePageHeight(paragraphs, fontSize) {
   if (!paragraphs || !Array.isArray(paragraphs)) return BASE_HEIGHT;
@@ -51,6 +55,31 @@ function calculatePageHeight(paragraphs, fontSize) {
 export default function DesktopBioEnsemble() {
   const { t } = useTranslation();
   const [imageLoaded, setImageLoaded] = useState(false);
+
+  // Track high contrast mode for color override
+  const [isHighContrast, setIsHighContrast] = useState(() =>
+    typeof document !== 'undefined' && document.body.classList.contains('high-contrast')
+  );
+
+  // Listen for high contrast mode changes
+  useEffect(() => {
+    const checkHighContrast = () => {
+      setIsHighContrast(document.body.classList.contains('high-contrast'));
+    };
+
+    checkHighContrast();
+
+    const observer = new MutationObserver((mutations) => {
+      for (const mutation of mutations) {
+        if (mutation.attributeName === 'class') {
+          checkHighContrast();
+        }
+      }
+    });
+    observer.observe(document.body, { attributes: true });
+
+    return () => observer.disconnect();
+  }, []);
 
   // Get content based on mode
   const largeData = isLargeTestMode ? generateBioEnsembleData(10) : null;
@@ -81,11 +110,13 @@ export default function DesktopBioEnsemble() {
     window.scrollTo(0, 0);
   }, []);
 
-  // Set background color
+  // Set background color - use white in high contrast mode
   useEffect(() => {
-    document.documentElement.style.setProperty('--page-bg', COLORS.backgroundColor);
-    document.documentElement.style.setProperty('--line-color', COLORS.lineColor);
-  }, []);
+    const bgColor = isHighContrast ? HIGH_CONTRAST_BG : COLORS.backgroundColor;
+    const lineColor = isHighContrast ? HIGH_CONTRAST_LINE_COLOR : COLORS.lineColor;
+    document.documentElement.style.setProperty('--page-bg', bgColor);
+    document.documentElement.style.setProperty('--line-color', lineColor);
+  }, [isHighContrast]);
 
   return (
     <section

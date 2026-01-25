@@ -32,7 +32,7 @@ export default function DesktopWydarzenie2() {
       {LINE_POSITIONS.map((x) => (
         <div
           key={x}
-          className="absolute top-0"
+          className="absolute top-0 decorative-line"
           style={{
             left: `${x}px`,
             width: '1px',
@@ -43,14 +43,18 @@ export default function DesktopWydarzenie2() {
       ))}
 
       {/* Logo */}
-      <Link to="/">
+      <Link
+        to="/"
+        className="absolute"
+        style={{
+          left: '185px',
+          top: '60px',
+        }}
+      >
         <img
           src="/assets/logo.svg"
           alt="Kompopolex"
-          className="absolute"
           style={{
-            left: '185px',
-            top: '60px',
             width: '149px',
             height: '60px',
           }}

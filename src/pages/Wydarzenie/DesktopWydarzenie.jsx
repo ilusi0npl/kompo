@@ -12,6 +12,10 @@ import { events as kalendarzEvents } from '../Kalendarz/kalendarz-config';
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
+// Pozycje linii pionowych z Figma
+const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
+const LINE_COLOR = '#A0E38A';
+
 // Calculate dynamic page height based on program items
 function calculatePageHeight(programLength, hasTicketButton) {
   const BASE_HEIGHT = DESKTOP_HEIGHT; // 1941
@@ -118,6 +122,20 @@ export default function DesktopWydarzenie() {
         zIndex: 60,
       }}
     >
+      {/* Pionowe linie dekoracyjne */}
+      {LINE_POSITIONS.map((x) => (
+        <div
+          key={x}
+          className="absolute top-0 decorative-line"
+          style={{
+            left: `${x}px`,
+            width: '1px',
+            height: '100%',
+            backgroundColor: LINE_COLOR,
+          }}
+        />
+      ))}
+
       {/* Tytuł wydarzenia - centered in 850px frame */}
       <div
         className="absolute flex items-center justify-center"

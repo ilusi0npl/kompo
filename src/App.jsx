@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router';
 import { LanguageProvider } from './context/LanguageContext';
 import { AriaLiveProvider } from './components/AriaLiveAnnouncer/AriaLiveAnnouncer';
+import { useHighContrastInit } from './hooks/useHighContrastInit';
 import SkipLink from './components/SkipLink/SkipLink';
 import Homepage from './pages/Homepage';
 import Bio from './pages/Bio';
@@ -18,6 +19,10 @@ import Specialne from './pages/Specialne';
 import Fundacja from './pages/Fundacja';
 
 function App() {
+  // Initialize high contrast from localStorage on app load
+  // This ensures it works on mobile where ContrastToggle is inside closed MobileMenu
+  useHighContrastInit();
+
   return (
     <LanguageProvider>
       <AriaLiveProvider>

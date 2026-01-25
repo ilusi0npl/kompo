@@ -169,8 +169,9 @@ export default function MobileBio({ setCurrentColors }) {
         minHeight: `${totalHeight}px`,
       }}
     >
-      {/* Header z logo i menu - FIXED via portal */}
-      {typeof document !== 'undefined' && createPortal(
+      {/* Header z logo i menu - FIXED via portal to #mobile-header-root */}
+      {/* Using #mobile-header-root instead of document.body for high contrast filter support */}
+      {typeof document !== 'undefined' && document.getElementById('mobile-header-root') && createPortal(
         <div
           className="fixed top-0 left-0"
           style={{
@@ -181,13 +182,14 @@ export default function MobileBio({ setCurrentColors }) {
             transform: `scale(${scale})`,
             transformOrigin: 'top left',
             zIndex: 100,
+            pointerEvents: 'auto',
           }}
         >
           {/* Pionowe linie w FIXED headerze */}
           {mobileLinePositions.map((left, index) => (
             <div
               key={`header-line-${index}`}
-              className="absolute top-0"
+              className="absolute top-0 decorative-line"
               style={{
                 left: `${left}px`,
                 width: '1px',
@@ -200,14 +202,18 @@ export default function MobileBio({ setCurrentColors }) {
           ))}
 
           {/* Logo */}
-          <Link to="/">
+          <Link
+            to="/"
+            className="absolute"
+            style={{
+              left: '20px',
+              top: '40px',
+            }}
+          >
             <img
               src="/assets/logo.svg"
               alt="Kompopolex"
-              className="absolute"
               style={{
-                left: '20px',
-                top: '40px',
                 width: '104px',
                 height: '42px',
               }}
@@ -217,7 +223,7 @@ export default function MobileBio({ setCurrentColors }) {
           {/* MENU button */}
           <button
             onClick={() => setIsMenuOpen(true)}
-            className="absolute"
+            className="absolute mobile-menu-btn"
             style={{
               left: '312px',
               top: '43px',
@@ -260,11 +266,25 @@ export default function MobileBio({ setCurrentColors }) {
           {/* MobileMenu wewnątrz portalu */}
           <MobileMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
         </div>,
-        document.body
+        document.getElementById('mobile-header-root')
       )}
 
       {/* SCROLLABLE CONTENT - All slides stacked vertically */}
       <div style={{ position: 'relative' }}>
+        {/* Pionowe linie w scrollable content (dla high contrast mode) */}
+        {mobileLinePositions.map((left, index) => (
+          <div
+            key={`content-line-${index}`}
+            className="absolute top-0 decorative-line"
+            style={{
+              left: `${left}px`,
+              width: '1px',
+              height: '100%',
+              backgroundColor: currentColors.lineColor,
+              transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+            }}
+          />
+        ))}
         {mobileBioSlides.map((slide, index) => {
           const translationKey = slideTranslationKeys[index];
           // In large test mode, use slide data directly; otherwise use translations

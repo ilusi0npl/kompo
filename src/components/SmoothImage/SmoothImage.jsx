@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 
 /**
  * SmoothImage - komponent do płynnego ładowania dużych obrazów
@@ -19,6 +19,21 @@ export default function SmoothImage({
   const imgRef = useRef(null);
   const containerRef = useRef(null);
 
+  // Manual check if element is in viewport (fallback for IntersectionObserver issues)
+  const checkInView = useCallback(() => {
+    if (isInView || !containerRef.current) return;
+
+    const rect = containerRef.current.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    // Check if element is within 2000px of viewport (matching rootMargin)
+    // Account for scaled layouts by using a larger margin
+    const margin = 3000;
+    if (rect.top < windowHeight + margin && rect.bottom > -margin) {
+      setIsInView(true);
+    }
+  }, [isInView]);
+
   // Intersection Observer dla lazy loading
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -38,8 +53,32 @@ export default function SmoothImage({
       observer.observe(containerRef.current);
     }
 
-    return () => observer.disconnect();
-  }, []);
+    // Also do a manual check after a short delay (handles scaled layouts and initial render timing)
+    const timeoutId = setTimeout(checkInView, 100);
+
+    return () => {
+      observer.disconnect();
+      clearTimeout(timeoutId);
+    };
+  }, [checkInView]);
+
+  // Fallback: check on scroll if observer didn't trigger
+  useEffect(() => {
+    if (isInView) return;
+
+    const handleScroll = () => {
+      checkInView();
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Initial check
+    checkInView();
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [isInView, checkInView]);
 
   // Reset stanu przy zmianie src
   useEffect(() => {
