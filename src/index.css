@@ -355,18 +355,18 @@ body.high-contrast #root {
   filter: contrast(1.5) grayscale(1);
 }
 
-/* Apply filter to all elements inside #lines-root */
-body.high-contrast #lines-root,
-body.high-contrast #lines-root *,
-body.high-contrast #lines-root > div,
-body.high-contrast #lines-root > div > div {
+/* Apply filter to all elements inside #lines-root EXCEPT decorative lines */
+/* Decorative lines stay unfiltered to maintain visibility against grayscale background */
+body.high-contrast #lines-root > div:not(.decorative-line),
+body.high-contrast #lines-root > div > div:not(.decorative-line) {
   filter: contrast(1.5) grayscale(1) !important;
 }
 
 /* Apply filter to all elements inside #fixed-root (fixed header, etc.) */
 /* The container itself stays unfiltered to preserve position: fixed */
-body.high-contrast #fixed-root > *,
-body.high-contrast #fixed-root > * * {
+/* EXCLUDE decorative-line elements which should stay visible without filter */
+body.high-contrast #fixed-root > *:not(.decorative-line),
+body.high-contrast #fixed-root > * *:not(.decorative-line) {
   filter: contrast(1.5) grayscale(1);
 }
 
@@ -417,7 +417,8 @@ body.high-contrast #fixed-root .decorative-line {
   background-color: #131313 !important;
 }
 
-/* Lines root for full-page decorative elements (below content) */
+/* Lines root for full-page decorative elements (BELOW content) */
+/* Used for backgrounds and decorative lines */
 #lines-root {
   position: fixed;
   top: 0;
@@ -429,7 +430,7 @@ body.high-contrast #fixed-root .decorative-line {
   overflow: visible;
 }
 
-/* Root needs z-index to stack above #lines-root */
+/* Root is main content layer */
 #root {
   position: relative;
   z-index: 2;

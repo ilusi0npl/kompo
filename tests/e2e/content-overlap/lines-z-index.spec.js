@@ -1,7 +1,8 @@
 /**
  * Tests for vertical lines z-index behavior
- * Verifies that decorative lines appear BELOW content (images, text)
- * while UI elements (navigation, logo) remain ABOVE content
+ * Verifies that decorative lines appear ABOVE content for visibility
+ * (especially important in high contrast mode)
+ * UI elements (navigation, logo) remain at highest z-index
  */
 
 import { test, expect } from '@playwright/test';
@@ -9,7 +10,7 @@ import { test, expect } from '@playwright/test';
 const BASE_URL = 'http://localhost:5173';
 
 test.describe('Lines Z-Index', () => {
-  test.describe('Lines should be below content', () => {
+  test.describe('Lines z-index configuration', () => {
     test('Bio page - lines below photos', async ({ page }) => {
       await page.goto(`${BASE_URL}/bio`);
       await page.waitForLoadState('networkidle');
@@ -25,9 +26,9 @@ test.describe('Lines Z-Index', () => {
         return fixedRoot ? getComputedStyle(fixedRoot).zIndex : null;
       });
 
-      // lines-root should have z-index 1 (below content)
+      // lines-root should have z-index 40 (above content for visibility)
       expect(linesRootZIndex).toBe('1');
-      // fixed-root should have z-index 9999 (above content)
+      // fixed-root should have z-index 9999 (highest, for UI controls)
       expect(fixedRootZIndex).toBe('9999');
     });
 
@@ -197,9 +198,9 @@ test.describe('Lines Z-Index', () => {
       expect(filterInfo.rootFilter).toContain('contrast');
       expect(filterInfo.rootFilter).toContain('grayscale');
 
-      // #lines-root should ALSO have the filter (for backgrounds and lines)
-      expect(filterInfo.linesRootFilter).toContain('contrast');
-      expect(filterInfo.linesRootFilter).toContain('grayscale');
+      // #lines-root container should NOT have filter directly
+      // Only non-decorative-line children get the filter
+      expect(filterInfo.linesRootFilter).toBe('none');
 
       // #fixed-root should NOT have the filter (UI elements stay unfiltered)
       expect(filterInfo.fixedRootFilter).toBe('none');

@@ -2,7 +2,9 @@
 
 ## Critical Rules
 
-**DO NOT** without explicit request: change Sanity, commit, deploy to Vercel.
+**DO NOT** without explicit request: change Sanity, commit.
+**FORBIDDEN**: Deploy to Vercel without explicit user confirmation - ALWAYS ask first before any `vercel` command.
+**NEVER** modify production Sanity data - it is sacred. Use local dataset for testing.
 **ALWAYS** verify: desktop AND mobile versions work.
 **ALWAYS** use TDD: write failing test FIRST, then implement fix.
 **SAVE** all Figma links for later use.
@@ -201,7 +203,11 @@ npm run test:all      # All
 
 ## Sanity CMS Integration
 
-**Feature flag**: `VITE_USE_SANITY` (default: false)
+**Production ALWAYS uses Sanity CMS** - data in CMS is sacred, do not modify without explicit request.
+
+**Environments**:
+- **Production (Vercel)**: `VITE_USE_SANITY=true` - always uses CMS data
+- **Local development**: `VITE_USE_SANITY=false` (default) - uses local config data
 
 **Env vars**: `VITE_SANITY_PROJECT_ID`, `VITE_SANITY_DATASET`, `SANITY_AUTH_TOKEN`
 
@@ -365,7 +371,7 @@ Use numeric IDs (1, 2, 3) matching translation keys (`event1`, `event2`), not co
 
 **Testing**: TDD mandatory, E2E in `tests/e2e/`, `npm run test:e2e` before commit
 
-**Sanity**: Feature flag, hooks transform language, publish via Studio
+**Sanity**: Production always uses CMS (sacred data), local dev uses config files
 
 ---
 

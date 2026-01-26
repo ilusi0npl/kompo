@@ -289,7 +289,7 @@ test.describe('Media pages - High Contrast Mode', () => {
     expect(afterColors['#root'].filter).toContain('contrast');
   });
 
-  test('Media: LinesPortal content should be affected by contrast', async ({ page }) => {
+  test('Media: LinesPortal decorative lines should NOT have filter in high contrast', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/media', { waitUntil: 'networkidle' });
     await page.waitForTimeout(500);
@@ -300,16 +300,24 @@ test.describe('Media pages - High Contrast Mode', () => {
     });
     await page.waitForTimeout(100);
 
-    // Check #lines-root filter after contrast
-    const linesRootAfter = await page.evaluate(() => {
+    // Check decorative lines in #lines-root - they should NOT have filter (to stay visible)
+    // Note: Lines rendered directly inside #root or #fixed-root will inherit parent's filter
+    // Only lines in #lines-root (via LinesPortal) should be filter-free
+    const linesInfo = await page.evaluate(() => {
       const linesRoot = document.getElementById('lines-root');
-      return {
-        filter: linesRoot ? getComputedStyle(linesRoot).filter : 'none',
-      };
+      if (!linesRoot) return [];
+      const lines = linesRoot.querySelectorAll('.decorative-line');
+      return Array.from(lines).map(line => ({
+        filter: getComputedStyle(line).filter,
+        backgroundColor: getComputedStyle(line).backgroundColor,
+      }));
     });
 
-    console.log('#lines-root after high contrast:', linesRootAfter);
-    expect(linesRootAfter.filter).toContain('contrast');
+    console.log('Decorative lines in #lines-root after high contrast:', linesInfo);
+    // Decorative lines in #lines-root should NOT have filter applied
+    linesInfo.forEach((line, i) => {
+      expect(line.filter, `Line ${i} in #lines-root should not have filter`).toBe('none');
+    });
   });
 
   test('Media: fixed header elements inside #fixed-root should have filter applied', async ({ page }) => {

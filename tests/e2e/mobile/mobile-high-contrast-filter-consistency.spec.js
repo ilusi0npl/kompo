@@ -123,7 +123,18 @@ test.describe('Mobile High Contrast - Filter & Color Consistency', () => {
       const expectedFilter = filterInfo.filters.root || EXPECTED_FILTER;
 
       // Check that all fixed elements with background have the grayscale filter
+      // EXCEPT decorative-line elements which should NOT have filter (to stay visible)
       for (const el of filterInfo.fixedElements) {
+        // Skip decorative-line elements - they intentionally don't have filter
+        if (el.className?.includes('decorative-line')) {
+          // Decorative lines should NOT have filter
+          expect(
+            el.filter === 'none',
+            `Decorative line should NOT have filter. Got: "${el.filter}"`
+          ).toBe(true);
+          continue;
+        }
+
         // Skip elements that are inside #mobile-header-root (they inherit filter)
         // We specifically check parent containers
         const hasGrayscaleFilter = el.filter?.includes('grayscale');
