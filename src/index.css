@@ -413,7 +413,11 @@ body.high-contrast .decorative-line,
 body.high-contrast #lines-root .decorative-line,
 body.high-contrast #lines-root > .decorative-line,
 body.high-contrast #root .decorative-line,
-body.high-contrast #fixed-root .decorative-line {
+body.high-contrast #fixed-root .decorative-line,
+body.high-contrast #fixed-root > .decorative-line,
+body.high-contrast #decorative-lines-root .decorative-line,
+body.high-contrast #decorative-lines-root > .decorative-line,
+body.high-contrast #decorative-lines-root > div > .decorative-line {
   background-color: #131313 !important;
 }
 
@@ -434,6 +438,20 @@ body.high-contrast #fixed-root .decorative-line {
 #root {
   position: relative;
   z-index: 2;
+}
+
+/* Decorative lines root - for vertical lines that appear ABOVE #root but BELOW fixed UI */
+/* This layer sits between #root (z-index 2) and #fixed-root (z-index 9999) */
+/* Lines here are visible through transparent content in #root */
+#decorative-lines-root {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: visible;
 }
 
 /* Fixed root stays unfiltered so position: fixed works correctly */
@@ -479,15 +497,20 @@ body.high-contrast #mobile-header-root > div[style*="background-color"] {
 }
 
 /* Force white backgrounds on mobile scrollable sections in high contrast mode */
-body.high-contrast [data-section] {
-  background-color: #FDFDFD !important;
+/* Only applies to mobile viewport (max-width: 768px) to avoid covering desktop lines */
+@media (max-width: 768px) {
+  body.high-contrast [data-section] {
+    background-color: #FDFDFD !important;
+  }
 }
 
 /* Force white background on ResponsiveWrapper container in high contrast mode */
 /* This prevents colored page backgrounds from showing as gray when filtered */
-body.high-contrast #root > div {
+/* DISABLED: This was covering decorative lines in #lines-root */
+/* Pages that need background should set it in LinesPortal instead */
+/* body.high-contrast #root > div {
   background: #FDFDFD !important;
-}
+} */
 
 /* Contrast toggle container - exclude from grayscale filter so icon stays visible */
 /* The container and all its children need filter: none to prevent parent filter inheritance */
