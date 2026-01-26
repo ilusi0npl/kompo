@@ -16,26 +16,38 @@ export default function BioFixedLayer({ currentColors, scale = 1, height = 700 }
 
   return (
     <>
-      {/* Full-page decorative lines - ABOVE content via FixedPortal */}
-      <FixedPortal>
-        {LINE_POSITIONS.map((x) => (
-          <div
-            key={x}
-            className="decorative-line"
-            style={{
-              position: 'fixed',
-              top: 0,
-              left: `${x * scale}px`,
-              width: '1px',
-              height: '100vh',
-              backgroundColor: currentColors.lineColor,
-              transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
-              pointerEvents: 'none',
-              zIndex: 50,
-            }}
-          />
-        ))}
-      </FixedPortal>
+      {/* Full-page decorative lines - BELOW content via LinesPortal (z-index 1) */}
+      {/* Lines are behind content, same as Archiwalne and other pages */}
+      <LinesPortal>
+        {/* Container for vertical lines */}
+        <div
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100vh',
+            pointerEvents: 'none',
+            zIndex: 50,
+          }}
+        >
+          {LINE_POSITIONS.map((x) => (
+            <div
+              key={x}
+              className="decorative-line"
+              style={{
+                position: 'absolute',
+                left: `${x * scale}px`,
+                top: 0,
+                width: '1px',
+                height: '100%',
+                backgroundColor: currentColors.lineColor,
+                transition: `background-color ${TRANSITION_DURATION} ${TRANSITION_EASING}`,
+              }}
+            />
+          ))}
+        </div>
+      </LinesPortal>
 
       {/* FIXED LAYER - Logo, Menu, Bio text - ABOVE content */}
       <FixedPortal>

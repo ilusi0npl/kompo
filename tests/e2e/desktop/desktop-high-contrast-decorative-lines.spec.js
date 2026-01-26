@@ -2,6 +2,8 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Desktop High Contrast - Decorative Lines', () => {
   const pages = [
+    { path: '/bio', name: 'Bio', section: 'bio' },
+    { path: '/bio/ensemble', name: 'BioEnsemble', section: 'bio-ensemble' },
     { path: '/wydarzenie/1', name: 'Wydarzenie', section: 'wydarzenie' },
     { path: '/repertuar', name: 'Repertuar', section: 'repertuar' },
     { path: '/specialne', name: 'Specialne', section: 'specialne' },
@@ -26,10 +28,17 @@ test.describe('Desktop High Contrast - Decorative Lines', () => {
       await page.evaluate(() => {
         document.body.classList.add('high-contrast');
       });
-      await page.waitForTimeout(300);
+      // Wait for line color transition (lines have 1s transition)
+      await page.waitForTimeout(1200);
 
-      // Check for decorative lines (now in #fixed-root)
-      const lines = page.locator('#fixed-root .decorative-line');
+      // Check for decorative lines (in #decorative-lines-root or #lines-root)
+      // Bio uses #decorative-lines-root (z-index 3), other pages use #lines-root (z-index 1)
+      const linesDecorativeRoot = page.locator('#decorative-lines-root .decorative-line');
+      const linesLinesRoot = page.locator('#lines-root .decorative-line');
+
+      const decorativeCount = await linesDecorativeRoot.count();
+      const linesRootCount = await linesLinesRoot.count();
+      const lines = decorativeCount > 0 ? linesDecorativeRoot : linesLinesRoot;
       const count = await lines.count();
 
       expect(count, `${name} should have 6 decorative lines`).toBe(6);
