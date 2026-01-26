@@ -50,7 +50,7 @@ test.describe('Ultimate Lines Debug', () => {
       };
 
       // Monitor #lines-root
-      const linesRoot = document.getElementById('fixed-root');
+      const linesRoot = document.getElementById('lines-root');
       if (linesRoot) {
         log('INIT', {
           linesRootExists: true,
@@ -120,7 +120,7 @@ test.describe('Ultimate Lines Debug', () => {
 
       // Periodic line check
       const checkLines = () => {
-        const linesRoot = document.getElementById('fixed-root');
+        const linesRoot = document.getElementById('lines-root');
         const lines = linesRoot?.querySelectorAll('.decorative-line') || [];
         const linesWith100vh = linesRoot?.querySelectorAll('div[style*="height: 100vh"]') || [];
 
@@ -270,7 +270,7 @@ test.describe('Ultimate Lines Debug', () => {
       window.portalHistory = [];
 
       const recordState = () => {
-        const linesRoot = document.getElementById('fixed-root');
+        const linesRoot = document.getElementById('lines-root');
         const fixedRoot = document.getElementById('fixed-root');
 
         window.portalHistory.push({
@@ -335,9 +335,9 @@ test.describe('Ultimate Lines Debug', () => {
         // Check if BioFixedLayer is rendered (has the Bio text SVG)
         const hasBioFixedLayer = !!document.querySelector('#fixed-root svg path[d*="45.4401"]');
 
-        // Check desktop lines in lines-root
-        const linesRoot = document.getElementById('fixed-root');
-        const desktopLines = linesRoot?.querySelectorAll('div[style*="width: 1px"][style*="height: 100vh"]') || [];
+        // Check desktop lines in lines-root (lines may have height: 100% or 100vh)
+        const linesRoot = document.getElementById('lines-root');
+        const desktopLines = linesRoot?.querySelectorAll('.decorative-line') || [];
 
         window.viewportHistory.push({
           time: Date.now(),
@@ -391,7 +391,7 @@ test.describe('Ultimate Lines Debug', () => {
       window.mountEvents = [];
 
       // Track when children are added/removed from portal roots
-      const linesRoot = document.getElementById('fixed-root');
+      const linesRoot = document.getElementById('lines-root');
       const fixedRoot = document.getElementById('fixed-root');
 
       const createObserver = (root, name) => {
@@ -443,7 +443,7 @@ test.describe('Ultimate Lines Debug', () => {
     // After that, there should be no more unmounts
 
     // Final check - lines should be there
-    const lines = await page.$$('#fixed-root .decorative-line');
+    const lines = await page.$$('#lines-root .decorative-line');
     expect(lines.length).toBeGreaterThanOrEqual(6);
   });
 

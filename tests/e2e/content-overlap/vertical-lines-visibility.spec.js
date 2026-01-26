@@ -11,16 +11,18 @@ import { test, expect } from '@playwright/test';
  * Fix: Lines should have fixed width: '1px' regardless of scale.
  */
 
+// Pages with header background use FixedPortal lines (header covers LinesPortal)
+// Pages without header background use LinesPortal lines (visible everywhere)
 const PAGES_WITH_LINES = [
-  { path: '/bio', name: 'Bio' },
-  { path: '/media', name: 'Media' },
-  { path: '/media/wideo', name: 'MediaWideo' },
-  { path: '/kalendarz', name: 'Kalendarz' },
-  { path: '/archiwalne', name: 'Archiwalne' },
-  { path: '/repertuar', name: 'Repertuar' },
-  { path: '/specialne', name: 'Specjalne' },
-  { path: '/fundacja', name: 'Fundacja' },
-  { path: '/kontakt', name: 'Kontakt' },
+  { path: '/bio', name: 'Bio', portal: '#lines-root' },
+  { path: '/media', name: 'Media', portal: '#fixed-root' },
+  { path: '/media/wideo', name: 'MediaWideo', portal: '#fixed-root' },
+  { path: '/kalendarz', name: 'Kalendarz', portal: '#fixed-root' },
+  { path: '/archiwalne', name: 'Archiwalne', portal: '#fixed-root' },
+  { path: '/repertuar', name: 'Repertuar', portal: '#fixed-root' },
+  { path: '/specialne', name: 'Specjalne', portal: '#fixed-root' },
+  { path: '/fundacja', name: 'Fundacja', portal: '#lines-root' },  // No header background
+  { path: '/kontakt', name: 'Kontakt', portal: '#lines-root' },    // No header background
 ];
 
 // Line positions from FixedLayer components
@@ -35,23 +37,22 @@ const VIEWPORTS = [
 ];
 
 test.describe('Vertical lines visibility', () => {
-  for (const page of PAGES_WITH_LINES) {
-    test.describe(`${page.name} page`, () => {
+  for (const pageConfig of PAGES_WITH_LINES) {
+    test.describe(`${pageConfig.name} page`, () => {
       for (const viewport of VIEWPORTS) {
         test(`lines visible at ${viewport.name} (${viewport.width}px)`, async ({ page: browserPage }) => {
           await browserPage.setViewportSize({ width: viewport.width, height: viewport.height });
-          await browserPage.goto(page.path, { waitUntil: 'networkidle' });
+          await browserPage.goto(pageConfig.path, { waitUntil: 'networkidle' });
 
           // Wait for page to render
           await browserPage.waitForTimeout(500);
 
-          // Check that #fixed-root exists and has children
-          const linesRoot = browserPage.locator('#fixed-root');
+          // Check that portal exists and has children
+          const linesRoot = browserPage.locator(pageConfig.portal);
           await expect(linesRoot).toBeAttached();
 
-          // Get all line elements (divs with 1px width and LINE_COLOR background)
-          // Lines are rendered inside #fixed-root via LinesPortal
-          const lineElements = browserPage.locator('#fixed-root .decorative-line');
+          // Get all line elements from the appropriate portal
+          const lineElements = browserPage.locator(`${pageConfig.portal} .decorative-line`);
 
           // We expect at least 6 lines (the LINE_POSITIONS array has 6 positions)
           const count = await lineElements.count();
@@ -93,7 +94,8 @@ test.describe('Vertical lines width consistency', () => {
     // If lines use `${1 * scale}px`, they would be ~0.556px (invisible)
     // With fixed '1px', they should remain 1px
 
-    const lineElements = page.locator('#fixed-root .decorative-line');
+    // Bio page uses #lines-root for decorative lines
+    const lineElements = page.locator('#lines-root .decorative-line');
     const count = await lineElements.count();
 
     // If count is 0, lines are using scaled width (broken)

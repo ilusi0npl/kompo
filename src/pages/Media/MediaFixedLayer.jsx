@@ -93,7 +93,7 @@ export default function MediaFixedLayer({ scale = 1, viewportHeight = 700, isPho
           backgroundColor: BACKGROUND_COLOR,
         }}
       >
-        {/* Pionowe linie w fixed header */}
+        {/* Pionowe linie w fixed header - tylko w obszarze headera */}
         {LINE_POSITIONS.map((x) => (
           <div
             key={`header-${x}`}

@@ -116,20 +116,6 @@ export default function DesktopKalendarz() {
         zIndex: 60,
       }}
     >
-      {/* Pionowe linie dekoracyjne */}
-      {LINE_POSITIONS.map((x) => (
-        <div
-          key={x}
-          className="absolute top-0 decorative-line"
-          style={{
-            left: `${x}px`,
-            width: '1px',
-            height: '100%',
-            backgroundColor: LINE_COLOR,
-          }}
-        />
-      ))}
-
       {/* Event 1 */}
       <Link
         to={`/wydarzenie/${events[0]._id || events[0].id}`}

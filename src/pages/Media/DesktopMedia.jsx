@@ -124,20 +124,6 @@ export default function DesktopMedia() {
         zIndex: 60,
       }}
     >
-      {/* Pionowe linie dekoracyjne */}
-      {LINE_POSITIONS.map((x) => (
-        <div
-          key={x}
-          className="absolute top-0 decorative-line"
-          style={{
-            left: `${x}px`,
-            width: '1px',
-            height: '100%',
-            backgroundColor: LINE_COLOR,
-          }}
-        />
-      ))}
-
       {/* Photo Grid */}
       {transformedAlbums.map((photo, index) => {
         const position = calculatePosition(index);

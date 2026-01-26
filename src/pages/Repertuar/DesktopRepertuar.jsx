@@ -151,20 +151,6 @@ export default function DesktopRepertuar() {
         zIndex: 60,
       }}
     >
-      {/* Pionowe linie dekoracyjne */}
-      {LINE_POSITIONS.map((x) => (
-        <div
-          key={x}
-          className="absolute top-0 decorative-line"
-          style={{
-            left: `${x}px`,
-            width: '1px',
-            height: '100%',
-            backgroundColor: LINE_COLOR,
-          }}
-        />
-      ))}
-
       {/* Composers Grid and Footnote - flex container for dynamic spacing */}
       <div
         className="absolute"
