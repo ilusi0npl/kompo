@@ -45,13 +45,13 @@ test.describe('Vertical lines visibility', () => {
           // Wait for page to render
           await browserPage.waitForTimeout(500);
 
-          // Check that #lines-root exists and has children
-          const linesRoot = browserPage.locator('#lines-root');
+          // Check that #fixed-root exists and has children
+          const linesRoot = browserPage.locator('#fixed-root');
           await expect(linesRoot).toBeAttached();
 
           // Get all line elements (divs with 1px width and LINE_COLOR background)
-          // Lines are rendered inside #lines-root via LinesPortal
-          const lineElements = browserPage.locator('#lines-root div[style*="width: 1px"]');
+          // Lines are rendered inside #fixed-root via LinesPortal
+          const lineElements = browserPage.locator('#fixed-root .decorative-line');
 
           // We expect at least 6 lines (the LINE_POSITIONS array has 6 positions)
           const count = await lineElements.count();
@@ -93,7 +93,7 @@ test.describe('Vertical lines width consistency', () => {
     // If lines use `${1 * scale}px`, they would be ~0.556px (invisible)
     // With fixed '1px', they should remain 1px
 
-    const lineElements = page.locator('#lines-root div[style*="width: 1px"]');
+    const lineElements = page.locator('#fixed-root .decorative-line');
     const count = await lineElements.count();
 
     // If count is 0, lines are using scaled width (broken)

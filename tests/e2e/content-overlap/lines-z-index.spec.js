@@ -91,25 +91,26 @@ test.describe('Lines Z-Index', () => {
       expect(linesRootZIndex).toBe('1');
     });
 
-    test('Bio Ensemble page - lines below content', async ({ page }) => {
+    test('Bio Ensemble page - lines in fixed-root', async ({ page }) => {
       await page.goto(`${BASE_URL}/bio/ensemble`);
       await page.waitForLoadState('networkidle');
 
       const portalInfo = await page.evaluate(() => {
         const linesRoot = document.getElementById('lines-root');
         const fixedRoot = document.getElementById('fixed-root');
+        const decorativeLines = fixedRoot ? fixedRoot.querySelectorAll('.decorative-line') : [];
         return {
           linesRootExists: !!linesRoot,
           fixedRootExists: !!fixedRoot,
           linesRootZIndex: linesRoot ? getComputedStyle(linesRoot).zIndex : null,
           fixedRootZIndex: fixedRoot ? getComputedStyle(fixedRoot).zIndex : null,
-          linesRootHasChildren: linesRoot ? linesRoot.children.length > 0 : false,
+          fixedRootHasDecorativeLines: decorativeLines.length > 0,
         };
       });
 
       expect(portalInfo.linesRootExists).toBe(true);
       expect(portalInfo.linesRootZIndex).toBe('1');
-      expect(portalInfo.linesRootHasChildren).toBe(true);
+      expect(portalInfo.fixedRootHasDecorativeLines).toBe(true);
     });
   });
 
@@ -388,17 +389,18 @@ test.describe('Lines Z-Index', () => {
   });
 
   test.describe('Lines portal content structure', () => {
-    test('Lines portal contains decorative elements', async ({ page }) => {
+    test('Fixed portal contains decorative lines', async ({ page }) => {
       await page.goto(`${BASE_URL}/media`);
       await page.waitForLoadState('networkidle');
 
-      // Verify lines-root has children (decorative lines)
-      const hasChildren = await page.evaluate(() => {
-        const linesRoot = document.getElementById('lines-root');
-        return linesRoot ? linesRoot.children.length > 0 : false;
+      // Verify fixed-root has decorative lines
+      const hasDecorativeLines = await page.evaluate(() => {
+        const fixedRoot = document.getElementById('fixed-root');
+        const lines = fixedRoot ? fixedRoot.querySelectorAll('.decorative-line') : [];
+        return lines.length > 0;
       });
 
-      expect(hasChildren).toBe(true);
+      expect(hasDecorativeLines).toBe(true);
     });
 
     test('Fixed portal contains UI elements', async ({ page }) => {

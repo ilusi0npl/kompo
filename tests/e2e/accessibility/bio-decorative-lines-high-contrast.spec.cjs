@@ -39,22 +39,22 @@ test.describe('Bio Page - Decorative Lines in High Contrast', () => {
     }
   });
 
-  test('decorative lines should render in #lines-root portal (outside #root)', async ({ page }) => {
+  test('decorative lines should render in #fixed-root portal (outside #root)', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/bio');
     await page.waitForTimeout(1000);
 
-    // Check that lines are rendered inside #lines-root (outside #root)
-    const linesInLinesRoot = await page.evaluate(() => {
-      const linesRoot = document.getElementById('lines-root');
-      if (!linesRoot) return { exists: false, lineCount: 0 };
+    // Check that lines are rendered inside #fixed-root (outside #root)
+    const linesInFixedRoot = await page.evaluate(() => {
+      const fixedRoot = document.getElementById('fixed-root');
+      if (!fixedRoot) return { exists: false, lineCount: 0 };
 
-      const lines = linesRoot.querySelectorAll('.decorative-line');
+      const lines = fixedRoot.querySelectorAll('.decorative-line');
       return { exists: true, lineCount: lines.length };
     });
 
-    expect(linesInLinesRoot.exists, '#lines-root should exist').toBe(true);
-    expect(linesInLinesRoot.lineCount, 'Lines should be rendered in #lines-root').toBeGreaterThan(0);
+    expect(linesInFixedRoot.exists, '#fixed-root should exist').toBe(true);
+    expect(linesInFixedRoot.lineCount, 'Lines should be rendered in #fixed-root').toBeGreaterThan(0);
   });
 
   test('decorative lines should have correct visual contrast in high contrast mode', async ({ page }) => {

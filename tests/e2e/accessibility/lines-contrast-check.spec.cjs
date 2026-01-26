@@ -5,7 +5,7 @@ const { test, expect } = require('@playwright/test');
  *
  * Requirements:
  * 1. Lines must exist (6 lines on Bio/Bio Ensemble desktop)
- * 2. Lines must be in #lines-root portal
+ * 2. Lines must be in #fixed-root portal (to avoid high contrast filter)
  * 3. Lines must NOT have grayscale filter applied
  * 4. Lines should have dark color that contrasts with white background
  */
@@ -32,9 +32,9 @@ test.describe('Decorative Lines Visibility in High Contrast Mode', () => {
     // Verify lines are in correct portal
     const linesInPortal = await page.evaluate(() => {
       const lines = document.querySelectorAll('.decorative-line');
-      return Array.from(lines).every(line => line.closest('#lines-root') !== null);
+      return Array.from(lines).every(line => line.closest('#fixed-root') !== null);
     });
-    expect(linesInPortal, 'All lines should be in #lines-root').toBe(true);
+    expect(linesInPortal, 'All lines should be in #fixed-root').toBe(true);
 
     // Verify lines don't have filter
     for (let i = 0; i < lineCount; i++) {
@@ -73,9 +73,9 @@ test.describe('Decorative Lines Visibility in High Contrast Mode', () => {
     // Verify lines are in correct portal
     const linesInPortal = await page.evaluate(() => {
       const lines = document.querySelectorAll('.decorative-line');
-      return Array.from(lines).every(line => line.closest('#lines-root') !== null);
+      return Array.from(lines).every(line => line.closest('#fixed-root') !== null);
     });
-    expect(linesInPortal, 'All lines should be in #lines-root').toBe(true);
+    expect(linesInPortal, 'All lines should be in #fixed-root').toBe(true);
 
     // Verify lines don't have filter
     for (let i = 0; i < lineCount; i++) {
@@ -87,7 +87,7 @@ test.describe('Decorative Lines Visibility in High Contrast Mode', () => {
     await page.screenshot({ path: 'test-results/bio-ensemble-high-contrast-lines.png', fullPage: false });
   });
 
-  test('Lines should have z-index allowing visibility above background', async ({ page }) => {
+  test('Lines should be in #fixed-root with high z-index for visibility', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/bio');
     await page.waitForLoadState('networkidle');
@@ -98,28 +98,29 @@ test.describe('Decorative Lines Visibility in High Contrast Mode', () => {
     });
     await page.waitForTimeout(300);
 
-    // Check z-index of lines vs background
+    // Check z-index of lines and their container
     const zIndexInfo = await page.evaluate(() => {
       const lines = document.querySelectorAll('.decorative-line');
+      const fixedRoot = document.getElementById('fixed-root');
+      const rootDiv = document.getElementById('root');
       const linesRoot = document.getElementById('lines-root');
 
-      // Find background div (first child of lines-root that's not a decorative-line)
-      const bgDiv = linesRoot ? linesRoot.querySelector('div:not(.decorative-line)') : null;
-
       return {
+        fixedRootZIndex: fixedRoot ? getComputedStyle(fixedRoot).zIndex : null,
+        rootZIndex: rootDiv ? getComputedStyle(rootDiv).zIndex : null,
         linesRootZIndex: linesRoot ? getComputedStyle(linesRoot).zIndex : null,
         lineZIndex: lines[0] ? getComputedStyle(lines[0]).zIndex : null,
-        bgDivZIndex: bgDiv ? getComputedStyle(bgDiv).zIndex : null,
+        linesInFixedRoot: Array.from(lines).every(l => l.closest('#fixed-root') !== null),
       };
     });
 
     console.log('Z-index info:', zIndexInfo);
 
-    // Lines should have higher z-index than background within #lines-root
-    if (zIndexInfo.bgDivZIndex && zIndexInfo.lineZIndex) {
-      const bgZ = parseInt(zIndexInfo.bgDivZIndex) || 0;
-      const lineZ = parseInt(zIndexInfo.lineZIndex) || 0;
-      expect(lineZ, 'Lines should be above background').toBeGreaterThanOrEqual(bgZ);
-    }
+    // Lines should be in #fixed-root
+    expect(zIndexInfo.linesInFixedRoot, 'Lines should be in #fixed-root').toBe(true);
+    // #fixed-root should have highest z-index
+    expect(parseInt(zIndexInfo.fixedRootZIndex), '#fixed-root should have high z-index').toBe(9999);
+    // Lines should have positive z-index
+    expect(parseInt(zIndexInfo.lineZIndex), 'Lines should have positive z-index').toBeGreaterThan(0);
   });
 });

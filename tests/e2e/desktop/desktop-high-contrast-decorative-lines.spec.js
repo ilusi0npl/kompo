@@ -28,8 +28,8 @@ test.describe('Desktop High Contrast - Decorative Lines', () => {
       });
       await page.waitForTimeout(300);
 
-      // Check for decorative lines
-      const lines = page.locator(`section[data-section="${section}"] .decorative-line`);
+      // Check for decorative lines (now in #fixed-root)
+      const lines = page.locator('#fixed-root .decorative-line');
       const count = await lines.count();
 
       expect(count, `${name} should have 6 decorative lines`).toBe(6);

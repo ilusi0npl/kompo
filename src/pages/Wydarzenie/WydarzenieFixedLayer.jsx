@@ -16,35 +16,25 @@ export default function WydarzenieFixedLayer({ scale = 1, pageHeight = 1941 }) {
 
   return (
     <>
-      {/* Full-page decorative lines - BELOW content */}
-      <LinesPortal>
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: `${pageHeight * scale}px`,
-            pointerEvents: 'none',
-            zIndex: 50,
-          }}
-        >
-          {LINE_POSITIONS.map((x) => (
-            <div
-              key={x}
-              className="decorative-line"
-              style={{
-                position: 'absolute',
-                left: `${x * scale}px`,
-                top: 0,
-                width: '1px',
-                height: '100%',
-                backgroundColor: LINE_COLOR,
-              }}
-            />
-          ))}
-        </div>
-      </LinesPortal>
+      {/* Full-page decorative lines - ABOVE content via FixedPortal */}
+      <FixedPortal>
+        {LINE_POSITIONS.map((x) => (
+          <div
+            key={x}
+            className="decorative-line"
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: `${x * scale}px`,
+              width: '1px',
+              height: '100vh',
+              backgroundColor: LINE_COLOR,
+              pointerEvents: 'none',
+              zIndex: 50,
+            }}
+          />
+        ))}
+      </FixedPortal>
 
       {/* FIXED LAYER - Logo, Side Title, Menu - ABOVE content */}
       <FixedPortal>

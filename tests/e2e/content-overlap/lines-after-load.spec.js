@@ -30,14 +30,14 @@ test.describe('Lines visible after page load', () => {
       await browserPage.waitForTimeout(500);
 
       // Check lines exist initially
-      const initialLines = await browserPage.$$('#lines-root div[style*="width: 1px"]');
+      const initialLines = await browserPage.$$('#fixed-root .decorative-line');
       console.log(`${page.name} - Initial lines count:`, initialLines.length);
 
       // Wait 3 seconds (longer than the 1 second the user reported)
       await browserPage.waitForTimeout(3000);
 
       // Check lines STILL exist after waiting
-      const linesAfterWait = await browserPage.$$('#lines-root div[style*="width: 1px"]');
+      const linesAfterWait = await browserPage.$$('#fixed-root .decorative-line');
       console.log(`${page.name} - Lines after 3s:`, linesAfterWait.length);
 
       // CRITICAL: Lines must still be present after page settles
@@ -72,7 +72,7 @@ test.describe('Lines visible after page load', () => {
       await browserPage.waitForTimeout(500);
 
       // Check lines after scroll
-      const lines = await browserPage.$$('#lines-root div[style*="width: 1px"]');
+      const lines = await browserPage.$$('#fixed-root .decorative-line');
       expect(lines.length).toBeGreaterThanOrEqual(6);
 
       // Scroll back up
@@ -80,7 +80,7 @@ test.describe('Lines visible after page load', () => {
       await browserPage.waitForTimeout(500);
 
       // Lines should still be there
-      const linesAfterScrollBack = await browserPage.$$('#lines-root div[style*="width: 1px"]');
+      const linesAfterScrollBack = await browserPage.$$('#fixed-root .decorative-line');
       expect(linesAfterScrollBack.length).toBeGreaterThanOrEqual(6);
     });
   }
@@ -97,7 +97,7 @@ test.describe('Lines persistence over time', () => {
     for (const ms of checkPoints) {
       if (ms > 0) await page.waitForTimeout(ms - (checkPoints[checkPoints.indexOf(ms) - 1] || 0));
 
-      const lines = await page.$$('#lines-root div[style*="width: 1px"]');
+      const lines = await page.$$('#fixed-root .decorative-line');
       const count = lines.length;
       results.push({ ms, count });
       console.log(`At ${ms}ms: ${count} lines`);
