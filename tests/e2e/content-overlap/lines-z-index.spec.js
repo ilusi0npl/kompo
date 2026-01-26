@@ -91,26 +91,26 @@ test.describe('Lines Z-Index', () => {
       expect(linesRootZIndex).toBe('1');
     });
 
-    test('Bio Ensemble page - lines in fixed-root', async ({ page }) => {
+    test('Bio Ensemble page - lines in lines-root (below content)', async ({ page }) => {
       await page.goto(`${BASE_URL}/bio/ensemble`);
       await page.waitForLoadState('networkidle');
 
       const portalInfo = await page.evaluate(() => {
         const linesRoot = document.getElementById('lines-root');
         const fixedRoot = document.getElementById('fixed-root');
-        const decorativeLines = fixedRoot ? fixedRoot.querySelectorAll('.decorative-line') : [];
+        const decorativeLinesInLinesRoot = linesRoot ? linesRoot.querySelectorAll('.decorative-line') : [];
         return {
           linesRootExists: !!linesRoot,
           fixedRootExists: !!fixedRoot,
           linesRootZIndex: linesRoot ? getComputedStyle(linesRoot).zIndex : null,
           fixedRootZIndex: fixedRoot ? getComputedStyle(fixedRoot).zIndex : null,
-          fixedRootHasDecorativeLines: decorativeLines.length > 0,
+          linesRootHasDecorativeLines: decorativeLinesInLinesRoot.length > 0,
         };
       });
 
       expect(portalInfo.linesRootExists).toBe(true);
       expect(portalInfo.linesRootZIndex).toBe('1');
-      expect(portalInfo.fixedRootHasDecorativeLines).toBe(true);
+      expect(portalInfo.linesRootHasDecorativeLines).toBe(true);
     });
   });
 
@@ -389,14 +389,14 @@ test.describe('Lines Z-Index', () => {
   });
 
   test.describe('Lines portal content structure', () => {
-    test('Fixed portal contains decorative lines', async ({ page }) => {
-      await page.goto(`${BASE_URL}/media`);
+    test('Lines-root portal contains decorative lines', async ({ page }) => {
+      await page.goto(`${BASE_URL}/bio`);
       await page.waitForLoadState('networkidle');
 
-      // Verify fixed-root has decorative lines
+      // Verify lines-root has decorative lines (below content)
       const hasDecorativeLines = await page.evaluate(() => {
-        const fixedRoot = document.getElementById('fixed-root');
-        const lines = fixedRoot ? fixedRoot.querySelectorAll('.decorative-line') : [];
+        const linesRoot = document.getElementById('lines-root');
+        const lines = linesRoot ? linesRoot.querySelectorAll('.decorative-line') : [];
         return lines.length > 0;
       });
 

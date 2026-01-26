@@ -9,36 +9,36 @@ import { test, expect } from '@playwright/test';
  */
 
 const PAGES_TO_TEST = [
-  { path: '/bio', name: 'Bio' },
-  { path: '/media', name: 'Media' },
-  { path: '/kalendarz', name: 'Kalendarz' },
-  { path: '/repertuar', name: 'Repertuar' },
+  { path: '/bio', name: 'Bio', portal: '#lines-root' },
+  { path: '/media', name: 'Media', portal: '#fixed-root' },
+  { path: '/kalendarz', name: 'Kalendarz', portal: '#fixed-root' },
+  { path: '/repertuar', name: 'Repertuar', portal: '#fixed-root' },
 ];
 
 // Desktop line positions
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
 
 test.describe('Lines visible after page load', () => {
-  for (const page of PAGES_TO_TEST) {
-    test(`${page.name}: lines remain visible after 3 seconds`, async ({ page: browserPage }) => {
+  for (const pageConfig of PAGES_TO_TEST) {
+    test(`${pageConfig.name}: lines remain visible after 3 seconds`, async ({ page: browserPage }) => {
       await browserPage.setViewportSize({ width: 1440, height: 900 });
 
       // Go to page
-      await browserPage.goto(page.path, { waitUntil: 'networkidle' });
+      await browserPage.goto(pageConfig.path, { waitUntil: 'networkidle' });
 
       // Wait for initial render
       await browserPage.waitForTimeout(500);
 
       // Check lines exist initially
-      const initialLines = await browserPage.$$('#fixed-root .decorative-line');
-      console.log(`${page.name} - Initial lines count:`, initialLines.length);
+      const initialLines = await browserPage.$$(`${pageConfig.portal} .decorative-line`);
+      console.log(`${pageConfig.name} - Initial lines count:`, initialLines.length);
 
       // Wait 3 seconds (longer than the 1 second the user reported)
       await browserPage.waitForTimeout(3000);
 
       // Check lines STILL exist after waiting
-      const linesAfterWait = await browserPage.$$('#fixed-root .decorative-line');
-      console.log(`${page.name} - Lines after 3s:`, linesAfterWait.length);
+      const linesAfterWait = await browserPage.$$(`${pageConfig.portal} .decorative-line`);
+      console.log(`${pageConfig.name} - Lines after 3s:`, linesAfterWait.length);
 
       // CRITICAL: Lines must still be present after page settles
       expect(linesAfterWait.length).toBeGreaterThanOrEqual(6);
@@ -62,9 +62,9 @@ test.describe('Lines visible after page load', () => {
       }
     });
 
-    test(`${page.name}: lines visible after scroll`, async ({ page: browserPage }) => {
+    test(`${pageConfig.name}: lines visible after scroll`, async ({ page: browserPage }) => {
       await browserPage.setViewportSize({ width: 1440, height: 900 });
-      await browserPage.goto(page.path, { waitUntil: 'networkidle' });
+      await browserPage.goto(pageConfig.path, { waitUntil: 'networkidle' });
       await browserPage.waitForTimeout(1000);
 
       // Scroll down
@@ -72,7 +72,7 @@ test.describe('Lines visible after page load', () => {
       await browserPage.waitForTimeout(500);
 
       // Check lines after scroll
-      const lines = await browserPage.$$('#fixed-root .decorative-line');
+      const lines = await browserPage.$$(`${pageConfig.portal} .decorative-line`);
       expect(lines.length).toBeGreaterThanOrEqual(6);
 
       // Scroll back up
@@ -80,7 +80,7 @@ test.describe('Lines visible after page load', () => {
       await browserPage.waitForTimeout(500);
 
       // Lines should still be there
-      const linesAfterScrollBack = await browserPage.$$('#fixed-root .decorative-line');
+      const linesAfterScrollBack = await browserPage.$$(`${pageConfig.portal} .decorative-line`);
       expect(linesAfterScrollBack.length).toBeGreaterThanOrEqual(6);
     });
   }
@@ -97,7 +97,8 @@ test.describe('Lines persistence over time', () => {
     for (const ms of checkPoints) {
       if (ms > 0) await page.waitForTimeout(ms - (checkPoints[checkPoints.indexOf(ms) - 1] || 0));
 
-      const lines = await page.$$('#fixed-root .decorative-line');
+      // Bio uses #lines-root for decorative lines
+      const lines = await page.$$('#lines-root .decorative-line');
       const count = lines.length;
       results.push({ ms, count });
       console.log(`At ${ms}ms: ${count} lines`);

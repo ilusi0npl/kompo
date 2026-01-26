@@ -7,7 +7,8 @@ const { test, expect } = require('@playwright/test');
  * Problem: Lines are inside #root which has filter applied in high contrast.
  * CSS filter creates new containing block, breaking position:fixed rendering.
  *
- * Solution: Lines should render via FixedPortal to #fixed-root (outside filtered #root)
+ * Solution: Lines render via LinesPortal to #lines-root (below content).
+ * CSS exclusion rule prevents grayscale filter from affecting .decorative-line.
  */
 
 test.describe('Bio Page - Decorative Lines in High Contrast', () => {
@@ -29,32 +30,32 @@ test.describe('Bio Page - Decorative Lines in High Contrast', () => {
     expect(lineCount).toBeGreaterThan(0);
 
     // Lines should NOT have the high contrast filter applied
-    // (they should be outside #root, in #fixed-root)
+    // (CSS exclusion rule prevents grayscale filter from affecting .decorative-line)
     for (let i = 0; i < lineCount; i++) {
       const line = lines.nth(i);
       const filter = await line.evaluate(el => window.getComputedStyle(el).filter);
 
-      // If filter is 'none', lines are correctly outside filtered #root
-      expect(filter, `Line ${i} should not have filter applied (should be in #fixed-root)`).toBe('none');
+      // If filter is 'none', CSS exclusion rule is working correctly
+      expect(filter, `Line ${i} should not have filter applied (CSS exclusion rule)`).toBe('none');
     }
   });
 
-  test('decorative lines should render in #fixed-root portal (outside #root)', async ({ page }) => {
+  test('decorative lines should render in #lines-root portal (below content)', async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
     await page.goto('/bio');
     await page.waitForTimeout(1000);
 
-    // Check that lines are rendered inside #fixed-root (outside #root)
-    const linesInFixedRoot = await page.evaluate(() => {
-      const fixedRoot = document.getElementById('fixed-root');
-      if (!fixedRoot) return { exists: false, lineCount: 0 };
+    // Check that lines are rendered inside #lines-root (below content)
+    const linesInLinesRoot = await page.evaluate(() => {
+      const linesRoot = document.getElementById('lines-root');
+      if (!linesRoot) return { exists: false, lineCount: 0 };
 
-      const lines = fixedRoot.querySelectorAll('.decorative-line');
+      const lines = linesRoot.querySelectorAll('.decorative-line');
       return { exists: true, lineCount: lines.length };
     });
 
-    expect(linesInFixedRoot.exists, '#fixed-root should exist').toBe(true);
-    expect(linesInFixedRoot.lineCount, 'Lines should be rendered in #fixed-root').toBeGreaterThan(0);
+    expect(linesInLinesRoot.exists, '#lines-root should exist').toBe(true);
+    expect(linesInLinesRoot.lineCount, 'Lines should be rendered in #lines-root').toBeGreaterThan(0);
   });
 
   test('decorative lines should have correct visual contrast in high contrast mode', async ({ page }) => {

@@ -97,7 +97,7 @@ test.describe('Lines disappear investigation', () => {
     }
 
     // Final check - lines should still be there
-    const finalLines = await page.$$('#fixed-root .decorative-line');
+    const finalLines = await page.$$('#lines-root .decorative-line');
     expect(finalLines.length).toBeGreaterThanOrEqual(6);
   });
 
@@ -107,7 +107,7 @@ test.describe('Lines disappear investigation', () => {
     await page.waitForTimeout(500);
 
     // Initial check
-    let lines = await page.$$('#fixed-root .decorative-line');
+    let lines = await page.$$('#lines-root .decorative-line');
     console.log('Initial lines:', lines.length);
     expect(lines.length).toBeGreaterThanOrEqual(6);
 
@@ -116,7 +116,7 @@ test.describe('Lines disappear investigation', () => {
       await page.mouse.move(100 + i * 100, 100 + i * 50);
       await page.waitForTimeout(200);
 
-      lines = await page.$$('#fixed-root .decorative-line');
+      lines = await page.$$('#lines-root .decorative-line');
       console.log(`After mouse move ${i}:`, lines.length);
       expect(lines.length).toBeGreaterThanOrEqual(6);
     }
@@ -139,7 +139,7 @@ test.describe('Lines disappear investigation', () => {
       await page.mouse.click(pos.x, pos.y);
       await page.waitForTimeout(500);
 
-      const lines = await page.$$('#fixed-root .decorative-line');
+      const lines = await page.$$('#lines-root .decorative-line');
       console.log(`After click at (${pos.x}, ${pos.y}):`, lines.length);
       expect(lines.length).toBeGreaterThanOrEqual(6);
     }
@@ -155,7 +155,7 @@ test.describe('Lines disappear investigation', () => {
       await page.evaluate((scrollY) => window.scrollTo(0, scrollY), y);
       await page.waitForTimeout(300);
 
-      const lines = await page.$$('#fixed-root .decorative-line');
+      const lines = await page.$$('#lines-root .decorative-line');
       console.log(`After scroll to ${y}:`, lines.length);
       expect(lines.length).toBeGreaterThanOrEqual(6);
     }
@@ -178,7 +178,7 @@ test.describe('Lines disappear investigation', () => {
       await page.setViewportSize(size);
       await page.waitForTimeout(500);
 
-      const lines = await page.$$('#fixed-root .decorative-line');
+      const lines = await page.$$('#lines-root .decorative-line');
       console.log(`At ${size.width}x${size.height}:`, lines.length);
 
       // At desktop widths (>768) we should have 6 lines
@@ -201,7 +201,7 @@ test.describe('Lines disappear investigation', () => {
         await page.waitForTimeout(ms - (results.length > 0 ? checkPoints[results.length - 1] : 0));
       }
 
-      const lines = await page.$$('#fixed-root .decorative-line');
+      const lines = await page.$$('#lines-root .decorative-line');
       results.push({ ms, count: lines.length });
       console.log(`At ${ms}ms: ${lines.length} lines`);
     }
@@ -223,7 +223,7 @@ test.describe('Lines disappear investigation', () => {
       await langToggle.click();
       await page.waitForTimeout(1000);
 
-      const lines = await page.$$('#fixed-root .decorative-line');
+      const lines = await page.$$('#lines-root .decorative-line');
       console.log('After language toggle:', lines.length);
       expect(lines.length).toBeGreaterThanOrEqual(6);
     }
@@ -234,7 +234,7 @@ test.describe('Lines disappear investigation', () => {
       await contrastToggle.click();
       await page.waitForTimeout(1000);
 
-      const lines = await page.$$('#fixed-root .decorative-line');
+      const lines = await page.$$('#lines-root .decorative-line');
       console.log('After contrast toggle:', lines.length);
       expect(lines.length).toBeGreaterThanOrEqual(6);
     }

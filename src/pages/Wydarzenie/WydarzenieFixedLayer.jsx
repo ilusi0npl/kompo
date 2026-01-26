@@ -16,8 +16,9 @@ export default function WydarzenieFixedLayer({ scale = 1, pageHeight = 1941 }) {
 
   return (
     <>
-      {/* Full-page decorative lines - ABOVE content via FixedPortal */}
-      <FixedPortal>
+      {/* Full-page decorative lines - BELOW content via LinesPortal (z-index 1) */}
+      {/* Lines are excluded from high-contrast filter via CSS .decorative-line rules */}
+      <LinesPortal>
         {LINE_POSITIONS.map((x) => (
           <div
             key={x}
@@ -34,7 +35,7 @@ export default function WydarzenieFixedLayer({ scale = 1, pageHeight = 1941 }) {
             }}
           />
         ))}
-      </FixedPortal>
+      </LinesPortal>
 
       {/* FIXED LAYER - Logo, Side Title, Menu - ABOVE content */}
       <FixedPortal>
