@@ -165,6 +165,8 @@ export const fundacjaPageQuery = `
     nip,
     bankAccount,
     email,
+    descriptionPl,
+    descriptionEn,
     projects[] {
       textPl,
       textEn,
@@ -191,7 +193,7 @@ export const photoAlbumsQuery = `
 
 // Repertuar composers (published only, sorted by creation date ascending)
 export const repertuarComposersQuery = `
-  *[_type == "composer" && category == "repertuar" && defined(publishedAt)] | order(_createdAt asc) {
+  *[_type == "composer" && category == "repertuar"] | order(_createdAt asc) {
     _id,
     name,
     year,
@@ -201,7 +203,7 @@ export const repertuarComposersQuery = `
 
 // Specialne composers (published only, sorted by creation date ascending)
 export const specialneComposersQuery = `
-  *[_type == "composer" && category == "specialne" && defined(publishedAt)] | order(_createdAt asc) {
+  *[_type == "composer" && category == "specialne"] | order(_createdAt asc) {
     _id,
     name,
     year,

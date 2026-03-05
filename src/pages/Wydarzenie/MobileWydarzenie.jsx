@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useParams } from 'react-router';
+import { PortableText } from '@portabletext/react';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import MobileMenu from '../../components/MobileMenu/MobileMenu';
@@ -380,18 +381,32 @@ export default function MobileWydarzenie() {
         }}
       >
         {/* Opis */}
-        <p
-          style={{
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 500,
-            fontSize: '16px',
-            lineHeight: 1.48,
-            color: TEXT_COLOR,
-            whiteSpace: 'pre-wrap',
-          }}
-        >
-          {event.description}
-        </p>
+        {Array.isArray(event.description) ? (
+          <div
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 500,
+              fontSize: '16px',
+              lineHeight: 1.48,
+              color: TEXT_COLOR,
+            }}
+          >
+            <PortableText value={event.description} />
+          </div>
+        ) : (
+          <p
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 500,
+              fontSize: '16px',
+              lineHeight: 1.48,
+              color: TEXT_COLOR,
+              whiteSpace: 'pre-wrap',
+            }}
+          >
+            {event.description}
+          </p>
+        )}
 
         {/* Artyści */}
         <div

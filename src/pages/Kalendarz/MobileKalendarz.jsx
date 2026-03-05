@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { PortableText } from '@portabletext/react';
 import MobileHeader, { MobileHeaderSpacer } from '../../components/MobileHeader/MobileHeader';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -43,6 +44,25 @@ export default function MobileKalendarz() {
 
   // Show loading state only when using Sanity
   if (USE_SANITY && loading) {
+    return (
+      <div
+        style={{
+          width: `${MOBILE_WIDTH}px`,
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <div style={{fontSize: '16px', fontFamily: "'IBM Plex Mono', monospace"}}>
+          {t('common.loading.events')}
+        </div>
+      </div>
+    );
+  }
+
+  // Show empty state when no events available
+  if (!events || events.length === 0) {
     return (
       <div
         style={{
@@ -221,7 +241,19 @@ export default function MobileKalendarz() {
             )}
 
             {/* Opis */}
-            {event.description && (
+            {event.description && (Array.isArray(event.description) ? (
+              <div
+                style={{
+                  fontFamily: "'IBM Plex Mono', monospace",
+                  fontWeight: 500,
+                  fontSize: '14px',
+                  lineHeight: 1.48,
+                  color: TEXT_COLOR,
+                }}
+              >
+                <PortableText value={event.description} />
+              </div>
+            ) : (
               <p
                 style={{
                   fontFamily: "'IBM Plex Mono', monospace",
@@ -233,7 +265,7 @@ export default function MobileKalendarz() {
               >
                 {event.description}
               </p>
-            )}
+            ))}
 
             {/* Lokalizacja */}
             <div className="flex items-start" style={{ gap: '8px' }}>

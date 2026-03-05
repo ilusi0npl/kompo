@@ -2,6 +2,13 @@ import { defineConfig, devices } from '@playwright/test'
 
 /**
  * Playwright configuration for Kompopolex E2E tests
+ *
+ * Two modes:
+ * - "local": VITE_USE_SANITY=false (default, uses config data)
+ * - "sanity": VITE_USE_SANITY=true (uses Sanity CMS, port 5174)
+ *
+ * Run specific mode: npx playwright test --project=local
+ * Run all: npx playwright test
  */
 export default defineConfig({
   testDir: './tests/e2e',
@@ -14,27 +21,41 @@ export default defineConfig({
     ['list'],
   ],
   use: {
-    baseURL: 'http://localhost:5173',
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
   },
 
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: 'local',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: 'http://localhost:5173',
+      },
+      testIgnore: /sanity-mode\//,
     },
-    // Mobile webkit tests disabled - webkit browser not installed
-    // {
-    //   name: 'mobile',
-    //   use: { ...devices['iPhone 14'] },
-    // },
+    {
+      name: 'sanity',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: 'http://localhost:5174',
+      },
+      testMatch: /sanity-mode\//,
+    },
   ],
 
-  webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:5173',
-    reuseExistingServer: !process.env.CI,
-    timeout: 120000,
-  },
+  webServer: [
+    {
+      command: 'npm run dev',
+      url: 'http://localhost:5173',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120000,
+    },
+    {
+      command: 'VITE_USE_SANITY=true npx vite --port 5174',
+      url: 'http://localhost:5174',
+      reuseExistingServer: !process.env.CI,
+      timeout: 120000,
+    },
+  ],
 })

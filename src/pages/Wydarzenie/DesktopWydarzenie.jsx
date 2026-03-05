@@ -1,3 +1,4 @@
+import { PortableText } from '@portabletext/react';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
@@ -228,6 +229,10 @@ export default function DesktopWydarzenie() {
               fontSize: '32px',
               lineHeight: 1.48,
               color: '#131313',
+              maxWidth: '700px',
+              whiteSpace: 'pre-wrap',
+              wordBreak: 'break-word',
+              textAlign: 'center',
             }}
           >
             {event.location}
@@ -286,19 +291,34 @@ export default function DesktopWydarzenie() {
         }}
       >
         {/* Opis */}
-        <p
-          style={{
-            width: '100%',
-            fontFamily: "'IBM Plex Mono', monospace",
-            fontWeight: 500,
-            fontSize: '16px',
-            lineHeight: 1.48,
-            color: '#131313',
-            whiteSpace: 'pre-wrap',
-          }}
-        >
-          {event.description}
-        </p>
+        {Array.isArray(event.description) ? (
+          <div
+            style={{
+              width: '100%',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 500,
+              fontSize: '16px',
+              lineHeight: 1.48,
+              color: '#131313',
+            }}
+          >
+            <PortableText value={event.description} />
+          </div>
+        ) : (
+          <p
+            style={{
+              width: '100%',
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 500,
+              fontSize: '16px',
+              lineHeight: 1.48,
+              color: '#131313',
+              whiteSpace: 'pre-wrap',
+            }}
+          >
+            {event.description}
+          </p>
+        )}
 
         {/* Artyści frame */}
         <div

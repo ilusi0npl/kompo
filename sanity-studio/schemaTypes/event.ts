@@ -73,17 +73,21 @@ export default {
         ],
       }],
     },
-    // Bilingual description fields
+    // Bilingual description fields (Portable Text for rich text formatting)
     {
       name: 'descriptionPl',
       title: 'Opis (PL)',
-      type: 'text',
+      type: 'array',
+      of: [{type: 'block'}],
+      description: 'Rich text description - supports bold, italic, paragraphs',
       validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'descriptionEn',
       title: 'Opis (EN)',
-      type: 'text',
+      type: 'array',
+      of: [{type: 'block'}],
+      description: 'Rich text description - supports bold, italic, paragraphs',
       validation: (Rule: Rule) => Rule.required(),
     },
     // Old description field - hidden for backward compatibility

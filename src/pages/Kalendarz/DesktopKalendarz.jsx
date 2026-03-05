@@ -1,4 +1,5 @@
 import { Link } from 'react-router';
+import { PortableText } from '@portabletext/react';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
@@ -67,6 +68,26 @@ export default function DesktopKalendarz() {
 
   // Show loading state only when using Sanity
   if (USE_SANITY && loading) {
+    return (
+      <div
+        className="relative"
+        style={{
+          width: `${DESKTOP_WIDTH}px`,
+          height: `${DESKTOP_HEIGHT}px`,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}
+      >
+        <div style={{fontSize: '18px', fontFamily: "'IBM Plex Mono', monospace"}}>
+          {t('common.loading.events')}
+        </div>
+      </div>
+    );
+  }
+
+  // Show empty state when no events available
+  if (!events || events.length === 0) {
     return (
       <div
         className="relative"
@@ -155,12 +176,18 @@ export default function DesktopKalendarz() {
               {events[0].performers}
             </p>
           </div>
-          <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
-            {events[0].description}
-          </p>
-          <div className="flex items-center" style={{ gap: '10px' }}>
+          {Array.isArray(events[0].description) ? (
+            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
+              <PortableText value={events[0].description} />
+            </div>
+          ) : (
+            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
+              {events[0].description}
+            </p>
+          )}
+          <div className="flex items-start" style={{ gap: '10px' }}>
             <img src="/assets/kalendarz/place-icon.svg" alt="Location" style={{ width: '30px', height: '30px' }} />
-            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '20px', lineHeight: 1.44, color: '#131313', textTransform: 'uppercase' }}>
+            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '20px', lineHeight: 1.44, color: '#131313', textTransform: 'uppercase', width: '479px', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
               {events[0].location}
             </p>
           </div>
@@ -200,9 +227,15 @@ export default function DesktopKalendarz() {
               {events[1].performers}
             </p>
           </div>
-          <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
-            {events[1].description}
-          </p>
+          {Array.isArray(events[1].description) ? (
+            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
+              <PortableText value={events[1].description} />
+            </div>
+          ) : (
+            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
+              {events[1].description}
+            </p>
+          )}
           <div className="flex items-start" style={{ gap: '10px' }}>
             <img src="/assets/kalendarz/place-icon.svg" alt="Location" style={{ width: '30px', height: '30px' }} />
             <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '20px', lineHeight: 1.44, color: '#131313', textTransform: 'uppercase', width: '479px', whiteSpace: 'pre-wrap' }}>
@@ -258,7 +291,7 @@ export default function DesktopKalendarz() {
           </div>
           <div className="flex items-start" style={{ gap: '10px' }}>
             <img src="/assets/kalendarz/place-icon.svg" alt="Location" style={{ width: '30px', height: '30px' }} />
-            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '20px', lineHeight: 1.44, color: '#131313', textTransform: 'uppercase', width: '479px' }}>
+            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '20px', lineHeight: 1.44, color: '#131313', textTransform: 'uppercase', width: '479px', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
               {events[2].location}
             </p>
           </div>
