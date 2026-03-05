@@ -216,6 +216,8 @@ export default function DesktopArchiwalne() {
                   lineHeight: 1.45,
                   color: '#131313',
                   textTransform: 'uppercase',
+                  wordBreak: 'break-word',
+                  overflowWrap: 'break-word',
                 }}
               >
                 {event.title}
