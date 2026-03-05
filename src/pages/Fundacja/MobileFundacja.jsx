@@ -413,13 +413,24 @@ export default function MobileFundacja() {
                 color: TEXT_COLOR,
               }}
             >
-              {USE_SANITY && sanityData?.accessibilityDeclarationPl ? (
-                <PortableText value={language === 'pl' ? sanityData.accessibilityDeclarationPl : sanityData.accessibilityDeclarationEn} />
-              ) : (
-                accessibilityDeclaration[language].map((paragraph, index) => (
-                  <p key={index}>{paragraph}</p>
-                ))
-              )}
+              {(() => {
+                const text = USE_SANITY && sanityData
+                  ? (language === 'pl'
+                      ? sanityData.accessibilityDeclarationPl
+                      : sanityData.accessibilityDeclarationEn) || []
+                  : accessibilityDeclaration[language];
+                // Sanity stores as plain string array; render as paragraphs
+                if (Array.isArray(text) && text.length > 0 && typeof text[0] === 'string') {
+                  return text.map((paragraph, index) => (
+                    <p key={index}>{paragraph}</p>
+                  ));
+                }
+                // Portable Text blocks
+                if (Array.isArray(text) && text.length > 0 && typeof text[0] === 'object') {
+                  return <PortableText value={text} />;
+                }
+                return null;
+              })()}
             </div>
           </div>
         )}
