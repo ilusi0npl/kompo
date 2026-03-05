@@ -43,6 +43,9 @@ export const pl = {
     foundation: 'Ładowanie strony fundacji...',
     repertoire: 'Ładowanie repertuaru...',
   },
+  empty: {
+    events: 'Brak nadchodzących wydarzeń',
+  },
   error: {
     loadEvents: 'Błąd ładowania wydarzeń. Spróbuj ponownie później.',
     loadAlbums: 'Błąd ładowania albumów. Spróbuj ponownie później.',
@@ -90,6 +93,9 @@ export const en = {
     contact: 'Loading contact page...',
     foundation: 'Loading foundation page...',
     repertoire: 'Loading repertoire...',
+  },
+  empty: {
+    events: 'No upcoming events',
   },
   error: {
     loadEvents: 'Error loading events. Please try again later.',

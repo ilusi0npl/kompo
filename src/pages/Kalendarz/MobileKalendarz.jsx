@@ -74,7 +74,7 @@ export default function MobileKalendarz() {
         }}
       >
         <div style={{fontSize: '16px', fontFamily: "'IBM Plex Mono', monospace"}}>
-          {t('common.loading.events')}
+          {t('common.empty.events')}
         </div>
       </div>
     );

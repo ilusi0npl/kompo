@@ -86,8 +86,8 @@ export default function DesktopKalendarz() {
     );
   }
 
-  // Show empty state when no events available
-  if (!events || events.length === 0) {
+  // Show empty state when no events available (Sanity mode only)
+  if (!events || events.length < 3) {
     return (
       <div
         className="relative"
@@ -100,7 +100,7 @@ export default function DesktopKalendarz() {
         }}
       >
         <div style={{fontSize: '18px', fontFamily: "'IBM Plex Mono', monospace"}}>
-          {t('common.loading.events')}
+          {t('common.empty.events')}
         </div>
       </div>
     );
