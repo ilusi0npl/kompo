@@ -18,6 +18,7 @@
     "test:report": "node scripts/test-report.js"
   },
   "dependencies": {
+    "@portabletext/react": "^6.0.3",
     "@sanity/client": "^7.14.0",
     "@sanity/image-url": "^2.0.2",
     "dotenv": "^17.2.3",

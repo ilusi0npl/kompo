@@ -37,8 +37,8 @@ export function useSanityEvents(status = 'upcoming') {
             ? (event.performersPl || event.performersEn || '')
             : (event.performersEn || event.performersPl || ''),
           description: language === 'pl'
-            ? (event.descriptionPl || event.descriptionEn || '')
-            : (event.descriptionEn || event.descriptionPl || ''),
+            ? (event.descriptionPl || event.descriptionEn || [])
+            : (event.descriptionEn || event.descriptionPl || []),
           location: language === 'pl'
             ? (event.locationPl || event.locationEn || '')
             : (event.locationEn || event.locationPl || ''),

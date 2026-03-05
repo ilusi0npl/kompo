@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { PortableText } from '@portabletext/react';
 import MobileHeader, { MobileHeaderSpacer } from '../../components/MobileHeader/MobileHeader';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
+import { useSanityFundacjaPage } from '../../hooks/useSanityFundacjaPage';
 import {
   BACKGROUND_COLOR,
   TEXT_COLOR,
@@ -12,6 +14,8 @@ import {
   accessibilityDeclaration,
 } from './fundacja-config';
 
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
+
 const MOBILE_WIDTH = 390;
 const mobileLinePositions = [97, 195, 292];
 const LINE_COLOR = '#01936F';
@@ -20,10 +24,95 @@ const HEADER_HEIGHT = 257;
 export default function MobileFundacja() {
   const { t, language } = useTranslation();
   const [isDeclarationExpanded, setIsDeclarationExpanded] = useState(false);
+  const { data: sanityData, loading, error } = useSanityFundacjaPage();
+
+  const fundacjaInfo = USE_SANITY && sanityData
+    ? {
+        krs: sanityData.krs,
+        regon: sanityData.regon,
+        nip: sanityData.nip,
+        bankAccount: sanityData.bankAccount,
+        email: sanityData.email,
+      }
+    : fundacjaData;
+
+  const projects = USE_SANITY && sanityData ? sanityData.projects : projectsData;
 
   const toggleDeclaration = () => {
     setIsDeclarationExpanded(!isDeclarationExpanded);
   };
+
+  if (USE_SANITY && loading) {
+    return (
+      <section
+        data-section="fundacja-mobile"
+        className="relative overflow-hidden"
+        style={{
+          width: `${MOBILE_WIDTH}px`,
+          minHeight: '100vh',
+          backgroundColor: BACKGROUND_COLOR,
+        }}
+      >
+        <MobileHeader
+          title={t('fundacja.sideTitle')}
+          textColor={TEXT_COLOR}
+          backgroundColor={BACKGROUND_COLOR}
+          lineColor={LINE_COLOR}
+          isFixed={true}
+        />
+        <MobileHeaderSpacer />
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '40px 20px',
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: TEXT_COLOR,
+          }}
+        >
+          {t('common.loading.foundation')}
+        </div>
+      </section>
+    );
+  }
+
+  if (USE_SANITY && error) {
+    return (
+      <section
+        data-section="fundacja-mobile"
+        className="relative overflow-hidden"
+        style={{
+          width: `${MOBILE_WIDTH}px`,
+          minHeight: '100vh',
+          backgroundColor: BACKGROUND_COLOR,
+        }}
+      >
+        <MobileHeader
+          title={t('fundacja.sideTitle')}
+          textColor={TEXT_COLOR}
+          backgroundColor={BACKGROUND_COLOR}
+          lineColor={LINE_COLOR}
+          isFixed={true}
+        />
+        <MobileHeaderSpacer />
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '40px 20px',
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontSize: '16px',
+            color: '#FF0000',
+          }}
+        >
+          Błąd ładowania strony fundacji.
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -113,7 +202,8 @@ export default function MobileFundacja() {
             {t('fundacja.title')}
           </p>
 
-          <p
+          <div
+            data-testid="fundacja-description"
             style={{
               fontFamily: "'IBM Plex Mono', monospace",
               fontWeight: 500,
@@ -122,8 +212,12 @@ export default function MobileFundacja() {
               color: TEXT_COLOR,
             }}
           >
-            {t('fundacja.description')}
-          </p>
+            {USE_SANITY && sanityData?.descriptionPl ? (
+              <PortableText value={language === 'pl' ? sanityData.descriptionPl : sanityData.descriptionEn} />
+            ) : (
+              <p>{t('fundacja.description')}</p>
+            )}
+          </div>
         </div>
 
         {/* Projekty */}
@@ -151,7 +245,7 @@ export default function MobileFundacja() {
               gap: '32px',
             }}
           >
-            {projectsData.map((project, index) => (
+            {projects.map((project, index) => (
               <div key={index} className="flex flex-col" style={{ gap: '12px' }}>
                 <p
                   style={{
@@ -172,7 +266,7 @@ export default function MobileFundacja() {
                   >
                     •
                   </span>
-                  {t(`fundacja.projects.${index}.text`)}
+                  {USE_SANITY && sanityData ? project.text : t(`fundacja.projects.${index}.text`)}
                 </p>
                 {project.linkText && (
                   <a
@@ -248,11 +342,11 @@ export default function MobileFundacja() {
               textTransform: 'uppercase',
             }}
           >
-            <p>KRS: {fundacjaData.krs}</p>
-            <p>REGON: {fundacjaData.regon}</p>
-            <p>NIP: {fundacjaData.nip}</p>
-            <p>NR KONTA: {fundacjaData.bankAccount}</p>
-            <p>{fundacjaData.email}</p>
+            <p>KRS: {fundacjaInfo.krs}</p>
+            <p>REGON: {fundacjaInfo.regon}</p>
+            <p>NIP: {fundacjaInfo.nip}</p>
+            <p>NR KONTA: {fundacjaInfo.bankAccount}</p>
+            <p>{fundacjaInfo.email}</p>
           </div>
         </div>
 
@@ -319,9 +413,13 @@ export default function MobileFundacja() {
                 color: TEXT_COLOR,
               }}
             >
-              {accessibilityDeclaration[language].map((paragraph, index) => (
-                <p key={index}>{paragraph}</p>
-              ))}
+              {USE_SANITY && sanityData?.accessibilityDeclarationPl ? (
+                <PortableText value={language === 'pl' ? sanityData.accessibilityDeclarationPl : sanityData.accessibilityDeclarationEn} />
+              ) : (
+                accessibilityDeclaration[language].map((paragraph, index) => (
+                  <p key={index}>{paragraph}</p>
+                ))
+              )}
             </div>
           </div>
         )}

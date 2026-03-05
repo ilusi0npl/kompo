@@ -34,7 +34,9 @@ export function useSanityEvent(id) {
           ...eventData,
           title: language === 'pl' ? eventData.titlePl : eventData.titleEn,
           performers: language === 'pl' ? eventData.performersPl : eventData.performersEn,
-          description: language === 'pl' ? eventData.descriptionPl : eventData.descriptionEn,
+          description: language === 'pl'
+            ? (eventData.descriptionPl || eventData.descriptionEn || [])
+            : (eventData.descriptionEn || eventData.descriptionPl || []),
           location: language === 'pl' ? eventData.locationPl : eventData.locationEn,
         }
 

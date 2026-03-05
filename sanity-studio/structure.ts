@@ -96,7 +96,7 @@ export const structure = (S: StructureBuilder) =>
         .child(
           S.documentTypeList('composer')
             .title('Kompozytorzy (Repertuar)')
-            .filter('_type == "composer" && category == "repertuar" && defined(publishedAt)')
+            .filter('_type == "composer" && category == "repertuar"')
             .defaultOrdering([{field: '_createdAt', direction: 'asc'}])
         ),
 
@@ -108,7 +108,7 @@ export const structure = (S: StructureBuilder) =>
         .child(
           S.documentTypeList('composer')
             .title('Kompozytorzy (Projekty Specjalne)')
-            .filter('_type == "composer" && category == "specialne" && defined(publishedAt)')
+            .filter('_type == "composer" && category == "specialne"')
             .defaultOrdering([{field: '_createdAt', direction: 'asc'}])
         ),
 

@@ -11,6 +11,7 @@ import {
   projectsData,
   accessibilityDeclaration,
 } from './fundacja-config';
+import { PortableText } from '@portabletext/react';
 import { useSanityFundacjaPage } from '../../hooks/useSanityFundacjaPage';
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
@@ -211,7 +212,8 @@ export default function DesktopFundacja() {
         </p>
 
         {/* Opis */}
-        <p
+        <div
+          data-testid="fundacja-description"
           style={{
             fontFamily: "'IBM Plex Mono', monospace",
             fontWeight: 500,
@@ -221,8 +223,12 @@ export default function DesktopFundacja() {
             marginBottom: '42px',
           }}
         >
-          {t('fundacja.description')}
-        </p>
+          {USE_SANITY && sanityData?.descriptionPl ? (
+            <PortableText value={language === 'pl' ? sanityData.descriptionPl : sanityData.descriptionEn} />
+          ) : (
+            <p>{t('fundacja.description')}</p>
+          )}
+        </div>
 
         {/* Projekty */}
         <div
@@ -409,9 +415,13 @@ export default function DesktopFundacja() {
               color: textColor,
             }}
           >
-            {accessibilityText[language].map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-            ))}
+            {USE_SANITY && sanityData?.accessibilityDeclarationPl ? (
+              <PortableText value={language === 'pl' ? sanityData.accessibilityDeclarationPl : sanityData.accessibilityDeclarationEn} />
+            ) : (
+              accessibilityText[language].map((paragraph, index) => (
+                <p key={index}>{paragraph}</p>
+              ))
+            )}
           </div>
         )}
       </div>
