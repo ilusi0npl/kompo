@@ -32,7 +32,7 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         baseURL: 'http://localhost:5173',
       },
-      testIgnore: /sanity-mode\//,
+      testIgnore: [/sanity-mode\//, /production\//],
     },
     {
       name: 'sanity',
@@ -41,6 +41,14 @@ export default defineConfig({
         baseURL: 'http://localhost:5174',
       },
       testMatch: /sanity-mode\//,
+    },
+    {
+      name: 'production',
+      use: {
+        ...devices['Desktop Chrome'],
+        baseURL: 'https://kompo-pi.vercel.app',
+      },
+      testMatch: /production\//,
     },
   ],
 

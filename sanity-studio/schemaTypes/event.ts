@@ -80,7 +80,6 @@ export default {
       type: 'array',
       of: [{type: 'block'}],
       description: 'Rich text description - supports bold, italic, paragraphs',
-      validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'descriptionEn',
@@ -88,7 +87,6 @@ export default {
       type: 'array',
       of: [{type: 'block'}],
       description: 'Rich text description - supports bold, italic, paragraphs',
-      validation: (Rule: Rule) => Rule.required(),
     },
     // Old description field - hidden for backward compatibility
     {

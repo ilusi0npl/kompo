@@ -234,7 +234,7 @@ export default function MobileKalendarz() {
                 {event.program.map((item, idx) => (
                   <p key={item._key || idx} style={{ marginBottom: idx < event.program.length - 1 ? '4px' : '0' }}>
                     <span style={{ fontWeight: 700 }}>• {item.composer}</span>
-                    <span style={{ fontWeight: 500 }}> - {item.piece}</span>
+                    <span style={{ fontWeight: 500 }}> – {item.piece}</span>
                   </p>
                 ))}
               </div>

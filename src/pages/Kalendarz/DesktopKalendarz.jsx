@@ -285,7 +285,7 @@ export default function DesktopKalendarz() {
             {events[2].program && events[2].program.map((item, idx) => (
               <p key={item._key || idx} style={{ marginBottom: idx < events[2].program.length - 1 ? '8px' : '0' }}>
                 <span style={{ fontWeight: 700 }}>• {item.composer}</span>
-                <span style={{ fontWeight: 500 }}> - {item.piece}</span>
+                <span style={{ fontWeight: 500 }}> – {item.piece}</span>
               </p>
             ))}
           </div>

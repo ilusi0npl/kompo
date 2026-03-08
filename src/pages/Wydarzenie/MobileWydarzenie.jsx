@@ -381,31 +381,33 @@ export default function MobileWydarzenie() {
         }}
       >
         {/* Opis */}
-        {Array.isArray(event.description) ? (
-          <div
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 500,
-              fontSize: '16px',
-              lineHeight: 1.48,
-              color: TEXT_COLOR,
-            }}
-          >
-            <PortableText value={event.description} />
-          </div>
-        ) : (
-          <p
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 500,
-              fontSize: '16px',
-              lineHeight: 1.48,
-              color: TEXT_COLOR,
-              whiteSpace: 'pre-wrap',
-            }}
-          >
-            {event.description}
-          </p>
+        {event.description?.length > 0 && (
+          Array.isArray(event.description) ? (
+            <div
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontWeight: 500,
+                fontSize: '16px',
+                lineHeight: 1.48,
+                color: TEXT_COLOR,
+              }}
+            >
+              <PortableText value={event.description} />
+            </div>
+          ) : (
+            <p
+              style={{
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontWeight: 500,
+                fontSize: '16px',
+                lineHeight: 1.48,
+                color: TEXT_COLOR,
+                whiteSpace: 'pre-wrap',
+              }}
+            >
+              {event.description}
+            </p>
+          )
         )}
 
         {/* Artyści */}
@@ -477,7 +479,7 @@ export default function MobileWydarzenie() {
               {event.program.map((item, idx) => (
                 <li key={idx} style={{ marginBottom: idx < event.program.length - 1 ? '8px' : '0' }}>
                   <span style={{ fontWeight: 700 }}>{item.composer}</span>
-                  <span style={{ fontWeight: 500 }}>- {item.piece}</span>
+                  <span style={{ fontWeight: 500 }}> – {item.piece}</span>
                 </li>
               ))}
             </ul>
@@ -485,136 +487,54 @@ export default function MobileWydarzenie() {
         )}
 
         {/* Partnerzy */}
-        <div
-          className="flex flex-col items-start"
-          style={{ gap: '32px' }}
-        >
-          <p
-            style={{
-              width: '100%',
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 600,
-              fontSize: '24px',
-              lineHeight: 1.45,
-              color: TEXT_COLOR,
-              textDecoration: 'underline',
-              textTransform: 'uppercase',
-              whiteSpace: 'pre-wrap',
-            }}
-          >
-            {t('common.labels.partners')}
-          </p>
-
-          {/* Partner logos - flex-col gap: 20px */}
+        {event.partners && event.partners.length > 0 && (
           <div
-            className="flex flex-col"
-            style={{ gap: '20px' }}
+            className="flex flex-col items-start"
+            style={{ gap: '32px' }}
           >
-            {/* Logo Wrocław - 309px x 42px with overflow */}
-            <div
-              className="relative"
+            <p
               style={{
-                width: '309px',
-                height: '42px',
+                width: '100%',
+                fontFamily: "'IBM Plex Mono', monospace",
+                fontWeight: 600,
+                fontSize: '24px',
+                lineHeight: 1.45,
+                color: TEXT_COLOR,
+                textDecoration: 'underline',
+                textTransform: 'uppercase',
+                whiteSpace: 'pre-wrap',
               }}
             >
-              <div
-                className="absolute"
-                style={{
-                  inset: 0,
-                  overflow: 'hidden',
-                }}
-              >
-                <img
-                  src={event.partners[0].logo}
-                  alt={event.partners[0].name}
-                  className="absolute"
+              {t('common.labels.partners')}
+            </p>
+
+            {/* Partner logos */}
+            <div
+              className="flex flex-col"
+              style={{ gap: '20px' }}
+            >
+              {event.partners.map((partner, idx) => (
+                <div
+                  key={partner.name || idx}
+                  className="relative"
                   style={{
-                    height: '100%',
-                    left: '-2.62%',
-                    top: 0,
-                    width: '104.6%',
-                    maxWidth: 'none',
+                    height: '42px',
                   }}
-                />
-              </div>
-            </div>
-
-            {/* Logo ZAIKS - 93px x 42px */}
-            <div
-              className="relative"
-              style={{
-                width: '93px',
-                height: '42px',
-              }}
-            >
-              <img
-                src={event.partners[1].logo}
-                alt={event.partners[1].name}
-                className="absolute"
-                style={{
-                  inset: 0,
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: '50% 50%',
-                }}
-              />
-            </div>
-
-            {/* Logo Recepcja - 122px x 42px with special positioning */}
-            <div
-              className="relative"
-              style={{
-                width: '122px',
-                height: '42px',
-              }}
-            >
-              <div
-                className="absolute"
-                style={{
-                  inset: 0,
-                  overflow: 'hidden',
-                }}
-              >
-                <img
-                  src={event.partners[2].logo}
-                  alt={event.partners[2].name}
-                  className="absolute"
-                  style={{
-                    height: '61.54%',
-                    left: '-0.06%',
-                    top: '25.96%',
-                    width: '100.12%',
-                    maxWidth: 'none',
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Logo Polmic - 129px x 42px */}
-            <div
-              className="relative"
-              style={{
-                width: '129px',
-                height: '42px',
-              }}
-            >
-              <img
-                src={event.partners[3].logo}
-                alt={event.partners[3].name}
-                className="absolute"
-                style={{
-                  inset: 0,
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: '50% 50%',
-                }}
-              />
+                >
+                  <img
+                    src={partner.logo}
+                    alt={partner.name}
+                    style={{
+                      height: '100%',
+                      width: 'auto',
+                      objectFit: 'contain',
+                    }}
+                  />
+                </div>
+              ))}
             </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Stopka */}

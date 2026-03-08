@@ -318,7 +318,7 @@ export default function DesktopWydarzenie2() {
             {eventData.program.map((item, idx) => (
               <li key={idx} style={{ marginBottom: idx < eventData.program.length - 1 ? '8px' : '0' }}>
                 <span style={{ fontWeight: 700 }}>{item.composer}</span>
-                <span style={{ fontWeight: 500 }}>- {item.piece}</span>
+                <span style={{ fontWeight: 500 }}> – {item.piece}</span>
               </li>
             ))}
           </ul>
