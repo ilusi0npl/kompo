@@ -95,8 +95,9 @@ export default function DesktopKalendarz() {
           width: `${DESKTOP_WIDTH}px`,
           height: `${DESKTOP_HEIGHT}px`,
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
+          alignItems: 'flex-start',
+          justifyContent: 'center',
+          paddingTop: '300px',
         }}
       >
         <div style={{fontSize: '18px', fontFamily: "'IBM Plex Mono', monospace"}}>

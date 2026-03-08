@@ -69,8 +69,9 @@ export default function MobileKalendarz() {
           width: `${MOBILE_WIDTH}px`,
           minHeight: '100vh',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
+          alignItems: 'flex-start',
+          justifyContent: 'center',
+          paddingTop: '280px',
         }}
       >
         <div style={{fontSize: '16px', fontFamily: "'IBM Plex Mono', monospace"}}>
