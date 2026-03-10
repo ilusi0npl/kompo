@@ -351,6 +351,7 @@ export default function DesktopWydarzenie() {
               fontSize: '16px',
               lineHeight: 1.48,
               color: '#131313',
+              whiteSpace: 'pre-wrap',
             }}
           >
             {event.artists}
