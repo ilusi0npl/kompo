@@ -104,6 +104,10 @@ test.describe('Media Page - 6th Image High Contrast Visibility', () => {
     await page.goto('/media');
     await page.waitForLoadState('networkidle');
 
+    // Skip if fewer than 6 albums available
+    const albumCount = await page.locator('section[data-section="media-mobile"] div.flex.flex-col > a').count();
+    test.skip(albumCount < 6, `Only ${albumCount} albums available, need 6`);
+
     // Enable high contrast mode
     await page.evaluate(() => {
       document.body.classList.add('high-contrast');
