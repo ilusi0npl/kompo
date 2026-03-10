@@ -87,7 +87,7 @@ export default function DesktopKalendarz() {
   }
 
   // Show empty state when no events available (Sanity mode only)
-  if (!events || events.length < 3) {
+  if (!events || events.length === 0) {
     return (
       <div
         className="relative"
@@ -127,13 +127,16 @@ export default function DesktopKalendarz() {
     );
   }
 
+  // Dynamic height based on number of events (each event slot ~532px, starting at 275px)
+  const sectionHeight = events.length >= 3 ? DESKTOP_HEIGHT : events.length === 2 ? 1470 : 940;
+
   return (
     <section
       data-section="kalendarz"
       className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
-        height: `${DESKTOP_HEIGHT}px`,
+        height: `${sectionHeight}px`,
         backgroundColor: 'transparent',
         zIndex: 60,
       }}
@@ -196,108 +199,116 @@ export default function DesktopKalendarz() {
       </div>
 
       {/* Event 2 */}
-      <Link
-        to={`/wydarzenie/${events[1]._id || events[1].id}`}
-        className="absolute event-poster-link"
-        style={{
-          left: '185px',
-          top: '807px',
-          width: '330px',
-          height: '462px',
-        }}
-      >
-        <SmoothImage
-          src={events[1].image || events[1].imageUrl}
-          alt={USE_SANITY ? events[1].title : t(`kalendarz.events.event${events[1].id}.title`)}
-          containerStyle={{
-            width: '330px',
-            height: '462px',
-          }}
-          style={events[1].imageStyle}
-          placeholderColor="#e5e5e5"
-        />
-      </Link>
-      <div className="absolute flex flex-col" style={{ left: '625px', top: '807px', width: '519px', gap: '20px' }}>
-        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: '#131313' }}>
-          {formatEventDate(events[1].date)}
-        </p>
-        <div className="flex flex-col" style={{ gap: '32px' }}>
-          <div className="flex flex-col" style={{ gap: '16px' }}>
-            <EventTitle event={events[1]} t={t} useSanity={USE_SANITY} />
-            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
-              {events[1].performers}
+      {events[1] && (
+        <>
+          <Link
+            to={`/wydarzenie/${events[1]._id || events[1].id}`}
+            className="absolute event-poster-link"
+            style={{
+              left: '185px',
+              top: '807px',
+              width: '330px',
+              height: '462px',
+            }}
+          >
+            <SmoothImage
+              src={events[1].image || events[1].imageUrl}
+              alt={USE_SANITY ? events[1].title : t(`kalendarz.events.event${events[1].id}.title`)}
+              containerStyle={{
+                width: '330px',
+                height: '462px',
+              }}
+              style={events[1].imageStyle}
+              placeholderColor="#e5e5e5"
+            />
+          </Link>
+          <div className="absolute flex flex-col" style={{ left: '625px', top: '807px', width: '519px', gap: '20px' }}>
+            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: '#131313' }}>
+              {formatEventDate(events[1].date)}
             </p>
-          </div>
-          {Array.isArray(events[1].description) ? (
-            <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
-              <PortableText value={events[1].description} />
+            <div className="flex flex-col" style={{ gap: '32px' }}>
+              <div className="flex flex-col" style={{ gap: '16px' }}>
+                <EventTitle event={events[1]} t={t} useSanity={USE_SANITY} />
+                <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
+                  {events[1].performers}
+                </p>
+              </div>
+              {Array.isArray(events[1].description) ? (
+                <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
+                  <PortableText value={events[1].description} />
+                </div>
+              ) : (
+                <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
+                  {events[1].description}
+                </p>
+              )}
+              <div className="flex items-start" style={{ gap: '10px' }}>
+                <img src="/assets/kalendarz/place-icon.svg" alt="Location" style={{ width: '30px', height: '30px' }} />
+                <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '20px', lineHeight: 1.44, color: '#131313', textTransform: 'uppercase', width: '479px', whiteSpace: 'pre-wrap' }}>
+                  {events[1].location}
+                </p>
+              </div>
             </div>
-          ) : (
-            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
-              {events[1].description}
-            </p>
-          )}
-          <div className="flex items-start" style={{ gap: '10px' }}>
-            <img src="/assets/kalendarz/place-icon.svg" alt="Location" style={{ width: '30px', height: '30px' }} />
-            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '20px', lineHeight: 1.44, color: '#131313', textTransform: 'uppercase', width: '479px', whiteSpace: 'pre-wrap' }}>
-              {events[1].location}
-            </p>
           </div>
-        </div>
-      </div>
+        </>
+      )}
 
       {/* Event 3 */}
-      <Link
-        to={`/wydarzenie/${events[2]._id || events[2].id}`}
-        className="absolute event-poster-link"
-        style={{
-          left: '185px',
-          top: '1339px',
-          width: '330px',
-          height: '462px',
-        }}
-      >
-        <SmoothImage
-          src={events[2].image || events[2].imageUrl}
-          alt={USE_SANITY ? events[2].title : t(`kalendarz.events.event${events[2].id}.title`)}
-          containerStyle={{
-            width: '330px',
-            height: '462px',
-          }}
-          style={{
-            ...events[2].imageStyle,
-            position: 'absolute',
-            inset: 0,
-            width: '100%',
-            height: '100%',
-          }}
-          placeholderColor="#e5e5e5"
-        />
-      </Link>
-      <div className="absolute flex flex-col" style={{ left: '625px', top: '1339px', width: '519px', gap: '20px' }}>
-        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: '#131313' }}>
-          {formatEventDate(events[2].date)}
-        </p>
-        <div className="flex flex-col" style={{ gap: '32px' }}>
-          <div className="flex flex-col">
-            <EventTitle event={events[2]} t={t} useSanity={USE_SANITY} />
-          </div>
-          <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px', lineHeight: 1.48, color: '#131313', width: '519px' }}>
-            {events[2].program && events[2].program.map((item, idx) => (
-              <p key={item._key || idx} style={{ marginBottom: idx < events[2].program.length - 1 ? '8px' : '0' }}>
-                <span style={{ fontWeight: 700 }}>• {item.composer}</span>
-                <span style={{ fontWeight: 500 }}> – {item.piece}</span>
-              </p>
-            ))}
-          </div>
-          <div className="flex items-start" style={{ gap: '10px' }}>
-            <img src="/assets/kalendarz/place-icon.svg" alt="Location" style={{ width: '30px', height: '30px' }} />
-            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '20px', lineHeight: 1.44, color: '#131313', textTransform: 'uppercase', width: '479px', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
-              {events[2].location}
+      {events[2] && (
+        <>
+          <Link
+            to={`/wydarzenie/${events[2]._id || events[2].id}`}
+            className="absolute event-poster-link"
+            style={{
+              left: '185px',
+              top: '1339px',
+              width: '330px',
+              height: '462px',
+            }}
+          >
+            <SmoothImage
+              src={events[2].image || events[2].imageUrl}
+              alt={USE_SANITY ? events[2].title : t(`kalendarz.events.event${events[2].id}.title`)}
+              containerStyle={{
+                width: '330px',
+                height: '462px',
+              }}
+              style={{
+                ...events[2].imageStyle,
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+              }}
+              placeholderColor="#e5e5e5"
+            />
+          </Link>
+          <div className="absolute flex flex-col" style={{ left: '625px', top: '1339px', width: '519px', gap: '20px' }}>
+            <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: '#131313' }}>
+              {formatEventDate(events[2].date)}
             </p>
+            <div className="flex flex-col" style={{ gap: '32px' }}>
+              <div className="flex flex-col">
+                <EventTitle event={events[2]} t={t} useSanity={USE_SANITY} />
+              </div>
+              <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px', lineHeight: 1.48, color: '#131313', width: '519px' }}>
+                {events[2].program && events[2].program.map((item, idx) => (
+                  <p key={item._key || idx} style={{ marginBottom: idx < events[2].program.length - 1 ? '8px' : '0' }}>
+                    <span style={{ fontWeight: 700 }}>• {item.composer}</span>
+                    <span style={{ fontWeight: 500 }}> – {item.piece}</span>
+                  </p>
+                ))}
+              </div>
+              <div className="flex items-start" style={{ gap: '10px' }}>
+                <img src="/assets/kalendarz/place-icon.svg" alt="Location" style={{ width: '30px', height: '30px' }} />
+                <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, fontSize: '20px', lineHeight: 1.44, color: '#131313', textTransform: 'uppercase', width: '479px', whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+                  {events[2].location}
+                </p>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
 
       {/* Stopka */}
       <Footer
