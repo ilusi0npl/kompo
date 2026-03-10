@@ -62,13 +62,13 @@ export default function MobileWydarzenie() {
       image: sanityEvent.imageUrl,
       artists: sanityEvent.performers || '',
       program: sanityEvent.program || [],
-      // Transform partners from Sanity format to UI format
+      // Transform partners from Sanity format - empty field means no partners
       partners: sanityEvent.partners && sanityEvent.partners.length > 0
         ? sanityEvent.partners.map(p => ({
             name: p.name,
             logo: p.logoUrl,
           }))
-        : eventData.partners, // Fallback to hardcoded if no partners in CMS
+        : [],
     };
   } else {
     // Look up event by ID from kalendarz events

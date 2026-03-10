@@ -128,7 +128,7 @@ test.describe('MobileBio - Fixed Header Color in High Contrast', () => {
       if (fixedHeader) {
         const walker = document.createTreeWalker(fixedHeader, NodeFilter.SHOW_ELEMENT);
         let node;
-        while (node = walker.nextNode()) {
+        while ((node = walker.nextNode())) {
           const bg = getComputedStyle(node).backgroundColor;
           if (bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
             elementsWithBg.push({
@@ -146,7 +146,7 @@ test.describe('MobileBio - Fixed Header Color in High Contrast', () => {
       if (linesRoot) {
         const walker = document.createTreeWalker(linesRoot, NodeFilter.SHOW_ELEMENT);
         let node;
-        while (node = walker.nextNode()) {
+        while ((node = walker.nextNode())) {
           const bg = getComputedStyle(node).backgroundColor;
           if (bg !== 'rgba(0, 0, 0, 0)' && bg !== 'transparent') {
             elementsWithBg.push({
