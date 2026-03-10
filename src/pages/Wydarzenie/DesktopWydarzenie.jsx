@@ -4,6 +4,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import { useParams } from 'react-router';
 import { useSanityEvent } from '../../hooks/useSanityEvent';
+import useFitText from '../../hooks/useFitText';
 import {
   eventData,
   DESKTOP_WIDTH,
@@ -41,6 +42,7 @@ export default function DesktopWydarzenie() {
 
   // Fetch from Sanity if enabled
   const { event: sanityEvent, loading, error } = useSanityEvent(id);
+  const [locationRef, locationFontSize] = useFitText(32);
 
   // Format date from ISO to display format
   const formatDate = (isoDate) => {
@@ -223,15 +225,16 @@ export default function DesktopWydarzenie() {
             style={{ width: '42px', height: '42px' }}
           />
           <p
+            ref={locationRef}
             style={{
               fontFamily: "'IBM Plex Mono', monospace",
               fontWeight: 600,
-              fontSize: '32px',
+              fontSize: `${locationFontSize}px`,
               lineHeight: 1.48,
               color: '#131313',
               maxWidth: '700px',
-              whiteSpace: 'pre-wrap',
-              wordBreak: 'break-word',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
               textAlign: 'center',
             }}
           >

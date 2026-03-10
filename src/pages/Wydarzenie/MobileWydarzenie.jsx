@@ -8,6 +8,7 @@ import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useFixedMobileHeader } from '../../hooks/useFixedMobileHeader';
 import { useSanityEvent } from '../../hooks/useSanityEvent';
+import useFitText from '../../hooks/useFitText';
 import { eventData } from './wydarzenie-config';
 import { events as kalendarzEvents } from '../Kalendarz/kalendarz-config';
 
@@ -28,6 +29,7 @@ export default function MobileWydarzenie() {
 
   // Fetch from Sanity if enabled
   const { event: sanityEvent, loading, error } = useSanityEvent(id);
+  const [locationRef, locationFontSize] = useFitText(24);
 
   // Format date from ISO to display format
   const formatDate = (isoDate) => {
@@ -296,7 +298,7 @@ export default function MobileWydarzenie() {
           </p>
         </div>
 
-        {/* Lokalizacja - 2 linie z ikoną */}
+        {/* Lokalizacja - single line with auto-fit font */}
         <div className="flex items-start w-full" style={{ gap: '10px' }}>
           <div
             className="flex items-center"
@@ -310,20 +312,22 @@ export default function MobileWydarzenie() {
               style={{ width: '32px', height: '32px' }}
             />
           </div>
-          <div
+          <p
+            ref={locationRef}
             style={{
               flex: '1 0 0',
               fontFamily: "'IBM Plex Mono', monospace",
               fontWeight: 600,
-              fontSize: '24px',
+              fontSize: `${locationFontSize}px`,
               lineHeight: 1.45,
               color: TEXT_COLOR,
               textTransform: 'uppercase',
-              whiteSpace: 'pre-wrap',
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
             }}
           >
-            <p>{event.location}</p>
-          </div>
+            {event.location}
+          </p>
         </div>
 
         {/* Przycisk KUP BILET */}
