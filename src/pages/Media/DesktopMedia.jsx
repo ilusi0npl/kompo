@@ -21,16 +21,9 @@ export default function DesktopMedia() {
   // Fetch from Sanity if enabled
   const { albums: sanityAlbums, loading, error } = useSanityPhotoAlbums();
 
-  // Transform Sanity albums to match config structure
+  // Hook returns normalized albums; fall back to local config
   const transformedAlbums = USE_SANITY && sanityAlbums && Array.isArray(sanityAlbums)
-    ? sanityAlbums.map((album) => ({
-        _id: album._id,
-        id: album._id,
-        image: album.thumbnailUrl || '',
-        title: album.title || 'Untitled',
-        photographer: album.photographer || '',
-        images: album.imageUrls || [],
-      }))
+    ? sanityAlbums
     : photos;
 
   // Dynamic grid calculation (3 columns, unlimited rows)

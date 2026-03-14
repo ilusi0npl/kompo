@@ -20,16 +20,9 @@ export default function MobileMedia() {
   // Fetch from Sanity if enabled
   const { albums: sanityAlbums, loading, error } = useSanityPhotoAlbums();
 
-  // Transform Sanity albums to match config structure
+  // Hook returns normalized albums; fall back to local config
   const albums = USE_SANITY && sanityAlbums && Array.isArray(sanityAlbums)
-    ? sanityAlbums.map((album) => ({
-        _id: album._id,
-        id: album._id,
-        image: album.thumbnailUrl || '',
-        title: album.title || 'Untitled',
-        photographer: album.photographer || '',
-        images: album.imageUrls || [],
-      }))
+    ? sanityAlbums
     : photos;
 
   // Show loading state only when using Sanity

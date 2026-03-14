@@ -12,10 +12,50 @@ const LINE_COLOR = '#01936F';
 const BACKGROUND_COLOR = '#34B898';
 const TEXT_COLOR = '#131313';
 
+/**
+ * Get the section name for the current image index.
+ * Returns null if album has 0 or 1 section (no label needed).
+ */
+function getCurrentSection(sections, currentIndex) {
+  if (!sections || sections.length <= 1) return null;
+  let count = 0;
+  for (const section of sections) {
+    count += section.images.length;
+    if (currentIndex < count) return section.name;
+  }
+  return null;
+}
+
 export default function DesktopMediaGaleria({ album }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate();
   const { t } = useTranslation();
+
+  // Guard against empty albums
+  if (!album.images || album.images.length === 0) {
+    return (
+      <section
+        data-section="media-galeria"
+        className="relative"
+        style={{
+          width: '1440px',
+          height: '856px',
+          backgroundColor: BACKGROUND_COLOR,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <p style={{
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontSize: '16px',
+          color: TEXT_COLOR,
+        }}>
+          Brak zdjęć w albumie
+        </p>
+      </section>
+    );
+  }
 
   // Navigation handlers
   const handlePrev = () => {
@@ -131,6 +171,26 @@ export default function DesktopMediaGaleria({ album }) {
           Zdjęcia
         </p>
       </div>
+
+      {/* Section label (only when album has 2+ sections) */}
+      {album.hasSections && album.sections.length > 1 && (
+        <p
+          style={{
+            position: 'absolute',
+            left: 'calc(50% + 0.5px)',
+            top: '155px',
+            transform: 'translateX(-50%)',
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 500,
+            fontSize: '14px',
+            lineHeight: 1.48,
+            color: TEXT_COLOR,
+            opacity: 0.7,
+          }}
+        >
+          {getCurrentSection(album.sections, currentIndex)}
+        </p>
+      )}
 
       {/* Main photo */}
       <div

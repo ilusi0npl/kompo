@@ -180,6 +180,7 @@ export const fundacjaPageQuery = `
 `
 
 // Photo albums (published only, sorted by creation date ascending)
+// Fetches both flat images and optional sections for backward compatibility
 export const photoAlbumsQuery = `
   *[_type == "photoAlbum" && defined(publishedAt)] | order(_createdAt asc) {
     _id,
@@ -187,7 +188,13 @@ export const photoAlbumsQuery = `
     titleEn,
     photographer,
     "thumbnailUrl": thumbnail.asset->url,
-    "imageUrls": images[].asset->url
+    "imageUrls": images[].asset->url,
+    sections[] {
+      _key,
+      namePl,
+      nameEn,
+      "imageUrls": images[].asset->url
+    }
   }
 `
 
