@@ -1,4 +1,5 @@
 import { Rule } from 'sanity'
+import { BulkImageUpload } from '../components/BulkImageUpload'
 
 /**
  * Photo Album Schema
@@ -64,6 +65,7 @@ export default {
           },
         },
       ],
+      components: { input: BulkImageUpload },
       validation: (Rule: Rule) => Rule.custom((images: any[] | undefined, context: any) => {
         const sections = context.document?.sections
         if ((!images || images.length === 0) && (!sections || sections.length === 0)) {
@@ -106,6 +108,7 @@ export default {
                   },
                 },
               ],
+              components: { input: BulkImageUpload },
               validation: (Rule: Rule) => Rule.required().min(1),
             },
           ],
