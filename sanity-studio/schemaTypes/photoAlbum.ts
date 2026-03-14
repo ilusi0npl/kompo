@@ -54,6 +54,7 @@ export default {
     {
       name: 'images',
       title: 'Zdjęcia w albumie',
+      description: 'Prosta lista zdjęć (używaj tej opcji LUB sekcji poniżej)',
       type: 'array',
       of: [
         {
@@ -63,7 +64,66 @@ export default {
           },
         },
       ],
-      validation: (Rule: Rule) => Rule.required().min(1),
+      validation: (Rule: Rule) => Rule.custom((images: any[] | undefined, context: any) => {
+        const sections = context.document?.sections
+        if ((!images || images.length === 0) && (!sections || sections.length === 0)) {
+          return 'Album musi mieć zdjęcia lub sekcje'
+        }
+        return true
+      }),
+    },
+    {
+      name: 'sections',
+      title: 'Sekcje albumu',
+      description: 'Opcjonalne: organizuj zdjęcia w nazwane grupy (np. "Scena", "Publiczność")',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          name: 'albumSection',
+          fields: [
+            {
+              name: 'namePl',
+              title: 'Nazwa sekcji (PL)',
+              type: 'string',
+              validation: (Rule: Rule) => Rule.required(),
+            },
+            {
+              name: 'nameEn',
+              title: 'Nazwa sekcji (EN)',
+              type: 'string',
+              validation: (Rule: Rule) => Rule.required(),
+            },
+            {
+              name: 'images',
+              title: 'Zdjęcia',
+              type: 'array',
+              of: [
+                {
+                  type: 'image',
+                  options: {
+                    hotspot: true,
+                  },
+                },
+              ],
+              validation: (Rule: Rule) => Rule.required().min(1),
+            },
+          ],
+          preview: {
+            select: {
+              title: 'namePl',
+              images: 'images',
+            },
+            prepare(selection: { title: string; images: any[] }) {
+              const { title, images } = selection
+              return {
+                title: title || 'Bez nazwy',
+                subtitle: `${images?.length || 0} zdjęć`,
+              }
+            },
+          },
+        },
+      ],
     },
     {
       name: 'publishedAt',

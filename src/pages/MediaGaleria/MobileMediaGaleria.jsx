@@ -16,12 +16,49 @@ const LINE_COLOR = '#01936F';
 const TEXT_COLOR = '#131313';
 const HEADER_HEIGHT = 240;
 
+/**
+ * Get the section name for the current image index.
+ * Returns null if album has 0 or 1 section (no label needed).
+ */
+function getCurrentSection(sections, currentIndex) {
+  if (!sections || sections.length <= 1) return null;
+  let count = 0;
+  for (const section of sections) {
+    count += section.images.length;
+    if (currentIndex < count) return section.name;
+  }
+  return null;
+}
+
 export default function MobileMediaGaleria({ album }) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { scale } = useFixedMobileHeader();
+
+  // Guard against empty albums
+  if (!album.images || album.images.length === 0) {
+    return (
+      <section
+        data-section="media-galeria-mobile"
+        className="relative overflow-hidden flex items-center justify-center"
+        style={{
+          width: `${MOBILE_WIDTH}px`,
+          minHeight: '100vh',
+          backgroundColor: BACKGROUND_COLOR,
+        }}
+      >
+        <p style={{
+          fontFamily: "'IBM Plex Mono', monospace",
+          fontSize: '16px',
+          color: TEXT_COLOR,
+        }}>
+          Brak zdjęć w albumie
+        </p>
+      </section>
+    );
+  }
 
   // Navigation handlers
   const handlePrev = () => {
@@ -238,6 +275,22 @@ export default function MobileMediaGaleria({ album }) {
             fot. {album.photographer}
           </p>
         </div>
+
+        {/* Section label (only when album has 2+ sections) */}
+        {album.hasSections && album.sections.length > 1 && (
+          <p
+            style={{
+              fontFamily: "'IBM Plex Mono', monospace",
+              fontWeight: 500,
+              fontSize: '12px',
+              lineHeight: 1.48,
+              color: TEXT_COLOR,
+              opacity: 0.7,
+            }}
+          >
+            {getCurrentSection(album.sections, currentIndex)}
+          </p>
+        )}
 
         {/* Photo with swipe */}
         <div

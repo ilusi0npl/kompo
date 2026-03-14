@@ -16,21 +16,11 @@ export default function MediaGaleria() {
   const { albums: sanityAlbums, loading, error } = useSanityPhotoAlbums();
 
   // Get album from Sanity or config
+  // Hook returns normalized shape: { id, title, photographer, image, images, sections, hasSections }
   let album;
   if (USE_SANITY && sanityAlbums) {
-    // Find album by Sanity _id
-    const sanityAlbum = sanityAlbums.find(a => a._id === id);
-    if (sanityAlbum) {
-      album = {
-        id: sanityAlbum._id,
-        image: sanityAlbum.thumbnailUrl,
-        title: sanityAlbum.title,
-        photographer: sanityAlbum.photographer,
-        images: sanityAlbum.imageUrls || [],
-      };
-    }
+    album = sanityAlbums.find(a => a.id === id);
   } else {
-    // Use local config
     album = getAlbumById(id);
   }
 
