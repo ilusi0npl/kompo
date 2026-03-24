@@ -75,6 +75,7 @@ export const allEventsQuery = `
 export const bioProfilesQuery = `
   *[_type == "bioProfile" && defined(publishedAt)] | order(_createdAt asc) {
     _id,
+    slug,
     namePl,
     nameEn,
     "imageUrl": image.asset->url,

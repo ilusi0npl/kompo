@@ -5,6 +5,12 @@ export default {
   title: 'Profile Bio',
   type: 'document',
   fields: [
+    {
+      name: 'slug',
+      title: 'Slug (identyfikator)',
+      type: 'string',
+      description: 'Unique identifier used by the website to find this profile (e.g. "ensemble").',
+    },
     // Bilingual name fields
     {
       name: 'namePl',
@@ -38,6 +44,7 @@ export default {
       title: 'Paragrafy (PL)',
       type: 'array',
       of: [{type: 'text'}],
+      description: 'Pierwsze 2 paragrafy → strona główna Bio. Wszystkie → podstrona "Więcej".',
       validation: (Rule: Rule) => Rule.required().min(1),
     },
     {
@@ -45,6 +52,7 @@ export default {
       title: 'Paragrafy (EN)',
       type: 'array',
       of: [{type: 'text'}],
+      description: 'First 2 paragraphs → main Bio page. All paragraphs → "More" detail page.',
       validation: (Rule: Rule) => Rule.required().min(1),
     },
     // Old paragraphs field - hidden for backward compatibility
