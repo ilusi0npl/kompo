@@ -2,12 +2,15 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Link } from 'react-router';
 import { useTranslation } from '../../hooks/useTranslation';
+import { useSanityBioProfiles } from '../../hooks/useSanityBioProfiles';
 import MobileMenu from '../../components/MobileMenu/MobileMenu';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useFixedMobileHeader } from '../../hooks/useFixedMobileHeader';
 import ArrowRight from '../../components/ArrowRight/ArrowRight';
 import { isLargeTestMode, generateBioEnsembleData } from '../../test-data/large-data-generator';
 import { calculateBioFontSize } from '../../hooks/useResponsiveFontSize';
+
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
 const MOBILE_WIDTH = 390;
 const HEADER_HEIGHT = 218;
@@ -59,10 +62,18 @@ export default function MobileBioEnsemble() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { scale } = useFixedMobileHeader();
 
-  // Get content based on mode
+  // Sanity data (always call — React hooks rules)
+  const { profiles: sanityProfiles, loading, error } = useSanityBioProfiles();
+  const ensembleProfile = sanityProfiles?.find(p => p.slug === 'ensemble') || null;
+
+  // Data source: Sanity > LargeTestMode > Translations
+  const useSanityData = USE_SANITY && ensembleProfile;
   const largeData = isLargeTestMode ? generateBioEnsembleData(10) : null;
-  const title = isLargeTestMode ? largeData.title : t('bio.ensemble.title');
-  const paragraphs = isLargeTestMode ? largeData.extendedParagraphs : t('bio.ensemble.extendedParagraphs');
+  const title = useSanityData ? ensembleProfile.name
+    : isLargeTestMode ? largeData.title : t('bio.ensemble.title');
+  const paragraphs = useSanityData ? ensembleProfile.paragraphs
+    : isLargeTestMode ? largeData.extendedParagraphs : t('bio.ensemble.extendedParagraphs');
+  // UI label — stays in translations, not CMS content
   const upcomingEventsText = isLargeTestMode ? largeData.upcomingEvents : t('bio.ensemble.upcomingEvents');
 
   // Calculate responsive font size
@@ -87,6 +98,30 @@ export default function MobileBioEnsemble() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // Loading/error states (after all hooks, before main render)
+  if (USE_SANITY && loading) {
+    return (
+      <div className="flex items-center justify-center" style={{
+        width: `${MOBILE_WIDTH}px`, minHeight: '400px', backgroundColor: COLORS.backgroundColor,
+      }}>
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px', color: COLORS.textColor }}>
+          Loading...
+        </p>
+      </div>
+    );
+  }
+  if (USE_SANITY && (error || !ensembleProfile)) {
+    return (
+      <div className="flex items-center justify-center" style={{
+        width: `${MOBILE_WIDTH}px`, minHeight: '400px', backgroundColor: COLORS.backgroundColor,
+      }}>
+        <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontSize: '16px', color: '#cc0000' }}>
+          {error ? 'Error loading content' : 'Ensemble profile not found'}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -218,7 +253,7 @@ export default function MobileBioEnsemble() {
       >
         <img
           src="/assets/bio/bio-ensemble-large.webp"
-          alt="Ensemble KOMPOPOLEX"
+          alt={title || 'Ensemble KOMPOPOLEX'}
           style={{
             width: '100%',
             height: '100%',

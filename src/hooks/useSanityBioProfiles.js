@@ -27,6 +27,7 @@ export function useSanityBioProfiles() {
         // Transform data based on current language with fallback
         const transformedProfiles = data.map(profile => ({
           ...profile,
+          slug: profile.slug || null,
           name: language === 'pl'
             ? (profile.namePl || profile.nameEn || '')
             : (profile.nameEn || profile.namePl || ''),

@@ -5,6 +5,7 @@
 **DO NOT** without explicit request: change Sanity, commit.
 **FORBIDDEN**: Deploy to Vercel without explicit user confirmation - ALWAYS ask first before any `vercel` command.
 **ALWAYS** after deploying to Vercel: verify that the latest code is live on production (e.g. run Playwright check against production URL to confirm the fix is deployed).
+**NOTE**: Vercel automatic deployment is NOT configured — after merging to main, trigger deployment manually with `vercel --prod` (requires explicit user confirmation).
 **NEVER** modify production Sanity data - it is sacred. Use local dataset for testing.
 **ALWAYS** verify: desktop AND mobile versions work.
 **ALWAYS** use TDD: write failing test FIRST, then implement fix.

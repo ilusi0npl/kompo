@@ -28,12 +28,17 @@ test.describe('BioEnsemble Page - Desktop', () => {
     await expect(nav).toBeVisible()
   })
 
-  test('displays ensemble content', async ({ page }) => {
+  test('displays ensemble content without lorem ipsum', async ({ page }) => {
     await navigateToPage(page, '/bio/ensemble')
 
     // Should have ensemble-specific text
     const text = await page.locator('body').textContent()
     expect(text).toMatch(/Ensemble|KOMPOPOLEX/i)
+
+    // Should NOT contain lorem ipsum placeholder text
+    expect(text).not.toContain('Sorem ipsum')
+    expect(text).not.toContain('Rorem ipsum')
+    expect(text).not.toContain('Norem ipsum')
   })
 
   test('displays ensemble image', async ({ page }) => {
