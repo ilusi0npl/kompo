@@ -60,20 +60,14 @@ export default function DesktopFundacja() {
   // Measure content and calculate section height
   useEffect(() => {
     if (contentRef.current) {
-      // Wait for render to complete
-      setTimeout(() => {
-        const contentHeight = contentRef.current.offsetHeight;
-        const contentTop = 180; // top position of content div
-        const spaceBelowContent = 100; // space for footer + margins
+      const contentHeight = contentRef.current.offsetHeight;
+      const contentTop = 180; // top position of content div
+      const footerSpace = 160; // marginTop(80) + footer(~40) + marginBottom(40)
 
-        // Calculate total section height needed
-        const calculatedHeight = contentTop + contentHeight + spaceBelowContent;
+      const calculatedHeight = contentTop + contentHeight + footerSpace;
+      const finalHeight = Math.max(calculatedHeight, DESKTOP_HEIGHT);
 
-        // Use at least DESKTOP_HEIGHT (1379px)
-        const finalHeight = Math.max(calculatedHeight, DESKTOP_HEIGHT);
-
-        setSectionMinHeight(finalHeight);
-      }, 100);
+      setSectionMinHeight(finalHeight);
     }
   }, [isDeclarationExpanded, language]);
 
@@ -435,17 +429,16 @@ export default function DesktopFundacja() {
             })()}
           </div>
         )}
-      </div>
 
-      {/* Stopka */}
-      <Footer
-        className="absolute"
-        style={{
-          left: '185px',
-          bottom: '40px',
-          width: '520px',
-        }}
-      />
+        {/* Stopka — in content flow, not absolute */}
+        <Footer
+          style={{
+            marginTop: '80px',
+            marginBottom: '40px',
+            width: '520px',
+          }}
+        />
+      </div>
     </section>
   );
 }

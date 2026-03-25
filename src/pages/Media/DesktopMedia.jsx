@@ -1,3 +1,4 @@
+import { useRef, useState, useLayoutEffect } from 'react';
 import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -15,8 +16,17 @@ const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
 const LINE_COLOR = '#01936F';
 
+const GRID_START_LEFT = 185;
+const GRID_START_TOP = 276;
+const COL_SPACING = 330;
+const MIN_ROW_GAP = 40;
+const FALLBACK_ROW_SPACING = 390;
+const FOOTER_SPACING = 113;
+
 export default function DesktopMedia() {
   const { t } = useTranslation();
+  const tileRefs = useRef([]);
+  const [rowTops, setRowTops] = useState(null);
 
   // Fetch from Sanity if enabled
   const { albums: sanityAlbums, loading, error } = useSanityPhotoAlbums();
@@ -26,29 +36,58 @@ export default function DesktopMedia() {
     ? sanityAlbums
     : photos;
 
-  // Dynamic grid calculation (3 columns, unlimited rows)
-  const GRID_START_LEFT = 185;
-  const GRID_START_TOP = 276;
-  const COL_SPACING = 330; // 515 - 185
-  const ROW_SPACING = 337; // 613 - 276
-  const ALBUM_HEIGHT = 290; // thumbnail (214) + gap (16) + text (~60)
-  const FOOTER_SPACING = 113; // space between last album and footer
+  const numRows = Math.ceil(transformedAlbums.length / 3);
 
-  const calculatePosition = (index) => {
+  // Measure tile heights after render and calculate dynamic row positions
+  useLayoutEffect(() => {
+    if (!tileRefs.current.length) return;
+
+    const tops = [GRID_START_TOP];
+    for (let row = 1; row < numRows; row++) {
+      // Find tallest tile in previous row
+      let maxHeight = 0;
+      for (let col = 0; col < 3; col++) {
+        const idx = (row - 1) * 3 + col;
+        const el = tileRefs.current[idx];
+        if (el) {
+          maxHeight = Math.max(maxHeight, el.offsetHeight);
+        }
+      }
+      tops.push(tops[row - 1] + maxHeight + MIN_ROW_GAP);
+    }
+    setRowTops(tops);
+  }, [transformedAlbums, numRows]);
+
+  const getPosition = (index) => {
     const col = index % 3;
     const row = Math.floor(index / 3);
+    const top = rowTops
+      ? rowTops[row]
+      : GRID_START_TOP + (row * FALLBACK_ROW_SPACING);
     return {
       left: GRID_START_LEFT + (col * COL_SPACING),
-      top: GRID_START_TOP + (row * ROW_SPACING),
+      top,
     };
   };
 
-  // Calculate dynamic height based on number of albums
-  const numRows = Math.ceil(transformedAlbums.length / 3);
-  const lastRowTop = GRID_START_TOP + ((numRows - 1) * ROW_SPACING);
-  const lastAlbumBottom = lastRowTop + ALBUM_HEIGHT;
-  const footerTop = lastAlbumBottom + FOOTER_SPACING;
-  const totalHeight = footerTop + 70; // footer height (~30px) + bottom margin (40px)
+  // Calculate total height
+  const lastRowTop = rowTops
+    ? rowTops[numRows - 1]
+    : GRID_START_TOP + ((numRows - 1) * FALLBACK_ROW_SPACING);
+
+  // Find tallest tile in last row for footer positioning
+  let lastRowMaxHeight = 290; // fallback
+  if (rowTops) {
+    for (let col = 0; col < 3; col++) {
+      const idx = (numRows - 1) * 3 + col;
+      const el = tileRefs.current[idx];
+      if (el) {
+        lastRowMaxHeight = Math.max(lastRowMaxHeight, el.offsetHeight);
+      }
+    }
+  }
+  const footerTop = lastRowTop + lastRowMaxHeight + FOOTER_SPACING;
+  const totalHeight = footerTop + 70;
 
   // Show loading state only when using Sanity
   if (USE_SANITY && loading) {
@@ -100,7 +139,7 @@ export default function DesktopMedia() {
             color: '#FF0000',
           }}
         >
-          {t('common.error.loadAlbums')}
+          Błąd ładowania albumów. Spróbuj ponownie później.
         </div>
       </section>
     );
@@ -119,11 +158,12 @@ export default function DesktopMedia() {
     >
       {/* Photo Grid */}
       {transformedAlbums.map((photo, index) => {
-        const position = calculatePosition(index);
+        const position = getPosition(index);
         return (
           <Link
             key={photo._id || photo.id}
             to={`/media/galeria/${photo._id || photo.id}`}
+            ref={(el) => { tileRefs.current[index] = el; }}
             className="absolute flex flex-col"
             style={{
               left: `${position.left}px`,

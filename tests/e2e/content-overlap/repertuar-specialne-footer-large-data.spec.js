@@ -171,7 +171,7 @@ test.describe('Specialne - Footer Visibility', () => {
       const footnoteBottom = footnote?.getBoundingClientRect()?.bottom || 0;
 
       // Get footer top
-      const footer = Array.from(section?.querySelectorAll('div') || []).find(el =>
+      const footer = section?.querySelector('footer') || Array.from(section?.querySelectorAll('div') || []).find(el =>
         el.textContent?.includes('KOMPOPOLEX@GMAIL.COM') && el.textContent?.includes('FACEBOOK')
       );
       const footerTop = footer?.getBoundingClientRect()?.top || 0;

@@ -1,3 +1,4 @@
+import { useRef, useState, useLayoutEffect } from 'react';
 import { PortableText } from '@portabletext/react';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -22,13 +23,13 @@ const LINE_COLOR = '#A0E38A';
 function calculatePageHeight(programLength, hasTicketButton) {
   const BASE_HEIGHT = DESKTOP_HEIGHT; // 1941
   const CONTENT_START = hasTicketButton ? 1087 : 990;
-  const DESCRIPTION_HEIGHT = 150; // Approximate
-  const ARTISTS_HEIGHT = 100;
+  const DESCRIPTION_HEIGHT = 80;
+  const ARTISTS_HEIGHT = 60;
   const PROGRAM_HEADER_HEIGHT = 50;
   const PROGRAM_ITEM_HEIGHT = 32; // Per item
-  const PARTNERS_HEIGHT = 150;
+  const PARTNERS_HEIGHT = 80;
   const FOOTER_HEIGHT = 64;
-  const FOOTER_MARGIN = 80;
+  const FOOTER_MARGIN = 40;
 
   const programHeight = PROGRAM_HEADER_HEIGHT + (programLength * PROGRAM_ITEM_HEIGHT);
   const contentHeight = CONTENT_START + DESCRIPTION_HEIGHT + ARTISTS_HEIGHT + programHeight + PARTNERS_HEIGHT + FOOTER_HEIGHT + FOOTER_MARGIN;
@@ -39,6 +40,8 @@ function calculatePageHeight(programLength, hasTicketButton) {
 export default function DesktopWydarzenie() {
   const { t } = useTranslation();
   const { id } = useParams();
+  const contentRef = useRef(null);
+  const [measuredHeight, setMeasuredHeight] = useState(null);
 
   // Fetch from Sanity if enabled
   const { event: sanityEvent, loading, error } = useSanityEvent(id);
@@ -110,9 +113,20 @@ export default function DesktopWydarzenie() {
     }
   }
 
-  // Calculate dynamic height based on program length
+  // Calculate dynamic height based on program length (initial estimate)
   const hasTicketButton = event.showTicketButton && event.ticketUrl;
-  const pageHeight = calculatePageHeight(event.program?.length || 0, hasTicketButton);
+  const estimatedHeight = calculatePageHeight(event.program?.length || 0, hasTicketButton);
+
+  // Measure actual content height after render
+  useLayoutEffect(() => {
+    if (contentRef.current) {
+      const contentTop = hasTicketButton ? 1087 : 990;
+      const actualHeight = contentRef.current.offsetHeight;
+      setMeasuredHeight(contentTop + actualHeight);
+    }
+  }, [event, hasTicketButton]);
+
+  const pageHeight = measuredHeight || estimatedHeight;
 
   return (
     <section
@@ -285,6 +299,7 @@ export default function DesktopWydarzenie() {
 
       {/* Główna treść - flex column with gap 50px */}
       <div
+        ref={contentRef}
         className="absolute flex flex-col"
         style={{
           left: '295px',
