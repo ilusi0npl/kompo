@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useLayoutEffect } from 'react';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
@@ -57,19 +57,24 @@ export default function DesktopFundacja() {
     setIsDeclarationExpanded(!isDeclarationExpanded);
   };
 
-  // Measure content and calculate section height
-  useEffect(() => {
+  const [footerTop, setFooterTop] = useState(null);
+
+  // Measure content and position footer dynamically
+  useLayoutEffect(() => {
     if (contentRef.current) {
       const contentHeight = contentRef.current.offsetHeight;
-      const contentTop = 180; // top position of content div
-      const footerSpace = 160; // marginTop(80) + footer(~40) + marginBottom(40)
+      const contentTop = 180;
+      const footerMargin = 80;
+      const footerHeight = 70;
 
-      const calculatedHeight = contentTop + contentHeight + footerSpace;
+      const calculatedFooterTop = contentTop + contentHeight + footerMargin;
+      setFooterTop(calculatedFooterTop);
+
+      const calculatedHeight = calculatedFooterTop + footerHeight + 40;
       const finalHeight = Math.max(calculatedHeight, DESKTOP_HEIGHT);
-
       setSectionMinHeight(finalHeight);
     }
-  }, [isDeclarationExpanded, language]);
+  }, [isDeclarationExpanded, language, sanityData]);
 
   // Show loading state only when using Sanity
   if (USE_SANITY && loading) {
@@ -430,15 +435,17 @@ export default function DesktopFundacja() {
           </div>
         )}
 
-        {/* Stopka — in content flow, not absolute */}
-        <Footer
-          style={{
-            marginTop: '80px',
-            marginBottom: '40px',
-            width: '520px',
-          }}
-        />
       </div>
+
+      {/* Stopka — dynamically positioned below content */}
+      <Footer
+        className="absolute"
+        style={{
+          left: '185px',
+          top: footerTop ? `${footerTop}px` : 'auto',
+          width: '520px',
+        }}
+      />
     </section>
   );
 }
