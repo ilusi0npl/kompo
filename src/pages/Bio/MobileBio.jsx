@@ -46,7 +46,7 @@ const MOBILE_TITLE_HEIGHT = 80;
 const MOBILE_BOTTOM_PADDING = 100;
 const MOBILE_FOOTER_EXTRA = 150;
 const MOBILE_BASE_PARAGRAPH_HEIGHT = 160; // at 16px font
-const ENSEMBLE_FONT_SIZE = 14;
+const BIO_FONT_SIZE = 14;
 
 // Calculate dynamic height for a mobile slide based on content
 function calculateMobileSlideHeight(paragraphs, isFirst, hasFooter, fontSizeOverride) {
@@ -157,7 +157,7 @@ export default function MobileBio({ setCurrentColors }) {
         slide.paragraphs,
         index === 0,
         slide.hasFooter,
-        index === 0 ? ENSEMBLE_FONT_SIZE : undefined
+        index === 0 ? BIO_FONT_SIZE : undefined
       );
     } else {
       height = MOBILE_SLIDE_HEIGHTS[index] || 850;
@@ -307,18 +307,11 @@ export default function MobileBio({ setCurrentColors }) {
             minFontSize: 28,
             maxChars: 20, // mobile has less width
           });
-          const paragraphFontSize = index === 0
-            ? ENSEMBLE_FONT_SIZE
-            : calculateBioFontSize(paragraphs, {
-                baseFontSize: 16,
-                minFontSize: 12,
-                maxParagraphs: 2,
-                maxCharsPerParagraph: 400,
-              });
+          const paragraphFontSize = BIO_FONT_SIZE;
 
           // Calculate dynamic height for this slide (bio1 always dynamic)
           const slideHeight = (index === 0 || isLargeTestMode)
-            ? calculateMobileSlideHeight(paragraphs, index === 0, slide.hasFooter, index === 0 ? ENSEMBLE_FONT_SIZE : undefined)
+            ? calculateMobileSlideHeight(paragraphs, index === 0, slide.hasFooter, index === 0 ? BIO_FONT_SIZE : undefined)
             : (MOBILE_SLIDE_HEIGHTS[index] || 850);
 
           return (

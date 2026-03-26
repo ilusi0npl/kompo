@@ -19,7 +19,7 @@ const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 
 const ENSEMBLE_TEXT_TOP = 180;
 const ENSEMBLE_BOTTOM_GAP = 120;
-const ENSEMBLE_FONT_SIZE = 14;
+const BIO_FONT_SIZE = 14;
 
 // Map slide indices to translation keys
 const slideTranslationKeys = ['ensemble', 'aleksandra', 'rafal', 'jacek'];
@@ -235,14 +235,7 @@ export default function DesktopBio({ setCurrentColors, onHeightChange }) {
                 minFontSize: 28,
                 maxChars: 25,
               });
-              const paragraphFontSize = slide.id === 'bio1'
-                ? ENSEMBLE_FONT_SIZE
-                : calculateBioFontSize(slideParagraphs, {
-                    baseFontSize: 16,
-                    minFontSize: 12,
-                    maxParagraphs: 2,
-                    maxCharsPerParagraph: 400,
-                  });
+              const paragraphFontSize = BIO_FONT_SIZE;
 
               return (
                 <div
