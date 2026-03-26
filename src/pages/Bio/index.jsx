@@ -12,9 +12,11 @@ const BREAKPOINT = 768;
 const TRANSITION_DURATION = '0.6s';
 const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
 
+// Static fallback height (used as initial value before dynamic measurement)
+const staticDesktopHeight = desktopBioSlides.reduce((sum, slide) => sum + (slide.height || DESKTOP_HEIGHT), 0);
+
 export default function Bio() {
-  // Total height: sum of all section heights (3×700px + 1×850px)
-  const totalDesktopHeight = desktopBioSlides.reduce((sum, slide) => sum + (slide.height || DESKTOP_HEIGHT), 0);
+  const [totalDesktopHeight, setTotalDesktopHeight] = useState(staticDesktopHeight);
 
   // Track current colors for fixed elements (desktop uses desktopBioSlides, mobile uses mobileBioSlides)
   const [currentColors, setCurrentColors] = useState(desktopBioSlides[0]);
@@ -96,7 +98,7 @@ export default function Bio() {
       {!isMobile && <BioFixedLayer currentColors={currentColors} scale={desktopScale} />}
 
       <ResponsiveWrapper
-        desktopContent={<DesktopBio setCurrentColors={setCurrentColors} />}
+        desktopContent={<DesktopBio setCurrentColors={setCurrentColors} onHeightChange={setTotalDesktopHeight} />}
         mobileContent={<MobileBio setCurrentColors={setMobileColors} />}
         desktopHeight={totalDesktopHeight}
         mobileHeight="auto"

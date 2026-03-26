@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { Link } from 'react-router';
 import { useScrollColorChange } from '../../hooks/useScrollColorChange';
 import {
@@ -16,6 +16,10 @@ const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
 const TRANSITION_DURATION = '1s';
 const TRANSITION_EASING = 'cubic-bezier(0.4, 0, 0.2, 1)';
+
+const ENSEMBLE_TEXT_TOP = 180;
+const ENSEMBLE_BOTTOM_GAP = 120;
+const ENSEMBLE_FONT_SIZE = 14;
 
 // Map slide indices to translation keys
 const slideTranslationKeys = ['ensemble', 'aleksandra', 'rafal', 'jacek'];
@@ -36,10 +40,12 @@ function transformSanityProfiles(sanityProfiles) {
   });
 }
 
-export default function DesktopBio({ setCurrentColors }) {
+export default function DesktopBio({ setCurrentColors, onHeightChange }) {
   const { t } = useTranslation();
   const [loadedImages, setLoadedImages] = useState(new Set());
+  const [bio1Height, setBio1Height] = useState(DESKTOP_HEIGHT);
   const sectionsRef = useRef([]);
+  const bio1TextRef = useRef(null);
 
   // Fetch from Sanity if enabled
   const { profiles: sanityProfiles, loading, error } = useSanityBioProfiles();
@@ -79,6 +85,28 @@ export default function DesktopBio({ setCurrentColors }) {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
+  // Measure bio1 text container to calculate dynamic section height
+  useLayoutEffect(() => {
+    if (bio1TextRef.current) {
+      const textHeight = bio1TextRef.current.offsetHeight;
+      const needed = ENSEMBLE_TEXT_TOP + textHeight + ENSEMBLE_BOTTOM_GAP;
+      setBio1Height(Math.max(DESKTOP_HEIGHT, needed));
+    }
+  }, [desktopBioSlides]);
+
+  // Total height: bio1 is dynamic, rest use config heights
+  const totalHeight = desktopBioSlides.reduce((sum, slide, index) => {
+    const h = index === 0 ? bio1Height : (slide.height || DESKTOP_HEIGHT);
+    return sum + h;
+  }, 0);
+
+  // Report total height to parent (ResponsiveWrapper needs it for overflow container)
+  useEffect(() => {
+    if (onHeightChange) {
+      onHeightChange(totalHeight);
+    }
+  }, [totalHeight, onHeightChange]);
 
   // Sync background and line colors with CSS variables for ResponsiveWrapper
   useEffect(() => {
@@ -140,9 +168,6 @@ export default function DesktopBio({ setCurrentColors }) {
     );
   }
 
-  // Total height: sum of all section heights (3×700px + 1×850px)
-  const totalHeight = desktopBioSlides.reduce((sum, slide) => sum + (slide.height || DESKTOP_HEIGHT), 0);
-
   return (
     <section
       data-section="bio"
@@ -164,7 +189,7 @@ export default function DesktopBio({ setCurrentColors }) {
             ref={(el) => (sectionsRef.current[index] = el)}
             data-color={slide.id}
             style={{
-              height: `${slide.height || DESKTOP_HEIGHT}px`,
+              height: `${index === 0 ? bio1Height : (slide.height || DESKTOP_HEIGHT)}px`,
               position: 'relative',
               width: `${DESKTOP_WIDTH}px`,
             }}
@@ -210,16 +235,19 @@ export default function DesktopBio({ setCurrentColors }) {
                 minFontSize: 28,
                 maxChars: 25,
               });
-              const paragraphFontSize = calculateBioFontSize(slideParagraphs, {
-                baseFontSize: 16,
-                minFontSize: 12,
-                maxParagraphs: 2,
-                maxCharsPerParagraph: 400,
-              });
+              const paragraphFontSize = slide.id === 'bio1'
+                ? ENSEMBLE_FONT_SIZE
+                : calculateBioFontSize(slideParagraphs, {
+                    baseFontSize: 16,
+                    minFontSize: 12,
+                    maxParagraphs: 2,
+                    maxCharsPerParagraph: 400,
+                  });
 
               return (
                 <div
                   className="absolute"
+                  ref={slide.id === 'bio1' ? bio1TextRef : undefined}
                   style={{
                     left: '625px',
                     top: '180px',

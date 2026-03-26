@@ -46,9 +46,10 @@ const MOBILE_TITLE_HEIGHT = 80;
 const MOBILE_BOTTOM_PADDING = 100;
 const MOBILE_FOOTER_EXTRA = 150;
 const MOBILE_BASE_PARAGRAPH_HEIGHT = 160; // at 16px font
+const ENSEMBLE_FONT_SIZE = 14;
 
 // Calculate dynamic height for a mobile slide based on content
-function calculateMobileSlideHeight(paragraphs, isFirst, hasFooter) {
+function calculateMobileSlideHeight(paragraphs, isFirst, hasFooter, fontSizeOverride) {
   if (!paragraphs || !Array.isArray(paragraphs)) {
     return 850; // default
   }
@@ -59,9 +60,14 @@ function calculateMobileSlideHeight(paragraphs, isFirst, hasFooter) {
   const baseFontSize = 16;
   const minFontSize = 12;
 
-  const paragraphOverflow = paragraphCount / maxParagraphs;
-  const fontScale = paragraphOverflow <= 1 ? 1 : 1 / Math.pow(paragraphOverflow, 0.4);
-  const actualFontSize = Math.max(minFontSize, Math.round(baseFontSize * fontScale));
+  let actualFontSize;
+  if (fontSizeOverride) {
+    actualFontSize = fontSizeOverride;
+  } else {
+    const paragraphOverflow = paragraphCount / maxParagraphs;
+    const fontScale = paragraphOverflow <= 1 ? 1 : 1 / Math.pow(paragraphOverflow, 0.4);
+    actualFontSize = Math.max(minFontSize, Math.round(baseFontSize * fontScale));
+  }
 
   // Paragraph height scales with font size
   const paragraphHeight = Math.round(MOBILE_BASE_PARAGRAPH_HEIGHT * (actualFontSize / baseFontSize));
@@ -143,18 +149,17 @@ export default function MobileBio({ setCurrentColors }) {
     window.scrollTo(0, 0);
   }, []);
 
-  // Total height: sum of all section heights (dynamic for large test mode)
+  // Total height: bio1 always dynamic, rest use predefined or dynamic in test mode
   const totalHeight = mobileBioSlides.reduce((sum, slide, index) => {
     let height;
-    if (isLargeTestMode) {
-      // Dynamic height based on content
+    if (index === 0 || isLargeTestMode) {
       height = calculateMobileSlideHeight(
         slide.paragraphs,
         index === 0,
-        slide.hasFooter
+        slide.hasFooter,
+        index === 0 ? ENSEMBLE_FONT_SIZE : undefined
       );
     } else {
-      // Use predefined heights for real data
       height = MOBILE_SLIDE_HEIGHTS[index] || 850;
     }
     return sum + height;
@@ -302,16 +307,18 @@ export default function MobileBio({ setCurrentColors }) {
             minFontSize: 28,
             maxChars: 20, // mobile has less width
           });
-          const paragraphFontSize = calculateBioFontSize(paragraphs, {
-            baseFontSize: 16,
-            minFontSize: 12,
-            maxParagraphs: 2,
-            maxCharsPerParagraph: 400,
-          });
+          const paragraphFontSize = index === 0
+            ? ENSEMBLE_FONT_SIZE
+            : calculateBioFontSize(paragraphs, {
+                baseFontSize: 16,
+                minFontSize: 12,
+                maxParagraphs: 2,
+                maxCharsPerParagraph: 400,
+              });
 
-          // Calculate dynamic height for this slide
-          const slideHeight = isLargeTestMode
-            ? calculateMobileSlideHeight(paragraphs, index === 0, slide.hasFooter)
+          // Calculate dynamic height for this slide (bio1 always dynamic)
+          const slideHeight = (index === 0 || isLargeTestMode)
+            ? calculateMobileSlideHeight(paragraphs, index === 0, slide.hasFooter, index === 0 ? ENSEMBLE_FONT_SIZE : undefined)
             : (MOBILE_SLIDE_HEIGHTS[index] || 850);
 
           return (

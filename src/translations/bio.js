@@ -19,6 +19,8 @@ export const pl = {
       paragraphs: [
         'Trio specjalizujące się w muzyce najnowszej, założone w 2017 roku we Wrocławiu. Wykonują utwory zaangażowane i angażujące, często porzucając swoje instrumenty na rzecz kabli, samplerów, klawiatur, tańca i śpiewu. W jego skład wchodzą Aleksandra Gołaj (perkusja), Rafał Łuc (akordeon) i Jacek Sotomski (komputery).',
         'Na przestrzeni lat zespół występował na najważniejszych festiwalach muzyki współczesnej w Polsce: Warszawskiej Jesieni, Sacrum Profanum, Festiwalu Prawykonań w Katowicach, Musica Polonica Nova oraz Musica Electronica Nova, w cyklu Experimental Tuesdays w Sinfonii Varsovii, na Festiwalu Kontrapunkt w Szczecinie oraz Festiwalu NeoArte – Synthesizer of Art w Gdańsku. Trio występowało także na europejskich festiwalach, takich jak: Time of Music (Finlandia), Mixtur Festival (Hiszpania), Klang Festival (Dania) oraz Heroines of Sound Festival (Niemcy).',
+        'Od początku swojej działalności zespół współpracuje z młodym pokoleniem artystów z Polski, m.in. z Piotrem Bednarczykiem, Moniką Dalach Sayers, Niną Fukuoką, Kubą Krzewińskim, Pawłem Malinowskim, Piotrem Peszatem, Teoniki Rożynek, Rafałem Ryterskim, Moniką Szpyrką, Martą Śniady, Rafałem Zapałą oraz Aleksandrą Słyż, a także z uznanymi na arenie międzynarodowej kompozytorami, takimi jak: Cezary Duchnowski, Neo Hülcker, Kelley Sheehan, Matthias Kranebitter, Simon Løffler, Jorge Sanchez-Chiong, Mathew Shlomowitz oraz Jennifer Walshe.',
+        'Artyści występowali również na jednej scenie z Joanną Freszel, Barbarą Kingą Majewską, Michałem Pepolem, Maciejem Koczurem oraz Rafałem Zalechem. Oprócz działalności w Ensemble Kompopolex jego członkowie są aktywni także jako soliści oraz muzycy zespołów kameralnych i orkiestr symfonicznych.',
       ],
     },
     aleksandra: {
@@ -64,6 +66,8 @@ export const en = {
       paragraphs: [
         'A trio specializing in contemporary music, founded in 2017 in Wrocław. They perform committed and engaging works, often abandoning their instruments for cables, keyboards, dance and singing. The ensemble consists of Aleksandra Gołaj (percussion), Rafał Łuc (accordion) and Jacek Sotomski (computers).',
         'Over the years, the band has managed to play at the most important new music festivals in Poland: Warsaw Autumn, Sacrum Profanum, Festival of Premieres in Katowice, Musica Polonica Nova and Musica Electronica Nova, Experimental Tuesdays at Sinfonia Varsovia, Festival Contrapunct in Szczecin, Festival NeoArte Synthesizer of Art in Gdańsk. Trio performed also at the European festivals such as: Time of Music (Finland), Mixtur Festival (Spain), Klang Festival (Denmark), Heroines of Sound Festival (Germany).',
+        'Since the beginning, they have been working with the young generation of artists from Poland, among others: Piotr Bednarczyk, Monika Dalach Sayers, Nina Fukuoka, Kuba Krzewiński, Paweł Malinowski, Piotr Peszat, Teoniki Rożynek, Rafał Ryterski, Monika Szpyrka, Marta Śniady, Rafał Zapała and Aleksandra Słyż, but also internationally recognized composers, such as: Cezary Duchnowski, Neo Hülcker, Kelley Sheehan, Matthias Kranebitter, Simon Løffler, Jorge Sanchez-Chiong, Mathew Shlomowitz and Jennifer Walshe.',
+        'They shared a stage with Joanna Freszel, Barbara Kinga Majewska, Michał Pepol, Maciej Koczur and Rafał Zalech. In addition to their activities in Ensemble Kompopolex, its members are active as soloists, musicians in chamber ensembles and symphony orchestras.',
       ],
     },
     aleksandra: {
