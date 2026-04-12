@@ -11,6 +11,10 @@
 **ALWAYS** use TDD: write failing test FIRST, then implement fix.
 **SAVE** all Figma links for later use.
 
+**SURGICAL**: Touch only what's needed. Don't "improve" adjacent code, comments, or formatting.
+**SIMPLE**: If 200 lines can be 50 — rewrite. No speculative abstractions or unused flexibility.
+**ASK**: If multiple interpretations exist — present them, don't pick silently.
+
 **Goal**: Pixel-perfect React from Figma. Design = source of truth.
 **Process**: generate → verify → fix → repeat
 
