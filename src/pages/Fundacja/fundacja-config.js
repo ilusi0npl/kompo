@@ -4,7 +4,7 @@
 import { isLargeTestMode, generateFundacjaProjects, generateAccessibilityDeclaration } from '../../test-data/large-data-generator';
 
 export const DESKTOP_WIDTH = 1440;
-export const DESKTOP_HEIGHT = 900; // Collapsed state height (reduced after removing Projects section)
+export const DESKTOP_HEIGHT = 1300; // Collapsed state height (must accommodate 948px photo + footer)
 
 // Vertical decorative lines - same positions as other pages
 export const desktopLinePositions = [155, 375, 595, 815, 1035, 1255];

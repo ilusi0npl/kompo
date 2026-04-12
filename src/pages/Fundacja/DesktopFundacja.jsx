@@ -4,7 +4,6 @@ import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import {
   DESKTOP_WIDTH,
-  DESKTOP_HEIGHT,
   TEXT_COLOR,
   LINK_COLOR,
   fundacjaData,
@@ -23,7 +22,7 @@ const LINE_COLOR = '#01936F';
 export default function DesktopFundacja() {
   const { t, language } = useTranslation();
   const [isDeclarationExpanded, setIsDeclarationExpanded] = useState(false);
-  const [sectionMinHeight, setSectionMinHeight] = useState(DESKTOP_HEIGHT);
+  const [sectionMinHeight, setSectionMinHeight] = useState(1300);
   const contentRef = useRef(null);
 
   // Fetch from Sanity if enabled
@@ -57,20 +56,21 @@ export default function DesktopFundacja() {
 
   const [footerTop, setFooterTop] = useState(null);
 
-  // Measure content and position footer dynamically
+  // Measure content and position footer dynamically below both text and photo
   useLayoutEffect(() => {
     if (contentRef.current) {
-      const contentHeight = contentRef.current.offsetHeight;
-      const contentTop = 180;
+      const contentBottom = 180 + contentRef.current.offsetHeight;
+      const imageEl = contentRef.current.closest('section')?.querySelector('.absolute.overflow-hidden');
+      const imageBottom = imageEl
+        ? parseFloat(imageEl.style.top) + parseFloat(imageEl.style.height)
+        : contentBottom;
       const footerMargin = 80;
       const footerHeight = 70;
 
-      const calculatedFooterTop = contentTop + contentHeight + footerMargin;
+      const calculatedFooterTop = Math.max(contentBottom, imageBottom) + footerMargin;
       setFooterTop(calculatedFooterTop);
 
-      const calculatedHeight = calculatedFooterTop + footerHeight + 40;
-      const finalHeight = Math.max(calculatedHeight, DESKTOP_HEIGHT);
-      setSectionMinHeight(finalHeight);
+      setSectionMinHeight(calculatedFooterTop + footerHeight + 40);
     }
   }, [isDeclarationExpanded, language, sanityData]);
 
@@ -82,7 +82,7 @@ export default function DesktopFundacja() {
         className="relative"
         style={{
           width: `${DESKTOP_WIDTH}px`,
-          minHeight: `${DESKTOP_HEIGHT}px`,
+          minHeight: `${1300}px`,
           backgroundColor: 'transparent',
           display: 'flex',
           alignItems: 'center',
@@ -110,7 +110,7 @@ export default function DesktopFundacja() {
         className="relative"
         style={{
           width: `${DESKTOP_WIDTH}px`,
-          minHeight: `${DESKTOP_HEIGHT}px`,
+          minHeight: `${1300}px`,
           backgroundColor: 'transparent',
           display: 'flex',
           alignItems: 'center',
