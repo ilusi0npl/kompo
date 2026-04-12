@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import { PortableText } from '@portabletext/react';
+import { portableTextComponents } from '../../components/PortableTextComponents';
 import MobileHeader, { MobileHeaderSpacer } from '../../components/MobileHeader/MobileHeader';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -252,7 +253,7 @@ export default function MobileKalendarz() {
                   color: TEXT_COLOR,
                 }}
               >
-                <PortableText value={event.description} />
+                <PortableText components={portableTextComponents} value={event.description} />
               </div>
             ) : (
               <p

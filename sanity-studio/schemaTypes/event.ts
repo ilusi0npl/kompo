@@ -1,5 +1,16 @@
 import type {Rule} from '@sanity/types'
 
+const alignedBlock = {
+  type: 'block',
+  styles: [
+    {title: 'Normal', value: 'normal'},
+    {title: 'Left', value: 'left'},
+    {title: 'Center', value: 'center'},
+    {title: 'Right', value: 'right'},
+    {title: 'Justify', value: 'justify'},
+  ],
+}
+
 export default {
   name: 'event',
   title: 'Wydarzenia',
@@ -78,14 +89,14 @@ export default {
       name: 'descriptionPl',
       title: 'Opis (PL)',
       type: 'array',
-      of: [{type: 'block'}],
+      of: [alignedBlock],
       description: 'Rich text description - supports bold, italic, paragraphs',
     },
     {
       name: 'descriptionEn',
       title: 'Opis (EN)',
       type: 'array',
-      of: [{type: 'block'}],
+      of: [alignedBlock],
       description: 'Rich text description - supports bold, italic, paragraphs',
     },
     // Old description field - hidden for backward compatibility

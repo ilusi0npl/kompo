@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import { PortableText } from '@portabletext/react';
+import { portableTextComponents } from '../../components/PortableTextComponents';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
@@ -182,7 +183,7 @@ export default function DesktopKalendarz() {
           </div>
           {Array.isArray(events[0].description) ? (
             <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
-              <PortableText value={events[0].description} />
+              <PortableText components={portableTextComponents} value={events[0].description} />
             </div>
           ) : (
             <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
@@ -235,7 +236,7 @@ export default function DesktopKalendarz() {
               </div>
               {Array.isArray(events[1].description) ? (
                 <div style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>
-                  <PortableText value={events[1].description} />
+                  <PortableText components={portableTextComponents} value={events[1].description} />
                 </div>
               ) : (
                 <p style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, fontSize: '16px', lineHeight: 1.48, color: '#131313' }}>

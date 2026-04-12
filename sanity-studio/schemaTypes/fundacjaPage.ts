@@ -1,5 +1,16 @@
 import { Rule } from 'sanity'
 
+const alignedBlock = {
+  type: 'block',
+  styles: [
+    { title: 'Normal', value: 'normal' },
+    { title: 'Left', value: 'left' },
+    { title: 'Center', value: 'center' },
+    { title: 'Right', value: 'right' },
+    { title: 'Justify', value: 'justify' },
+  ],
+}
+
 /**
  * Fundacja Page Schema
  *
@@ -55,7 +66,7 @@ export default {
       name: 'descriptionPl',
       title: 'Opis fundacji (PL)',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [alignedBlock],
       description: 'Rich text description of the foundation in Polish',
       validation: (Rule: Rule) => Rule.required(),
     },
@@ -63,7 +74,7 @@ export default {
       name: 'descriptionEn',
       title: 'Foundation description (EN)',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [alignedBlock],
       description: 'Rich text description of the foundation in English',
       validation: (Rule: Rule) => Rule.required(),
     },
@@ -136,14 +147,14 @@ export default {
       name: 'accessibilityDeclarationPl',
       title: 'Deklaracja dostępności (PL)',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [alignedBlock],
       description: 'Accessibility declaration in Polish (rich text)',
     },
     {
       name: 'accessibilityDeclarationEn',
       title: 'Deklaracja dostępności (EN)',
       type: 'array',
-      of: [{ type: 'block' }],
+      of: [alignedBlock],
       description: 'Accessibility declaration in English (rich text)',
     },
     {

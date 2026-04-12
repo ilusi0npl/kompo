@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useParams } from 'react-router';
 import { PortableText } from '@portabletext/react';
+import { portableTextComponents } from '../../components/PortableTextComponents';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import MobileMenu from '../../components/MobileMenu/MobileMenu';
@@ -396,7 +397,7 @@ export default function MobileWydarzenie() {
                 color: TEXT_COLOR,
               }}
             >
-              <PortableText value={event.description} />
+              <PortableText components={portableTextComponents} value={event.description} />
             </div>
           ) : (
             <p

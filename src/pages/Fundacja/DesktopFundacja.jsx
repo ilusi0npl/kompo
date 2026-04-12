@@ -11,6 +11,7 @@ import {
   accessibilityDeclaration,
 } from './fundacja-config';
 import { PortableText } from '@portabletext/react';
+import { portableTextComponents } from '../../components/PortableTextComponents';
 import { useSanityFundacjaPage } from '../../hooks/useSanityFundacjaPage';
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
@@ -220,7 +221,7 @@ export default function DesktopFundacja() {
           }}
         >
           {USE_SANITY && sanityData?.descriptionPl ? (
-            <PortableText value={language === 'pl' ? sanityData.descriptionPl : sanityData.descriptionEn} />
+            <PortableText components={portableTextComponents} value={language === 'pl' ? sanityData.descriptionPl : sanityData.descriptionEn} />
           ) : (
             <p>{t('fundacja.description')}</p>
           )}
@@ -335,7 +336,7 @@ export default function DesktopFundacja() {
               }
               // Portable Text blocks
               if (Array.isArray(text) && text.length > 0 && typeof text[0] === 'object') {
-                return <PortableText value={text} />;
+                return <PortableText components={portableTextComponents} value={text} />;
               }
               return null;
             })()}

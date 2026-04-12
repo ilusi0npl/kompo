@@ -1,5 +1,6 @@
 import { useRef, useState, useLayoutEffect } from 'react';
 import { PortableText } from '@portabletext/react';
+import { portableTextComponents } from '../../components/PortableTextComponents';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
@@ -321,7 +322,7 @@ export default function DesktopWydarzenie() {
                 color: '#131313',
               }}
             >
-              <PortableText value={event.description} />
+              <PortableText components={portableTextComponents} value={event.description} />
             </div>
           ) : (
             <p

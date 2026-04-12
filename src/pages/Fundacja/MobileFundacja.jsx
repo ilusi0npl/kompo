@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { PortableText } from '@portabletext/react';
+import { portableTextComponents } from '../../components/PortableTextComponents';
 import MobileHeader, { MobileHeaderSpacer } from '../../components/MobileHeader/MobileHeader';
 import MobileFooter from '../../components/Footer/MobileFooter';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -210,7 +211,7 @@ export default function MobileFundacja() {
             }}
           >
             {USE_SANITY && sanityData?.descriptionPl ? (
-              <PortableText value={language === 'pl' ? sanityData.descriptionPl : sanityData.descriptionEn} />
+              <PortableText components={portableTextComponents} value={language === 'pl' ? sanityData.descriptionPl : sanityData.descriptionEn} />
             ) : (
               <p>{t('fundacja.description')}</p>
             )}
@@ -335,7 +336,7 @@ export default function MobileFundacja() {
                 }
                 // Portable Text blocks
                 if (Array.isArray(text) && text.length > 0 && typeof text[0] === 'object') {
-                  return <PortableText value={text} />;
+                  return <PortableText components={portableTextComponents} value={text} />;
                 }
                 return null;
               })()}
