@@ -79,6 +79,7 @@ export const bioProfilesQuery = `
     namePl,
     nameEn,
     "imageUrl": image.asset->url,
+    paragraphs[] { textPl, textEn, display },
     paragraphsPl,
     paragraphsEn
   }

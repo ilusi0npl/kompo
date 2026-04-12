@@ -35,7 +35,8 @@ function transformSanityProfiles(sanityProfiles) {
       ...configSlide, // All design from bio-config.js
       name: sanityProfile.name,
       image: sanityProfile.imageUrl,
-      paragraphs: sanityProfile.paragraphs,
+      paragraphs: sanityProfile.mainParagraphs || sanityProfile.paragraphs?.map(p => p.text) || [],
+      hasMoreParagraphs: (sanityProfile.moreParagraphs || []).length > 0,
     };
   });
 }
@@ -280,8 +281,8 @@ export default function DesktopBio({ setCurrentColors, onHeightChange }) {
                     </p>
                   ))}
 
-                  {/* Link "WIĘCEJ" (tylko dla bio1 - ensemble) */}
-                  {slide.id === 'bio1' && (
+                  {/* Link "WIĘCEJ" (only for ensemble, hidden if no more paragraphs) */}
+                  {slide.id === 'bio1' && slide.hasMoreParagraphs !== false && (
                     <Link
                       to="/bio/ensemble"
                       style={{

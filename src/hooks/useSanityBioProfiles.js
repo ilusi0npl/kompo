@@ -25,16 +25,39 @@ export function useSanityBioProfiles() {
         }
 
         // Transform data based on current language with fallback
-        const transformedProfiles = data.map(profile => ({
-          ...profile,
-          slug: profile.slug || null,
-          name: language === 'pl'
-            ? (profile.namePl || profile.nameEn || '')
-            : (profile.nameEn || profile.namePl || ''),
-          paragraphs: language === 'pl'
-            ? (profile.paragraphsPl || profile.paragraphsEn || [])
-            : (profile.paragraphsEn || profile.paragraphsPl || []),
-        }))
+        const transformedProfiles = data.map(profile => {
+          // Use unified paragraphs if available, fallback to old separate arrays
+          let paragraphs
+          if (profile.paragraphs && profile.paragraphs.length > 0 && profile.paragraphs[0].textPl) {
+            // New unified format: array of { textPl, textEn, display }
+            paragraphs = profile.paragraphs.map(p => ({
+              text: language === 'pl' ? (p.textPl || p.textEn || '') : (p.textEn || p.textPl || ''),
+              display: p.display || 'both',
+            }))
+          } else {
+            // Old format: separate paragraphsPl/paragraphsEn arrays (backward compat)
+            const texts = language === 'pl'
+              ? (profile.paragraphsPl || profile.paragraphsEn || [])
+              : (profile.paragraphsEn || profile.paragraphsPl || [])
+            paragraphs = texts.map(text => ({ text, display: 'both' }))
+          }
+
+          return {
+            ...profile,
+            slug: profile.slug || null,
+            name: language === 'pl'
+              ? (profile.namePl || profile.nameEn || '')
+              : (profile.nameEn || profile.namePl || ''),
+            paragraphs,
+            // Filtered views for convenience
+            mainParagraphs: paragraphs
+              .filter(p => p.display === 'main' || p.display === 'both')
+              .map(p => p.text),
+            moreParagraphs: paragraphs
+              .filter(p => p.display === 'more' || p.display === 'both')
+              .map(p => p.text),
+          }
+        })
         setProfiles(transformedProfiles)
         setLoading(false)
       })

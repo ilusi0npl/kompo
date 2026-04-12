@@ -71,7 +71,7 @@ export default function MobileBioEnsemble() {
   const largeData = isLargeTestMode ? generateBioEnsembleData(10) : null;
   const title = useSanityData ? ensembleProfile.name
     : isLargeTestMode ? largeData.title : t('bio.ensemble.title');
-  const paragraphs = useSanityData ? ensembleProfile.paragraphs
+  const paragraphs = useSanityData ? ensembleProfile.moreParagraphs
     : isLargeTestMode ? largeData.extendedParagraphs : t('bio.ensemble.extendedParagraphs');
   // UI label — stays in translations, not CMS content
   const upcomingEventsText = isLargeTestMode ? largeData.upcomingEvents : t('bio.ensemble.upcomingEvents');

@@ -38,27 +38,70 @@ export default {
       options: {hotspot: true},
       validation: (Rule: Rule) => Rule.required(),
     },
-    // Bilingual paragraphs fields
+    // Unified paragraphs with bilingual text and visibility control
+    {
+      name: 'paragraphs',
+      title: 'Akapity / Paragraphs',
+      type: 'array',
+      description: 'Each paragraph contains PL/EN text and visibility control (main Bio page, "More" page, or both).',
+      of: [
+        {
+          type: 'object',
+          name: 'bioParagraph',
+          fields: [
+            {
+              name: 'textPl',
+              title: 'Tekst (PL)',
+              type: 'text',
+              validation: (Rule: Rule) => Rule.required(),
+            },
+            {
+              name: 'textEn',
+              title: 'Text (EN)',
+              type: 'text',
+              validation: (Rule: Rule) => Rule.required(),
+            },
+            {
+              name: 'display',
+              title: 'Gdzie wyświetlać / Where to display',
+              type: 'string',
+              options: {
+                list: [
+                  {title: 'Strona główna Bio / Main Bio page', value: 'main'},
+                  {title: 'Strona "Więcej" / "More" page', value: 'more'},
+                  {title: 'Oba / Both', value: 'both'},
+                ],
+                layout: 'radio',
+              },
+              initialValue: 'both',
+              validation: (Rule: Rule) => Rule.required(),
+            },
+          ],
+          preview: {
+            select: {textPl: 'textPl', display: 'display'},
+            prepare({textPl, display}: any) {
+              const labels: Record<string, string> = {main: 'Bio glowna', more: 'Wiecej', both: 'Oba'}
+              return {
+                title: (textPl?.substring(0, 80) || '') + '...',
+                subtitle: labels[display] || display,
+              }
+            },
+          },
+        },
+      ],
+      validation: (Rule: Rule) => Rule.required().min(1),
+    },
+    // Old paragraph fields - hidden for backward compatibility (data preserved for rollback)
     {
       name: 'paragraphsPl',
-      title: 'Paragrafy (PL)',
+      title: 'Paragrafy PL (deprecated)',
       type: 'array',
       of: [{type: 'text'}],
-      description: 'Pierwsze 2 paragrafy → strona główna Bio. Wszystkie → podstrona "Więcej".',
-      validation: (Rule: Rule) => Rule.required().min(1),
+      hidden: true,
     },
     {
       name: 'paragraphsEn',
-      title: 'Paragrafy (EN)',
-      type: 'array',
-      of: [{type: 'text'}],
-      description: 'First 2 paragraphs → main Bio page. All paragraphs → "More" detail page.',
-      validation: (Rule: Rule) => Rule.required().min(1),
-    },
-    // Old paragraphs field - hidden for backward compatibility
-    {
-      name: 'paragraphs',
-      title: 'Paragrafy (deprecated)',
+      title: 'Paragrafy EN (deprecated)',
       type: 'array',
       of: [{type: 'text'}],
       hidden: true,
