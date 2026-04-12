@@ -10,7 +10,6 @@ import {
   TEXT_COLOR,
   LINK_COLOR,
   fundacjaData,
-  projectsData,
   accessibilityDeclaration,
 } from './fundacja-config';
 
@@ -35,8 +34,6 @@ export default function MobileFundacja() {
         email: sanityData.email,
       }
     : fundacjaData;
-
-  const projects = USE_SANITY && sanityData ? sanityData.projects : projectsData;
 
   const toggleDeclaration = () => {
     setIsDeclarationExpanded(!isDeclarationExpanded);
@@ -217,95 +214,6 @@ export default function MobileFundacja() {
             ) : (
               <p>{t('fundacja.description')}</p>
             )}
-          </div>
-        </div>
-
-        {/* Projekty */}
-        <div
-          className="flex flex-col"
-          style={{
-            gap: '20px',
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 700,
-              fontSize: '16px',
-              lineHeight: 1.48,
-              color: TEXT_COLOR,
-            }}
-          >
-            {t('fundacja.projectsTitle')}
-          </p>
-
-          <div
-            className="flex flex-col"
-            style={{
-              gap: '32px',
-            }}
-          >
-            {projects.map((project, index) => (
-              <div key={index} className="flex flex-col" style={{ gap: '12px' }}>
-                <p
-                  style={{
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontWeight: 500,
-                    fontSize: '16px',
-                    lineHeight: 1.48,
-                    color: TEXT_COLOR,
-                    paddingLeft: '24px',
-                    position: 'relative',
-                  }}
-                >
-                  <span
-                    style={{
-                      position: 'absolute',
-                      left: '0',
-                    }}
-                  >
-                    •
-                  </span>
-                  {USE_SANITY && sanityData ? project.text : t(`fundacja.projects.${index}.text`)}
-                </p>
-                {project.linkText && (
-                  <a
-                    href={project.linkUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center external-link-btn"
-                    style={{
-                      gap: '6px',
-                      justifyContent: 'flex-end',
-                      width: project.linkText.includes('CROSSFADE') ? '347px' : '174px',
-                    }}
-                  >
-                    <span
-                      className="external-link-btn__text"
-                      style={{
-                        fontFamily: "'IBM Plex Mono', monospace",
-                        fontWeight: 600,
-                        fontSize: '16px',
-                        lineHeight: 1.48,
-                        color: LINK_COLOR,
-                        textTransform: 'uppercase',
-                      }}
-                    >
-                      {project.linkText}
-                    </span>
-                    <img
-                      src="/assets/fundacja/arrow-up-right.svg"
-                      alt="External link"
-                      className="external-link-btn__arrow"
-                      style={{
-                        width: '24px',
-                        height: '24px',
-                      }}
-                    />
-                  </a>
-                )}
-              </div>
-            ))}
           </div>
         </div>
 

@@ -168,13 +168,6 @@ export const fundacjaPageQuery = `
     email,
     descriptionPl,
     descriptionEn,
-    projects[] {
-      textPl,
-      textEn,
-      linkTextPl,
-      linkTextEn,
-      linkUrl
-    },
     accessibilityDeclarationPl,
     accessibilityDeclarationEn
   }

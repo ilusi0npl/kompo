@@ -67,10 +67,12 @@ export default {
       description: 'Rich text description of the foundation in English',
       validation: (Rule: Rule) => Rule.required(),
     },
+    // Hidden 2026-04-12: client requested removal of Projects section from page
     {
       name: 'projects',
       title: 'Projekty',
       type: 'array',
+      hidden: true,
       of: [
         {
           type: 'object',
@@ -129,7 +131,6 @@ export default {
           },
         },
       ],
-      validation: (Rule: Rule) => Rule.required(),
     },
     {
       name: 'accessibilityDeclarationPl',

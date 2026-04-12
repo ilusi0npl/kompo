@@ -8,7 +8,6 @@ import {
   TEXT_COLOR,
   LINK_COLOR,
   fundacjaData,
-  projectsData,
   accessibilityDeclaration,
 } from './fundacja-config';
 import { PortableText } from '@portabletext/react';
@@ -39,8 +38,6 @@ export default function DesktopFundacja() {
         email: sanityData.email,
       }
     : fundacjaData;
-
-  const projects = USE_SANITY && sanityData ? sanityData.projects : projectsData;
 
   const accessibilityText = USE_SANITY && sanityData
     ? {
@@ -227,96 +224,6 @@ export default function DesktopFundacja() {
           ) : (
             <p>{t('fundacja.description')}</p>
           )}
-        </div>
-
-        {/* Projekty */}
-        <div
-          className="flex flex-col"
-          style={{
-            gap: '20px',
-            marginBottom: '64px',
-          }}
-        >
-          <p
-            style={{
-              fontFamily: "'IBM Plex Mono', monospace",
-              fontWeight: 700,
-              fontSize: '16px',
-              lineHeight: 1.48,
-              color: textColor,
-            }}
-          >
-            {t('fundacja.projectsTitle')}
-          </p>
-
-          <div
-            className="flex flex-col"
-            style={{
-              gap: '32px',
-            }}
-          >
-            {projects.map((project, index) => (
-              <div key={index} className="flex flex-col" style={{ gap: '12px' }}>
-                <p
-                  style={{
-                    fontFamily: "'IBM Plex Mono', monospace",
-                    fontWeight: 500,
-                    fontSize: '16px',
-                    lineHeight: 1.48,
-                    color: textColor,
-                    paddingLeft: '24px',
-                    position: 'relative',
-                  }}
-                >
-                  <span
-                    style={{
-                      position: 'absolute',
-                      left: '0',
-                    }}
-                  >
-                    •
-                  </span>
-                  {USE_SANITY && sanityData ? project.text : t(`fundacja.projects.${index}.text`)}
-                </p>
-                {project.linkText && (
-                  <a
-                    href={project.linkUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center external-link-btn"
-                    style={{
-                      gap: '6px',
-                      justifyContent: 'flex-end',
-                      width: project.linkText.includes('CROSSFADE') ? '347px' : '174px',
-                    }}
-                  >
-                    <span
-                      className="external-link-btn__text"
-                      style={{
-                        fontFamily: "'IBM Plex Mono', monospace",
-                        fontWeight: 600,
-                        fontSize: '16px',
-                        lineHeight: 1.48,
-                        color: linkColor,
-                        textTransform: 'uppercase',
-                      }}
-                    >
-                      {project.linkText}
-                    </span>
-                    <img
-                      src="/assets/fundacja/arrow-up-right.svg"
-                      alt="External link"
-                      className="external-link-btn__arrow"
-                      style={{
-                        width: '24px',
-                        height: '24px',
-                      }}
-                    />
-                  </a>
-                )}
-              </div>
-            ))}
-          </div>
         </div>
 
         {/* Dane fundacji */}
