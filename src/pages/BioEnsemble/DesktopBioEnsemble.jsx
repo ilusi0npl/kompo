@@ -86,7 +86,7 @@ export default function DesktopBioEnsemble() {
 
   // Sanity data (always call — React hooks rules)
   const { profiles: sanityProfiles, loading, error } = useSanityBioProfiles();
-  const ensembleProfile = sanityProfiles?.find(p => p.slug === 'ensemble') || null;
+  const ensembleProfile = sanityProfiles?.find(p => p.slug === 'ensemble') || sanityProfiles?.[0] || null;
 
   // Data source: Sanity > LargeTestMode > Translations
   const useSanityData = USE_SANITY && ensembleProfile;
