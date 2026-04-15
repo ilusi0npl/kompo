@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { Link } from 'react-router';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useSanityBioProfiles } from '../../hooks/useSanityBioProfiles';
@@ -106,8 +106,27 @@ export default function DesktopBioEnsemble() {
     maxCharsPerParagraph: 500,
   });
 
-  // Calculate dynamic height
-  const pageHeight = calculatePageHeight(paragraphs, paragraphFontSize);
+  // Measure actual content height so footer never overlaps dynamic content
+  const contentRef = useRef(null);
+  const [measuredContentBottom, setMeasuredContentBottom] = useState(0);
+  useLayoutEffect(() => {
+    if (!contentRef.current) return;
+    const measure = () => {
+      const el = contentRef.current;
+      if (!el) return;
+      setMeasuredContentBottom(el.offsetTop + el.offsetHeight);
+    };
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(contentRef.current);
+    return () => ro.disconnect();
+  }, [paragraphs, paragraphFontSize]);
+
+  // Dynamic page height: measured content + footer space, fallback to estimate
+  const estimatedHeight = calculatePageHeight(paragraphs, paragraphFontSize);
+  const pageHeight = measuredContentBottom > 0
+    ? Math.max(estimatedHeight, measuredContentBottom + FOOTER_HEIGHT)
+    : estimatedHeight;
 
   // Preload image
   useEffect(() => {
@@ -214,6 +233,7 @@ export default function DesktopBioEnsemble() {
 
       {/* Treść - paragraphs + link */}
       <div
+        ref={contentRef}
         className="absolute flex flex-col"
         style={{
           left: '295px',
