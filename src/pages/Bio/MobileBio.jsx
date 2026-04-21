@@ -9,12 +9,16 @@ import {
   mobileBioSlides,
   mobileLinePositions,
   MOBILE_WIDTH,
+  transformSanityProfiles,
 } from './bio-config';
+import { useSanityBioProfiles } from '../../hooks/useSanityBioProfiles';
 import { isLargeTestMode } from '../../test-data/large-data-generator';
 import { calculateBioFontSize, calculateTitleFontSize } from '../../hooks/useResponsiveFontSize';
 
 // Mapowanie indeksu slajdu na klucz tłumaczenia
 const slideTranslationKeys = ['ensemble', 'aleksandra', 'rafal', 'jacek'];
+
+const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
 const BREAKPOINT = 768;
 
@@ -88,6 +92,7 @@ function calculateMobileSlideHeight(paragraphs, isFirst, hasFooter, fontSizeOver
 }
 
 export default function MobileBio({ setCurrentColors }) {
+  const { profiles: sanityProfiles, loading } = useSanityBioProfiles();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [loadedImages, setLoadedImages] = useState(new Set());
   const [linesVisible, setLinesVisible] = useState(false);
@@ -95,8 +100,12 @@ export default function MobileBio({ setCurrentColors }) {
   const sectionsRef = useRef([]);
   const { t } = useTranslation();
 
+  const slides = USE_SANITY && sanityProfiles && sanityProfiles.length > 0
+    ? transformSanityProfiles(mobileBioSlides, sanityProfiles)
+    : mobileBioSlides;
+
   // Use scroll-based color detection (same as desktop)
-  const currentColors = useScrollColorChange(sectionsRef, mobileBioSlides);
+  const currentColors = useScrollColorChange(sectionsRef, slides);
 
   // Pass colors to parent (for fixed background and lines outside ResponsiveWrapper)
   useEffect(() => {
@@ -129,14 +138,14 @@ export default function MobileBio({ setCurrentColors }) {
 
   // Preload wszystkich obrazów Bio
   useEffect(() => {
-    mobileBioSlides.forEach((slide, index) => {
+    slides.forEach((slide, index) => {
       const img = new Image();
       img.onload = () => {
         setLoadedImages((prev) => new Set(prev).add(index));
       };
       img.src = slide.image;
     });
-  }, []);
+  }, [slides]);
 
   // Sync background and line colors with CSS variables for ResponsiveWrapper
   useEffect(() => {
@@ -149,8 +158,10 @@ export default function MobileBio({ setCurrentColors }) {
     window.scrollTo(0, 0);
   }, []);
 
+  if (USE_SANITY && loading) return null;
+
   // Total height: bio1 always dynamic, rest use predefined or dynamic in test mode
-  const totalHeight = mobileBioSlides.reduce((sum, slide, index) => {
+  const totalHeight = slides.reduce((sum, slide, index) => {
     let height;
     if (index === 0 || isLargeTestMode) {
       height = calculateMobileSlideHeight(
@@ -290,13 +301,12 @@ export default function MobileBio({ setCurrentColors }) {
             }}
           />
         ))}
-        {mobileBioSlides.map((slide, index) => {
+        {slides.map((slide, index) => {
           const translationKey = slideTranslationKeys[index];
-          // In large test mode, use slide data directly; otherwise use translations
-          const paragraphs = isLargeTestMode
+          const paragraphs = USE_SANITY || isLargeTestMode
             ? slide.paragraphs
             : t(`bio.slides.${translationKey}.paragraphs`);
-          const slideName = isLargeTestMode
+          const slideName = USE_SANITY || isLargeTestMode
             ? slide.name
             : t(`bio.slides.${translationKey}.name`);
           const imageStyle = mobileImageStyles[index] || defaultImageStyle;

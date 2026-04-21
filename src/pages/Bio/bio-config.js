@@ -166,6 +166,23 @@ const realMobileBioSlides = [
   }
 ];
 
+// Merges Sanity CMS content with hardcoded design values from a config slides array.
+// Preserves: colors, layout, hasFooter — all Figma-derived.
+// Overrides: name, image (imageUrl), paragraphs (mainParagraphs with fallback).
+export function transformSanityProfiles(configSlides, sanityProfiles) {
+  return configSlides.map((configSlide, index) => {
+    const sanityProfile = sanityProfiles[index];
+    if (!sanityProfile) return configSlide;
+    return {
+      ...configSlide,
+      name: sanityProfile.name || configSlide.name,
+      image: sanityProfile.imageUrl || configSlide.image,
+      paragraphs: sanityProfile.mainParagraphs || sanityProfile.paragraphs?.map(p => p.text) || [],
+      hasMoreParagraphs: (sanityProfile.moreParagraphs || []).length > 0,
+    };
+  });
+}
+
 // Pozycje pionowych linii (z Figma)
 export const desktopLinePositions = [155, 375, 595, 815, 1035, 1255];
 export const mobileLinePositions = [97, 195, 292];

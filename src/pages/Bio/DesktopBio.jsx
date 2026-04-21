@@ -5,6 +5,7 @@ import {
   desktopBioSlides as configSlides,
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
+  transformSanityProfiles as transformProfiles,
 } from './bio-config';
 import Footer from '../../components/Footer/Footer';
 import { useTranslation } from '../../hooks/useTranslation';
@@ -24,22 +25,7 @@ const BIO_FONT_SIZE = 14;
 // Map slide indices to translation keys
 const slideTranslationKeys = ['ensemble', 'aleksandra', 'rafal', 'jacek'];
 
-// Transform Sanity profiles to match config structure
-// Merges CMS content (name, image, paragraphs) with hardcoded design values
-function transformSanityProfiles(sanityProfiles) {
-  return configSlides.map((configSlide, index) => {
-    const sanityProfile = sanityProfiles[index];
-    if (!sanityProfile) return configSlide;
-
-    return {
-      ...configSlide, // All design from bio-config.js
-      name: sanityProfile.name,
-      image: sanityProfile.imageUrl,
-      paragraphs: sanityProfile.mainParagraphs || sanityProfile.paragraphs?.map(p => p.text) || [],
-      hasMoreParagraphs: (sanityProfile.moreParagraphs || []).length > 0,
-    };
-  });
-}
+const transformSanityProfiles = (sanityProfiles) => transformProfiles(configSlides, sanityProfiles);
 
 export default function DesktopBio({ setCurrentColors, onHeightChange }) {
   const { t } = useTranslation();
