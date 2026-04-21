@@ -11,6 +11,8 @@
 **ALWAYS** use TDD: write failing test FIRST, then implement fix.
 **SAVE** all Figma links for later use.
 
+**PRODUCTION**: https://kompopolex.pl (Vercel, live). DNS: cyber_Folks panel (dnsl/2/3.linuxpl.com), A record `@` → `76.76.21.21`.
+
 **SURGICAL**: Touch only what's needed. Don't "improve" adjacent code, comments, or formatting.
 **SIMPLE**: If 200 lines can be 50 — rewrite. No speculative abstractions or unused flexibility.
 **ASK**: If multiple interpretations exist — present them, don't pick silently.
