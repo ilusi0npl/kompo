@@ -203,7 +203,7 @@ test.describe('Content Overlap Detection - Non-CMS Mode', () => {
       await page.goto('/kalendarz', { waitUntil: 'networkidle' });
 
       // Find event cards/items
-      const events = page.locator('[data-event], [class*="event"], article');
+      const events = page.locator('[data-event-card], [data-event]');
       const count = await events.count();
 
       if (count >= 2) {

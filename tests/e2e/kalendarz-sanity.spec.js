@@ -15,7 +15,7 @@ test.describe('Kalendarz Page - Sanity Integration', () => {
       await page.goto('/kalendarz')
 
       // Should display event cards
-      const eventCards = page.locator('[data-testid="event-card"], section > div')
+      const eventCards = page.locator('[data-event-card], [data-testid="event-card"]')
       await expect(eventCards.first()).toBeVisible({ timeout: 5000 })
     })
 
