@@ -42,6 +42,9 @@ export function useSanityEvents(status = 'upcoming') {
           location: language === 'pl'
             ? (event.locationPl || event.locationEn || '')
             : (event.locationEn || event.locationPl || ''),
+          dateText: language === 'pl'
+            ? (event.dateTextPl || event.dateTextEn || '')
+            : (event.dateTextEn || event.dateTextPl || ''),
         }))
         setEvents(transformedEvents)
         setLoading(false)

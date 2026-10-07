@@ -53,11 +53,11 @@ function transformSanityEvents(sanityEvents) {
     const position = getGridPosition(index);
     return {
       id: event._id,
-      date: new Date(event.date).toLocaleDateString('pl-PL', {
+      date: event.date ? new Date(event.date).toLocaleDateString('pl-PL', {
         day: '2-digit',
         month: '2-digit',
         year: '2-digit',
-      }).replace(/\./g, '.').replace(/(\d{2})\.(\d{2})\.(\d{2})/, '$1.$2.$3 '),
+      }).replace(/\./g, '.').replace(/(\d{2})\.(\d{2})\.(\d{2})/, '$1.$2.$3 ') : event.dateText,
       title: event.title,
       performers: event.performers,
       image: event.imageUrl,

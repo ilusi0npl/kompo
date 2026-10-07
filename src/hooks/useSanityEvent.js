@@ -38,6 +38,9 @@ export function useSanityEvent(id) {
             ? (eventData.descriptionPl || eventData.descriptionEn || [])
             : (eventData.descriptionEn || eventData.descriptionPl || []),
           location: language === 'pl' ? eventData.locationPl : eventData.locationEn,
+          dateText: language === 'pl'
+            ? (eventData.dateTextPl || eventData.dateTextEn || '')
+            : (eventData.dateTextEn || eventData.dateTextPl || ''),
         }
 
         setEvent(transformedEvent)

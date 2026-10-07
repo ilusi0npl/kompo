@@ -7,6 +7,7 @@ import { useTranslation } from '../../hooks/useTranslation';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import { useSanityEvents } from '../../hooks/useSanityEvents';
 import { events as configEvents } from './kalendarz-config';
+import { formatEventDate } from './formatEventDate';
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
@@ -15,24 +16,6 @@ const mobileLinePositions = [97, 195, 292];
 const BACKGROUND_COLOR = '#FDFDFD';
 const LINE_COLOR = '#A0E38A';
 const TEXT_COLOR = '#131313';
-
-// Format date for display (handle both config string and Sanity datetime)
-const formatEventDate = (dateValue) => {
-  // If it's already formatted string from config (e.g., "13.12.25 | 18:00"), return as-is
-  if (typeof dateValue === 'string' && dateValue.includes('|')) {
-    return dateValue;
-  }
-
-  // Otherwise parse as datetime and format
-  const date = new Date(dateValue);
-  return date.toLocaleDateString('pl-PL', {
-    day: '2-digit',
-    month: '2-digit',
-    year: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit'
-  }).replace(',', ' |');
-};
 
 export default function MobileKalendarz() {
   const { t } = useTranslation();
@@ -190,7 +173,7 @@ export default function MobileKalendarz() {
                 color: TEXT_COLOR,
               }}
             >
-              {formatEventDate(event.date)}
+              {formatEventDate(event)}
             </p>
 
             {/* Tytuł (link) z hover na fiolet */}

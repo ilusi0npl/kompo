@@ -76,7 +76,7 @@ export default function DesktopWydarzenie() {
   if (USE_SANITY && sanityEvent) {
     event = {
       ...sanityEvent,
-      date: formatDate(sanityEvent.date),
+      date: sanityEvent.date ? formatDate(sanityEvent.date) : sanityEvent.dateText,
       time: formatTime(sanityEvent.date),
       image: sanityEvent.imageUrl,
       artists: sanityEvent.performers || '',
@@ -223,7 +223,7 @@ export default function DesktopWydarzenie() {
               color: '#131313',
             }}
           >
-            {event.date}| {event.time}
+            {event.time ? `${event.date}| ${event.time}` : event.date}
           </p>
         </div>
 

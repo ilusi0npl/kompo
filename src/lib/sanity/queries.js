@@ -10,13 +10,15 @@
  * - $param - Query parameter
  */
 
-// Upcoming events (published only, sorted by date ascending)
+// Upcoming events (published only, undated first, then by date ascending)
 export const upcomingEventsQuery = `
-  *[_type == "event" && status == "upcoming" && defined(publishedAt)] | order(date asc) {
+  *[_type == "event" && status == "upcoming" && defined(publishedAt)] | order(defined(date) asc, date asc) {
     _id,
     titlePl,
     titleEn,
     date,
+    dateTextPl,
+    dateTextEn,
     performersPl,
     performersEn,
     program,
@@ -41,6 +43,8 @@ export const archivedEventsQuery = `
     titlePl,
     titleEn,
     date,
+    dateTextPl,
+    dateTextEn,
     performersPl,
     performersEn,
     program,
@@ -92,6 +96,8 @@ export const eventByIdQuery = `
     titlePl,
     titleEn,
     date,
+    dateTextPl,
+    dateTextEn,
     performersPl,
     performersEn,
     program,

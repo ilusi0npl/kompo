@@ -40,7 +40,25 @@ export default {
       name: 'date',
       title: 'Data i godzina',
       type: 'datetime',
-      validation: (Rule: Rule) => Rule.required(),
+      description: 'Opcjonalne - jeśli brak, wypełnij "Tekst zamiast daty". Wydarzenia bez daty są na początku kalendarza',
+      validation: (Rule: Rule) =>
+        Rule.custom((date: string | undefined, context: any) =>
+          date || context.document?.dateTextPl ? true : 'Podaj datę albo "Tekst zamiast daty (PL)"'
+        ),
+    },
+    {
+      name: 'dateTextPl',
+      title: 'Tekst zamiast daty (PL)',
+      type: 'string',
+      description: 'Np. "Szczegóły wkrótce" - wyświetlany tylko gdy brak daty',
+      hidden: ({document}: any) => Boolean(document?.date),
+    },
+    {
+      name: 'dateTextEn',
+      title: 'Tekst zamiast daty (EN)',
+      type: 'string',
+      description: 'E.g. "Details coming soon" - shown only when date is empty',
+      hidden: ({document}: any) => Boolean(document?.date),
     },
     // Bilingual performers fields
     {

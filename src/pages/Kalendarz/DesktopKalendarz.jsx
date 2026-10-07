@@ -10,6 +10,7 @@ import {
   DESKTOP_WIDTH,
   DESKTOP_HEIGHT,
 } from './kalendarz-config';
+import { formatEventDate } from './formatEventDate';
 
 const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 
@@ -24,24 +25,6 @@ const CARD_GAP = 70;
 
 const TEXT_COLOR = '#131313';
 const MONO = "'IBM Plex Mono', monospace";
-
-// Format date for display (handle both config string and Sanity datetime)
-const formatEventDate = (dateValue) => {
-  // If it's already formatted string from config (e.g., "13.12.25 | 18:00"), return as-is
-  if (typeof dateValue === 'string' && dateValue.includes('|')) {
-    return dateValue;
-  }
-
-  // Otherwise parse as datetime and format
-  const date = new Date(dateValue);
-  return date.toLocaleDateString('pl-PL', {
-    day: '2-digit',
-    month: '2-digit',
-    year: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit'
-  }).replace(',', ' |');
-};
 
 const StateMessage = ({ children, color = TEXT_COLOR }) => (
   <div
@@ -90,7 +73,7 @@ function EventCard({ event, t }) {
 
       <div className="flex flex-col" style={{ width: `${TEXT_WIDTH}px`, gap: '20px' }}>
         <p style={{ fontFamily: MONO, fontWeight: 600, fontSize: '20px', lineHeight: 1.44, color: TEXT_COLOR }}>
-          {formatEventDate(event.date)}
+          {formatEventDate(event)}
         </p>
 
         <div className="flex flex-col" style={{ gap: '32px' }}>
