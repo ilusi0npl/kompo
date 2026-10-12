@@ -40,7 +40,7 @@ export default {
       name: 'date',
       title: 'Data i godzina',
       type: 'datetime',
-      description: 'Opcjonalne - jeśli brak, wypełnij "Tekst zamiast daty". Wydarzenia bez daty są na początku kalendarza',
+      description: 'Opcjonalne - jeśli brak, wypełnij "Tekst zamiast daty". Wydarzenia bez daty są na końcu kalendarza',
       validation: (Rule: Rule) =>
         Rule.custom((date: string | undefined, context: any) =>
           date || context.document?.dateTextPl ? true : 'Podaj datę albo "Tekst zamiast daty (PL)"'
