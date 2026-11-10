@@ -13,6 +13,7 @@ import Wydarzenie2 from './pages/Wydarzenie2';
 import Media from './pages/Media';
 import MediaWideo from './pages/MediaWideo';
 import MediaGaleria from './pages/MediaGaleria';
+import MediaRecenzje from './pages/MediaRecenzje';
 import Kontakt from './pages/Kontakt';
 import Repertuar from './pages/Repertuar';
 import Specialne from './pages/Specialne';
@@ -36,6 +37,8 @@ function App() {
           <Route path="/media" element={<Media />} />
           <Route path="/media/wideo" element={<MediaWideo />} />
           <Route path="/media/galeria/:id" element={<MediaGaleria />} />
+          <Route path="/media/recenzje" element={<MediaRecenzje />} />
+          <Route path="/media/recenzje/:id" element={<MediaRecenzje />} />
           <Route path="/kalendarz" element={<Kalendarz />} />
           <Route path="/archiwalne" element={<Archiwalne />} />
           <Route path="/wydarzenie/2" element={<Wydarzenie2 />} />

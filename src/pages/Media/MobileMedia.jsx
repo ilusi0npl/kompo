@@ -109,11 +109,12 @@ export default function MobileMedia() {
         headerHeight={326}
         activeColor={ACTIVE_TAB_COLOR}
         navLinksTop={257}
-        navLinksGap={101}
+        navLinksGap={40}
         navLinksFontSize={20}
         navLinks={[
           { label: t('common.tabs.photos'), to: '/media', isActive: true },
           { label: t('common.tabs.video'), to: '/media/wideo', isActive: false },
+          { label: t('common.tabs.reviews'), to: '/media/recenzje', isActive: false },
         ]}
       />
       <MobileHeaderSpacer height={326} />

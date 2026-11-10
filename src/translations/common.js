@@ -22,6 +22,7 @@ export const pl = {
     archived: 'Archiwalne',
     photos: 'Zdjęcia',
     video: 'Wideo',
+    reviews: 'Recenzje',
   },
   labels: {
     program: 'program:',
@@ -38,6 +39,7 @@ export const pl = {
     album: 'Ładowanie albumu...',
     slides: 'Ładowanie slajdów...',
     videos: 'Ładowanie filmów...',
+    reviews: 'Ładowanie recenzji...',
     special: 'Ładowanie projektów specjalnych...',
     contact: 'Ładowanie strony kontakt...',
     foundation: 'Ładowanie strony fundacji...',
@@ -73,6 +75,7 @@ export const en = {
     archived: 'Archived',
     photos: 'Photos',
     video: 'Video',
+    reviews: 'Reviews',
   },
   labels: {
     program: 'program:',
@@ -89,6 +92,7 @@ export const en = {
     album: 'Loading album...',
     slides: 'Loading slides...',
     videos: 'Loading videos...',
+    reviews: 'Loading reviews...',
     special: 'Loading special projects...',
     contact: 'Loading contact page...',
     foundation: 'Loading foundation page...',

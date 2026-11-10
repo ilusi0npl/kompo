@@ -218,3 +218,32 @@ export const specialneComposersQuery = `
     works
   }
 `
+
+// Review events with their press reviews (published only, newest first)
+export const reviewEventsQuery = `
+  *[_type == "reviewEvent" && defined(publishedAt)] | order(date desc) {
+    _id,
+    "slug": slug.current,
+    titlePl,
+    titleEn,
+    festivalPl,
+    festivalEn,
+    date,
+    placePl,
+    placeEn,
+    "imageUrl": image.asset->url,
+    reviews[] {
+      _key,
+      outlet,
+      author,
+      publishedOn,
+      url,
+      sourceTitle,
+      textPl,
+      textEn,
+      "photoUrl": photo.asset->url,
+      photoCaptionPl,
+      photoCaptionEn
+    }
+  }
+`

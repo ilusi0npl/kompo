@@ -12,8 +12,13 @@ const LINE_COLOR = '#01936F';
 const BACKGROUND_COLOR = '#34B898';
 const TEXT_COLOR = '#131313';
 const ACTIVE_COLOR = '#761FE0';
+const TABS = [
+  { key: 'photos', to: '/media', left: 185 },
+  { key: 'video', to: '/media/wideo', left: 405 },
+  { key: 'reviews', to: '/media/recenzje', left: 625 },
+];
 
-export default function MediaFixedLayer({ scale = 1, viewportHeight = 700, isPhotosActive = true }) {
+export default function MediaFixedLayer({ scale = 1, viewportHeight = 700, activeTab = 'photos' }) {
   const [documentHeight, setDocumentHeight] = useState(0);
 
   useEffect(() => {
@@ -145,84 +150,30 @@ export default function MediaFixedLayer({ scale = 1, viewportHeight = 700, isPho
           }}
         />
 
-        {/* Nawigacja Zdjęcia / Wideo */}
-        {isPhotosActive ? (
-          <>
-            <span
-              className="filter-tab filter-tab--active"
-              style={{
-                position: 'absolute',
-                left: `${185 * scale}px`,
-                top: `${190 * scale}px`,
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontWeight: 600,
-                fontSize: `${24 * scale}px`,
-                lineHeight: 1.48,
-                color: ACTIVE_COLOR,
-                pointerEvents: 'auto',
-                zIndex: 101,
-              }}
-            >
-              {t('common.tabs.photos')}
+        {/* Nawigacja Zdjęcia / Wideo / Recenzje */}
+        {TABS.map(({ key, to, left }) => {
+          const style = {
+            position: 'absolute',
+            left: `${left * scale}px`,
+            top: `${190 * scale}px`,
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 600,
+            fontSize: `${24 * scale}px`,
+            lineHeight: 1.48,
+            color: key === activeTab ? ACTIVE_COLOR : TEXT_COLOR,
+            pointerEvents: 'auto',
+            zIndex: 101,
+          };
+          return key === activeTab ? (
+            <span key={key} className="filter-tab filter-tab--active" style={style}>
+              {t(`common.tabs.${key}`)}
             </span>
-            <Link
-              to="/media/wideo"
-              className="filter-tab"
-              style={{
-                position: 'absolute',
-                left: `${405 * scale}px`,
-                top: `${190 * scale}px`,
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontWeight: 600,
-                fontSize: `${24 * scale}px`,
-                lineHeight: 1.48,
-                color: TEXT_COLOR,
-                pointerEvents: 'auto',
-                zIndex: 101,
-              }}
-            >
-              {t('common.tabs.video')}
+          ) : (
+            <Link key={key} to={to} className="filter-tab" style={style}>
+              {t(`common.tabs.${key}`)}
             </Link>
-          </>
-        ) : (
-          <>
-            <Link
-              to="/media"
-              className="filter-tab"
-              style={{
-                position: 'absolute',
-                left: `${185 * scale}px`,
-                top: `${190 * scale}px`,
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontWeight: 600,
-                fontSize: `${24 * scale}px`,
-                lineHeight: 1.48,
-                color: TEXT_COLOR,
-                pointerEvents: 'auto',
-                zIndex: 101,
-              }}
-            >
-              {t('common.tabs.photos')}
-            </Link>
-            <span
-              className="filter-tab filter-tab--active"
-              style={{
-                position: 'absolute',
-                left: `${405 * scale}px`,
-                top: `${190 * scale}px`,
-                fontFamily: "'IBM Plex Mono', monospace",
-                fontWeight: 600,
-                fontSize: `${24 * scale}px`,
-                lineHeight: 1.48,
-                color: ACTIVE_COLOR,
-                pointerEvents: 'auto',
-                zIndex: 101,
-              }}
-            >
-              {t('common.tabs.video')}
-            </span>
-          </>
-        )}
+          );
+        })}
 
         {/* Language & Contrast Controls - top right */}
         <div

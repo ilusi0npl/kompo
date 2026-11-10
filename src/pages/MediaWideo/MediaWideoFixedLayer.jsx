@@ -145,7 +145,7 @@ export default function MediaWideoFixedLayer({ scale = 1, viewportHeight = 700 }
           }}
         />
 
-        {/* Nawigacja Zdjęcia / Wideo - Wideo active */}
+        {/* Nawigacja Zdjęcia / Wideo / Recenzje - Wideo active */}
         <Link
           to="/media"
           className="filter-tab"
@@ -181,6 +181,24 @@ export default function MediaWideoFixedLayer({ scale = 1, viewportHeight = 700 }
         >
           {t('common.tabs.video')}
         </span>
+        <Link
+          to="/media/recenzje"
+          className="filter-tab"
+          style={{
+            position: 'absolute',
+            left: `${625 * scale}px`,
+            top: `${190 * scale}px`,
+            fontFamily: "'IBM Plex Mono', monospace",
+            fontWeight: 600,
+            fontSize: `${24 * scale}px`,
+            lineHeight: 1.44,
+            color: TEXT_COLOR,
+            pointerEvents: 'auto',
+            zIndex: 101,
+          }}
+        >
+          {t('common.tabs.reviews')}
+        </Link>
 
         {/* Language & Contrast Controls - top right */}
         <div

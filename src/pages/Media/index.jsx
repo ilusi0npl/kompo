@@ -31,7 +31,7 @@ export default function Media() {
         <MediaFixedLayer
           scale={scale}
           viewportHeight={window.innerHeight}
-          isPhotosActive={true}
+          activeTab="photos"
         />
       )}
 

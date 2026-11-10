@@ -6,5 +6,6 @@ import kontaktPage from './kontaktPage'
 import fundacjaPage from './fundacjaPage'
 import photoAlbum from './photoAlbum'
 import composer from './composer'
+import reviewEvent from './reviewEvent'
 
-export const schemaTypes = [event, bioProfile, media, homepageSlide, kontaktPage, fundacjaPage, photoAlbum, composer]
+export const schemaTypes = [event, bioProfile, media, homepageSlide, kontaktPage, fundacjaPage, photoAlbum, composer, reviewEvent]

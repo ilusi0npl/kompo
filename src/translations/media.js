@@ -3,6 +3,12 @@
 
 export const pl = {
   sideTitle: 'Media',
+  reviews: {
+    back: '← Wszystkie recenzje',
+    source: 'Źródło',
+    count: { one: 'recenzja', few: 'recenzje', many: 'recenzji' },
+    error: 'Błąd ładowania recenzji. Spróbuj ponownie później.',
+  },
   photos: {
     photo1: {
       title: 'Festiwal Klang',
@@ -27,6 +33,12 @@ export const pl = {
 
 export const en = {
   sideTitle: 'Media',
+  reviews: {
+    back: '← All reviews',
+    source: 'Source',
+    count: { one: 'review', few: 'reviews', many: 'reviews' },
+    error: 'Error loading reviews. Please try again later.',
+  },
   photos: {
     photo1: {
       title: 'Klang Festival',
