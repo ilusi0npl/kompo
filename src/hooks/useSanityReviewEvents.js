@@ -56,17 +56,23 @@ export function useSanityReviewEvents() {
   const { language } = useLanguage()
 
   useEffect(() => {
+    // Ignore responses from a request started for a previous language.
+    let stale = false
+    setError(null)
     client
       .fetch(reviewEventsQuery)
       .then(data => {
+        if (stale) return
         setEvents(Array.isArray(data) ? normalizeReviewEvents(data, language) : [])
         setLoading(false)
       })
       .catch(err => {
+        if (stale) return
         console.error('Failed to fetch review events:', err)
         setError(err)
         setLoading(false)
       })
+    return () => { stale = true }
   }, [language])
 
   return { events, loading, error }

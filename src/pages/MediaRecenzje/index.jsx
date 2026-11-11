@@ -45,6 +45,11 @@ export default function MediaRecenzje() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // List and event pages share this component, so the router keeps the old scroll position.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
+
   if (USE_SANITY && loading) return <Status>{t('common.loading.reviews')}</Status>;
   if (USE_SANITY && error) return <Status color="#FF0000">{t('media.reviews.error')}</Status>;
 

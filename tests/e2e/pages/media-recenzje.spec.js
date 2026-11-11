@@ -66,4 +66,14 @@ test.describe('Media Recenzje - Mobile', () => {
     const bodyWidth = await page.evaluate(() => document.body.scrollWidth)
     expect(bodyWidth).toBeLessThanOrEqual(390)
   })
+
+  test('event page opens at the top after scrolling the list', async ({ page }) => {
+    await navigateToPage(page, '/media/recenzje')
+    const tile = page.locator(`a[href="${SACRUM}"]`)
+    await tile.scrollIntoViewIfNeeded()
+    expect(await page.evaluate(() => window.scrollY)).toBeGreaterThan(0)
+    await tile.click()
+    await expect(page).toHaveURL(SACRUM)
+    await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0)
+  })
 })

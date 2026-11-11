@@ -3,10 +3,10 @@
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { renderHook, waitFor } from '@testing-library/react'
+import { renderHook, waitFor, act } from '@testing-library/react'
 import React from 'react'
 import { useSanityReviewEvents, normalizeReviewEvent } from '../../../src/hooks/useSanityReviewEvents'
-import { LanguageProvider } from '../../../src/context/LanguageContext'
+import { LanguageProvider, useLanguage } from '../../../src/context/LanguageContext'
 
 vi.mock('../../../src/lib/sanity/client', () => ({
   client: { fetch: vi.fn() },
@@ -68,8 +68,43 @@ describe('normalizeReviewEvent', () => {
   })
 })
 
+const deferred = () => {
+  let resolve, reject
+  const promise = new Promise((res, rej) => { resolve = res; reject = rej })
+  return { promise, resolve, reject }
+}
+
+const useReviewsWithLanguage = () => ({ ...useSanityReviewEvents(), ...useLanguage() })
+
 describe('useSanityReviewEvents', () => {
-  beforeEach(() => vi.clearAllMocks())
+  beforeEach(() => {
+    vi.clearAllMocks()
+    localStorage.clear()
+  })
+
+  it('keeps the current language when an older request finishes last', async () => {
+    const plRequest = deferred()
+    const enRequest = deferred()
+    client.fetch.mockReturnValueOnce(plRequest.promise).mockReturnValueOnce(enRequest.promise)
+    const { result } = renderHook(useReviewsWithLanguage, { wrapper })
+
+    act(() => result.current.setLanguage('en'))
+    await act(async () => enRequest.resolve([createEvent()]))
+    await act(async () => plRequest.resolve([createEvent()]))
+
+    expect(result.current.events[0].title).toBe('Lecture')
+  })
+
+  it('clears an earlier error once a later request succeeds', async () => {
+    client.fetch.mockRejectedValueOnce(new Error('network')).mockResolvedValueOnce([createEvent()])
+    const { result } = renderHook(useReviewsWithLanguage, { wrapper })
+    await waitFor(() => expect(result.current.error).not.toBeNull())
+
+    act(() => result.current.setLanguage('en'))
+
+    await waitFor(() => expect(result.current.events).toHaveLength(1))
+    expect(result.current.error).toBeNull()
+  })
 
   it('hides events that have no reviews', async () => {
     client.fetch.mockResolvedValue([createEvent(), createEvent({ _id: 'x', slug: 'empty', reviews: [] })])
