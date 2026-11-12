@@ -14,43 +14,16 @@ const USE_SANITY = import.meta.env.VITE_USE_SANITY === 'true';
 const LINE_POSITIONS = [155, 375, 595, 815, 1035, 1255];
 const LINE_COLOR = '#A0E38A';
 
-// Grid layout constants (like Media page pattern)
-const CARD_HEIGHT = 420; // Image height
-const TEXT_HEIGHT = 120; // Text content below image (date + title + performers)
-const ITEM_HEIGHT = CARD_HEIGHT + 16 + TEXT_HEIGHT; // Card + gap + text
-const ROW_SPACING = 674; // Distance between row starts
-const FOOTER_SPACING = 113; // Space between last item and footer (same as Media)
+// Grid layout: 3 columns from Figma; rows flow so long text never runs under the next row
+const CONTENT_LEFT = 185;
 const GRID_START_TOP = 275;
-const GRID_COLUMNS = [185, 515, 845]; // Column X positions
-
-// Generate grid position for event at given index
-function getGridPosition(index) {
-  const row = Math.floor(index / 3);
-  const col = index % 3;
-  return {
-    left: GRID_COLUMNS[col],
-    top: GRID_START_TOP + (row * ROW_SPACING),
-    hasBorder: col === 0, // First column has border
-  };
-}
-
-// Calculate footer position and total height (like Media page)
-function calculateLayout(eventCount) {
-  if (eventCount === 0) return { footerTop: 400, totalHeight: 500 };
-
-  const numRows = Math.ceil(eventCount / 3);
-  const lastRowTop = GRID_START_TOP + ((numRows - 1) * ROW_SPACING);
-  const lastItemBottom = lastRowTop + ITEM_HEIGHT;
-  const footerTop = lastItemBottom + FOOTER_SPACING;
-  const totalHeight = footerTop + 70; // footer + bottom margin (same as Media)
-
-  return { footerTop, totalHeight };
-}
+const CARD_WIDTH = 300;
+const COLUMN_GAP = 30;
+const ROW_GAP = 80; // Constant gap between the longest text in a row and the next row's posters
 
 // Transform Sanity archived events to match config structure with grid layout
 function transformSanityEvents(sanityEvents) {
-  return sanityEvents.map((event, index) => {
-    const position = getGridPosition(index);
+  return sanityEvents.map((event) => {
     return {
       id: event._id,
       date: event.date ? new Date(event.date).toLocaleDateString('pl-PL', {
@@ -61,8 +34,6 @@ function transformSanityEvents(sanityEvents) {
       title: event.title,
       performers: event.performers,
       image: event.imageUrl,
-      position,
-      hasBorder: position.hasBorder,
     };
   });
 }
@@ -78,9 +49,6 @@ export default function DesktopArchiwalne() {
     ? transformSanityEvents(sanityEvents)
     : configEvents;
 
-  // Calculate layout (footer position and total height)
-  const { footerTop, totalHeight } = calculateLayout(archivedEvents.length);
-
   // Show loading state only when using Sanity
   if (USE_SANITY && loading) {
     return (
@@ -89,7 +57,7 @@ export default function DesktopArchiwalne() {
         className="relative"
         style={{
           width: `${DESKTOP_WIDTH}px`,
-          height: `${totalHeight}px`,
+          height: '500px',
           backgroundColor: 'transparent',
           display: 'flex',
           alignItems: 'center',
@@ -117,7 +85,7 @@ export default function DesktopArchiwalne() {
         className="relative"
         style={{
           width: `${DESKTOP_WIDTH}px`,
-          height: `${totalHeight}px`,
+          height: '500px',
           backgroundColor: 'transparent',
           display: 'flex',
           alignItems: 'center',
@@ -143,20 +111,28 @@ export default function DesktopArchiwalne() {
       className="relative"
       style={{
         width: `${DESKTOP_WIDTH}px`,
-        height: `${totalHeight}px`,
+        paddingLeft: `${CONTENT_LEFT}px`,
+        paddingTop: `${GRID_START_TOP}px`,
         backgroundColor: 'transparent',
         zIndex: 60,
       }}
     >
-      {/* Event cards - 3x2 grid */}
-      {archivedEvents.map((event) => (
+      {/* Event cards - 3 column grid, rows sized by their content */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(3, ${CARD_WIDTH}px)`,
+          columnGap: `${COLUMN_GAP}px`,
+          rowGap: `${ROW_GAP}px`,
+          alignItems: 'start',
+        }}
+      >
+      {archivedEvents.map((event, index) => (
         <div
           key={event.id}
-          className="absolute flex flex-col"
+          className="flex flex-col"
           style={{
-            left: `${event.position.left}px`,
-            top: `${event.position.top}px`,
-            width: '300px',
+            width: `${CARD_WIDTH}px`,
             gap: '16px',
           }}
         >
@@ -167,7 +143,7 @@ export default function DesktopArchiwalne() {
             style={{
               width: '300px',
               height: '420px',
-              border: event.hasBorder ? '1px solid #131313' : 'none',
+              border: index % 3 === 0 ? '1px solid #131313' : 'none', // First column has border
             }}
           >
             <SmoothImage
@@ -237,16 +213,9 @@ export default function DesktopArchiwalne() {
           </div>
         </div>
       ))}
+      </div>
 
-      {/* Stopka - absolute position like Media page */}
-      <Footer
-        className="absolute"
-        style={{
-          left: '185px',
-          top: `${footerTop}px`,
-          width: '520px',
-        }}
-      />
+      <Footer style={{ width: '520px', marginTop: '113px', marginBottom: '40px' }} />
     </section>
   );
 }

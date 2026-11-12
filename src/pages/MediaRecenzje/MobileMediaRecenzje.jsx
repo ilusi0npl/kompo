@@ -52,7 +52,7 @@ function EventTiles({ events, t }) {
           <p style={label14}>
             {[event.date, event.place, reviewCountLabel(event.reviews.length, t('media.reviews.count'))]
               .filter(Boolean)
-              .join(' · ')}
+              .join(' | ')}
           </p>
         </Link>
       ))}
@@ -74,7 +74,7 @@ function Review({ review, t }) {
 
       <div className="flex flex-col" style={{ gap: '16px' }}>
         {review.paragraphs.map((paragraph, i) => (
-          <p key={i} style={{ fontFamily: MONO, fontSize: '15px', lineHeight: 1.6, color: TEXT_COLOR }}>
+          <p key={i} style={{ fontFamily: MONO, fontWeight: 500, fontSize: '14px', lineHeight: 1.48, color: TEXT_COLOR }}>
             {paragraph}
           </p>
         ))}
@@ -109,8 +109,8 @@ function Review({ review, t }) {
 function EventReviews({ event, t }) {
   return (
     <div className="flex flex-col">
-      <Link to="/media/recenzje" style={{ ...caps14, textDecoration: 'underline' }}>
-        {t('media.reviews.back')}
+      <Link to="/media/recenzje" style={{ ...caps14, color: ACTIVE_TAB_COLOR, textDecoration: 'none', alignSelf: 'flex-start' }}>
+        ← <span style={{ textDecoration: 'underline' }}>{t('media.reviews.back')}</span>
       </Link>
       <div className="flex flex-col" style={{ gap: '6px', margin: '24px 0 32px' }}>
         {event.festival && <p style={label14}>{event.festival}</p>}
@@ -127,7 +127,7 @@ function EventReviews({ event, t }) {
         >
           {event.title}
         </h1>
-        <p style={label14}>{[event.date, event.place].filter(Boolean).join(' · ')}</p>
+        <p style={label14}>{[event.date, event.place].filter(Boolean).join(' | ')}</p>
       </div>
       {event.reviews.map((review) => (
         <Review key={review.key} review={review} t={t} />

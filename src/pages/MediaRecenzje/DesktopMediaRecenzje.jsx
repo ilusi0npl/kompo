@@ -2,7 +2,7 @@ import { Link } from 'react-router';
 import Footer from '../../components/Footer/Footer';
 import SmoothImage from '../../components/SmoothImage/SmoothImage';
 import { useTranslation } from '../../hooks/useTranslation';
-import { reviewCountLabel, TEXT_COLOR } from './recenzje-config';
+import { reviewCountLabel, TEXT_COLOR, ACTIVE_TAB_COLOR } from './recenzje-config';
 
 const DESKTOP_WIDTH = 1440;
 const CONTENT_LEFT = 185;
@@ -48,7 +48,7 @@ function EventTiles({ events, t }) {
             <p style={label16}>
               {[event.date, event.place, reviewCountLabel(event.reviews.length, t('media.reviews.count'))]
                 .filter(Boolean)
-                .join(' · ')}
+                .join(' | ')}
             </p>
           </div>
         </Link>
@@ -71,7 +71,7 @@ function Review({ review, t }) {
 
       <div className="flex flex-col" style={{ gap: '20px' }}>
         {review.paragraphs.map((paragraph, i) => (
-          <p key={i} style={{ fontFamily: MONO, fontSize: '18px', lineHeight: 1.62, color: TEXT_COLOR }}>
+          <p key={i} style={{ fontFamily: MONO, fontWeight: 500, fontSize: '14px', lineHeight: 1.48, color: TEXT_COLOR }}>
             {paragraph}
           </p>
         ))}
@@ -101,8 +101,8 @@ function Review({ review, t }) {
 function EventReviews({ event, t }) {
   return (
     <div className="flex flex-col">
-      <Link to="/media/recenzje" style={{ ...caps16, textDecoration: 'underline' }}>
-        {t('media.reviews.back')}
+      <Link to="/media/recenzje" style={{ ...caps16, color: ACTIVE_TAB_COLOR, textDecoration: 'none', alignSelf: 'flex-start' }}>
+        ← <span style={{ textDecoration: 'underline' }}>{t('media.reviews.back')}</span>
       </Link>
       <div className="flex flex-col" style={{ gap: '8px', margin: '32px 0 48px' }}>
         {event.festival && <p style={label16}>{event.festival}</p>}
@@ -119,7 +119,7 @@ function EventReviews({ event, t }) {
         >
           {event.title}
         </h1>
-        <p style={label16}>{[event.date, event.place].filter(Boolean).join(' · ')}</p>
+        <p style={label16}>{[event.date, event.place].filter(Boolean).join(' | ')}</p>
       </div>
       {event.reviews.map((review) => (
         <Review key={review.key} review={review} t={t} />

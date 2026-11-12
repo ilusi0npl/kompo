@@ -43,6 +43,36 @@ test.describe('Media Recenzje - Desktop', () => {
     await expect(page.locator('a[href="https://ruchmuzyczny.pl/article/507"]')).toContainText('SACRUM PROFANUM 2020 (relacje)')
   })
 
+  test('review excerpt uses the same text style as Bio', async ({ page }) => {
+    await navigateToPage(page, SACRUM)
+    const style = await page.getByText('Kompopolex: 10/10.').evaluate((el) => {
+      const s = getComputedStyle(el)
+      return { size: s.fontSize, weight: s.fontWeight }
+    })
+    expect(style).toEqual({ size: '14px', weight: '500' })
+  })
+
+  test('date, place and review count are separated with vertical bars', async ({ page }) => {
+    await navigateToPage(page, '/media/recenzje')
+    const tile = page.locator(`a[href="${SACRUM}"]`)
+    await expect(tile).toContainText('15.11.2020 | Kraków / online | 2 recenzje')
+    await expect(tile).not.toContainText('·')
+  })
+
+  test('back link is purple and underlines only its text, not the arrow', async ({ page }) => {
+    await navigateToPage(page, SACRUM)
+    const back = page.locator('a[href="/media/recenzje"]').filter({ hasText: 'Wszystkie recenzje' }).first()
+    const look = await back.evaluate((el) => {
+      const underlined = [...el.querySelectorAll('*')].find((c) => getComputedStyle(c).textDecorationLine.includes('underline'))
+      return {
+        color: getComputedStyle(el).color,
+        linkUnderlined: getComputedStyle(el).textDecorationLine.includes('underline'),
+        underlinedText: underlined ? underlined.textContent : null,
+      }
+    })
+    expect(look).toEqual({ color: 'rgb(118, 31, 224)', linkUnderlined: false, underlinedText: 'Wszystkie recenzje' })
+  })
+
   test('unknown event redirects to the reviews list', async ({ page }) => {
     await navigateToPage(page, '/media/recenzje/nie-istnieje')
     await expect(page).toHaveURL('/media/recenzje')

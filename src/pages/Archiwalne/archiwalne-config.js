@@ -11,7 +11,6 @@ const realArchivedEvents = [
     title: 'ENSEMBLE KOMPOPOLEX',
     performers: 'Aleksandra Gołaj, Rafał Łuc, Jacek Sotomski',
     image: '/assets/archiwalne/event1.jpg',
-    position: { left: 185, top: 275 },
     hasBorder: true,
   },
   {
@@ -20,7 +19,6 @@ const realArchivedEvents = [
     title: 'KOMPOPOLEX x martyna zakrzewska',
     performers: 'Aleksandra Gołaj, Rafał Łuc, Jacek Sotomski, Martyna Zakrzewska',
     image: '/assets/archiwalne/event2.jpg',
-    position: { left: 515, top: 275 },
     hasBorder: false,
   },
   {
@@ -29,7 +27,6 @@ const realArchivedEvents = [
     title: 'społeczne komponowanie',
     performers: 'Aleksandra Gołaj, Rafał Łuc, Jacek Sotomski',
     image: '/assets/archiwalne/event3.jpg',
-    position: { left: 845, top: 275 },
     hasBorder: false,
   },
   // Row 2
@@ -39,7 +36,6 @@ const realArchivedEvents = [
     title: 'ENSEMBLE KOMPOPOLEX',
     performers: 'Aleksandra Gołaj, Rafał Łuc, Jacek Sotomski',
     image: '/assets/archiwalne/event4.jpg',
-    position: { left: 185, top: 949 },
     hasBorder: true,
   },
   {
@@ -48,7 +44,6 @@ const realArchivedEvents = [
     title: 'KOMPOPOLEX x martyna zakrzewska',
     performers: 'Aleksandra Gołaj, Rafał Łuc, Jacek Sotomski, Martyna Zakrzewska',
     image: '/assets/archiwalne/event5.jpg',
-    position: { left: 515, top: 949 },
     hasBorder: false,
   },
   {
@@ -57,7 +52,6 @@ const realArchivedEvents = [
     title: 'społeczne komponowanie',
     performers: 'Aleksandra Gołaj, Rafał Łuc, Jacek Sotomski',
     image: '/assets/archiwalne/event6.jpg',
-    position: { left: 845, top: 949 },
     hasBorder: false,
   },
 ];

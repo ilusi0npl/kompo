@@ -4,7 +4,7 @@
 export const pl = {
   sideTitle: 'Media',
   reviews: {
-    back: '← Wszystkie recenzje',
+    back: 'Wszystkie recenzje',
     source: 'Źródło',
     count: { one: 'recenzja', few: 'recenzje', many: 'recenzji' },
     error: 'Błąd ładowania recenzji. Spróbuj ponownie później.',
@@ -34,7 +34,7 @@ export const pl = {
 export const en = {
   sideTitle: 'Media',
   reviews: {
-    back: '← All reviews',
+    back: 'All reviews',
     source: 'Source',
     count: { one: 'review', few: 'reviews', many: 'reviews' },
     error: 'Error loading reviews. Please try again later.',
