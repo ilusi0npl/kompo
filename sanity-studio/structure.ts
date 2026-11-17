@@ -85,6 +85,9 @@ export const structure = (S: StructureBuilder) =>
               S.documentTypeListItem('mediaItem')
                 .title('Wideo')
                 .icon(() => '🎥'),
+              S.documentTypeListItem('reviewEvent')
+                .title('Recenzje')
+                .icon(() => '📰'),
             ])
         ),
 
@@ -153,6 +156,7 @@ export const structure = (S: StructureBuilder) =>
               S.documentTypeListItem('kontaktPage').title('Kontakt Page'),
               S.documentTypeListItem('mediaItem').title('Media Items'),
               S.documentTypeListItem('photoAlbum').title('Photo Albums'),
+              S.documentTypeListItem('reviewEvent').title('Review Events'),
             ])
         ),
     ])
